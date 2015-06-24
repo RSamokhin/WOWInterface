@@ -1,0 +1,14 @@
+## Title: Auc:Util:Scan Finish
+## Interface: 60100
+## Dependancies: Auc-Advanced
+##
+## Version: 5.21d2.5561 (SanctimoniousSwamprat)
+## Revision: $Id: Auc-Util-ScanFinish.toc 5554 2015-03-31 11:59:08Z brykrys $
+## Author: Norganna's AddOns
+## X-Part-Of: Auctioneer
+## X-Category: Auction House
+## X-Max-Interface: 60100
+## X-URL: http://auctioneeraddon.com/
+## X-Feedback: http://forums.norganna.org
+##
+Embed.xml

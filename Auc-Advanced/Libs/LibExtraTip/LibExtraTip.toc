@@ -1,0 +1,16 @@
+## Title: LibExtraTip |cff224477(lib)
+## Notes: Assists in the management of additional tooltip information.
+##
+## Interface: 60100
+## LoadOnDemand: 0
+##
+## Version: 5.21d2.5561 (SanctimoniousSwamprat)
+## Revision: $Id: LibExtraTip.toc 383 2015-03-31 11:55:42Z brykrys $
+## Author: Norganna's AddOns
+## X-Part-Of: Libraries
+## X-Category: Library
+## X-Max-Interface: 60100
+## X-URL: http://zip.norganna.org/libs/LibExtraTip/
+## X-Feedback: http://forums.norganna.org
+##
+Load.xml

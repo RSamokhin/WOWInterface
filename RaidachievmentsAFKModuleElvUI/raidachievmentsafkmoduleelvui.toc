@@ -1,0 +1,8 @@
+## Interface: 60000
+## Author: Jaybee
+## Version: 1.01
+## Title: |cff1784d1RaidachievmentsAFKModuleElvUI|r
+## Notes: Adds Raid Achievements to ElvUI Afk screen
+## RequiredDeps: ElvUI
+
+raidachievmentsafkmoduleelvui.lua
