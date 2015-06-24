@@ -1,0 +1,8 @@
+## Interface: 60100
+## Title: Pets To Buy
+## Version: 1.00
+## Notes: Creates a "Pets to buy" shopping list in Auctionator, including tradable pets you don't own yet.
+## Author: Urzula - Al'akir (EU)
+## RequiredDeps: Auctionator
+
+PetsToBuy.lua
