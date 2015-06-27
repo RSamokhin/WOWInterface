@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(553, "DBM-Party-BC", 12, 255)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 561 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 566 $"):sub(12, -3))
 mod:SetCreatureID(17880)
 
 mod:RegisterCombat("combat")
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 --TODO, actual CD timers
 local warnHasten			= mod:NewSpellAnnounce(31458)
 
-local specWarnSpellReflect	= mod:NewSpecialWarningReflect(38592)
+local specWarnSpellReflect	= mod:NewSpecialWarningReflect(38592, "SpellCaster", nil, 2)
 local specWarnHasten		= mod:NewSpecialWarningDispel(31458, "MagicDispeller")
 
 local timerSpellReflect		= mod:NewBuffActiveTimer(6, 38592)
@@ -23,7 +23,7 @@ local timerHasten			= mod:NewTargetTimer(10, 31458)
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 38592 then
-		specWarnSpellReflect:Show()
+		specWarnSpellReflect:Show(args.destName)
 		timerSpellReflect:Start()
 	end
 end
