@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Price Level Utility module
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
 	Revision: $Id: Undercut.lua 5507 2014-10-23 16:08:21Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -292,4 +292,4 @@ function private.SetupConfigGui(gui)
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/Auc-Match-Undercut/Undercut.lua $", "$Rev: 5507 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Match-Undercut/Undercut.lua $", "$Rev: 5507 $")

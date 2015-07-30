@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Search UI - Searcher Prospect
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
 	Revision: $Id: SearcherProspect.lua 5498 2014-10-18 13:24:18Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -196,4 +196,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/Auc-Util-SearchUI/SearcherProspect.lua $", "$Rev: 5498 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Util-SearchUI/SearcherProspect.lua $", "$Rev: 5498 $")

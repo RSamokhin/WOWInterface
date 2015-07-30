@@ -1,5 +1,6 @@
 local Addon = PetTracker
 local Record = Addon:NewClass('Button', 'Record', 'PetTrackerRecord')
+local L = Addon.Locals
 
 local IdMatch = strrep('%w', 12)
 local SpellsMatch = strrep('(%w%w%w)', 3)
@@ -9,7 +10,7 @@ function Record:Display(entry)
 	self:Unpack(entry)
 	self.Content.When:SetFormattedText('%d/%d/%02d', self.day, self.month, self.year)
 	self:SetNormalFontObject(self.won and GameFontGreen or GameFontRed)
-	self:SetText(self.won and 'Victory' or 'Defeat')
+	self:SetText(self.won and L.Victory or L.Defeat)
 	self:Show()
 
 	for i = 1, 3 do

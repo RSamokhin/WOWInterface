@@ -23,6 +23,8 @@ L.ShowStables = 'Stallmeister anzeigen'
 L.StableTip = '|cffffd200Hier k\195\182nnen Haustiere gegen eine|nkleine Geb\195\188hr geheilt werden.|r'
 L.UpgradeAlert = 'Besseres Kampfhaustier entdeckt!'
 L.ZoneTracker = 'Zonen Tracker'
+L.Victory = 'Sieg'
+L.Defeat = 'Niederlage'
 
 L.Source1 = 'Erbeutet'
 L.Source10 = 'Haustiershop'

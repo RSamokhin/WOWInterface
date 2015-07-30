@@ -1,19 +1,19 @@
 ## Title: Auc-Auctioneer |cff774422(core)
 ## Notes: Auctioneer assists players to track item values on the Auction House; whether buying or selling.
 ##
-## Interface: 60100
+## Interface: 60200
 ## LoadOnDemand: 0
 ## Dependencies: Stubby
 ## OptionalDependencies: !nLog, SlideBar, Configator, Babylonian, DebugLib, TipHelper, LibExtraTip, LibDataBroker
 ## SavedVariables: AucAdvancedConfig, AucAdvancedData, AucAdvancedServers
 ## SavedVariablesPerCharacter: AucAdvancedLocal
 ##
-## Version: 5.21d2.5561 (SanctimoniousSwamprat)
-## Revision: $Id: Auc-Advanced.toc 5557 2015-05-13 13:56:40Z brykrys $
+## Version: 5.21e.5566 (SanctimoniousSwamprat)
+## Revision: $Id: Auc-Advanced.toc 5564 2015-06-26 23:43:33Z dinesh $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer
 ## X-Category: Auction House
-## X-Max-Interface: 60100
+## X-Max-Interface: 60200
 ## X-URL: http://auctioneeraddon.com/
 ## X-Feedback: http://forums.norganna.org
 ##

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
-	Revision: $Id: BeanCounterSearch.lua 5354 2012-09-14 22:38:20Z kandoko $
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
+	Revision: $Id: BeanCounterSearch.lua 5563 2015-06-26 10:15:37Z brykrys $
 
 	BeanCounterSearch - Search routines for BeanCounter data
 	URL: http://auctioneeraddon.com/
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/BeanCounter/BeanCounterSearch.lua $","$Rev: 5354 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/BeanCounter/BeanCounterSearch.lua $","$Rev: 5563 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local lib = BeanCounter
 local private, print, get, set, _BC = lib.getLocals()
@@ -349,8 +349,8 @@ end
 			local profit =  (uMoney - uDeposit + uFee)
 			if stack > 0 then pricePer =  profit/stack end
 			
-			local itemID, suffix, uniqueID, reforged = lib.API.decodeLink(itemKey)
-			local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID, reforged)
+			local itemID, suffix, uniqueID = lib.API.decodeLink(itemKey)
+			local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID)
 
 			if not itemLink then itemLink = private.getItemInfo(id, "name") end--if not in our DB ask the server
 
@@ -382,8 +382,8 @@ end
 			local status =_BC('UiAucExpired')
 			if uReason == _BC('Cancelled') then status = _BC('UiAucCancelled') end --if its a cancel rather than true expired auction
 			
-			local itemID, suffix, uniqueID, reforged = lib.API.decodeLink(itemKey)
-			local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID, reforged)
+			local itemID, suffix, uniqueID = lib.API.decodeLink(itemKey)
+			local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID)
 			if not itemLink then itemLink = private.getItemInfo(id, "name") end--if not in our DB ask the server
 
 			return {
@@ -437,8 +437,8 @@ end
 				end
 			end
 
-			local itemID, suffix, uniqueID, reforged = lib.API.decodeLink(itemKey)
-			local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID, reforged)
+			local itemID, suffix, uniqueID = lib.API.decodeLink(itemKey)
+			local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID)
 			if not itemLink then itemLink = private.getItemInfo(id, "name") end--if not in our DB ask the server
 
 			return {
@@ -467,8 +467,8 @@ end
 			if uSeller == "0" then uSeller = "..." end
 			if uReason == "0" then uReason = "..." end
 			
-			local itemID, suffix, uniqueID, reforged = lib.API.decodeLink(itemKey)
-			local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID, reforged)
+			local itemID, suffix, uniqueID = lib.API.decodeLink(itemKey)
+			local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID)
 			if not itemLink then itemLink = private.getItemInfo(id, "name") end--if not in our DB ask the server
 			
 			return {

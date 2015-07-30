@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Price Level Utility module
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
 	Revision: $Id: PriceLevel.lua 5535 2014-12-12 15:12:36Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -324,4 +324,4 @@ function lib.CalcLevel(link, quantity, bidPrice, buyPrice, itemWorth, serverKey)
 	return priceLevel, perItem, r,g,b, lvl, itemWorth
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/Auc-Util-PriceLevel/PriceLevel.lua $", "$Rev: 5535 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Util-PriceLevel/PriceLevel.lua $", "$Rev: 5535 $")

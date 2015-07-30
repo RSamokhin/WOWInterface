@@ -7,7 +7,7 @@ local L
 L= DBM:GetModLocalization(1426)
 
 L:SetTimerLocalization({
-	timerSiegeVehicleCD	= "다음 차량: %s"
+	timerSiegeVehicleCD	= "다음 공성 차량: %s"
 })
 
 L:SetOptionLocalization({
@@ -15,9 +15,9 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	AddsSpawn1		=	"Comin' in hot!",--Blizzard seems to have disabled these
-	AddsSpawn2		=	"Fire in the hole!",--Blizzard seems to have disabled these
-	BossLeaving		=	"I'll be back..."
+	AddsSpawn1		=	"Comin' in hot!",--Blizzard seems to have disabled these (찾지 못함)
+	AddsSpawn2		=	"Fire in the hole!",--Blizzard seems to have disabled these (찾지 못함)
+	BossLeaving		=	"I'll be back..."--조금만 기다리라고...
 })
 
 ---------------------------
@@ -30,6 +30,10 @@ L= DBM:GetModLocalization(1425)
 ---------------------------
 L= DBM:GetModLocalization(1432)
 
+L:SetMiscLocalization({
+	Jubeideath		=	"난 영원히 타오른다!"
+})
+
 ------------------
 -- Kormrok --
 ------------------
@@ -41,7 +45,7 @@ L= DBM:GetModLocalization(1392)
 L= DBM:GetModLocalization(1396)
 
 L:SetMiscLocalization({
-	BloodthirstersSoon		=	"Come brothers! Seize your destiny!"
+	BloodthirstersSoon		=	"와라, 형제들이여! 운명을 손에 넣어라!"
 })
 
 --------------------
@@ -85,7 +89,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	SeedsBehavior		= "씨앗 위치 알림 방법 설정(공격대장 권한 필요)",
-	Iconed				= "해골, 엑스, 동그라미, 달, 역삼각형(기둥 위치를 사용할 경우)",--Default
+	Iconed				= "별, 동그라미, 다이아, 역삼각형, 달(기둥 위치를 사용할 경우)",--Default
 	Numbered			= "1, 2, 3, 4, 5(번호로 지정된 위치를 사용할 경우)",
 	DirectionLine		= "왼쪽, 중앙 왼쪽, 중앙, 중앙 오른쪽, 오른쪽.(일직선 진형을 사용할 경우)",
 	FreeForAll			= "위지 지정하지 않음. 기본 대화 알림 사용",
@@ -97,8 +101,7 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	DBMConfigMsg		= "씨앗 위치 알림 방법이 공격대장 설정과 동일하게 하기 위해 %s로 설정되었습니다.",
-	BWConfigMsg			= "공격대장이 BigWigs를 사용합니다, 씨앗 경고를 맞추기 위해 BigWigs에게 기능 좀 추가하라고 하세요!",
-	customSeedsSay		= "%s 에게 씨앗!(%s)"
+	BWConfigMsg			= "공격대장이 BigWigs를 사용합니다. BigWigs와 동일한 경고를 하기 위해 번호 알림으로 설정됩니다."
 	--TODO, talk to some guilds, maybe trim list above, add finalized directions here
 })
 
@@ -130,7 +133,7 @@ L= DBM:GetModLocalization(1394)
 L= DBM:GetModLocalization(1395)
 
 L:SetMiscLocalization({
-	felSpire		=	"begins to empower the Fel Spire!"
+	felSpire		=	"힘을 불어넣기 시작합니다!"
 })
 
 --------------------------
@@ -148,16 +151,12 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	phase2				= "I grow tired of this pointless game. You face the immortal Legion, scourge of a thousand worlds.",--1 second faster than CLEU. Probably not needed, but just in case
-	phase2point5		= "Look upon the endless forces of the Burning Legion and know the folly of your resistance.",--3 seconds faster than CLEU, used as primary, slower CLEU secondary
-	phase3				= "Enough! Your meaningless struggle ends now!",--6 seconds faster than CLEU, used as primary, slower CLEU secondary
-	phase3point5		= "I will shatter this pathetic world! Its broken husk will be torn apart in the twisting nether for all time!",--Not currently used. seems fire at same time as UNIT event that's present. Here only in case things change from now and live
+	phase2point5		= "보아라, 불타는 군단의 무한한 힘을. 깨달아라. 저항해도 소용없음을.",--3 seconds faster than CLEU, used as primary, slower CLEU secondary
 	First				= "첫번째",
 	Second				= "두번째",
 	Third				= "세번째",
 	Fourth				= "네번째",--Just in case, not sure how many targets in 30 man raid
-	Fifth				= "다섯번째",--Just in case, not sure how many targets in 30 man raid
-	customShackledSay	= "%s Shackle on %s"
+	Fifth				= "다섯번째"--Just in case, not sure how many targets in 30 man raid
 })
 
 -------------

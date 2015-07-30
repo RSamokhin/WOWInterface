@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(193, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 158 $"):sub(12, -3))
 mod:SetCreatureID(52558)--or does 53772 die instead?didn't actually varify this fires right unit_died event yet so we'll see tonight
 mod:SetEncounterID(1204)
 mod:DisableEEKillDetection()
@@ -34,8 +34,8 @@ local warnPhase2			= mod:NewPhaseAnnounce(2, 3)
 local specWarnMagmaFlow		= mod:NewSpecialWarningSpell(97225, nil, nil, nil, 2)
 local specWarnFlameStomp	= mod:NewSpecialWarningSpell(97282, false)
 
-local timerFragmentCD		= mod:NewNextTimer(22.5, "ej2531", nil, nil, nil, 98136)
-local timerSparkCD			= mod:NewNextCountTimer(22.5, "ej2532", nil, nil, nil, 98552)
+local timerFragmentCD		= mod:NewNextTimer(22.5, "ej2531", nil, nil, nil, nil, 98136)
+local timerSparkCD			= mod:NewNextCountTimer(22.5, "ej2532", nil, nil, nil, nil, 98552)
 local timerHeatedVolcano	= mod:NewNextTimer(25.5, 98493)
 local timerFlameStomp		= mod:NewNextTimer(30.5, 97282)
 local timerSuperheated		= mod:NewNextTimer(10, 101304)		--Add the 10 second party in later at some point if i remember to actually log it better

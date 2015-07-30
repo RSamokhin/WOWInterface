@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - AutoMagic Utility module
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
 	Revision: $Id: Core.lua 5537 2014-12-12 15:31:05Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -625,4 +625,4 @@ end
 
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/Auc-Util-AutoMagic/Core.lua $", "$Rev: 5537 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Util-AutoMagic/Core.lua $", "$Rev: 5537 $")

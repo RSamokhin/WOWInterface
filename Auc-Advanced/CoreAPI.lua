@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Advanced
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
-	Revision: $Id: CoreAPI.lua 5557 2015-05-13 13:56:40Z brykrys $
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
+	Revision: $Id: CoreAPI.lua 5562 2015-06-25 19:07:43Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -60,6 +60,7 @@ local tostring,tonumber,strjoin,strsplit,format = tostring,tonumber,strjoin,strs
 local GetItemInfo = GetItemInfo
 local time = time
 local bitand = bit.band
+local tconcat=table.concat
 -- GLOBALS: nLog, N_NOTICE, N_WARNING, N_ERROR
 
 
@@ -717,7 +718,7 @@ local function RebuildMatcherListLookup()
 			end
 			if insert then
 				AucAdvanced.Print("Auctioneer: New matcher found: "..name)
-				tinsert(matcherCurList, 1, name)
+				tinsert(matcherCurList, name)
 			end
 		else
 			debugPrint("Auctioneer engine '"..name.."' does not have a GetMatchArray() function.", "CoreAPI", "Missing GetMatchArray", "Warning")
@@ -926,18 +927,18 @@ function lib.GetSigFromLink(link)
 	elseif ptype ~= "string" then
 		return
 	end
-	local header,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12 = strsplit(":", link, 13)
+	local header,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13 = strsplit(":", link, 14)
 	if not s1 then
 		return
 	end
 	local lType = header:sub(-4)
 	if lType == "item" then
 		-- sig format: itemID:suffix:factor:enchant:bonus1:...:bonusX {any trailing ":0" are ommitted}
-		-- s1 = itemID, s2 = enchant, s3,s4,s5,s6 = gems, s7 = suffix, s8 = uniqueID(factor), s9 = level, s10 = upgrades, s11 = instance, s12 = bonuses
+		-- s1 = itemID, s2 = enchant, s3,s4,s5,s6 = gems, s7 = suffix, s8 = uniqueID(factor), s9 = level, s10 = specID, s11 = upgrades, s12 = instance, s13 = bonuses
 		-- some entries are not used: gems, level, upgrades, instance
 		-- for compatibility with old or partial links, test for nils
-		if s12 and s12:byte(1) ~= 48 then -- bonus counter is not '0'
-			bonus = s12:match("%d+:([^|]+)")
+		if s13 and s13:byte(1) ~= 48 then -- bonus counter is not '0'
+			bonus = s13:match("%d+:([^|]+)")
 		end
 		if s8 and s7 ~= "0" then -- suffix
 			local factor = "0"
@@ -958,7 +959,7 @@ function lib.GetSigFromLink(link)
 				sig = s1..":"..s7
 			end
 		else
-			if bonus then -- (if bonus then s12 exists, therefore s2 must exist)
+			if bonus then -- (if bonus then s13 exists, therefore s2 must exist)
 				sig = s1..":0:0:"..s2..":"..bonus
 			elseif s2 and s2 ~= "0" then
 				sig = s1..":0:0:"..s2
@@ -1006,7 +1007,7 @@ function lib.GetLinkFromSig(sig)
 			local _, count = tail:gsub(":", ":")
 			bonus = (count + 1) .. ":" .. tail
 		end
-		local itemstring = format("item:%s:%s:0:0:0:0:%s:%s:80:0:0:%s", itemID, enchant or "0", suffix or "0", factor or "0", bonus)
+		local itemstring = format("item:%s:%s:0:0:0:0:%s:%s:80:0:0:0:%s", itemID, enchant or "0", suffix or "0", factor or "0", bonus)
 		local name, link = GetItemInfo(itemstring)
 		if link then
 			return SanitizeLink(link), name, "item" -- name is ignored by most calls
@@ -1134,7 +1135,7 @@ do -- Store key style 'B'
 			end
 		end
 		-- otherwise analyze link
-		local header,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12 = strsplit(":", link, 13)
+		local header,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13 = strsplit(":", link, 14)
 		if not s1 then return end
 		local lType = header:sub(-4)
 		if lType == "item" then
@@ -1145,8 +1146,8 @@ do -- Store key style 'B'
 				end
 				-- if suffix is not 0 and not negative, then link is corrupt - will return nil
 			else
-				if s12 and s12:byte(1) ~= 48 then -- bonus counter is not '0'
-					local bonuses = s12:match("%d+:([^|]+)") -- extract just the bonusIDs
+				if s13 and s13:byte(1) ~= 48 then -- bonus counter is not '0'
+					local bonuses = s13:match("%d+:([^|]+)") -- extract just the bonusIDs
 					if bonuses then
 						local property = lib.GetBonusIDPropertyB(bonuses)
 						if property then
@@ -1176,7 +1177,9 @@ do -- Store key style 'B'
 end
 
 do -- Auctioneer bonusID handling functions
-	local LookupSuffix, LookupStat, LookupTierX, LookupWarforged = {}, {}, {}, {}
+	local LookupSuffix, LookupStat, LookupTier, LookupStage = {}, {}, {}, {}
+	local LookupWarforged, LookupSocket, LookupTertiary = {}, {}, {}
+	local LookupTierB = {} -- used by GetBonusIDPropertyB
 
 	function private.InitBonusIDHandlers()
 		private.InitBonusIDHandlers = nil
@@ -1193,14 +1196,25 @@ do -- Auctioneer bonusID handling functions
 			local y = tostring(x)
 			LookupWarforged[y] = y
 		end
+		for _, x in ipairs(Data.BonusSocketedList) do
+			local y = tostring(x)
+			LookupSocket[y] = y
+		end
+		for _, x in ipairs(Data.BonusTertiaryStatList) do
+			local y = tostring(x)
+			LookupTertiary[y] = y
+		end
+
 		for _, x in ipairs(Data.BonusTierList) do
 			local y = tostring(x)
-			LookupTierX[y] = y
+			LookupTier[y] = y
+			LookupTierB[y] = y
 		end
 		for _, x in ipairs(Data.BonusCraftedStageList) do
 			local y = tostring(x)
-			if y ~= "525" then -- special exception: do not include Stage 1 (basic item)
-				LookupTierX[y] = y
+			LookupStage[y] = y
+			if y ~= "525" then -- special exception: do not include Stage 1 (basic item) in this table
+				LookupTierB[y] = y
 			end
 		end
 	end
@@ -1228,6 +1242,111 @@ do -- Auctioneer bonusID handling functions
 		return suffix
 	end
 
+	-- Generate a signature for a set of bonusIDs, contained in bonuses string
+	-- Intended for comparison operations, such as QueryImage
+	-- optional include table specifies which types of bonusID to include in the sig:
+	--    suffix : normalize suffix
+	--    primary : primary stat
+	--    tier : upgrade tiers (dropped items)
+	--    stage : upgrade stages (crafted items, includes Stage 1)
+	--    stage2 : upgrade stages (crafted items, excludes Stage 1)
+	--    warforged
+	--    socket
+	--    minor : minor stats (Leech, Avoidance, etc.)
+	local defaultinclude = {
+		suffix = true,
+		primary = true,
+		tier = true,
+		stage = true,
+		warforged = true,
+		socket = true,
+		minor = true,
+	}
+	local compile = {}
+	function lib.GetBonusIDSig(bonuses, include)
+		local suffix, primary, tier, stage, warforged, socket, minor
+		if type(bonuses) ~= "string" then return end
+		if type(include) ~= "table" then
+			include = defaultinclude
+		end
+
+		-- parse the bonuses string into the various locals
+		for bonus in bonuses:gmatch("%d+") do
+			local x = LookupStat[bonus]
+			if x then
+				if include.primary then primary = x end
+			else
+				x = LookupTier[bonus]
+				if x then
+					if include.tier then tier = x end
+				else
+					x = LookupStage[bonus]
+					if x then
+						if include.stage then stage = x
+						elseif include.stage2 then
+							if x ~= "525" then stage = x end
+						end
+					else
+						x = LookupWarforged[bonus]
+						if x then
+							if include.warforged then warforged = x end
+						else
+							x = LookupSocket[bonus]
+							if x then
+								if include.socket then socket = x end
+							else
+								x = LookupTertiary[bonus]
+								if x then
+									if include.minor then minor = x end
+								else
+									x = lib.GetNormalizedBonusIDSuffix(bonus)
+									if x then
+										if include.suffix then suffix = x
+										else suffix = bonus end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+		-- compile bonusIDs in a specific order
+		local n = 0
+		if suffix then
+			n = n + 1
+			compile[n] = suffix
+		end
+		if primary then
+			n = n + 1
+			compile[n] = primary
+		end
+		if tier then
+			n = n + 1
+			compile[n] = tier
+		end
+		if stage then
+			n = n + 1
+			compile[n] = stage
+		end
+		if warforged then
+			n = n + 1
+			compile[n] = warforged
+		end
+		if socket then
+			n = n + 1
+			compile[n] = socket
+		end
+		if minor then
+			n = n + 1
+			compile[n] = minor
+		end
+
+		if n > 0 then
+			return tconcat(compile, ":", 1, n)
+		end
+	end
+
 	-- Generate a 'property' string for a type B StoreKey from the bonuses string
 	-- Primarily used in GetStoreKeyFromLinkB
 	-- Exported for use by other modules, could be used as a sort of sig to identify "similar" items
@@ -1237,7 +1356,7 @@ do -- Auctioneer bonusID handling functions
 
 		-- parse the bonuses string to pick out suffix, stat, tier and/or warforged entries
 		for bonus in bonuses:gmatch("%d+") do
-			local x = LookupTierX[bonus]
+			local x = LookupTierB[bonus]
 			if x then
 				tier = x
 			else
@@ -1408,4 +1527,4 @@ do
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/Auc-Advanced/CoreAPI.lua $", "$Rev: 5557 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Advanced/CoreAPI.lua $", "$Rev: 5562 $")

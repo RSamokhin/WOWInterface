@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(332, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 145 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 158 $"):sub(12, -3))
 mod:SetCreatureID(56598)--56427 is Boss, but engage trigger needs the ship which is 56598
 --mod:SetEncounterID(1298)--Fires when ship get actual engage. need to adjust timer.
 mod:SetMainBossID(56427)
@@ -61,7 +61,7 @@ local timerHarpoonActive			= mod:NewBuffActiveTimer(20, 108038, nil, "Dps")--See
 local timerReloadingCast			= mod:NewCastTimer(10, 108039, nil, "Dps")
 local timerTwilightOnslaught		= mod:NewCastTimer(7, 107588)
 local timerTwilightOnslaughtCD		= mod:NewNextCountTimer(35, 107588)
-local timerSapperCD					= mod:NewNextTimer(40, "ej4200", nil, nil, nil, 107752)
+local timerSapperCD					= mod:NewNextTimer(40, "ej4200", nil, nil, nil, nil, 107752)
 local timerDegenerationCD			= mod:NewCDTimer(8.5, 107558, nil, "Tank")--8.5-9.5 variation.
 local timerBladeRushCD				= mod:NewCDTimer(15.5, 107595)
 local timerBroadsideCD				= mod:NewNextTimer(90, 110153)

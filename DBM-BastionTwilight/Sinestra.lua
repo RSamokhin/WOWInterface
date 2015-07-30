@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(168, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 156 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 158 $"):sub(12, -3))
 mod:SetCreatureID(45213)
 --mod:SetEncounterID(1082, 1083) Muiti encounter id. need to verify.
 mod:SetZone()
@@ -47,7 +47,7 @@ local timerWrack			= mod:NewNextTimer(61, 89421)
 local timerExtinction		= mod:NewCastTimer(16, 86227)
 local timerEggWeakening		= mod:NewTimer(4, "TimerEggWeakening", 61357)
 local timerEggWeaken		= mod:NewTimer(30, "TimerEggWeaken", 61357)
-local timerDragon			= mod:NewNextTimer(50, "ej3231", nil, nil,nil, 69002)
+local timerDragon			= mod:NewNextTimer(50, "ej3231", nil, nil, nil, nil, 69002)
 local timerRedEssenceCD		= mod:NewNextTimer(22, 87946)--21-23 seconds after red egg dies
 local timerRedEssence		= mod:NewBuffFadesTimer(180, 87946)
 

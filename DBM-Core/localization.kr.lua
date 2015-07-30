@@ -5,7 +5,8 @@ DBM_CORE_NEED_LOGS					= "DBM이 현재 전투 경고를 원할히 하기 위해
 DBM_HOW_TO_USE_MOD					= "DBM 사용을 환영합니다. 대화창에서 /dbm help를 입력하면 사용 가능한 명령어 목록을 볼 수 있습니다. 설정을 위해서는 /dbm을 입력하면 설정창이 나타납니다. 각 경고는 최초 불러오기시 캐릭터 특성에 맞는 적절한 경고를 선택합니다. 선택된 경고는 설정창에서 언제든지 변경이 가능합니다."
 
 DBM_FORUMS_MESSAGE					= "오류를 발견하셨나요? 일부 전투에서 추가 경고가 있으면 좋을텐데라고 생각하셨나요?\n그렇다면 DBM 사용자 포럼을 방문해 보세요. 주소는 |HDBM:forums|h|cff3588ffhttp://www.inven.co.kr/board/powerbbs.php?come_idx=3716|r 입니다. 클릭하시면 주소를 복사할 수 있습니다."
-DBM_FORUMS_COPY_URL_DIALOG			= "문의/건의사항은 DBM 사용자 포럼에 남겨주세요.\r\n서비스 제공: 와우 인벤"
+DBM_FORUMS_COPY_URL_DIALOG			= "DBM 사용자 포럼을 방문해 보세요."
+DBM_FORUMS_COPY_URL_DIALOG_NEWS		= "문의/건의사항이 있을 경우 포럼에 방문하셔서 글을 남겨주세요."
 
 DBM_CORE_LOAD_MOD_ERROR				= "%s 경보를 불러오는 중 오류 발생: %s"
 DBM_CORE_LOAD_MOD_SUCCESS			= "'%s' 경보를 불러왔습니다! 사용자 정의 경고 소리나 개인 메모가 필요한경우 /dbm 을 입력하세요."
@@ -16,7 +17,7 @@ DBM_CORE_LOAD_SKIN_COMBAT			= "전투 도중 DBM 바 스킨 설정에 실패했�
 DBM_CORE_BAD_LOAD					= "DBM이 현재 인스턴스의 경고를 완전히 불러오지 못한 것을 발견했습니다. 전투가 종료된 후에, /console reloadui 명령어를 입력하여 경고를 다시 불러오시기 바랍니다."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "현재 사용중인 DBM 버전은 '%s' 경보에 필요한 기능이 없습니다. 새로운 DBM을 설치하셔야 이 경보를 불러올 수 있습니다."
 
-DBM_CORE_WHATS_NEW					= "이 버전의 새로운 기능: 메모 기능이 개선되었으며, 공유가 가능합니다. 자세한 사항은 공식 홈페이지를 참고하여 주시기 바랍니다."
+DBM_CORE_WHATS_NEW					= "이 버전의 새로운 기능: 바가 갖고 있는 정보별로 다른 바 색상을 지정하는 기능이 추가되었습니다. 바 설정에서 색상을 변경 가능합니다."
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "현재 공격대원 숫자에 맞는 근접판정 정보를 알 수 없기 때문에 DBM이 이 전투에서 거리 창을 비활성화 했습니다."
 DBM_CORE_DYNAMIC_ADD_COUNT			= "현재 공격대원 숫자에 맞는 쫄 소환 정보를 알 수 없기 때문에 DBM이 이 전투에서 소환 횟수 정보를 비활성화 했습니다."
@@ -286,6 +287,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel		= "%s: >%%s< - 해제!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt		= "%s: >%%s< - 차단!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount= "%s: >%%s< - 차단! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you			= "당신에게 %s"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.youcount		= "당신에게 %s (%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target		= ">%%s<에게 %1$s!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.targetcount	= ">%%2$s<에게 %1$s! (%%1$s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt			= ">%%s<에게 %1$s - 도발!"
@@ -311,6 +313,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dispel			= "$spell:%s 해제 특수 경고 보�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt		= "$spell:%s 차단 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= "$spell:%s 차단 특수 경고 보기(횟수 포함)"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you				= "당신이 $spell:%s 대상이 된 경우 특수 경고 보기"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.youcount		= "당신이 $spell:%s 대상이 된 경우 특수 경고 보기(횟수 포함)"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target			= "$spell:%s 대상 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.targetcount		= "$spell:%s 대상 특수 경고 보기(횟수 포함)"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.taunt			= "다른 방어 전담이 $spell:%s 대상이 된 경우 도발 특수 경고 보기"
@@ -375,6 +378,7 @@ DBM_CORE_AUTO_YELL_OPTION_TEXT			= "$spell:%s 대상이 된 경우 대화로 알
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.yell	= UnitName("player").."에게 %s!"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.count	= UnitName("player").."에게 %s! (%%d)"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.fade	= "%s %%d초 후 사라짐!"
+DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.position	= UnitName("player").."에게 %s! (%%s)"
 DBM_CORE_AUTO_HUD_OPTION_TEXT			= "$spell:%s 범위 정보를 화면에서 보기"
 DBM_CORE_AUTO_HUD_OPTION_TEXT_MULTI		= "다양한 범위 정보를 화면에서 보기"
 DBM_CORE_AUTO_RANGE_OPTION_TEXT			= "$spell:%2$s 관련 거리 창 보기(%1$sm)"

@@ -17,13 +17,11 @@ You should have received a copy of the GNU General Public License
 along with SecureTabs. If not, see <http://www.gnu.org/licenses/>.
 --]]
 
-local Lib, Old = LibStub:NewLibrary('SecureTabs-1.0', 4)
+local Lib, Old = LibStub:NewLibrary('SecureTabs-1.0', 6)
 if not Lib then
 	return
-elseif not Old then
-	hooksecurefunc('PanelTemplates_SetTab', function(parent)
-		Lib:Update(parent)
-	end)
+elseif Old then
+	Lib.Update = function() end
 end
 
 function Lib:Startup(parent, ...)
@@ -35,6 +33,7 @@ function Lib:Startup(parent, ...)
 	for i = 1, select('#', ...) do
 		secure:SetFrameRef('panel' .. i, select(i, ...))
 		secure[i] = _G[parent:GetName() .. 'Tab' .. i]
+		secure[i]:SetScript('OnClick',  self.OnClick)
 		secure[i].panel = select(i, ...)
 	end
 
@@ -60,10 +59,9 @@ function Lib:Add(parent, panel, label, anchor)
 	local numTabs = parent.numTabs or 0
 	local id = numTabs + 1
 	local tab = CreateFrame('Button', '$parentTab' .. id, parent, 'CharacterFrameTabButtonTemplate', id)
+	tab:SetScript('OnClick', self.OnClick)
+	tab.Open = self.OnClick
 	tab:SetText(label)
-	tab:SetScript('OnClick', function(self)
-		PanelTemplates_SetTab(parent, id)
-	end)
 
 	if anchor then
 		for k = 1, numTabs do
@@ -87,8 +85,10 @@ function Lib:Add(parent, panel, label, anchor)
 	return tab
 end
 
-function Lib:Update(parent)
-	if parent.secureTabs then
+function Lib:OnClick()
+	local parent = self:GetParent()
+	if parent and parent.secureTabs then
+		PanelTemplates_SetTab(parent, self:GetID())
 		parent.secureTabs:SetAttribute('selected', parent.selectedTab)
 	end
 end

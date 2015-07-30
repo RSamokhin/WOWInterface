@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
-	Revision: $Id: BeanCounterUpdate.lua 5266 2012-01-12 03:33:30Z kandoko $
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
+	Revision: $Id: BeanCounterUpdate.lua 5563 2015-06-26 10:15:37Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	BeanCounterUpdate - Upgrades the Beancounter Database to latest version
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/BeanCounter/BeanCounterUpdate.lua $","$Rev: 5266 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/BeanCounter/BeanCounterUpdate.lua $","$Rev: 5563 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local libName = "BeanCounter"
 local libType = "Util"
@@ -362,6 +362,7 @@ end
 
 --Add new reforged item position on all keys
 function private.update._3_01(server, player)
+	--[[ disabled: reforge no longer exists
 	for DB, data in pairs(BeanCounterDB[server][player]) do
 		for itemID, itemIDData in pairs(data) do
 			local del = {}
@@ -377,6 +378,7 @@ function private.update._3_01(server, player)
 			end
 		end
 	end
+	--]]
 	BeanCounterDBSettings[server][player].version = 3.01
 end
 

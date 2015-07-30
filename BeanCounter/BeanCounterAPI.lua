@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
-	Revision: $Id: BeanCounterAPI.lua 5449 2014-01-14 15:25:58Z brykrys $
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
+	Revision: $Id: BeanCounterAPI.lua 5563 2015-06-26 10:15:37Z brykrys $
 
 	BeanCounterAPI - Functions for other addons to get BeanCounter Data
 	URL: http://auctioneeraddon.com/
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/BeanCounter/BeanCounterAPI.lua $","$Rev: 5449 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/BeanCounter/BeanCounterAPI.lua $","$Rev: 5563 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local lib = BeanCounter
 lib.API = {}
@@ -326,23 +326,22 @@ end
 we store itemKeys with a unique ID but our name array does not
 ]]
 function lib.API.getArrayItemLink(itemString)
-	local itemID, suffix, uniqueID, reforged = lib.API.decodeLink(itemString)
+	local itemID, suffix, uniqueID = lib.API.decodeLink(itemString)
 	local itemKey = itemID..":"..suffix
 	if BeanCounterDBNames[itemKey] then
-		return lib.API.createItemLinkFromArray(itemKey, uniqueID, reforged) --uniqueID is used as a scaling factor for "of the" suffix items
+		return lib.API.createItemLinkFromArray(itemKey, uniqueID) --uniqueID is used as a scaling factor for "of the" suffix items
 	end
 	debugPrint("Searching DB for ItemID..", suffix, itemID, "Failed Item does not exist")
 	return
 end
 
 --[[Converts the compressed link stored in the itemIDArray back to a standard blizzard format]]
-function lib.API.createItemLinkFromArray(itemKey, uniqueID, reforged)
+function lib.API.createItemLinkFromArray(itemKey, uniqueID)
 	if BeanCounterDBNames[itemKey] then
 		if not uniqueID then uniqueID = 0 end
-		if not reforged then reforged = 0 end
 		local itemID, suffix = strsplit(":", itemKey)
 		local color, name = strsplit(";", BeanCounterDBNames[itemKey])
-		return strjoin("", "|", color, "|Hitem:", itemID,":0:0:0:0:0:", suffix, ":", uniqueID, ":80:",reforged,"|h[", name, "]|h|r")
+		return strjoin("", "|", color, "|Hitem:", itemID,":0:0:0:0:0:", suffix, ":", uniqueID, ":80:0:0:0|h[", name, "]|h|r")
 	end
 	return
 end
@@ -363,31 +362,19 @@ function lib.API.getItemString(itemLink)
 	if not itemLink or not type(itemLink) == "string" then return end
 	local itemString, itemName = itemLink:match("H(item:.-)|h%[(.-)%]")
 	if not itemString then return end
-	itemString = itemString:gsub("(item:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+):%d+", "%1:80")
+	itemString = itemString:gsub("(item:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+):%d+:%d+", "%1:80:0")
 	return itemString, itemName
 end
 
 --[[Returns id, suffix, uniqueID, reforged when passed an itemLink or itemString, this a mildly tweaked version of the one found in AucAdv.
 Handles Hitem:string,  item:string, or full itemlinks
 ]]
-local function breakHyperlink(match, matchlen, ...)
-	local v
-	local n = select("#", ...)
-	for i = 1, n do
-		v = select(i, ...)
-		if (v:sub(1,matchlen) == match) then
-			return strsplit(":", v) --for item:0:...  style links bean stores
-		elseif(v:sub(2, matchlen+1) == match) then
-			return strsplit(":", v:sub(2))  --for Hitem:0:... normal itemStrings and hyperlinks
-		end
-	end
-end
 function lib.API.decodeLink(link)
 	local vartype = type(link)
 	if (vartype == "string") then
-		local lType, id, enchant, gem1, gem2, gem3, gemBonus, suffix, uniqueID, lichKing, reforged = breakHyperlink("item:", 5, strsplit("|", link))
-		if (lType ~= "item") then return end
-			return id, suffix, uniqueID, reforged
+		local header, id, enchant, gem1, gem2, gem3, gemBonus, suffix, uniqueID, tail = strsplit(":", link, 10)
+		if header:sub(-4) ~= "item" then return end
+			return id, suffix, uniqueID
 		end
 	return
 end

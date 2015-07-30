@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
 	Revision: $Id: CoreScan.lua 5549 2015-03-17 19:51:52Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -3153,4 +3153,4 @@ end
 internal.Scan.Logout = lib.Logout
 internal.Scan.AHClosed = lib.AHClosed
 
-_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/Auc-Advanced/CoreScan.lua $", "$Rev: 5549 $")
+_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Advanced/CoreScan.lua $", "$Rev: 5549 $")

@@ -46,7 +46,7 @@ function Tamer:Display()
 	if GetAddOnEnableState(UnitName('player'), 'PetTracker_Journal') >= 2 then
 		CollectionsJournal_LoadUI()
 		ShowUIPanel(CollectionsJournal)
-		CollectionsJournal_SetTab(CollectionsJournal, 4)
+		PetTrackerTamerJournal.Tab:Open()
 		PetTrackerTamerJournal:SetTamer(self)
 	end
 end

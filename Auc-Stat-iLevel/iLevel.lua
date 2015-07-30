@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - iLevel Standard Deviation Statistics module
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
 	Revision: $Id: iLevel.lua 5540 2015-01-21 21:13:48Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -649,4 +649,4 @@ function private.PackStats(data)
 	return concat(tmp, ",", 1, ntmp)
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/Auc-Stat-iLevel/iLevel.lua $", "$Rev: 5540 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Stat-iLevel/iLevel.lua $", "$Rev: 5540 $")

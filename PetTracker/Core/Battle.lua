@@ -149,10 +149,6 @@ function Battle:GetStats()
 		speedScale  = 100/(speedScale+100)
 		healthScale = 100/(healthScale+100)
 
-		if self:IsWildBattle() and not self:IsAlly() then
-			healthScale = healthScale * 1.2
-		end
-
 		return floor(self:GetMaxHealth() * healthScale - healthBonus + .5),
 			   self:GetPower(),
 			   floor(self:GetSpeed() * speedScale + .5)

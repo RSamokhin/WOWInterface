@@ -1,4 +1,4 @@
-﻿## Interface: 60100
+﻿## Interface: 60200
 ## Author: Shurshik
 ## Title: Raid|cff7fff7fAchievement|r_OldModules
 ## Notes: Raid|cff7fff7fAchievement|r_OldModules

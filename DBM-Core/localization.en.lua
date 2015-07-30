@@ -4,7 +4,8 @@ DBM_CORE_NEED_LOGS					= "DBM needs Transcriptor (http://www.wowace.com/addons/t
 DBM_HOW_TO_USE_MOD					= "Welcome to DBM. Type /dbm help for a list of supported commands. To access options type /dbm in your chat to begin configuration. Load specific zones manually to configure any boss specific settings to your liking as well. DBM tries to do this for you by scanning your spec on first run, but some might want additional options turned on anyways."
 
 DBM_FORUMS_MESSAGE					= "Found a bug or wrong timer? Do you think some mod would need an additional warning, timer or special feature?\nVisit the new Deadly Boss Mods discussion, bug report and feature request forums at |HDBM:forums|h|cff3588ffhttp://www.deadlybossmods.com|r (you can click the link to copy the URL)"
-DBM_FORUMS_COPY_URL_DIALOG			= "Come visit our discussion and support forums\r\n(hosted by Elitist Jerks!)"
+DBM_FORUMS_COPY_URL_DIALOG			= "Come visit our discussion and support forums"
+DBM_FORUMS_COPY_URL_DIALOG_NEWS		= "To learn more about this new feature and how it works, visit our forums"
 
 DBM_CORE_LOAD_MOD_ERROR				= "Error while loading boss mods for %s: %s"
 DBM_CORE_LOAD_MOD_SUCCESS			= "Loaded '%s' mods. For more options such as custom alert sounds and personalized warning notes, type /dbm."
@@ -15,7 +16,7 @@ DBM_CORE_LOAD_SKIN_COMBAT			= "DBM timers failed to skin during combat. Your tim
 DBM_CORE_BAD_LOAD					= "DBM has detected your mod for this instance failed to fully load correctly because of combat. As soon as you are out of combat, please do /console reloadui as soon as possible."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s could not be loaded because your DBM-Core does not meet requirements. An updated version is required"
 
-DBM_CORE_WHATS_NEW					= "New in this version: DBM notes feature has been expanded to now include sharing and other quality of life improvements. For more information on notes updates and how to use them, visit our forums"
+DBM_CORE_WHATS_NEW					= "New in this version: DBM timers now support multiple colors based on what type of spell the timer is for. To learn more about this feature you can read about it by |HDBM:forumsnews|h|cff3588ffclicking here|r"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM has disabled dynamic range frame on this fight do to insufficient information about number of players needed to affect clump check for a group of your size."
 DBM_CORE_DYNAMIC_ADD_COUNT			= "DBM has disabled add count warnings on this fight do to insufficient information about number of adds that spawn for a group of your size."
@@ -285,6 +286,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
 	interrupt		= "%s - interrupt >%%s<!",
 	interruptcount	= "%s - interrupt >%%s<! (%%d)",
 	you				= "%s on you",
+	youcount		= "%s (%%s) on you",
 	target			= "%s on >%%s<",
 	targetcount		= "%s (%%s) on >%%s< ",
 	taunt			= "%s on >%%s< - taunt now",
@@ -313,6 +315,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
 	interrupt		= "Show special warning to interrupt $spell:%s",
 	interruptcount	= "Show special warning (with count) to interrupt $spell:%s",
 	you 			= "Show special warning when you are affected by $spell:%s",
+	youcount		= "Show special warning (with count) when you are affected by $spell:%s",
 	target 			= "Show special warning when someone is affected by $spell:%s",
 	targetcount 	= "Show special warning (with count) when someone is affected by $spell:%s",
 	taunt 			= "Show special warning to taunt when other tank affected by $spell:%s",
@@ -384,7 +387,8 @@ DBM_CORE_AUTO_YELL_OPTION_TEXT			= "Yell when you are affected by $spell:%s"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT = {
 	yell	= "%s on " .. UnitName("player") .. "!",
 	count	= "%s on " .. UnitName("player") .. "! (%%d)",
-	fade	= "%s fading in %%d"
+	fade	= "%s fading in %%d",
+	position = "%s %%s on "..UnitName("player")
 }
 DBM_CORE_AUTO_HUD_OPTION_TEXT			= "Show HudMap for $spell:%s"
 DBM_CORE_AUTO_HUD_OPTION_TEXT_MULTI		= "Show HudMap for various mechanics"

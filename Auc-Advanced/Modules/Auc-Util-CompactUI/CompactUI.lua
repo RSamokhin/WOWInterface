@@ -1,6 +1,6 @@
 ﻿--[[
 	Auctioneer - Price Level Utility module
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
 	Revision: $Id: CompactUI.lua 5550 2015-03-28 17:00:46Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -909,4 +909,4 @@ function lib.GetButtons()
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 5550 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 5550 $")

@@ -1,6 +1,6 @@
 ﻿--[[
 	Auctioneer
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
 	Revision: $Id: CoreMain.lua 5524 2014-11-23 18:06:32Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -411,4 +411,4 @@ do -- ScheduleMessage handler
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/Auc-Advanced/CoreMain.lua $", "$Rev: 5524 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Advanced/CoreMain.lua $", "$Rev: 5524 $")

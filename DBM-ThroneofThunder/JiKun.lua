@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(828, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 62 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 70 $"):sub(12, -3))
 mod:SetCreatureID(69712)
 mod:SetEncounterID(1573)
 mod:SetZone()
@@ -36,15 +36,15 @@ local specWarnFeedPool		= mod:NewSpecialWarningMove(138319, false)
 
 --local timerCawsCD			= mod:NewCDTimer(15, 138923)--Variable beyond usefulness. anywhere from 18 second cd and 50.
 local timerQuills			= mod:NewBuffActiveTimer(10, 134380)
-local timerQuillsCD			= mod:NewCDCountTimer(62.5, 134380)--variable because he has two other channeled abilities with different cds, so this is cast every 62.5-67 seconds usually after channel of some other spell ends
-local timerFlockCD	 		= mod:NewTimer(30, "timerFlockCD", 15746)
-local timerFeedYoungCD	 	= mod:NewCDTimer(29.8, 137528)--30-40 seconds (always 30 unless delayed by other channeled spells)
-local timerTalonRakeCD		= mod:NewCDTimer(20, 134366, nil, "Tank|Healer")--20-30 second variation
-local timerTalonRake		= mod:NewTargetTimer("OptionVersion2", 60, 134366, nil, false)
+local timerQuillsCD			= mod:NewCDCountTimer(62.5, 134380, nil, nil, nil, 2)--variable because he has two other channeled abilities with different cds, so this is cast every 62.5-67 seconds usually after channel of some other spell ends
+local timerFlockCD	 		= mod:NewTimer(30, "timerFlockCD", 15746, nil, nil, 1)
+local timerFeedYoungCD	 	= mod:NewCDTimer(29.8, 137528, nil, nil, nil, 5)--30-40 seconds (always 30 unless delayed by other channeled spells)
+local timerTalonRakeCD		= mod:NewCDTimer(20, 134366, nil, "Tank|Healer", nil, 5)--20-30 second variation
+local timerTalonRake		= mod:NewTargetTimer(60, 134366, nil, false, 2)
 local timerDowndraft		= mod:NewBuffActiveTimer(10, 134370)
-local timerDowndraftCD		= mod:NewCDTimer(97, 134370)
+local timerDowndraftCD		= mod:NewCDTimer(97, 134370, nil, nil, nil, 2)
 local timerFlight			= mod:NewBuffFadesTimer(10, 133755)
-local timerPrimalNutriment	= mod:NewBuffFadesTimer("OptionVersion2", 30, 140741, nil, false)
+local timerPrimalNutriment	= mod:NewBuffFadesTimer(30, 140741, nil, false, 2)
 local timerLessons			= mod:NewBuffFadesTimer(60, 140571, nil, false)
 
 mod:AddBoolOption("RangeFrame", "Ranged")

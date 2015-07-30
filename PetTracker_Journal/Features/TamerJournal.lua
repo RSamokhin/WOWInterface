@@ -31,12 +31,10 @@ end
 
 function Journal:Startup()
 	HybridScrollFrame_CreateButtons(self.List, 'PetTrackerTamerEntry', 44, 0)
-	hooksecurefunc('CollectionsJournal_UpdateSelectedTab', function(...)
-		Tabs:Update(...)
-	end)
 
 	self.Startup = function() end
 	self.List.scrollBar.doNotHide = true
+	self.Count.Label:SetText(L.TotalTamers)
 	self.Count.Number:SetText(#Addon.TamerOrder)
 	self.SearchBox:SetText(Addon.Sets.TamerSearch or '')
 	self.SearchBox:SetScript('OnTextChanged', self.Search)
@@ -66,6 +64,7 @@ function Journal:Startup()
 	self.Map:SetScrollChild(map)
 	self.Slots = Addon.JournalSlot:CreateLine('TOP', self.Team, 0, 104)
 	self.Team.Border.Text:SetText(L.EnemyTeam)
+	self.History.LoadButton:SetText(L.LoadTeam)
 	self.History.Empty:SetText(L.NoHistory)
 
 	for i = 1, 4 do
@@ -278,7 +277,7 @@ end
 
 local function Startup()
 	Tabs:Startup(CollectionsJournal, MountJournal, PetJournal, ToyBox, HeirloomsJournal)
-	Tabs:Add(CollectionsJournal, Journal, L.Rivals, PetJournal)
+	Journal.Tab = Tabs:Add(CollectionsJournal, Journal, L.Rivals, PetJournal)
 	Journal:SetScript('OnShow', Journal.OnShow)
 end
 

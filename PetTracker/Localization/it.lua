@@ -31,6 +31,8 @@ L.UnlockActions = 'Sblocca Azioni Nemiche'
 L.UnlockActionsTip = 'Se abilitato, la barra delle aziojni nemiche può essere trasportata ovunque nello schermo.'
 L.UpgradeAlert = 'Sono apparsi Miglioramenti selvatici!'
 L.ZoneTracker = 'Zone Tracker'
+L.Victory = 'Vittoria'
+L.Defeat = 'Sconfitta'
 
 L.FAQ = {
 	'Come posso mostrare/nascondere tutti le Mascotte sulla mappa?',

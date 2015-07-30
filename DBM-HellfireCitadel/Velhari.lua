@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1394, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13928 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14149 $"):sub(12, -3))
 mod:SetCreatureID(90269)
 mod:SetEncounterID(1784)
 mod:SetZone()
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
-mod:SetRespawnTime(29.5)--40?
+mod.respawnTime = 39--Def less than 40 but much greater than 30. i have a video of a 38 second respawn
 
 mod:RegisterCombat("combat")
 
@@ -39,7 +39,7 @@ local warnAuraofMalice						= mod:NewSpellAnnounce(179991, 3)
 local warnBulwarkoftheTyrant				= mod:NewTargetCountAnnounce(180600, 2)
 
 --All
-local specWarnEdictofCondemnation			= mod:NewSpecialWarningYou(182459, nil, nil, nil, 1, 2)
+local specWarnEdictofCondemnation			= mod:NewSpecialWarningYouCount(182459, nil, nil, nil, 1, 2)
 local specWarnEdictofCondemnationOther		= mod:NewSpecialWarningMoveTo(185241, "Ranged")--Mythic, they can't run in, you have to run to them, they are rooted.
 local yellEdictofCondemnation				= mod:NewFadesYell(182459)
 local specWarnTouchofHarm					= mod:NewSpecialWarningTarget(180166, false)
@@ -67,19 +67,19 @@ local specWarnGaveloftheTyrant				= mod:NewSpecialWarningCount(180608, nil, nil,
 local specWarnAncientSovereign				= mod:NewSpecialWarningSwitch("ej11170", "-Healer")
 
 mod:AddTimerLine(ALL)--All
-local timerSealofDecayCD					= mod:NewCDTimer(6, 180000, nil, false)--I don't think it's really needed, but at least make it an option
-local timerEdictofCondemnationCD			= mod:NewNextCountTimer(60, 182459)
-local timerTouchofHarmCD					= mod:NewNextCountTimer(45, 180166, nil, "Healer")
+local timerSealofDecayCD					= mod:NewCDTimer(6, 180000, nil, false, nil, 5)--I don't think it's really needed, but at least make it an option
+local timerEdictofCondemnationCD			= mod:NewNextCountTimer(60, 182459, nil, nil, nil, 3)
+local timerTouchofHarmCD					= mod:NewNextCountTimer(45, 180166, nil, "Healer", nil, 3)
 mod:AddTimerLine(SCENARIO_STAGE:format(1))--Stage One: Oppression
-local timerAnnihilatingStrikeCD				= mod:NewNextCountTimer(10, 180260)
-local timerInfernalTempestCD				= mod:NewNextCountTimer(10, 180300)
+local timerAnnihilatingStrikeCD				= mod:NewNextCountTimer(10, 180260, nil, nil, nil, 3)
+local timerInfernalTempestCD				= mod:NewNextCountTimer(10, 180300, nil, nil, nil, 2)
 ----Ancient Enforcer
-local timerEnforcersOnslaughtCD				= mod:NewCDTimer(18, 180004, nil, "Tank")
+local timerEnforcersOnslaughtCD				= mod:NewCDTimer(18, 180004, nil, "Tank", nil, 5)
 mod:AddTimerLine(SCENARIO_STAGE:format(2))--Stage Two: Contempt
-local timerTaintedShadowsCD					= mod:NewNextTimer(5, 180533, nil, "Tank")
-local timerFontofCorruptionCD				= mod:NewNextTimer(20, 180526)
+local timerTaintedShadowsCD					= mod:NewNextTimer(5, 180533, nil, "Tank", nil, 5)
+local timerFontofCorruptionCD				= mod:NewNextTimer(20, 180526, nil, nil, nil, 3)
 ----Ancient Harbinger
-local timerHarbingersMendingCD				= mod:NewCDTimer(11, 180025)
+local timerHarbingersMendingCD				= mod:NewCDTimer(11, 180025, nil, nil, nil, 4)
 mod:AddTimerLine(SCENARIO_STAGE:format(3))--Stage Three: Malice
 local timerBulwarkoftheTyrantCD				= mod:NewNextCountTimer(10, 180600)
 local timerGaveloftheTyrantCD				= mod:NewNextCountTimer(10, 180608)
@@ -168,6 +168,11 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 180004 then
 		specWarnEnforcersOnslaught:Show()
 		voiceEnforcerOnslaught:Play("watchorb")
+		if self:IsMythic() then
+			timerEnforcersOnslaughtCD:Start(11)
+		else
+			timerEnforcersOnslaughtCD:Start()
+		end
 		timerEnforcersOnslaughtCD:Start()
 	elseif spellId == 180025 then--No target filter, it's only interrupt onfight and it's VERY important
 		specWarnHarbingersMending:Show(args.sourceName)
@@ -229,7 +234,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnEdictofCondemnation:Show(self.vb.edictCount, args.destName)
 		timerEdictofCondemnationCD:Start(nil, self.vb.edictCount+1)
 		if args:IsPlayer() then
-			specWarnEdictofCondemnation:Show()
+			specWarnEdictofCondemnation:Show(self.vb.edictCount)
 			if not self:IsMythic() then
 				--If not mythic, just run it into melee, like flamebender
 				--Movement does damage to players so 1 person moving better than many

@@ -30,6 +30,8 @@ L.UnlockActions = 'Dévérrouiller les actions ennemies'
 L.UnlockActionsTip = 'Si activé, la barre d\'action ennemie pourra être déplacée n\'importe où à l\'écran.'
 L.UpgradeAlert = 'Des améliorations sauvages sont apparues!'
 L.ZoneTracker = 'Zone de Pistage'
+L.Victory = 'Victoire'
+L.Defeat = 'Défaite'
 
 L.FAQ = {
 	'Comment puis-je afficher/masquer toutes les mascotte sur la carte?',

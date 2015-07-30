@@ -1,8 +1,8 @@
-## Interface: 60100
+## Interface: 60200
 ## Title: PetTracker
 ## Notes: Tracking pets in and out of combat since 2012.
 ## Author: Jaliborc (João Cardoso)
-## Version: 6.1.3
+## Version: 6.2.3
 
 ## SavedVariables: PetTracker_Sets
 ## SavedVariablesPerCharacter: PetTracker_State

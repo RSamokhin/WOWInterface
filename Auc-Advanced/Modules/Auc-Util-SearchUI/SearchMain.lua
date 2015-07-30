@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Search UI
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
 	Revision: $Id: SearchMain.lua 5548 2015-03-17 19:25:22Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -2209,4 +2209,4 @@ end
 private.updater = CreateFrame("Frame", nil, UIParent)
 private.updater:SetScript("OnUpdate", private.OnUpdate)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5548 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5548 $")

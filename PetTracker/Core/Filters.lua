@@ -49,8 +49,8 @@ Filters.level = {
 
 do
 	local qualities = {[L.Maximized] = 4, [ADDON_MISSING] = 0, [NONE] = 0}
-	for i = 0, #ITEM_QUALITY_COLORS do
-		qualities[_G['ITEM_QUALITY' .. i .. '_DESC']] = i + 1
+	for i = 1, #ITEM_QUALITY_COLORS-2 do
+		qualities[_G['BATTLE_PET_BREED_QUALITY'..i]] = i
 	end
 
 	Filters.quality = {

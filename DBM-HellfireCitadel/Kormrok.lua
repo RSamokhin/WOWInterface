@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(1392, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13922 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14154 $"):sub(12, -3))
 mod:SetCreatureID(90435)
 mod:SetEncounterID(1787)
 mod:SetZone()
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
-mod:SetHotfixNoticeRev(13910)
-mod:SetRespawnTime(18)--18 is an odd one, but definitely was 18
+mod:SetHotfixNoticeRev(14096)
+mod.respawnTime = 18--18 is an odd one, but definitely was 18
 
 mod:RegisterCombat("combat")
 
@@ -21,12 +21,17 @@ mod:RegisterEventsInCombat(
 --	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
+mod:RegisterEvents(
+	"CHAT_MSG_ADDON"--Has to be out of combat
+)
+
+--(ability.id = 181292 or ability.id = 181293 or ability.id = 181296 or ability.id = 181297 or ability.id = 181299 or ability.id = 181300 or ability.id = 180244 or ability.id = 181305) and type = "begincast" or ability.id = 181307 and type = "cast" or (ability.id = 181306 or ability.id = 180115 or ability.id = 180116 or ability.id = 180117 or ability.id = 189197 or ability.id = 189198 or ability.id = 189199 or ability.id = 186882 or ability.id = 186879 or ability.id = 186880 or ability.id = 186881) and (type = "applybuff" or type = "applydebuff")
 --TODO, other countdowns, other voices, once ability importance is assessed.
 local warnShadowEnergy				= mod:NewSpellAnnounce(180115, 2)
 local warnExplosiveEnergy			= mod:NewSpellAnnounce(180116, 3)--This one looks more dangerous than other 2, because it enables the Explosive Runes ability
 local warnFoulEnergy				= mod:NewSpellAnnounce(180117, 2)
 --These are probably temp, changed to better tank special warnings when better understood
-local warnExplosiveBurst			= mod:NewTargetAnnounce(181306, 4)--Concerns everyone
+local warnExplosiveBurst			= mod:NewTargetCountAnnounce(181306, 4)--Concerns everyone
 local warnEnrage					= mod:NewSpellAnnounce(186882, 3)
 
 local specWarnPound					= mod:NewSpecialWarningCount(180244, nil, nil, nil, 2, 2)
@@ -43,17 +48,17 @@ local specWarnEmpFelOutpouring		= mod:NewSpecialWarningDodge(181293, nil, nil, n
 local specWarnEmpExplosiveRunes		= mod:NewSpecialWarningSpell(181297, "-Tank")
 local specWarnDraggingHands			= mod:NewSpecialWarningSwitch(181300)
 
-local timerLeapCD					= mod:NewCDTimer(113.5, 180068)--Not techincally a leap timer, timer syncs up to when he gains next buff (leap ended)
+local timerLeapCD					= mod:NewCDTimer(113.5, 180068, nil, nil, nil, 6)--Not techincally a leap timer, timer syncs up to when he gains next buff (leap ended)
 --Times here are not relevant, they are all hard coded orders based on what buff boss has, real values are under 3 different phases
-local timerPoundCD					= mod:NewNextCountTimer(42, 180244)
-local timerFelOutpouringCD			= mod:NewNextTimer(107, 181292)
-local timerExplosiveRunesCD			= mod:NewNextTimer(48, 181296)
-local timerGraspingHandsCD			= mod:NewNextTimer(107, 181299)
+local timerPoundCD					= mod:NewNextCountTimer(42, 180244, nil, nil, nil, 2)
+local timerFelOutpouringCD			= mod:NewNextTimer(107, 181292, nil, nil, nil, 2)
+local timerExplosiveRunesCD			= mod:NewNextTimer(48, 181296, nil, nil, nil, 5)
+local timerGraspingHandsCD			= mod:NewNextTimer(107, 181299, nil, nil, nil, 1)
 --Tank Debuffs. These are also hard coded, but in different place.
 mod:AddTimerLine(TANK)
-local timerExplosiveBurstCD			= mod:NewNextCountTimer(40, 181306)--Everyone needs to know these 2
-local timerFoulCrushCD				= mod:NewNextCountTimer(40, 181307)--Everyone needs to know these 2
-local timerSwatCD					= mod:NewNextCountTimer(40, 181305, nil, "Tank")
+local timerExplosiveBurstCD			= mod:NewNextCountTimer(40, 181306, nil, nil, nil, 3)--Everyone needs to know these 2
+local timerFoulCrushCD				= mod:NewNextCountTimer(40, 181307, nil, nil, nil, 1)--Everyone needs to know these 2
+local timerSwatCD					= mod:NewNextCountTimer(40, 181305, nil, "Tank", nil, 5)
 
 --local berserkTimer				= mod:NewBerserkTimer(360)--Was 8 min on heroic PTR, but that also might have been a bug so will wait to confirm
 
@@ -67,6 +72,8 @@ local voiceGraspingHands			= mod:NewVoice(181299)--gather
 local voiceSwat						= mod:NewVoice(181305, "Tank")--carefly
 
 mod:AddRangeFrameOption("4/40")
+--mod:AddArrowOption("RuneArrow", 157060, false, 3)--Off by default, because hud does a much better job, and in case user is running both Exorsus Raid Tools and DBM (ExRT has it's own arrow)
+mod:AddHudMapOption("HudMapForRune", 181202)
 
 mod.vb.explodingTank = nil
 mod.vb.poundActive = false
@@ -77,6 +84,40 @@ mod.vb.swatCount = 0
 mod.vb.enraged = false
 local debuffName = GetSpellInfo(181306)
 local UnitDebuff = UnitDebuff
+local playerOrangeX, playerOrangeY = nil, nil
+local playerGreenX, playerGreenY = nil, nil
+local playerPurpleX, playerPurpleY = nil, nil
+
+--Not local functions, so they can also be used as a test functions as well
+--/run DBM:GetModByName("1392"):RuneStart(181293)
+function mod:RuneStart(spellId)
+	if not self:IsMythic() then return end
+	local playerX, playerY
+	if spellId == 181293 then
+		playerX, playerY = playerPurpleX, playerPurpleY
+	elseif spellId == 181297 then
+		playerX, playerY = playerOrangeX, playerOrangeY
+	elseif spellId == 181300 then
+		playerX, playerY = playerGreenX, playerGreenY
+	end
+	if spellId and playerX and playerY then
+	--	if self.Options.RuneArrow then
+	--		DBM.Arrow:ShowRunTo(playerX, playerY, 0)
+	--	end
+		if self.Options.HudMapForRune then
+			DBMHudMap:RegisterPositionMarker(spellId, "HudMapForRune", "highlight", playerX, playerY, 3, 8, 0, 1, 0, 0.5, nil, 4):Pulse(0.5, 0.5)
+		end
+	end
+end
+
+function mod:RuneOver()
+--	if self.Options.RuneArrow then
+--		DBM.RangeCheck:Hide()
+--	end
+	if self.Options.HudMapForRune then
+		DBMHudMap:Disable()
+	end
+end
 
 local debuffFilter
 do
@@ -87,15 +128,16 @@ do
 	end
 end
 
+--Change range to 30 yards in 6.2.1, or on live if it's confirmed to be 30 yards on live
 local function updateRangeCheck(self)
 	if not self.Options.RangeFrame then return end
 	if self.vb.explodingTank then
 		if UnitDebuff("player", debuffName) then
-			DBM.RangeCheck:Show(40)
-		elseif not self:CheckNearby(41, self.vb.explodingTank) and self.vb.poundActive then--far enough from tank and pound is active, switch back to 4
+			DBM.RangeCheck:Show(30)
+		elseif not self:CheckNearby(31, self.vb.explodingTank) and self.vb.poundActive then--far enough from tank and pound is active, switch back to 4
 			DBM.RangeCheck:Show(4)
 		else--No pound, tank still active, keep filtered radar up to prevent walking back into tank
-			DBM.RangeCheck:Show(40, debuffFilter)
+			DBM.RangeCheck:Show(30, debuffFilter)
 		end
 	elseif self.vb.poundActive then--Just pound, no tank debuff.
 		DBM.RangeCheck:Show(4)
@@ -105,7 +147,7 @@ local function updateRangeCheck(self)
 end
 
 local function trippleBurstCheck(self, target, first)
-	if self:CheckNearby(41, target) then--Second and third check will use smaller range
+	if self:CheckNearby(31, target) then--Second and third check will use smaller range
 		specWarnExplosiveBurstNear:Show(target)
 		voiceExplosiveBurst:Play("justrun")
 	end
@@ -116,7 +158,6 @@ local function trippleBurstCheck(self, target, first)
 end
 
 function mod:OnCombatStart(delay)
-	print("DBM NOTICE: This fight was redesigned since heroic testing, timers probably won't work very well, if at all")
 	self.vb.explodingTank = nil
 	self.vb.poundActive = false
 	self.vb.poundCount = 0
@@ -128,9 +169,14 @@ function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
+--	if self.Options.RuneArrow then
+--		DBM.RangeCheck:Hide()
+--	end
+	if self.Options.HudMapForRune then
+		DBMHudMap:Disable()
+	end
 end 
 
---(ability.id = 181292 or ability.id = 181293 or ability.id = 181296 or ability.id = 181297 or ability.id = 181299 or ability.id = 181300 or ability.id = 180244 or ability.id = 181305) and type = "begincast" or ability.id = 181307 and type = "cast" or (ability.id = 181306 or ability.id = 180115 or ability.id = 180116 or ability.id = 180117 or ability.id = 189197 or ability.id = 189198 or ability.id = 189199 or ability.id = 186882 or ability.id = 186879 or ability.id = 186880 or ability.id = 186881) and (type = "applybuff" or type = "applydebuff")
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 181292 or spellId == 181293 then
@@ -162,12 +208,9 @@ function mod:SPELL_CAST_START(args)
 		self.vb.swatCount = self.vb.swatCount + 1
 		specWarnSwat:Show(self.vb.swatCount)
 		voiceSwat:Play("carefly")
+		local isMoreFaster = self:IsMythic() and self.vb.enraged
 		local isFaster = self:IsMythic() or self.vb.enraged
---		if self.vb.swatCount == 1 then
-			timerSwatCD:Start(isFaster and 32 or 38, self.vb.swatCount+1)
---		elseif self.vb.swatCount == 2 then
---			timerSwatCD:Start(38, 3)
---		end
+		timerSwatCD:Start(isMoreFaster and 23 or isFaster and 32 or 38, self.vb.swatCount+1)
 	end
 end
 
@@ -176,11 +219,13 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 181307 then
 		self.vb.foulCrush = self.vb.foulCrush + 1
 		specWarnFoulCrush:Show(self.vb.foulCrush)
+		local isMoreFaster = self:IsMythic() and self.vb.enraged
 		local isFaster = self:IsMythic() or self.vb.enraged
 		if self.vb.foulCrush == 1 then
-			timerFoulCrushCD:Start(isFaster and 42 or 50, 2)
+			--Mythic enraged 23 not confirmed. Guessed based on likeliness
+			timerFoulCrushCD:Start(isMoreFaster and 31 or isFaster and 42 or 50, 2)
 		elseif self.vb.foulCrush == 2 then
-			timerFoulCrushCD:Start(isFaster and 32 or 38, 3)
+			timerFoulCrushCD:Start(isMoreFaster and 23 or isFaster and 32 or 38, 3)
 		end
 	end
 end
@@ -215,7 +260,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnExplosiveBurst:Show()
 			yellExplosiveBurst:Yell()
 		else
-			if self:CheckNearby(41, args.destName) then
+			if self:CheckNearby(31, args.destName) then
 				specWarnExplosiveBurstNear:Show(args.destName)
 				voiceExplosiveBurst:Play("runout")
 			else
@@ -225,11 +270,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:Schedule(3, trippleBurstCheck, self, args.destName, true)
 		end
 		updateRangeCheck(self)
+		local isMoreFaster = self:IsMythic() and self.vb.enraged
 		local isFaster = self:IsMythic() or self.vb.enraged
 		if self.vb.explosiveBurst == 1 then
-			timerExplosiveBurstCD:Start(isFaster and 32 or 38, 2)
+			--Mythic enraged 23/30 total guess, don't know it yet for sure.
+			timerExplosiveBurstCD:Start(isMoreFaster and 23 or isFaster and 32 or 38, 2)
 		elseif self.vb.explosiveBurst == 2 then
-			timerExplosiveBurstCD:Start(isFaster and 42 or 50, 3)
+			timerExplosiveBurstCD:Start(isMoreFaster and 30 or isFaster and 42 or 50, 3)
 		end
 	--Each energy has it's own hard coded sequence of events/timers.
 	--So all timers need to be scheduled here, they aren't started by any ability casts
@@ -237,10 +284,21 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.poundCount = 0
 		self.vb.swatCount = 0
 		warnShadowEnergy:Show()
-		if self:IsMythic() or spellId == 186879 then
+		self:RuneStart(181293)
+		if self:IsMythic() and spellId == 186879 then--Mythic AND enraged
+			timerFelOutpouringCD:Start(8)
+			self:Schedule(8, delayedFelOutpouring, self, 65)--73
+			timerSwatCD:Start(23, 1)
+			timerPoundCD:Start(26, 1)
+			self:Schedule(26, delayedPound, self, 30)--57
+			timerExplosiveRunesCD:Start(39)
+			timerGraspingHandsCD:Start(50)
+			countdownGraspingHands:Start(50)
+			timerLeapCD:Start(96)
+		elseif (self:IsMythic() and spellId == 180115) or spellId == 186879 then--Mythic regular, or heroic/normal enrage
 			timerFelOutpouringCD:Start(11)
 			self:Schedule(11, delayedFelOutpouring, self, 84)--95
-			timerSwatCD:Start(21, 1)
+			timerSwatCD:Start(31, 1)
 			timerPoundCD:Start(37, 1)
 			self:Schedule(37, delayedPound, self, 48)--85
 			timerExplosiveRunesCD:Start(53)
@@ -265,7 +323,18 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.poundCount = 0
 		self.vb.explosiveBurst = 0
 		warnExplosiveEnergy:Show()
-		if self:IsMythic() or spellId == 186880 then
+		self:RuneStart(181297)
+		if (self:IsMythic() and spellId == 186880) then
+			timerExplosiveRunesCD:Start(8)
+--			self:Schedule(8, delayedExplosiveRunes, self, 48)--59
+			timerExplosiveBurstCD:Start(15, 1)
+			timerPoundCD:Start(19, 1)
+--			self:Schedule(19, delayedPound, self, 42)--69
+--			timerGraspingHandsCD:Start(43)
+--			countdownGraspingHands:Start(43)
+--			timerFelOutpouringCD:Start(59)
+			timerLeapCD:Start(96)
+		elseif (self:IsMythic() and spellId == 180116) or spellId == 186880 then
 			timerExplosiveRunesCD:Start(11)
 			self:Schedule(11, delayedExplosiveRunes, self, 48)--59
 			timerExplosiveBurstCD:Start(21, 1)
@@ -273,7 +342,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:Schedule(27, delayedPound, self, 42)--69
 			timerGraspingHandsCD:Start(43)
 			countdownGraspingHands:Start(43)
-			timerFelOutpouringCD:Start(85)
+			timerFelOutpouringCD:Start(59)
 			timerLeapCD:Start()
 		else
 			timerExplosiveRunesCD:Start(13)
@@ -291,7 +360,18 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.poundCount = 0
 		self.vb.foulCrush = 0
 		warnFoulEnergy:Show()
-		if self:IsMythic() or spellId == 186881 then
+		self:RuneStart(181300)
+		if (self:IsMythic() and spellId == 186881) then
+			timerGraspingHandsCD:Start(8)
+			countdownGraspingHands:Start(8)
+--			self:Schedule(8, delayedHands, self, 90)--101
+			timerFoulCrushCD:Start(15, 1)
+			timerPoundCD:Start(19, 1)
+--			self:Schedule(19, delayedPound, self, 52)--79
+			timerFelOutpouringCD:Start(31)
+			timerExplosiveRunesCD:Start(50)
+			timerLeapCD:Start(96)
+		elseif (self:IsMythic() and spellId == 180117) or spellId == 186881 then
 			timerGraspingHandsCD:Start(11)
 			countdownGraspingHands:Start(11)
 			self:Schedule(11, delayedHands, self, 90)--101
@@ -363,5 +443,142 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 180244 then
 		self.vb.poundActive = false
 		updateRangeCheck(self)
+	end
+end
+
+do
+	RegisterAddonMessagePrefix("EXRTADD")
+	local playerName = UnitName("player")
+	local Ambiguate = Ambiguate
+	local assignedPositionOrange, assignedPositionGreen, assignedPositionPurple
+	local function delayedNotice(self, sender)
+		DBM:AddMsg(L.ExRTNotice:format(sender, (assignedPositionOrange or NONE), (assignedPositionGreen or NONE), (assignedPositionPurple or NONE)))
+	end
+	--Exorsus Raid Tools Comm snooping to detect player assignment even if player isn't running Exorsus Raid Tools.
+	local runes = {
+		[1] = {-388.10,4209.00},
+		[2] = {-354.50,4208.60},
+		[3] = {-339.80,4210.80},
+		[4] = {-321.50,4210.20},
+		[5] = {-396.90,4227.70},
+		[6] = {-380.00,4223.90},
+		[7] = {-365.50,4224.90},
+		[8] = {-345.40,4223.80},
+		[9] = {-331.50,4220.00},
+		[10] = {-388.60,4241.30},
+		[11] = {-367.80,4241.80},
+		[12] = {-354.90,4238.60},
+		[13] = {-338.40,4243.40},
+		[14] = {-321.70,4243.10},
+		[15] = {-394.80,4258.40},
+		[16] = {-384.40,4253.80},
+		[17] = {-363.00,4258.30},
+		[18] = {-347.70,4253.60},
+		[19] = {-328.10,4252.60},
+		[20] = {-308.90,4253.00},
+		[21] = {-389.80,4269.90},
+		[22] = {-372.70,4271.60},
+		[23] = {-356.70,4270.40},
+		[24] = {-336.10,4270.40},
+		[25] = {-318.90,4271.40},
+		[26] = {-302.50,4271.00},
+		[27] = {-362.50,4283.60},
+		[28] = {-345.30,4283.00},
+		[29] = {-329.70,4287.20},
+		[30] = {-355.60,4301.30},
+		[31] = {-336.30,4299.70},
+		[32] = {-320.60,4303.30},
+		[33] = {-304.10,4301.50},
+		[34] = {-300.10,4240.10},
+		[35] = {-294.10,4255.20},
+		[36] = {-311.10,4281.70},
+		[37] = {-295.40,4285.90},
+		[38] = {-284.20,4270.00},
+		[39] = {-343.30,4316.10},
+		[40] = {-328.00,4318.30},
+		[41] = {-310.80,4318.40},
+		[42] = {-294.40,4316.50},
+		[43] = {-273.20,4315.90},
+		[44] = {-259.50,4317.70},
+		[45] = {-241.50,4315.60},
+		[46] = {-332.80,4329.70},
+		[47] = {-318.50,4332.70},
+		[48] = {-301.50,4333.20},
+		[49] = {-286.20,4329.10},
+		[50] = {-268.70,4329.80},
+		[51] = {-313.60,4344.40},
+		[52] = {-292.10,4344.00},
+		[53] = {-360.50,4318.30},
+		[54] = {-354.60,4329.70},
+		[55] = {-326.80,4343.50},
+		[56] = {-274.10,4345.40},
+		[57] = {-248.40,4329.20},
+		[58] = {-235.10,4332.30},
+		[59] = {-285.10,4299.00},
+		[60] = {-265.20,4299.00},
+		[61] = {-249.50,4303.40},
+		[62] = {-230.90,4297.20},
+		[63] = {-275.00,4288.40},
+		[64] = {-259.00,4283.00},
+		[65] = {-240.50,4284.10},
+		[66] = {-222.50,4286.70},
+		[67] = {-269.60,4272.00},
+		[68] = {-249.50,4269.60},
+		[69] = {-231.50,4267.30},
+		[70] = {-257.30,4253.20},
+		[71] = {-240.20,4253.80},
+		[72] = {-278.90,4255.20},
+	}
+	function mod:CHAT_MSG_ADDON(prefix, message, channel, sender)
+		if prefix ~= "EXRTADD" then return end
+		local subPrefix,pos1,name1,pos2,name2,pos3,name3 = strsplit("\t", message)
+		if subPrefix ~= "kormrok" then return end
+		sender = Ambiguate(sender, "none")
+		if DBM:GetRaidRank(sender) == 0 and IsInGroup() then return end
+		local tempPos1, tempPos2, TempPos3 = pos1 or "nil", pos2 or "nil", pos3 or "nil"
+		DBM:Debug("Sender: "..sender.."Pos1: "..tempPos1..", Name1: "..(name1 or "nil")..", Pos2: "..tempPos2..", Name2: "..(name2 or "nil")..", Pos3: "..TempPos3..", Name3: "..(name3 or "nil"), 3)
+		--Check if player removed from a cached assignment
+		--Now the add player assignment code
+		if name1 and Ambiguate(name1, "none") == playerName then
+			local number = tonumber(pos1)
+			if number < 100 then--Orange
+				assignedPositionOrange = number
+				playerOrangeX, playerOrangeY = runes[assignedPositionOrange][2], runes[assignedPositionOrange][1]
+			elseif number < 200 then--Green
+				assignedPositionGreen = number-100
+				playerGreenX, playerGreenY = runes[assignedPositionGreen][2], runes[assignedPositionGreen][1]
+			else--Purple
+				assignedPositionPurple = number-200
+				playerPurpleX, playerPurpleY = runes[assignedPositionPurple][2], runes[assignedPositionPurple][1]
+			end
+		end
+		if name2 and Ambiguate(name2, "none") == playerName then
+			local number = tonumber(pos2)
+			if number < 100 then--Orange
+				assignedPositionOrange = number
+				playerOrangeX, playerOrangeY = runes[assignedPositionOrange][2], runes[assignedPositionOrange][1]
+			elseif number < 200 then--Green
+				assignedPositionGreen = number-100
+				playerGreenX, playerGreenY = runes[assignedPositionGreen][2], runes[assignedPositionGreen][1]
+			else--Purple
+				assignedPositionPurple = number-200
+				playerPurpleX, playerPurpleY = runes[assignedPositionPurple][2], runes[assignedPositionPurple][1]
+			end
+		end
+		if name3 and Ambiguate(name3, "none") == playerName then
+			local number = tonumber(pos3)
+			if number < 100 then--Orange
+				assignedPositionOrange = number
+				playerOrangeX, playerOrangeY = runes[assignedPositionOrange][2], runes[assignedPositionOrange][1]
+			elseif number < 200 then--Green
+				assignedPositionGreen = number-100
+				playerGreenX, playerGreenY = runes[assignedPositionGreen][2], runes[assignedPositionGreen][1]
+			else--Purple
+				assignedPositionPurple = number-200
+				playerPurpleX, playerPurpleY = runes[assignedPositionPurple][2], runes[assignedPositionPurple][1]
+			end
+		end
+		self:Unschedule(delayedNotice)
+		self:Schedule(1, delayedNotice, self, sender)
 	end
 end

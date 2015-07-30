@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
 	Revision: $Id: CoreBuy.lua 5529 2014-11-28 16:17:01Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -744,4 +744,4 @@ private.Prompt.DragBottom:SetHighlightTexture("Interface\\FriendsFrame\\UI-Frien
 private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/Auc-Advanced/CoreBuy.lua $", "$Rev: 5529 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Advanced/CoreBuy.lua $", "$Rev: 5529 $")

@@ -27,7 +27,7 @@ local L = Addon.Locals
 local SUGGESTIONS = {
 	L.CommonSearches,
 	LibStub('CustomSearch-1.0').NOT .. ' ' .. L.Maximized,
-	'< ' .. ITEM_QUALITY2_DESC,
+	'< ' .. BATTLE_PET_BREED_QUALITY3,
 	ADDON_MISSING
 }
 

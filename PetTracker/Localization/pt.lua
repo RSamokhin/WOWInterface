@@ -28,6 +28,8 @@ L.TrackPets = 'Listar Mascotes'
 L.TellMore = 'Conte-me mais sobre si.'
 L.UpgradeAlert = 'Apareceram melhorias!'
 L.ZoneTracker = 'Rastreador de Zona'
+L.Victory = 'Vitória'
+L.Defeat = 'Derrota'
 
 L.FAQ = {
 	'Como escondo/mostro todas as mascotes no mapa?',

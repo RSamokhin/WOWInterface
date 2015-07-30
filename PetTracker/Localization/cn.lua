@@ -31,6 +31,8 @@ L.UnlockActions = '解锁敌对动作'
 L.UnlockActionsTip = '如启用，敌对动作条可以被拖动到屏幕的任意位置。'
 L.UpgradeAlert = '野生宠物出现！'
 L.ZoneTracker = '区域追踪'
+L.Victory = '胜利'
+L.Defeat = '败'
 
 L.FAQ = {
 	'如何在地图上显示/隐藏全部宠物？',

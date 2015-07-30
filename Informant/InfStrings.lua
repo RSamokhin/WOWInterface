@@ -5,7 +5,7 @@
 
 	AddOn: Informant
 	Revision: $Id: InfStrings.lua 5456 2014-06-05 11:59:54Z brykrys $
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
 
 	License:
 		This program is free software; you can redistribute it and/or

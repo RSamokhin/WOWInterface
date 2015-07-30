@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
 	Revision: $Id: CoreServers.lua 5528 2014-11-28 14:33:30Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -395,4 +395,4 @@ AucAdvanced.GetServerKeyText = GetServerKeyText
 AucAdvanced.SplitServerKey = SplitServerKey
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/Auc-Advanced/CoreServers.lua $", "$Rev: 5528 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Advanced/CoreServers.lua $", "$Rev: 5528 $")

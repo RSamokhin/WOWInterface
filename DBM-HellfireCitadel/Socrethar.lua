@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod(1427, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13927 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14040 $"):sub(12, -3))
 mod:SetCreatureID(92330)
 mod:SetEncounterID(1794)
 mod:SetZone()
 mod:SetUsedIcons(1)
---mod:SetRespawnTime(20)
+mod:SetHotfixNoticeRev(14032)
+--mod.respawnTime = 20
 
 mod:RegisterCombat("combat")
 
@@ -57,29 +58,28 @@ local specWarnApocalypse			= mod:NewSpecialWarningSpell(183329, nil, nil, nil, 2
 --Adds
 local specWarnShadowWordAgony		= mod:NewSpecialWarningInterrupt(184239, false, nil, nil, 1, 2)
 local specWarnShadowBoltVolley		= mod:NewSpecialWarningInterrupt(182392, "-Healer", nil, nil, 1, 2)
-local specWarnGhastlyFixation		= mod:NewSpecialWarningRun(182769, nil, nil, nil, 4, 2)
-local yellGhastlyFixation			= mod:NewYell(182769, nil, false)
-local specWarnSargereiDominator		= mod:NewSpecialWarningSwitch("ej11456", "-Healer", nil, nil, 3)
+local specWarnGhastlyFixation		= mod:NewSpecialWarningYou(182769, nil, nil, nil, 1)--You don't run out or kite. you position yourself so ghosts go through fire dropped by construct
+local specWarnSargereiDominator		= mod:NewSpecialWarningSwitchCount("ej11456", "-Healer", nil, nil, 3)
 local specWarnGiftoftheManari		= mod:NewSpecialWarningYou(184124, nil, nil, nil, 1, 2)
 local yellGiftoftheManari			= mod:NewYell(184124)
 local specWarnEternalHunger			= mod:NewSpecialWarningRun(188666, nil, nil, nil, 4, 2)--Mythic
 local yellEternalHunger				= mod:NewYell(188666, nil, false)
 
 --Soulbound Construct
-local timerReverberatingBlowCD		= mod:NewCDCountTimer(17, 180008)--Seems changed to 17, formerly 11, review in later tests/live
-local timerFelPrisonCD				= mod:NewCDTimer(29, 182994)--29-33
-local timerVolatileFelOrbCD			= mod:NewCDTimer(23, 180221)
-local timerFelChargeCD				= mod:NewCDTimer(23, 182051)
-local timerApocalypticFelburstCD	= mod:NewCDCountTimer(30, 188693)
+local timerReverberatingBlowCD		= mod:NewCDCountTimer(17, 180008, nil, nil, nil, 5)--Seems changed to 17, formerly 11, review in later tests/live
+local timerFelPrisonCD				= mod:NewCDTimer(29, 182994, nil, nil, nil, 3)--29-33
+local timerVolatileFelOrbCD			= mod:NewCDTimer(23, 180221, nil, nil, nil, 3)
+local timerFelChargeCD				= mod:NewCDTimer(23, 182051, nil, nil, nil, 3)
+local timerApocalypticFelburstCD	= mod:NewCDCountTimer(30, 188693, nil, nil, nil, 2)
 --Socrethar
-local timerExertDominanceCD			= mod:NewCDTimer(6, 183331, nil, "-Healer")
-local timerApocalypseCD				= mod:NewCDTimer(46, 183329)
+local timerExertDominanceCD			= mod:NewCDTimer(5, 183331, nil, "-Healer", nil, 4)
+local timerApocalypseCD				= mod:NewCDTimer(46, 183329, nil, nil, nil, 2)
 --Adds
-local timerSargereiDominatorCD		= mod:NewCDTimer(60, "ej11456", nil, nil, nil, 184053)--CD needs verifying, no log saw 2 of them in a phase. phase always ended or boss died before 2nd add, i know it's at least longer than 60 sec tho
-local timerHauntingSoulCD			= mod:NewCDCountTimer(30, "ej11462", nil, nil, nil, 182769)
-local timerGiftofManariCD			= mod:NewCDTimer(11, 184124)
+local timerSargereiDominatorCD		= mod:NewNextCountTimer(60, "ej11456", nil, nil, nil, 1, 184053)--CD needs verifying, no log saw 2 of them in a phase. phase always ended or boss died before 2nd add, i know it's at least longer than 60 sec tho
+local timerHauntingSoulCD			= mod:NewCDCountTimer(30, "ej11462", nil, nil, nil, 1, 182769)
+local timerGiftofManariCD			= mod:NewCDTimer(11, 184124, nil, nil, nil, 3)
 --Mythic
-local timerVoraciousSoulstalkerCD	= mod:NewCDCountTimer(60, "ej11778", nil, nil, nil, 190776)
+local timerVoraciousSoulstalkerCD	= mod:NewCDCountTimer(60, "ej11778", nil, nil, nil, 1, 190776)
 
 --local berserkTimer				= mod:NewBerserkTimer(360)
 
@@ -97,7 +97,7 @@ local voiceApocalypse				= mod:NewVoice(183329)--aesoon
 --Adds
 local voiceShadowWordAgony			= mod:NewVoice(184239, false)--kickcast
 local voiceShadowBoltVolley			= mod:NewVoice(182392, "-Healer")--kickcast
-local voiceGhastlyFixation			= mod:NewVoice(182769)--runout/keepmove
+--local voiceGhastlyFixation			= mod:NewVoice(182769)--runout/keepmove
 local voiceGiftoftheManari			= mod:NewVoice(184124)--scatter
 local voiceEternalHunger			= mod:NewVoice(188666)--runout/keepmove
 
@@ -113,6 +113,7 @@ mod.vb.mythicAddSpawn = 0
 mod.vb.ghostSpawn = 0
 mod.vb.kickCount = 0
 mod.vb.barrierUp = false
+mod.vb.dominatorCount = 0
 local playerInConstruct = false
 --[[
 Dominator Times Observed on Normal and raid sizes
@@ -181,6 +182,7 @@ function mod:OnCombatStart(delay)
 	self.vb.mythicAddSpawn = 0
 	self.vb.ghostSpawn = 0
 	self.vb.kickCount = 0
+	self.vb.dominatorCount = 0
 	self.vb.barrierUp = false
 	playerInConstruct = false
 	timerReverberatingBlowCD:Start(6.3-delay, 1)
@@ -191,7 +193,7 @@ function mod:OnCombatStart(delay)
 	timerFelPrisonCD:Start(51-delay)--Seems drastically changed. 51 in all newer logs
 	if self:IsMythic() then
 		timerVoraciousSoulstalkerCD:Start(20-delay, 1)
-		timerApocalypticFelburstCD:Start(-delay)
+		timerApocalypticFelburstCD:Start(33.7-delay)
 	end
 end
 
@@ -283,6 +285,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.mythicAddSpawn = self.vb.mythicAddSpawn + 1
 		timerVoraciousSoulstalkerCD:Start(60, self.vb.mythicAddSpawn+1)
 	elseif spellId == 183023 then--Eject Soul
+		self.vb.dominatorCount = 0
+		self.vb.ghostSpawn = 0
+		self.vb.kickCount = 0
 		warnEjectSoul:Show()
 		timerReverberatingBlowCD:Cancel()
 		countdownReverberatingBlow:Cancel()
@@ -291,15 +296,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerFelChargeCD:Cancel()
 		timerApocalypticFelburstCD:Cancel()
 		timerTransition:Start()--Time until boss is attackable
-		if self:IsNormal() then
-			timerSargereiDominatorCD:Start(25)--25
-			timerHauntingSoulCD:Start(30)--30-33
-			timerApocalypseCD:Start(53)
-		else
-			--timerSargereiDominatorCD:Start()--TODO
-			--timerHauntingSoulCD:Start(30)--TODO
-			timerApocalypseCD:Start()--46-47. Small sample size (2 pulls) (NEEDS new review, had to change phase detection trigger since old spellid now hidden)
-		end
+		timerSargereiDominatorCD:Start(23, 1)
+		timerHauntingSoulCD:Start(30)--30-33
+		timerApocalypseCD:Start(53)--53-58
 		self:RegisterShortTermEvents(
 			"UNIT_TARGETABLE_CHANGED"
 		)
@@ -319,9 +318,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnGhastlyFixation:CombinedShow(2, args.destName)
 		if args:IsPlayer() and self:AntiSpam(3, 1) then
 			specWarnGhastlyFixation:Show()
-			yellGhastlyFixation:Yell()
-			voiceGhastlyFixation:Play("runout")
-			voiceGhastlyFixation:Schedule(2, "keepmove")
+--			voiceGhastlyFixation:Play("runout")
+--			voiceGhastlyFixation:Schedule(2, "keepmove")
 		end
 		if self:AntiSpam(28, 2) then--Shitty way of doing it, but if a player dies fixate changes and will start false timer any other way
 			self.vb.ghostSpawn = self.vb.ghostSpawn + 1
@@ -349,17 +347,18 @@ function mod:SPELL_AURA_APPLIED(args)
 		updateRangeFrame(self)
 	elseif spellId == 184053 then--Fel Barrior (Boss becomes immune to damage, Sargerei Dominator spawned and must die)
 		self.vb.barrierUp = true
-		specWarnSargereiDominator:Show()
-		if self:IsNormal() then
-			timerSargereiDominatorCD:Start(140)--i've seen 2:20 to 3:00 variation, but no log shorter than 2:20 ever, so that's minimum time
+		self.vb.dominatorCount = self.vb.dominatorCount + 1
+		specWarnSargereiDominator:Show(self.vb.dominatorCount)
+		if self:IsMythic() then
+			timerSargereiDominatorCD:Start(130, self.vb.dominatorCount+1)
 		else
-			--timerSargereiDominatorCD:Start()--TODO, verify
+			if self.vb.dominatorCount % 2 == 0 then--Every portal swap adds 10 seconds to next spawn, so 3, 5, 7 etc
+				timerSargereiDominatorCD:Start(70, self.vb.dominatorCount+1)
+			else
+				timerSargereiDominatorCD:Start(nil, self.vb.dominatorCount+1)
+			end
 		end
-		if self:IsNormal() then
-			timerGiftofManariCD:Start(14, args.sourceGUID)
-		else
-			timerGiftofManariCD:Start(12, args.sourceGUID)
-		end
+		timerGiftofManariCD:Start(5, args.sourceGUID)
 	elseif spellId == 189627 then
 		if self:IsNormal() then
 			timerVolatileFelOrbCD:Start(30)

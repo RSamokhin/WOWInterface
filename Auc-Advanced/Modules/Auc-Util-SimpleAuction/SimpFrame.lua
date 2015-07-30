@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Simplified Auction Posting
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
 	Revision: $Id: SimpFrame.lua 5531 2014-12-10 15:27:31Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -1368,4 +1368,4 @@ function private.CreateFrames()
 	frame:RegisterEvent("BAG_UPDATE")
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 5531 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 5531 $")

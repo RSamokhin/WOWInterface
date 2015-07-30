@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
 	Revision: $Id: DataBonusIDs.lua 5557 2015-05-13 13:56:40Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -100,4 +100,4 @@ data.BonusTertiaryStatList = {
 	43, -- Indestructible
 }
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21d2/Auc-Advanced/DataBonusIDs.lua $", "$Rev: 5557 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Advanced/DataBonusIDs.lua $", "$Rev: 5557 $")

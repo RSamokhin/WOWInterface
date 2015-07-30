@@ -1,6 +1,6 @@
 --[[
 	Configator - A library to help you create a gui config
-	Version: 5.21d2.5561 (SanctimoniousSwamprat)
+	Version: 5.21e.5566 (SanctimoniousSwamprat)
 	Revision: $Id: Configator.lua 376 2014-11-05 17:34:52Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 

@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 60200
 ## Title: PetTracker Switcher
 ## Notes: Displays all battle information at a glance.
 ## Author: Jaliborc (João Cardoso)

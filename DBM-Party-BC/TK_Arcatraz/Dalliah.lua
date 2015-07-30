@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(549, "DBM-Party-BC", 15, 254)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 561 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 568 $"):sub(12, -3))
 
 mod:SetCreatureID(20885)
 mod:RegisterCombat("combat")
@@ -17,7 +17,7 @@ local warnGift			= mod:NewTargetAnnounce(39009, 3)
 local specwarnWhirlwind	= mod:NewSpecialWarningRun(36175, "Melee", nil, nil, 4)
 local specwarnHeal		= mod:NewSpecialWarningInterrupt(39013, "-Healer")
 
-local timerGift			= mod:NewTargetTimer("OptionVersion2", 10, 39009, nil, false)
+local timerGift			= mod:NewTargetTimer(10, 39009, nil, false, 2)
 
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(39013, 36144) then

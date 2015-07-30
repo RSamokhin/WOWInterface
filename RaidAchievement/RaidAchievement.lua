@@ -6,7 +6,7 @@ if GetLocale()=="deDE" or GetLocale()=="ruRU" or GetLocale()=="zhTW" or GetLocal
 end
 
 
-	raversion=6.103
+	raversion=6.204
 	local raverstiptext="alpha"
 	if string.len(raversion)==6 then
 		raverstiptext="beta"
@@ -1181,7 +1181,7 @@ end
 end
 
 --тут добавить рейды WoD
-if GetCurrentMapAreaID()==988 then
+if GetCurrentMapAreaID()==988 or GetCurrentMapAreaID()==1026 then
 if IsAddOnLoaded("RaidAchievement_WoDRaids")==false and waswodrtryloadea==nil then
 waswodrtryloadea=1
 local loaded, reason = LoadAddOn("RaidAchievement_WoDRaids")
