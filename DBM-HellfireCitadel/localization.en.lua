@@ -29,8 +29,12 @@ L= DBM:GetModLocalization(1425)
 ---------------------------
 L= DBM:GetModLocalization(1432)
 
-L:SetMiscLocalization({
-	Jubeideath		=	"I am everburning!"
+L:SetWarningLocalization({
+	reapDelayed =	"Reap after Visage ends"
+})
+
+L:SetOptionLocalization({
+	reapDelayed =	DBM_CORE_AUTO_ANNOUNCE_OPTIONS.soon:format(184476)
 })
 
 ------------------
@@ -57,15 +61,16 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(1372)
 
 L:SetTimerLocalization({
-	SoDDPS		= "Next Shadows (%s)",
-	SoDTank		= "Next Shadows (%s)",
-	SoDHealer	= "Next Shadows (%s)"
+	SoDDPS2		= "Next Shadows (%s)",
+	SoDTank2	= "Next Shadows (%s)",
+	SoDHealer2	= "Next Shadows (%s)"
 })
 
 L:SetOptionLocalization({
-	SoDDPS					= "Show timer for next $spell:179864 affecting Damagers",
-	SoDTank					= "Show timer for next $spell:179864 affecting Tanks",
-	SoDHealer				= "Show timer for next $spell:179864 affecting Healers"
+	SoDDPS2			= "Show timer for next $spell:179864 affecting Damagers",
+	SoDTank2		= "Show timer for next $spell:179864 affecting Tanks",
+	SoDHealer2		= "Show timer for next $spell:179864 affecting Healers",
+	ShowOnlyPlayer	= "Only show HudMap for $spell:179909 if you are a participant"
 })
 
 --------------------------
@@ -86,26 +91,17 @@ L:SetOptionLocalization({
 --------------------------
 L= DBM:GetModLocalization(1391)
 
-L:SetWarningLocalization({
-	specWarnSeedPosition =	"Seed Position: %s"
-})
-
 L:SetOptionLocalization({
 	SeedsBehavior		= "Set seeds yell behavior for raid (Requires raid leader)",
 	Iconed				= "Star, Circle, Diamond, Triangle, Moon. Usuable for any strat using flare positions",--Default
 	Numbered			= "1, 2, 3, 4, 5. Usable for any strat using numbered positions.",
 	DirectionLine		= "Left, Middle Left, Middle, Middle Right, Right. Typical for straight line strat",
-	FreeForAll			= "Free for all. Assign no positions, just use basic yell",
-	--Currently these 3 below are unused unless I see anyone want/need them
-	CrossPerception		= "Front, Back, Left, Right, Middle. Typical for Cross strat",--Unsure if viable with 5 targets/will remain
-	CrossCardinal		= "North, South, East, West, Middle. Typical for Cross strat",--Unsure if viable 5 targets/will remain
-	ExCardinal			= "NorthEast, Southeast, Northwest, Southwest, Middle. Typical for Ex strat"--Unsure if viable 5 targets/will remain
+	FreeForAll			= "Free for all. Assign no positions, just use basic yell"
 })
 
 L:SetMiscLocalization({
 	DBMConfigMsg		= "Seed configuration set to %s to match raid leaders configuration.",
 	BWConfigMsg			= "Raid leader is using Bigwigs, DBM automatically configured to use Numbered."
-	--TODO, talk to some guilds, maybe trim list above, add finalized directions here
 })
 
 --------------------------
@@ -124,6 +120,14 @@ L:SetOptionLocalization({
 -- Socrethar the Eternal --
 --------------------------
 L= DBM:GetModLocalization(1427)
+
+L:SetOptionLocalization({
+	InterruptBehavior	= "Set interrupt behavior for raid (Requires raid leader)",
+	Count3Resume		= "3 person rotation that resumes where left off when barrier drops",--Default
+	Count3Reset			= "3 person rotation that resets to 1 when barrier drops",
+	Count4Resume		= "4 person rotation that resumes where left off when barrier drops",
+	Count4Reset			= "4 person rotation that resets to 1 when barrier drops"
+})
 
 --------------------------
 -- Tyrant Velhari --
@@ -150,7 +154,15 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	specWarnBreakShackle	= "Show special warning when affected by $spell:184964. This warning auto assigns break order to minimize similtanious damage.",
-	FilterOtherPhase		= "Filter out warnings for events not in same phase as you"
+	ExtendWroughtHud3		= "Extend the HUD lines beyond the $spell:185014 target (May diminish line accuracy)",
+	AlternateHudLine		= "Use alternate line texture for HUD lines between $spell:185014 targets",
+	NamesWroughtHud			= "Show player names HUD for $spell:185014 targets",
+	FilterOtherPhase		= "Filter out warnings for events not in same phase as you",
+	MarkBehavior			= "Set Mark of Legion yell behavior for raid (Requires raid leader)",
+	Numbered				= "Star, Circle, Diamond, Triangle. Usable for any strat using flare positions.",--Default
+	LocSmallFront			= "Melee L/R(Star,Circle), Ranged L/R(Diamond,Triangle). Short debuffs in melee.",
+	LocSmallBack			= "Melee L/R(Star,Circle), Ranged L/R(Diamond,Triangle). Short debuffs at ranged.",
+	NoAssignment			= "Disable all position yells/messages, icons, and HUD for entire raid."
 })
 
 L:SetMiscLocalization({

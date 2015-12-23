@@ -30,14 +30,18 @@ L= DBM:GetModLocalization(1425)
 ---------------------------
 L= DBM:GetModLocalization(1432)
 
-L:SetMiscLocalization({
-	Jubeideath		=	"Ich bin die ewige Flamme!"
+L:SetWarningLocalization({
+	reapDelayed =	"Ernte nachdem Erscheinung endet"
 })
 
 ------------------
 -- Kormrok --
 ------------------
 L= DBM:GetModLocalization(1392)
+
+L:SetMiscLocalization({
+	ExRTNotice		= "%s hat ExRT Positionszuweisungen gesendet. Deine Positionen sind: Orange:%s, Grün:%s, Violett:%s"
+})
 
 --------------
 -- Kilrogg Deadeye --
@@ -54,15 +58,16 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(1372)
 
 L:SetTimerLocalization({
-	SoDDPS		= "Nächste Schatten (%s)",
-	SoDTank		= "Nächste Schatten (%s)",
-	SoDHealer	= "Nächste Schatten (%s)"
+	SoDDPS2		= "Nächste Schatten (%s)",
+	SoDTank2	= "Nächste Schatten (%s)",
+	SoDHealer2	= "Nächste Schatten (%s)"
 })
 
 L:SetOptionLocalization({
-	SoDDPS					= "Zeige Zeit bis nächste $spell:179864 die DDs betreffen",
-	SoDTank					= "Zeige Zeit bis nächste $spell:179864 die Tanks betreffen",
-	SoDHealer				= "Zeige Zeit bis nächste $spell:179864 die Heiler betreffen"
+	SoDDPS2			= "Zeige Zeit bis nächste $spell:179864 die DDs betreffen",
+	SoDTank2		= "Zeige Zeit bis nächste $spell:179864 die Tanks betreffen",
+	SoDHealer2		= "Zeige Zeit bis nächste $spell:179864 die Heiler betreffen",
+	ShowOnlyPlayer	= "Zeige HudMap für $spell:179909 nur, falls du beteiligt bist"
 })
 
 --------------------------
@@ -83,20 +88,12 @@ L:SetOptionLocalization({
 --------------------------
 L= DBM:GetModLocalization(1391)
 
-L:SetWarningLocalization({
-	specWarnSeedPosition =	"Saatposition: %s"
-})
-
 L:SetOptionLocalization({
 	SeedsBehavior		= "Auswahl der Positionierungsschreie für Saat der Zerstörung (nur als Schlachtzugsleiter)",
 	Iconed				= "Stern, Kreis, Diamant, Dreieck, Mond (für Strategien mit Weltmarkierungen)",
 	Numbered			= "1, 2, 3, 4, 5 (für Strategien mit nummerierten Positionen)",
 	DirectionLine		= "Links, Mitte Links, Mitte, Mitte Rechts, Rechts (typisch für geradlinige Formationen)", 
-	FreeForAll			= "Nur Standardschrei verwenden (ohne Positionszuweisung)",
-	--Currently these 3 below are unused unless I see anyone want/need them
-	CrossPerception		= "Vorne, Hinten, Links, Rechts, Mitte. (typisch für Strategien mit Kreuzformationen)",
-	CrossCardinal		= "Norden, Süden, Osten, Westen, Mitte. (typisch für Strategien mit Kreuzformationen)",
-	ExCardinal			= "Nordosten, Südosten, Nordwesten, Südwesten, Mitte (typisch für \"Ex\" Strategien)"
+	FreeForAll			= "Nur Standardschrei verwenden (ohne Positionszuweisung)"
 })
 
 L:SetMiscLocalization({
@@ -120,6 +117,14 @@ L:SetOptionLocalization({
 -- Socrethar the Eternal --
 --------------------------
 L= DBM:GetModLocalization(1427)
+
+L:SetOptionLocalization({
+	InterruptBehavior	= "Auswahl des Unterbrechungsverhaltens für Vorherrschaft (nur als Schlachtzugsleiter)",
+	Count3Resume		= "3-Personen-Rotation, die fortgesetzt wird, wenn die Barriere fällt",
+	Count3Reset			= "3-Personen-Rotation, die auf 1 zurückgesetzt wird, wenn die Barriere fällt",
+	Count4Resume		= "4-Personen-Rotation, die fortgesetzt wird, wenn die Barriere fällt",
+	Count4Reset			= "4-Personen-Rotation, die auf 1 zurückgesetzt wird, wenn die Barriere fällt"
+})
 
 --------------------------
 -- Tyrant Velhari --
@@ -146,11 +151,14 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	specWarnBreakShackle	= "Spezialwarnung, wenn du von $spell:184964 betroffen bist (diese Warnung weist zur Minimierung des gleichzeitigen Schadens die Brechungsreihenfolge automatisch zu)",
+	ExtendWroughtHud3		= "Erweitere die HudMap-Linien über das Ziel von $spell:185014 hinaus (kann die Liniengenauigkeit verringern)",
+	AlternateHudLine		= "Nutze alternative Linientextur für HudMap-Linien zwischen Zielen von $spell:185014",
+	NamesWroughtHud			= "Zeige Spielernamen in HudMap für Ziele von $spell:185014",
 	FilterOtherPhase		= "Zeige keine Warnungen für Ereignisse, die sich nicht in deiner Phase befinden"
 })
 
 L:SetMiscLocalization({
-	phase2point5		= "Look upon the endless forces of the Burning Legion and know the folly of your resistance.",--translate (trigger)
+	phase2point5		= "Seht die endlosen Ränge der Brennenden Legion und erkennt die Ausichtslosigkeit Eurer Wiederwehr!",
 	First				= "Erster",
 	Second				= "Zweiter",
 	Third				= "Dritter",

@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod(1433, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14140 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14717 $"):sub(12, -3))
 mod:SetCreatureID(90316)
 mod:SetEncounterID(1788)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
 mod:SetMinSyncRevision(13887)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--Unknown full spectrum of icons yet. Don't know how many debuffs go out.
-mod:SetHotfixNoticeRev(14106)
+mod:SetHotfixNoticeRev(14463)
 mod.respawnTime = 15
 mod:DisableRegenDetection()--Boss returns true on UnitAffectingCombat when fighting his trash, making boss pre mature pull by REGEN method
 
@@ -16,11 +16,11 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 181912 181827 187998 181873 185345",
-	"SPELL_CAST_SUCCESS 182178 181956 185510",
+	"SPELL_CAST_SUCCESS 182178 181956 185510 181912",
 	"SPELL_AURA_APPLIED 179202 181957 182325 187990 181824 179219 185510 181753 182178 182200",
-	"SPELL_AURA_REMOVED 179202 181957 182325 187990 181824 179219 185510 181753",
---	"SPELL_PERIODIC_DAMAGE",
---	"SPELL_ABSORBED",
+	"SPELL_AURA_REMOVED 179202 181957 182325 187990 181824 179219 185510 181753 182178 182200",
+	"SPELL_PERIODIC_DAMAGE 182600",
+	"SPELL_PERIODIC_MISSED 182600",
 	"RAID_BOSS_WHISPER",
 	"CHAT_MSG_ADDON",
 	"INSTANCE_ENCOUNTER_ENGAGE_UNIT",
@@ -55,6 +55,7 @@ local yellPhantasmalWinds				= mod:NewYell(181957)--So person with eye can see w
 local specWarnPhantasmalWounds			= mod:NewSpecialWarningYou(182325, false)
 local yellPhantasmalWounds				= mod:NewYell(182325, nil, false)--Can't see much reason to have THIS one on by default, but offered as an option.
 local specWarnFelLaser					= mod:NewSpecialWarningMoveAway(182582, nil, nil, nil, 1, 2)
+local specWarnFelLaserGTFO				= mod:NewSpecialWarningMove(182600, nil, nil, nil, 1, 2)
 local yellFelLaser						= mod:NewYell(182582)
 local specWarnShadowRiposte				= mod:NewSpecialWarningSpell(185345, nil, nil, nil, 3)--Has eye of anzu, they need to know this badly.
 --Adds
@@ -70,15 +71,15 @@ local specWarnFelConduit				= mod:NewSpecialWarningInterrupt(181827, nil, nil, n
 
 local timerFelLaserCD					= mod:NewCDTimer(16, 182582, nil, nil, nil, 3)--16-22. Never pauses, used all phases
 local timerChakramCD					= mod:NewCDTimer(33, 182178, nil, nil, nil, 3)
-local timerPhantasmalWindsCD			= mod:NewCDTimer(35, 181957, nil, nil, nil, 3)
+local timerPhantasmalWindsCD			= mod:NewCDTimer(35, 181957, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 local timerPhantasmalWoundsCD			= mod:NewCDTimer(30.5, 182325, nil, "Healer", 2, 5)--30.5-32
 local timerFocusedBlast					= mod:NewCastTimer(11, 181912, nil, nil, nil, 2)--Doesn't realy need a cd timer. he casts it twice back to back, then lands
-local timerShadowRiposteCD				= mod:NewCDTimer(26, 185345, nil, nil, nil, 3)
+local timerShadowRiposteCD				= mod:NewCDTimer(23.5, 185345, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 --Adds
-local timerFelBombCD					= mod:NewCDTimer(18.5, 181753, nil, nil, nil, 3)
-local timerFelConduitCD					= mod:NewCDTimer(15, 181827, nil, nil, nil, 4)
+local timerFelBombCD					= mod:NewCDTimer(18.5, 181753, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)
+local timerFelConduitCD					= mod:NewCDTimer(15, 181827, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 local timerPhantasmalCorruptionCD		= mod:NewCDTimer(14, 181824, nil, "Tank", nil, 3)--14-18
-local timerDarkBindingsCD				= mod:NewCDTimer(34, 185456, nil, nil, nil, 3)
+local timerDarkBindingsCD				= mod:NewCDTimer(34, 185456, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 
 local countdownPhantasmalWinds			= mod:NewCountdown(35, 181957)
 local countdownFelBomb					= mod:NewCountdown("Alt18", 181753)
@@ -97,17 +98,24 @@ mod:AddRangeFrameOption(15)--Both aoes are 15 yards, ref 187991 and 181748
 mod:AddSetIconOption("SetIconOnAnzu", 179202, false)
 mod:AddSetIconOption("SetIconOnWinds", 181957, true)
 mod:AddSetIconOption("SetIconOnFelBomb", 181753, true)
+mod:AddSetIconOption("SetIconOnAdds", 181873, false, true)
+mod:AddHudMapOption("HudMapOnChakram", 182178)
 
+mod.vb.escapeCount = 0
 mod.vb.focusedBlast = 0
 mod.vb.savedChakram = nil
 mod.vb.savedWinds = nil
 mod.vb.savedWounds = nil
 mod.vb.savedRiposte = nil
+mod.vb.windsTargets = 0
+mod.vb.bombActive = nil
+local chakramTargets = {}
 local playerHasAnzu = false
 local corruption = GetSpellInfo(181824)
 local phantasmalFelBomb = GetSpellInfo(179219)
 local realFelBomb = GetSpellInfo(181753)
 local darkBindings = GetSpellInfo(185510)
+local playerName = UnitName("player")
 local AddsSeen = {}
 
 local debuffFilter
@@ -130,14 +138,54 @@ local function updateRangeFrame(self)
 	end
 end
 
+local function showChakram(self)
+	warnFelChakram:Show(table.concat(chakramTargets, "<, >"))
+	--Chakram is always thrown ranged-->melee-->Tank
+	--Need to determine roles for the hud
+	if not self.Options.HudMapOnChakram then return end
+	local ranged, melee, tank = nil, nil, nil
+	for i = 1, #chakramTargets do
+		local name = chakramTargets[i]
+		local uId = DBM:GetRaidUnitId(name)
+		if not uId then return end--Prevent errors if person leaves group
+		if self:IsMeleeDps(uId) then--Melee
+			melee = chakramTargets[i]
+			DBM:Debug("Melee Chakram found: "..melee, 2)
+		elseif self:IsTanking(uId, "boss1") then--Tank
+			tank = chakramTargets[i]
+			DBM:Debug("Tank Chakram found: "..tank, 2)
+		else--Ranged
+			ranged = chakramTargets[i]
+			DBM:Debug("Ranged Chakram found: "..ranged, 2)
+		end
+	end
+	if ranged and melee and tank then
+		DBM:Debug("All Chakram found!", 2)
+		DBMHudMap:RegisterRangeMarkerOnPartyMember(182178, "party", ranged, 0.65, 6, nil, nil, nil, 0.8, nil, false):Appear():SetLabel(ranged, nil, nil, nil, nil, nil, 0.8, nil, -15, 8, nil)
+		DBMHudMap:RegisterRangeMarkerOnPartyMember(182178, "party", melee, 0.65, 6, nil, nil, nil, 0.8, nil, false):Appear():SetLabel(melee, nil, nil, nil, nil, nil, 0.8, nil, -15, 8, nil)
+		DBMHudMap:RegisterRangeMarkerOnPartyMember(182178, "party", tank, 0.65, 6, nil, nil, nil, 0.8, nil, false):Appear():SetLabel(tank, nil, nil, nil, nil, nil, 0.8, nil, -15, 8, nil)
+		if playerName == melee or playerName == ranged or playerName == tank then--Player in it, green lines
+			DBMHudMap:AddEdge(0, 1, 0, 0.5, 6, ranged, melee, nil, nil, nil, nil)
+			DBMHudMap:AddEdge(0, 1, 0, 0.5, 6, melee, tank, nil, nil, nil, nil)
+		else--Yellow lines
+			DBMHudMap:AddEdge(1, 1, 0, 0.5, 6, ranged, melee, nil, nil, nil, nil)
+			DBMHudMap:AddEdge(1, 1, 0, 0.5, 6, melee, tank, nil, nil, nil, nil)
+		end
+	end
+end
+
 function mod:OnCombatStart(delay)
+	self.vb.escapeCount = 0
 	self.vb.focusedBlast = 0
 	self.vb.savedChakram = nil
 	self.vb.savedWinds = nil
 	self.vb.savedWounds = nil
 	self.vb.savedRiposte = nil
+	self.vb.windsTargets = 0
+	self.vb.bombActive = nil
 	playerHasAnzu = false
 	table.wipe(AddsSeen)
+	table.wipe(chakramTargets)
 	updateRangeFrame(self)
 	timerChakramCD:Start(5-delay)--Seems still 5 in all modes
 	if self:IsNormal() then--Normal timers are about 40% slower on pull, 20% slower rest of fight
@@ -154,7 +202,7 @@ function mod:OnCombatStart(delay)
 			timerShadowRiposteCD:Start(9.5-delay)
 		end
 	end
-	if self:IsNormal() then--Harder berserk on normal vs all other difficulties. Kromog all over again.
+	if self:IsNormal() or self:IsMythic() then
 		berserkTimer:Start(480-delay)
 	else
 		berserkTimer:Start(-delay)
@@ -164,6 +212,9 @@ end
 function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
+	end
+	if self.Options.HudMapOnChakram then
+		DBMHudMap:Disable()
 	end
 end 
 
@@ -179,7 +230,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 181827 or spellId == 187998 then--Both versions of it. I assume the 5 second version is probably LFR/Normal
 		timerFelConduitCD:Start(args.sourceGUID)
 		if playerHasAnzu then--Able to interrupt
-			specWarnFelConduit:Show()
+			specWarnFelConduit:Show(args.sourceName)
 			if self:IsHealer() then--It's still on healer that did last dispel, they need to throw to better interruptor, probably tank
 				specWarnThrowAnzu:Show(TANK)
 				voiceThrowAnzu:Play("179202m") --throw to melee (maybe change to throw to tank, in strat i saw, it was best to bounce eye between tank and healer since throwing to tank also made immune to Phantasmal Corruption as added bonus)
@@ -190,6 +241,7 @@ function mod:SPELL_CAST_START(args)
 			warnFelConduit:Show()
 		end
 	elseif spellId == 181873 then--Air phase start (Shadow Escape)
+		self.vb.escapeCount = self.vb.escapeCount + 1
 		self.vb.focusedBlast = 0
 		--Timers pause, save times
 		self.vb.savedChakram = timerChakramCD:GetRemaining()
@@ -197,6 +249,26 @@ function mod:SPELL_CAST_START(args)
 		self.vb.savedWounds = timerPhantasmalWoundsCD:GetRemaining()
 		if self:IsMythic() then
 			self.vb.savedRiposte = timerShadowRiposteCD:GetRemaining()
+			if self.Options.SetIconOnAdds then
+				self:ScanForMobs(93625, 2, 8, 1, 0.2, 15)--Mythic Add
+				self:ScanForMobs(91543, 2, 7, 1, 0.2, 15)--Bomb Add
+				if self.vb.escapeCount >= 2 then
+					self:ScanForMobs(91541, 2, 6, 1, 0.2, 15)--Construct Add
+				end
+				if self.vb.escapeCount == 3 then
+					self:ScanForMobs(91539, 2, 5, 1, 0.2, 15)--Raven Add
+				end
+			end
+		else
+			if self.Options.SetIconOnAdds then
+				self:ScanForMobs(91543, 2, 8, 1, 0.2, 15)--Bomb Add
+				if self.vb.escapeCount >= 2 then
+					self:ScanForMobs(91541, 2, 7, 1, 0.2, 15)--Construct Add
+				end
+				if self.vb.escapeCount == 3 then
+					self:ScanForMobs(91539, 2, 6, 1, 0.2, 15)--Raven Add
+				end
+			end
 		end
 		--Clear. Sure I could just do GetTime+39 and call it a day, but this is prettier
 		timerChakramCD:Cancel()
@@ -205,8 +277,7 @@ function mod:SPELL_CAST_START(args)
 		timerPhantasmalWoundsCD:Cancel()
 		timerDarkBindingsCD:Cancel()
 		timerShadowRiposteCD:Cancel()
-	elseif spellId == 185345 then
-		timerShadowRiposteCD:Start()
+	elseif spellId == 185345 and not args:IsSrcTypePlayer() then
 		if playerHasAnzu then
 			specWarnShadowRiposte:Show()
 		else
@@ -218,6 +289,7 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 182178 then
+		table.wipe(chakramTargets)
 		timerChakramCD:Start()
 	elseif spellId == 181956 then
 		if self:IsNormal() then
@@ -242,6 +314,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.savedRiposte = nil
 	elseif spellId == 185510 then
 		timerDarkBindingsCD:Start(args.sourceGUID)
+	elseif spellId == 185345 and not args:IsSrcTypePlayer() then
+		timerShadowRiposteCD:Start()
 	end
 end
 
@@ -253,11 +327,26 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetIcon(args.destName, 1)
 		end
 		if args:IsPlayer() then
-			specWarnEyeofAnzu:Show()
 			playerHasAnzu = true
+			--Check for bombs or winds and show action warnings
+			if self.vb.bombActive then
+				if self:IsHealer() then--Can dispel
+					specWarnFelBombDispel:Show(self.vb.bombActive)
+					voiceFelBombDispel:Play("dispelnow")
+				else--Cannot dispel, get eye to a healer asap!
+					specWarnThrowAnzu:Show(HEALER)
+					voiceThrowAnzu:Play("179202h")
+				end
+			elseif self.vb.windsTargets > 0 then
+				specWarnThrowAnzu:Show(GetSpellInfo(181957))
+				voiceThrowAnzu:Play("179202")
+			else--No bombs or winds, show generic "eye on you" warning
+				specWarnEyeofAnzu:Show()
+			end
 		end
 	elseif spellId == 181957 then
 		warnPhantasmalWinds:CombinedShow(0.3, args.destName)
+		self.vb.windsTargets = self.vb.windsTargets + 1
 		if args:IsPlayer() then
 			specWarnPhantasmalWinds:Show()
 			yellPhantasmalWinds:Yell()
@@ -309,6 +398,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellPhantasmalFelBomb:Schedule(0.3)
 		end
 	elseif spellId == 181753 then
+		self.vb.bombActive = args.destName
 		warnFelBomb:Show(args.destName)
 		if self:IsNormal() then
 			timerFelBombCD:Start(23, args.sourceGUID)
@@ -345,12 +435,18 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnDarkBindings:Show()
 		end
-		if playerHasAnzu and self:AntiSpam(3, 1) then
+		if playerHasAnzu and self:AntiSpam(3, 3) then
 			specWarnThrowAnzu:Show(args.spellName)
 			voiceThrowAnzu:Play("179202")
 		end
 	elseif spellId == 182178 or spellId == 182200 then
-		warnFelChakram:CombinedShow(0.3, args.destName)
+		chakramTargets[#chakramTargets+1] = args.destName
+		self:Unschedule(showChakram)
+		if #chakramTargets == 3 then
+			showChakram(self)
+		else
+			self:Schedule(0.5, showChakram, self)
+		end
 		if args:IsPlayer() then
 			specWarnFelChakram:Show()
 			voiceFelChakram:Play("runout")
@@ -377,6 +473,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			playerHasAnzu = false
 		end
 	elseif spellId == 181957 and self.Options.SetIconOnWinds then
+		self.vb.windsTargets = self.vb.windsTargets - 1
 		self:SetIcon(args.destName, 0)
 	elseif (spellId == 181824 or spellId == 187990) then
 		if args:IsPlayer() then
@@ -387,14 +484,27 @@ function mod:SPELL_AURA_REMOVED(args)
 			updateRangeFrame(self)
 		end
 	elseif spellId == 181753 then
+		self.vb.bombActive = nil
 		if args:IsPlayer() then
 			updateRangeFrame(self)
 		end
 		if self.Options.SetIconOnFelBomb then
 			self:SetIcon(args.destName, 0)
 		end
+	elseif spellId == 182178 or spellId == 182200 then
+--		if self.Options.HudMapOnChakram then
+--			DBMHudMap:FreeEncounterMarkerByTarget(182178, args.destName)
+--		end
 	end
 end
+
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+	if spellId == 182600 and destGUID == UnitGUID("player") and self:AntiSpam(2, 4) then
+		specWarnFelLaserGTFO:Show()
+		voiceFelLaser:Play("runaway")
+	end
+end
+mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:RAID_BOSS_WHISPER(msg)
 	if msg:find("spell:182582") then
@@ -460,12 +570,3 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		end
 	end
 end
-
---[[
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 173192 and destGUID == UnitGUID("player") and self:AntiSpam(2, 3) then
-
-	end
-end
-mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
---]]

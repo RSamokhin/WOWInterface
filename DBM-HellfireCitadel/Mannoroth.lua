@@ -1,23 +1,23 @@
 local mod	= DBM:NewMod(1395, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14147 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14718 $"):sub(12, -3))
 mod:SetCreatureID(91349)--91305 Fel Iron Summoner
 mod:SetEncounterID(1795)
 mod:SetZone()
-mod:SetUsedIcons(3, 2, 1)
-mod:SetHotfixNoticeRev(14146)
+mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
+mod:SetHotfixNoticeRev(14612)
 mod.respawnTime = 30
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 181126 181132 181557 183376 181793 181792 181738 181799 182084 185830 181948 182040 182076 182077 181099 181597 182006",
-	"SPELL_CAST_SUCCESS 181190 181597 182006",
+	"SPELL_CAST_SUCCESS 181190 181597 182006 181275",
 	"SPELL_AURA_APPLIED 181099 181275 181191 181597 182006 186362",
 	"SPELL_AURA_APPLIED_DOSE 181119",
-	"SPELL_AURA_REMOVED 181099 181275 185147 182212 185175 181597 182006 181275 186362",
---	"SPELL_PERIODIC_DAMAGE",
---	"SPELL_ABSORBED",
+	"SPELL_AURA_REMOVED 181099 181275 185147 182212 185175 181597 182006 181275 186362 181119",
+	"SPELL_DAMAGE 181192 190070",
+	"SPELL_MISSED 181192 190070",
 	"SPELL_SUMMON 181255 181180",
 	"INSTANCE_ENCOUNTER_ENGAGE_UNIT",
 	"UNIT_DIED",
@@ -33,7 +33,7 @@ mod:RegisterEventsInCombat(
 ----Doom Lords
 local warnCurseoftheLegion			= mod:NewTargetCountAnnounce(181275, 3)--Spawn
 local warnMarkofDoom				= mod:NewTargetAnnounce(181099, 4)
-local warnDoomSpike					= mod:NewStackAnnounce(181119, 3, nil, "Tank")
+local warnDoomSpike					= mod:NewStackAnnounce(181119, 3, nil, false, 2)
 ----Fel Imp
 local warnFelImplosion				= mod:NewCountAnnounce(181255, 3)--Spawn
 ----Dread Infernals
@@ -53,64 +53,70 @@ local warnFelseeker					= mod:NewCountAnnounce(181735, 3)
 local specWarnCurseofLegion			= mod:NewSpecialWarningYou(181275)
 local yellCurseofLegion				= mod:NewFadesYell(181275)--Don't need to know when it's applied, only when it's fading does it do aoe/add spawn
 local specWarnMarkOfDoom			= mod:NewSpecialWarningYou(181099, nil, nil, nil, 1, 2)
-local yellMarkOfDoom				= mod:NewPosYell(181099)--This need to know at apply, only player needs to know when it's fading
+local yellMarkOfDoom				= mod:NewPosYell(181099, 31348)-- This need to know at apply, only player needs to know when it's fading
 local specWarnShadowBoltVolley		= mod:NewSpecialWarningInterrupt(181126, "-Healer", nil, nil, 1, 2)
-local specWarnDoomSpikeOther		= mod:NewSpecialWarningTaunt(181119, nil, nil, nil, 1, 2)
+local specWarnDoomSpikeOther		= mod:NewSpecialWarningTaunt(181119, false, nil, 2, 1, 2)--Optional, most guilds 3 tank and don't swap for this so off by default
 ----Fel Imps
 local specWarnFelBlast				= mod:NewSpecialWarningInterrupt(181132, false, nil, 2, 1, 2)--Can be spammy, but someone may want it
 ----Dread Infernals
-local specWarnFelHellfire			= mod:NewSpecialWarningDodge(181191, "Melee", nil, nil, 4, 2)
+local specWarnFelHellfire			= mod:NewSpecialWarningDodge(181191, nil, nil, 3, 1, 2)
 ----Gul'dan
 local specWarnWrathofGuldan			= mod:NewSpecialWarningYou(186362, nil, nil, nil, 1)
-local yellWrathofGuldan				= mod:NewYell(186362)
+local yellWrathofGuldan				= mod:NewPosYell(186362, 169826)
+local specWarnFelPillar				= mod:NewSpecialWarningDodge(190070, nil, nil, 3, 1, 2)
 --Mannoroth
 local specWarnGlaiveCombo			= mod:NewSpecialWarningSpell(181354, "Tank", nil, nil, 3, 2)--Active mitigation or die mechanic
 local specWarnMassiveBlast			= mod:NewSpecialWarningSpell(181359, nil, nil, nil, 1, 2)
 local specWarnMassiveBlastOther		= mod:NewSpecialWarningTaunt(181359, nil, nil, nil, 1, 2)
 local specWarnFelHellStorm			= mod:NewSpecialWarningSpell(181557, nil, nil, nil, 2, 2)
 local specWarnGaze					= mod:NewSpecialWarningYou(181597)
-local yellGaze						= mod:NewPosYell(181597)
+local yellGaze						= mod:NewPosYell(181597, 134029)
 local specWarnFelSeeker				= mod:NewSpecialWarningDodge(181735, nil, nil, nil, 2, 2)
 local specWarnShadowForce			= mod:NewSpecialWarningSpell(181799, nil, nil, nil, 3)
 
 --Adds
 mod:AddTimerLine(OTHER)
 ----Doom Lords
-local timerCurseofLegionCD			= mod:NewNextCountTimer(65, 181275, nil, nil, nil, 1)--Maybe see one day, in LFR or something when group is terrible or doesn't kill doom lord portal first
+local timerCurseofLegionCD			= mod:NewNextCountTimer(64.8, 181275, nil, nil, nil, 1, nil, DBM_CORE_HEROIC_ICON)--Maybe see one day, in LFR or something when group is terrible or doesn't kill doom lord portal first
 local timerMarkofDoomCD				= mod:NewCDTimer(31.5, 181099, nil, "-Tank", nil, 3)
-local timerShadowBoltVolleyCD		= mod:NewCDTimer(12, 181126, nil, "-Healer", nil, 4)
+--local timerShadowBoltVolleyCD		= mod:NewCDTimer(12, 181126, nil, "-Healer", nil, 4)
 ----Fel Imps
-local timerFelImplosionCD			= mod:NewNextCountTimer(46, 181255, nil, nil, nil, 1)
+local timerFelImplosionCD			= mod:NewNextCountTimer(46, 181255, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
 ----Infernals
 local timerInfernoCD				= mod:NewNextCountTimer(107, 181180, nil, nil, nil, 1)
 ----Gul'dan
-local timerWrathofGuldanCD			= mod:NewCDTimer(107, 186348, nil, nil, nil, 3)
+local timerWrathofGuldanCD			= mod:NewCDTimer(107, 186348, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 --Mannoroth
 mod:AddTimerLine(L.name)
-local timerGlaiveComboCD			= mod:NewCDTimer(30, 181354, nil, "Tank", nil, 5)--30 seconds unless delayed by something else
+local timerGlaiveComboCD			= mod:NewCDTimer(30, 181354, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--30 seconds unless delayed by something else
 local timerFelHellfireCD			= mod:NewCDTimer(35, 181557, nil, nil, nil, 2)--35, unless delayed by other things.
-local timerGazeCD					= mod:NewCDTimer(47.1, 181597, nil, nil, nil, 3)--As usual, some variation do to other abilities
+local timerGazeCD					= mod:NewCDTimer(47.1, 181597, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)--As usual, some variation do to other abilities
 local timerFelSeekerCD				= mod:NewCDTimer(50, 181735, nil, nil, nil, 2)--Small sample size, confirm it's not shorter if not delayed by things.
-local timerShadowForceCD			= mod:NewCDTimer(52.2, 181799, nil, nil, nil, 3)
+local timerShadowForceCD			= mod:NewCDTimer(52.2, 181799, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 
 --local berserkTimer					= mod:NewBerserkTimer(360)
 
 local countdownGlaiveCombo			= mod:NewCountdown("Alt30", 181354, "Tank")
-local countdownMarkOfDoom			= mod:NewCountdownFades("Alt15", 181099)
-local countdownShadowForce			= mod:NewCountdown("AltTwo52", 181799)
+local countdownMarkOfDoom			= mod:NewCountdownFades("AltTwo15", 181099)
+local countdownShadowForce			= mod:NewCountdown(52, 181799)
 
 local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
 local voiceGaze						= mod:NewVoice(181597, false) --gather share
 local voiceMarkOfDoom				= mod:NewVoice(181099) --run out
-local voiceFelHellfire				= mod:NewVoice(181191, "Melee") --runaway
+local voiceFelHellfire				= mod:NewVoice(181191, nil, nil, 2) --runaway
 local voiceShadowBoltVolley			= mod:NewVoice(181126, "-Healer")
 local voiceFelBlast					= mod:NewVoice(181132, "-Healer")
-local voiceFelSeeker				= mod:NewVoice(181132)--watchstep
+local voiceFelSeeker				= mod:NewVoice(181735)--watchstep
+local voiceFelHellstorm				= mod:NewVoice(181557)--watchstep
 local voiceGlaiveCombo				= mod:NewVoice(181354, "Tank")--Defensive
 local voiceMassiveBlast				= mod:NewVoice(181359, "Tank")--changemt
+local voiceFelPillar				= mod:NewVoice(190070)--runaway
 
 mod:AddRangeFrameOption(20, 181099)
-mod:AddHudMapOption("HudMapOnGaze", 181597)
+mod:AddSetIconOption("SetIconOnGaze", 181597, false)
+mod:AddSetIconOption("SetIconOnDoom2", 181099, true)
+mod:AddSetIconOption("SetIconOnWrath", 186348, false)
+mod:AddHudMapOption("HudMapOnGaze2", 181597, false)
 mod:AddInfoFrameOption(181597)
 
 mod.vb.DoomTargetCount = 0
@@ -119,6 +125,7 @@ mod.vb.phase = 1
 mod.vb.impCount = 0
 mod.vb.infernalCount = 0
 mod.vb.doomlordCount = 0
+mod.vb.wrathIcon = 8
 mod.vb.ignoreAdds = false
 local phase1ImpTimers = {15, 32.2, 24, 15, 10}--Spawn 33% faster each wave, but cannot confirm it goes lower than 10, if it does, next would be 6.6
 local phase1ImpTimersN = {15, 32.2, 24, 24}--Normal doesn't go below 24? need larger sample size. Normal differently two 24s in a row and didn't drop to 15
@@ -128,20 +135,34 @@ local phase1InfernalTimers = {18.4, 40, 30, 20, 20, 20}--Confirmed this far on h
 local phase1InfernalTimersN = {18.4, 40, 30, 30}--Normal probably doesn't drop below 30?
 local phase2InfernalTimers = {47.5, 44.8, 44.8, 35}--So far normal and heroic same, but if phase goes on longer probably different (with normal having a higher minimum)
 local phase2InfernalTimersN = {47.5, 44.8, 44.8, 35}--So far normal and heroic same, but if phase goes on longer probably different (with normal having a higher minimum)
-local phase3InfernalTimers = {28, 34.8, 35, 34.8, 34.8}--Again, the same now, but two tables FOR NOW until I can confirm whether or not they differ for REALLY long pulls
-local phase3InfernalTimersN = {28, 34.8, 35, 34.8, 34.8}--^^
+--local phase3InfernalTimers = {28, 34.8, 35, 34.8, 34.8}--Again, the same now, but two tables FOR NOW until I can confirm whether or not they differ for REALLY long pulls
+--local phase3InfernalTimersN = {28, 34.8, 35, 34.8, 34.8}--^^
 
 local gazeTargets = {}
 local doomTargets = {}
 local guldanTargets = {}
+local doomSpikeTargets = {}
 local AddsSeen = {}
 local playerName = UnitName("player")
-local debuffFilter
-local debuffName = GetSpellInfo(181099)
+local doomName = GetSpellInfo(181099)
+local guldanName = GetSpellInfo(186362)
+local doomSpikeName = GetSpellInfo(181119)
+local gaze1, gaze2 = GetSpellInfo(181597), GetSpellInfo(182006)
 local UnitDebuff = UnitDebuff
+local doomFilter, guldanFilter, doomSpikeFilter
 do
-	debuffFilter = function(uId)
-		if UnitDebuff(uId, debuffName) then
+	doomFilter = function(uId)
+		if UnitDebuff(uId, doomName) then
+			return true
+		end
+	end
+	guldanFilter = function(uId)
+		if UnitDebuff(uId, guldanName) then
+			return true
+		end
+	end
+	doomSpikeFilter = function(uId)
+		if UnitDebuff(uId, guldanName) then
 			return true
 		end
 	end
@@ -149,53 +170,81 @@ end
 
 local function updateRangeFrame(self)
 	if not self.Options.RangeFrame then return end
-	if self.vb.DoomTargetCount > 0 then
-		if UnitDebuff("Player", debuffName) then
+	if self:IsTank() and #doomSpikeTargets > 0 then
+		if UnitDebuff("Player", doomSpikeName) then
+			DBM.RangeCheck:Show(30)
+		else
+			DBM.RangeCheck:Show(30, doomSpikeFilter)
+		end
+	elseif self.vb.DoomTargetCount > 0 then
+		if UnitDebuff("Player", doomName) then
 			DBM.RangeCheck:Show(20)
 		else
-			DBM.RangeCheck:Show(20, debuffFilter)
+			DBM.RangeCheck:Show(20, doomFilter)
+		end
+	elseif #guldanTargets > 0 then
+		if UnitDebuff("Player", guldanName) then
+			DBM.RangeCheck:Show(15)
+		else
+			DBM.RangeCheck:Show(15, guldanFilter)
+		end
+	elseif not self:IsTank() and #doomSpikeTargets > 0 then
+		local showDoomSpike = false
+		for i = 1, #doomSpikeTargets do
+			local name = doomSpikeTargets[i]
+			if name and self:CheckNearby(31, name) then
+				showDoomSpike = true
+				break
+			end
+		end
+		if showDoomSpike then
+			--Only show doom spike if you have no debuffs
+			DBM.RangeCheck:Show(30, doomSpikeFilter)
 		end
 	else
 		DBM.RangeCheck:Hide()
 	end
 end
 
-local lines = {}
-local function sortInfoFrame(a, b) 
-	local a = lines[a]
-	local b = lines[b]
-	if not tonumber(a) then a = -1 end
-	if not tonumber(b) then b = -1 end
-	if a < b then return true else return false end
-end
-
-local gaze1, gaze2, guldanSpellName = GetSpellInfo(181597), GetSpellInfo(182006), GetSpellInfo(186362)
-local function updateInfoFrame()
-	table.wipe(lines)
-	local total = 0
-	local total2 = 0
-	for i = 1, #gazeTargets do
-		local name = gazeTargets[i]
-		local uId = DBM:GetRaidUnitId(name)
-		if UnitDebuff(uId, gaze1) or UnitDebuff(uId, gaze2) then
-			total = total + 1
-			lines[name] = i
+local updateInfoFrame, sortInfoFrame
+do
+	local lines = {}
+	sortInfoFrame = function(a, b)
+		local a = lines[a]
+		local b = lines[b]
+		if not tonumber(a) then a = -1 end
+		if not tonumber(b) then b = -1 end
+		if a < b then return true else return false end
+	end
+	updateInfoFrame = function()
+		table.wipe(lines)
+		local total = 0
+		local total2 = 0
+		for i = 1, #gazeTargets do
+			local name = gazeTargets[i]
+			local uId = DBM:GetRaidUnitId(name)
+			if not uId then break end
+			if UnitDebuff(uId, gaze1) or UnitDebuff(uId, gaze2) then
+				total = total + 1
+				lines["|cFF9932CD"..name.."|r"] = i
+			end
 		end
-	end
-	--Mythic, show guldan targets and number of charges left
-	for i = 1, #guldanTargets do
-		local name = guldanTargets[i]
-		local uId = DBM:GetRaidUnitId(name)
-		local _, _, _, currentStack = UnitDebuff(uId, guldanSpellName)
-		if currentStack then
-			total2 = total2 + 1
-			lines[name] = currentStack
+		--Mythic, show guldan targets and number of charges left
+		for i = 1, #guldanTargets do
+			local name = guldanTargets[i]
+			local uId = DBM:GetRaidUnitId(name)
+			if not uId then break end
+			local _, _, _, currentStack = UnitDebuff(uId, guldanName)
+			if currentStack then
+				total2 = total2 + 1
+				lines[name] = currentStack
+			end
 		end
+		if total == 0 and total2 == 0 then--None found, hide infoframe because all broke
+			DBM.InfoFrame:Hide()
+		end
+		return lines
 	end
-	if total == 0 and total2 == 0 then--None found, hide infoframe because all broke
-		DBM.InfoFrame:Hide()
-	end
-	return lines
 end
 
 local function warnGazeTargts(self)
@@ -205,25 +254,20 @@ local function warnGazeTargts(self)
 	for i = 1, #gazeTargets do
 		local name = gazeTargets[i]
 		if name == playerName then
-			yellGaze:Yell(i)
+			yellGaze:Yell(i, i, i)
+		end
+		if self.Options.SetIconOnGaze then
+			self:SetIcon(name, i)
 		end
 	end
 	if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
-		--DBM.InfoFrame:SetHeader(gaze1)
-		DBM.InfoFrame:Show(8, "function", updateInfoFrame, sortInfoFrame)
+		DBM.InfoFrame:SetHeader(gaze1)
+		DBM.InfoFrame:Show(8, "function", updateInfoFrame, sortInfoFrame, true)
 	end
 end
 
 local function breakDoom(self)
-	table.sort(doomTargets)
 	warnMarkofDoom:Show(table.concat(doomTargets, "<, >"))
-	if self:IsLFR() then return end
-	for i = 1, #doomTargets do
-		local name = doomTargets[i]
-		if name == playerName then
-			yellMarkOfDoom:Yell(i)
-		end
-	end
 end
 
 function mod:OnCombatStart(delay)
@@ -231,6 +275,7 @@ function mod:OnCombatStart(delay)
 	table.wipe(gazeTargets)
 	table.wipe(AddsSeen)
 	table.wipe(guldanTargets)
+	table.wipe(doomSpikeTargets)
 	self.vb.ignoreAdds = false
 	self.vb.impCount = 0
 	self.vb.infernalCount = 0
@@ -239,20 +284,10 @@ function mod:OnCombatStart(delay)
 	self.vb.portalsLeft = 3
 	self.vb.DoomTargetCount = 0
 	if self:IsMythic() then
-		--I've seen 1 sec variance on all of these timers.
-		--yes most of time +1 to all of these timers is more accurate
-		--but sometimes, everything does come 1 sec early, so that's why
-		timerCurseofLegionCD:Start(23, 1)
-		timerFelHellfireCD:Start(28)
-		timerGlaiveComboCD:Start(42.5)
-		countdownGlaiveCombo:Start(42.5)
-		timerFelImplosionCD:Start(45-delay, 1)
-		timerFelSeekerCD:Start(57.8)
-		timerGazeCD:Start(68)
-		timerInfernoCD:Start(70-delay, 1)
+		self.vb.wrathIcon = 8
 	else
-		timerCurseofLegionCD:Start(6, 1)
-		timerFelImplosionCD:Start(15-delay, 1)
+		timerCurseofLegionCD:Start(5.2, 1)
+		timerFelImplosionCD:Start(13.5-delay, 1)
 		timerInfernoCD:Start(18.4-delay, 1)--Verify, seems 20 now
 	end
 end
@@ -261,7 +296,7 @@ function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
-	if self.Options.HudMapOnGaze then
+	if self.Options.HudMapOnGaze2 then
 		DBMHudMap:Disable()
 	end
 end 
@@ -270,9 +305,10 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 181557 or spellId == 181948 then
 		specWarnFelHellStorm:Show()
+		voiceFelHellstorm:Play("watchstep")
 		timerFelHellfireCD:Start()
 	elseif spellId == 181126 then
-		timerShadowBoltVolleyCD:Start(args.sourceGUID)
+--		timerShadowBoltVolleyCD:Start(args.sourceGUID)
 		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnShadowBoltVolley:Show(args.sourceName)
 			voiceShadowBoltVolley:Play("kickcast")
@@ -289,6 +325,7 @@ function mod:SPELL_CAST_START(args)
 		if tanking or (status == 3) then--Player is current target
 			specWarnMassiveBlast:Show()
 		else
+			if self:GetNumAliveTanks() >= 3 and not self:CheckNearby(21, targetName) then return end--You are not near current tank, you're probably 3rd tank on Doom Guards that never taunts massive blast
 			specWarnMassiveBlastOther:Schedule(1, targetName)
 		end
 	elseif spellId == 181793 or spellId == 182077 then--Melee (10)
@@ -340,15 +377,15 @@ function mod:SPELL_SUMMON(args)
 				timerInfernoCD:Start(timers1, nextCount)
 			end
 		elseif self.vb.phase == 2 then
-			local timers2 = self:IsMythic() and 55 or self:IsNormal() and phase2InfernalTimersN[nextCount] or phase2InfernalTimers[nextCount]
+			local timers2 = self:IsMythic() and 54.8 or self:IsNormal() and phase2InfernalTimersN[nextCount] or phase2InfernalTimers[nextCount]
 			if timers2 then
 				timerInfernoCD:Start(timers2, nextCount)
 			end
 		else
-			local timers3 = self:IsNormal() and phase3InfernalTimersN[nextCount] or phase3InfernalTimers[nextCount]
-			if timers3 then
-				timerInfernoCD:Start(timers3, nextCount)
-			end
+--			local timers3 = self:IsNormal() and phase3InfernalTimersN[nextCount] or phase3InfernalTimers[nextCount]
+--			if timers3 then
+				timerInfernoCD:Start(34.8, nextCount)
+--			end
 		end
 	end
 end
@@ -359,14 +396,15 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnFelStreak:Show()
 	elseif spellId == 181597 or spellId == 182006 then
 		timerGazeCD:Start()
+	elseif spellId == 181275 then
+		self.vb.doomlordCount = self.vb.doomlordCount + 1
+		timerCurseofLegionCD:Start(nil, self.vb.doomlordCount+1)
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 181275 then
-		self.vb.doomlordCount = self.vb.doomlordCount + 1
-		timerCurseofLegionCD:Start(nil, self.vb.doomlordCount+1)
 		if args:IsPlayer() then
 			specWarnCurseofLegion:Show()
 			local _, _, _, _, _, _, expires = UnitDebuff("Player", args.spellName)
@@ -374,30 +412,52 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellCurseofLegion:Schedule(debuffTime - 1, 1)
 			yellCurseofLegion:Schedule(debuffTime - 2, 2)
 			yellCurseofLegion:Schedule(debuffTime - 3, 3)
-			yellCurseofLegion:Schedule(debuffTime - 2, 4)
+			yellCurseofLegion:Schedule(debuffTime - 4, 4)
 			yellCurseofLegion:Schedule(debuffTime - 5, 5)
 		else
 			warnCurseoftheLegion:Show(self.vb.doomlordCount, args.destName)
 		end
 	elseif spellId == 181099 then
 		timerMarkofDoomCD:Start(args.sourceGUID)
-		doomTargets[#doomTargets+1] = args.destName
+		local name = args.destName
+		if not tContains(doomTargets, name) then
+			doomTargets[#doomTargets+1] = name
+		end
+		local count = #doomTargets
 		self.vb.DoomTargetCount = self.vb.DoomTargetCount + 1
 		self:Unschedule(breakDoom)
-		self:Schedule(1.3, breakDoom, self)--3 targets, pretty slowly. I've seen at least 1.2, so make this 1.3, maybe more if needed
+		if count == 3 then
+			breakDoom(self)
+		else
+			self:Schedule(2, breakDoom, self)--3 targets, pretty slowly. I've seen at least 1.2, so make this 1.3, maybe more if needed
+		end
 		if args:IsPlayer() then
-			specWarnMarkOfDoom:Show()
+			specWarnMarkOfDoom:Show(self:IconNumToString(count))
 			countdownMarkOfDoom:Start()
-			voiceMarkOfDoom:Schedule(8.5, "runout")
+			if self:IsMythic() then
+				voiceMarkOfDoom:Play("mm"..count)
+			else
+				voiceMarkOfDoom:Play("runout")
+			end
+			yellMarkOfDoom:Yell(count, count, count)
+		end
+		if self.Options.SetIconOnDoom2 then
+			self:SetIcon(name, count)
 		end
 		updateRangeFrame(self)
-	elseif spellId == 181191 and self:CheckInterruptFilter(args.sourceGUID, true) then--No sense in duplicating code, just use CheckInterruptFilter with arg to skip the filter setting check
+	elseif spellId == 181191 and self:CheckInterruptFilter(args.sourceGUID, true) and self:IsMelee() and self:AntiSpam(2, 5) then--No sense in duplicating code, just use CheckInterruptFilter with arg to skip the filter setting check
 		voiceFelHellfire:Play("runaway")
 		specWarnFelHellfire:Show()--warn melee who are targetting infernal to run out if it's exploding
 	elseif spellId == 181597 or spellId == 182006 then
-		gazeTargets[#gazeTargets+1] = args.destName
+		if not tContains(gazeTargets, args.destName) then
+			gazeTargets[#gazeTargets+1] = args.destName
+		end
 		self:Unschedule(warnGazeTargts)
-		self:Schedule(0.5, warnGazeTargts, self)--At least 0.5, maybe bigger needed if warning still splits
+		if #gazeTargets == 3 then
+			warnGazeTargts(self)
+		else
+			self:Schedule(1, warnGazeTargts, self)--At least 0.5, maybe bigger needed if warning still splits
+		end
 		voiceGaze:Cancel()
 		if args:IsPlayer() then
 			specWarnGaze:Show()
@@ -406,8 +466,8 @@ function mod:SPELL_AURA_APPLIED(args)
 				voiceGaze:Schedule(0.3, "gathershare")
 			end
 		end
-		if self.Options.HudMapOnGaze then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 8, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
+		if self.Options.HudMapOnGaze2 then
+			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 8, 8, nil, nil, nil, 0.5, nil, true):Appear():SetLabel(args.destName)
 		end
 	elseif spellId == 181119 then
 		local amount = args.amount or 1
@@ -417,16 +477,33 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnDoomSpikeOther:Show(args.destName)
 			end
 		end
+		if self:IsMythic() then
+			if not tContains(doomSpikeTargets, args.destName) then
+				table.insert(doomSpikeTargets, args.destName)
+			end
+			updateRangeFrame(self)
+		end
 	elseif spellId == 186362 then--Only cast once per phase transition (twice whole fight)
-		table.insert(guldanTargets, args.destName)
+		if not tContains(guldanTargets, args.destName) then
+			table.insert(guldanTargets, args.destName)
+		end
 		warnWrathofGuldan:CombinedShow(0.3, args.destName)
+		local icon = self.vb.wrathIcon
+		if self.Options.SetIconOnWrath then
+			self:SetIcon(args.destName, icon)
+		end
 		if args:IsPlayer() then
 			specWarnWrathofGuldan:Show()
-			yellWrathofGuldan:Yell()
+			yellWrathofGuldan:Yell(icon, icon, icon)
 		end
-		if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
-			DBM.InfoFrame:Show(8, "function", updateInfoFrame, sortInfoFrame)
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:SetHeader(args.spellName)--Always set header to wrath if wrath is present
+			if not DBM.InfoFrame:IsShown() then
+				DBM.InfoFrame:Show(8, "function", updateInfoFrame, sortInfoFrame, true)
+			end
 		end
+		self.vb.wrathIcon = self.vb.wrathIcon - 1--Update icon even if icon option off, for sync accuracy
+		updateRangeFrame(self)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -439,6 +516,9 @@ function mod:SPELL_AURA_REMOVED(args)
 			countdownMarkOfDoom:Cancel()
 		end
 		updateRangeFrame(self)
+		if self.Options.SetIconOnDoom2 and not self:IsLFR() then
+			self:SetIcon(args.destName, 0)
+		end
 	elseif spellId == 185147 or spellId == 182212 or spellId == 185175 then--Portals
 		self.vb.portalsLeft = self.vb.portalsLeft - 1
 		if spellId == 185147 and not self:IsMythic() then--Doom Lords Portal
@@ -466,15 +546,25 @@ function mod:SPELL_AURA_REMOVED(args)
 			end
 		end
 	elseif spellId == 181597 or spellId == 182006 then
-		if self.Options.HudMapOnGaze then
+		if self.Options.HudMapOnGaze2 then
 			DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
+		end
+		if self.Options.SetIconOnGaze and not self:IsLFR() then
+			self:SetIcon(args.destName, 0)
 		end
 	elseif spellId == 181275 then
 		if args:IsPlayer() then
 			yellCurseofLegion:Cancel()
 		end
 	elseif spellId == 186362 then--Only cast once per phase transition (twice whole fight)
-		table.remove(guldanTargets, args.destName)
+		tDeleteItem(guldanTargets, args.destName)
+		updateRangeFrame(self)
+		if self.Options.SetIconOnWrath then
+			self:SetIcon(args.destName, 0)
+		end
+	elseif spellId == 181119 and self:IsMythic() then
+		tDeleteItem(doomSpikeTargets, args.destName)
+		updateRangeFrame(self)
 	end
 end
 
@@ -497,11 +587,10 @@ function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 91241 then--Doom Lord
 		timerMarkofDoomCD:Cancel(args.destGUID)
-		timerShadowBoltVolleyCD:Cancel(args.destGUID)
+--		timerShadowBoltVolleyCD:Cancel(args.destGUID)
 	end
 end
 
---Todo, verify mythic has no new emotes with guldan's name, if not, just check npc for "Gul'dan"
 --This function isn't required by mod, i purposely put start timers on later trigger that doesn't need localizing.
 --This just starts phase 3 and 4 earlier, if translation available.
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc)
@@ -528,7 +617,18 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc)
 			warnPhase3:Show()
 			voicePhaseChange:Play("pthree")
 			if self:IsMythic() then
+				self.vb.wrathIcon = 8
 				timerWrathofGuldanCD:Start(10)
+			end
+			--Detect when adds timers will reset (by 181301) before they come off cd, and cancel them early
+			if timerFelImplosionCD:GetRemaining(self.vb.impCount+1) > 10 then
+				timerFelImplosionCD:Cancel()
+			end
+			if timerInfernoCD:GetRemaining(self.vb.infernalCount+1) > 10 then
+				timerInfernoCD:Cancel()
+			end
+			if timerCurseofLegionCD:GetRemaining(self.vb.doomlordCount+1) > 10 then
+				timerCurseofLegionCD:Cancel()
 			end
 		elseif self.vb.phase == 4 then
 			self.vb.ignoreAdds = true
@@ -550,6 +650,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc)
 			warnPhase4:Show()
 			voicePhaseChange:Play("pfour")
 			if self:IsMythic() then
+				self.vb.wrathIcon = 8
 				timerWrathofGuldanCD:Start(16.7)
 			end
 		end
@@ -567,14 +668,14 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		self.vb.impCount = 0
 		timerFelImplosionCD:Cancel()
 		timerInfernoCD:Cancel()
-		timerFelImplosionCD:Start(24.3, 1)--Seems same for all difficulties on this one
+		timerFelImplosionCD:Start(22, 1)--Seems same for all difficulties on this one
 		if not self:IsMythic() then
 			self.vb.infernalCount = 0
 			timerInfernoCD:Start(47.5, 1)
 		else
 			self.vb.doomlordCount = 0
 			timerCurseofLegionCD:Cancel()
-			timerCurseofLegionCD:Start(46.2, 1)--Verify more thoroughly. More transcriptor logs
+			timerCurseofLegionCD:Start(45, 1)
 		end
 	elseif spellId == 182262 then--Summon Adds (phase 3 start/Mythic Phase 4)
 		DBM:Debug("Summon adds 182262 fired", 2)
@@ -584,14 +685,24 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			self.vb.infernalCount = 0
 			timerInfernoCD:Cancel()
 			timerInfernoCD:Start(28, 1)
+			timerFelImplosionCD:Start(22, 1)
 		else
 			self.vb.impCount = 0
 			timerCurseofLegionCD:Cancel()--Done for rest of fight
-			timerFelImplosionCD:Start(24.3, 1)
+			timerFelImplosionCD:Start(7, 1)
 		end
 	elseif spellId == 181156 then--Summon Adds, Phase 2 mythic (about 18 seconds into fight)
-		--Maybe move first add spawns here? seems accurate starting firsts on pull though
+		--Starting mythic timers here is far more accurate. Starting on engage can be as much as 5 seconds off
+		--since summon adds (when mannorth starts actually gaining energy) can variate from encounter_start
 		DBM:Debug("Summon adds 181156 fired", 2)
+		timerCurseofLegionCD:Start(5, 1)
+		timerFelHellfireCD:Start(10.5)
+		timerGlaiveComboCD:Start(25.2)
+		countdownGlaiveCombo:Start(25.2)
+		timerFelImplosionCD:Start(27.4, 1)
+		timerFelSeekerCD:Start(40.2)
+		timerGazeCD:Start(50.7)--50.8-53
+		timerInfernoCD:Start(53, 1)
 	--Backup phase detection. a bit slower than CHAT_MSG_RAID_BOSS_EMOTE (5.5 seconds slower)
 	elseif spellId == 182263 and self.vb.phase == 2 then--Phase 3
 		self.vb.phase = 3
@@ -613,7 +724,18 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		warnPhase3:Show()
 		voicePhaseChange:Play("pthree")
 		if self:IsMythic() then
+			self.vb.wrathIcon = 8
 			timerWrathofGuldanCD:Start(4.8)
+		end
+		--Detect when adds timers will reset (by 181301) before they come off cd, and cancel them early
+		if timerFelImplosionCD:GetRemaining(self.vb.impCount+1) > 9.5 then
+			timerFelImplosionCD:Cancel()
+		end
+		if timerInfernoCD:GetRemaining(self.vb.infernalCount+1) > 9.5 then
+			timerInfernoCD:Cancel()
+		end
+		if timerCurseofLegionCD:GetRemaining(self.vb.doomlordCount+1) > 9.5 then
+			timerCurseofLegionCD:Cancel()
 		end
 	elseif spellId == 185690 and self.vb.phase == 3 then--Phase 4
 		self.vb.phase = 4
@@ -636,6 +758,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		warnPhase4:Show()
 		voicePhaseChange:Play("pfour")
 		if self:IsMythic() then
+			self.vb.wrathIcon = 8
 			timerWrathofGuldanCD:Start(11.2)
 		end
 	elseif spellId == 181354 then--183377 or 185831 also usable with SPELL_CAST_START but i like this way more, cleaner than Antispamming the other spellids
@@ -646,11 +769,14 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	end
 end
 
---[[
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 173192 and destGUID == UnitGUID("player") and self:AntiSpam(2, 5) then
-
+function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+	if spellId == 181192 and destGUID == UnitGUID("player") and self:AntiSpam(2, 5) then
+		specWarnFelHellfire:Show()
+		voiceFelHellfire:Play("runaway")
+	elseif spellId == 190070 and destGUID == UnitGUID("player") and self:AntiSpam(1.5, 7) then
+		specWarnFelPillar:Show()
+		voiceFelPillar:Play("runaway")
 	end
 end
-mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
---]]
+mod.SPELL_MISSED = mod.SPELL_DAMAGE
+

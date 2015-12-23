@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Souls", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 554 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
 mod:SetCreatureID(23420)
 mod:SetModelID(21483)
 mod:SetZone()
@@ -45,7 +45,7 @@ local timerNextDeaden	= mod:NewCDTimer(31, 41410)
 local timerMana			= mod:NewTimer(160, "TimerMana", 41350)
 local timerNextShield	= mod:NewCDTimer(15, 41431)
 local timerNextSoul		= mod:NewCDTimer(10, 41545)
-local timerNextShock	= mod:NewCDTimer(12, 41426)--Blizz lied, this is a 12-15 second cd. you can NOT solo interrupt these with most classes
+local timerNextShock	= mod:NewCDTimer(12, 41426, nil, nil, nil, 4)--Blizz lied, this is a 12-15 second cd. you can NOT solo interrupt these with most classes
 
 mod:AddBoolOption("DrainIcon", false)
 mod:AddBoolOption("SpiteIcon", false)

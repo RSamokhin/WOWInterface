@@ -340,6 +340,33 @@ local ACHID_ZONE_MISC = {
 		IsAlliance and 9214 or 9215, -- Hero of Stormshield / Hero of Warspear
 		IsAlliance and 9714 or 9715, -- Thy Kingdom Come
 	},
+	["Gorgrond"] = {
+		IsAlliance and 8923 or 8924,
+		9607,
+	},
+	["Talador"] = {
+		IsAlliance and 8920 or 8919,
+		9674,
+	},
+	["Spires of Arak"] = {
+		IsAlliance and 8925 or 8926,
+		9605,
+	},
+	--["Nagrand"] = { -- section handled below temporarily
+	--	IsAlliance and 8927 or 8928,
+	--	9615,
+	--},
+	["Tanaan Jungle"] = {
+		10261, -- Jungle Treasure Hunter
+		10259, -- Jungle Hunter
+		10069, -- I Came, I Clawed, I Conquered
+		10061, -- Hellbane
+		IsAlliance and 10067 or 10074, -- In Pursuit of Gul'dan
+		IsAlliance and 10068 or 10075, -- Draenor's Last Stand
+		10071, -- The Legion Will NOT Conquer All
+		IsAlliance and 10072 or 10265, -- Rumble in the Jungle (complete the above, and any in same series as one of the above, and the explore achievement)
+		10052, -- Tiny Terrors in Tanaan
+	},
 }
 if (IsAlliance) then
   tinsert(ACHID_ZONE_MISC["Grizzly Hills"], 2016) -- "Grizzled Veteran"
@@ -365,6 +392,12 @@ if (IsAlliance) then
   tinsert(ACHID_ZONE_MISC["Icecrown"], 2782)
   -- "Down Goes Van Rook" (currently no Horde equivalent?)
   tinsert(ACHID_ZONE_MISC["Ashran"], 9228)
+
+  ACHID_ZONE_MISC["Shadowmoon Valley"] = {
+	8845,
+	9602,
+  }
+
 else
   tinsert(ACHID_ZONE_MISC["Azshara"], 5454) -- "Joy Ride"
   tinsert(ACHID_ZONE_MISC["Grizzly Hills"], 2017) -- "Grizzled Veteran"
@@ -384,6 +417,12 @@ else
   -- "The Sunreavers", "Champion of the Horde":
   tinsert(ACHID_ZONE_MISC["Icecrown"], 3677)
   tinsert(ACHID_ZONE_MISC["Icecrown"], 2788)
+  
+  ACHID_ZONE_MISC["Frostfire Ridge"] = {
+	8671,
+	9606,
+  }
+
 end
 -- "The Fishing Diplomat":
 tinsert(ACHID_ZONE_MISC["Stormwind City"], "150:2")
@@ -401,6 +440,10 @@ tinsert(ACHID_ZONE_MISC["Orgrimmar"], "6621:1")
 tinsert(ACHID_ZONE_MISC["Thunder Bluff"], "6621:2")
 tinsert(ACHID_ZONE_MISC["Undercity"], "6621:3")
 tinsert(ACHID_ZONE_MISC["Silvermoon City"], "6621:4")
+
+-- Problem: Two zones named Nagrand. A change to the system is needed. For now, just put the new zone's in with the rest.
+tinsert(ACHID_ZONE_MISC["Nagrand"], IsAlliance and 8927 or 8928)
+tinsert(ACHID_ZONE_MISC["Nagrand"], 9615)
 
 -- INSTANCES - ANY DIFFICULTY (any group size):
 local ACHID_INSTANCES = {
@@ -1386,12 +1429,14 @@ local function grabFromCategory(cat, ...)
   local id, prev, p2
   for i = 1, GetCategoryNumAchievements(cat) do
     id = GetAchievementInfo(cat, i)
-    prev, p2 = nil, GetPreviousAchievement(id)
-    while (p2 and GetAchievementCategory(p2) == cat) do
-      prev = p2
-      p2 = GetPreviousAchievement(id)
-    end
-    suggested[ (prev or id) ] = true
+	if (id) then
+      prev, p2 = nil, GetPreviousAchievement(id)
+      while (p2 and GetAchievementCategory(p2) == cat) do
+        prev = p2
+        p2 = GetPreviousAchievement(id)
+      end
+      suggested[ (prev or id) ] = true
+	end
   end
   -- Add achievements specified by function call (useful for meta-achievements in a different category):
   for i=1, select("#", ...) do
@@ -1436,7 +1481,9 @@ function Overachiever.Debug_GetIDsInCat(cat)
   local id, n
   for i=1,GetCategoryNumAchievements(cat) do
     id, n = GetAchievementInfo(cat, i)
-    tab[n] = id
+    if (id) then
+	  tab[n] = id
+    end
   end
 end
 --]]

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("PT", "DBM-Party-BC", 12)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 567 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 572 $"):sub(12, -3))
 
 mod:RegisterEvents(
 	"UPDATE_WORLD_STATES",
@@ -15,7 +15,7 @@ local warnWavePortalSoon	= mod:NewAnnounce("WarnWavePortalSoon", 2, 57687)
 local warnWavePortal		= mod:NewAnnounce("WarnWavePortal", 3, 57687)
 local warnBossPortal		= mod:NewAnnounce("WarnBossPortal", 4, 33341)
 
-local timerNextPortal		= mod:NewTimer(120, "TimerNextPortal", 57687)
+local timerNextPortal		= mod:NewTimer(120, "TimerNextPortal", 57687, nil, nil, 6)
 
 --mod:AddBoolOption("ShowAllPortalTimers", false, "timer")
 mod:RemoveOption("HealthFrame")

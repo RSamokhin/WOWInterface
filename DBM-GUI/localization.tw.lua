@@ -13,6 +13,7 @@ L.OTabBosses	= "首領模組"
 L.OTabOptions	= GAMEOPTIONS_MENU
 
 L.TabCategory_Options		= "綜合設置"
+L.TabCategory_LEG	 		= "軍臨天下"
 L.TabCategory_WoD	 		= EXPANSION_NAME5
 L.TabCategory_MOP	 		= EXPANSION_NAME4
 L.TabCategory_CATA	 		= EXPANSION_NAME3
@@ -69,8 +70,9 @@ L.ModelSoundShort			= SHORT
 L.ModelSoundLong			= TOAST_DURATION_LONG
 
 L.Button_RangeFrame			= "顯示/隱藏距離監視器"
-L.Button_InfoFrame			= "顯示/隱藏訊息框架"
+L.Button_InfoFrame			= "顯示/隱藏訊息監視器"
 L.Button_TestBars			= "測試計時條"
+L.Button_ResetInfoRange		= "重置訊息/距離監視器"
 
 -- Tab: Raidwarning
 L.Tab_RaidWarning 			= "團隊警告"
@@ -104,17 +106,12 @@ L.RaidWarnSound				= "發出團隊警告時播放音效"
 -- Tab: Generalwarnings
 L.Tab_GeneralMessages 		= "綜合訊息"
 L.CoreMessages				= "核心訊息選項"
-L.ShowLoadMessage 			= "在聊天視窗顯示模組載入訊息"
 L.ShowPizzaMessage 			= "在聊天視窗顯示計時器廣播訊息"
-L.ShowCombatLogMessage 		= "在聊天視窗顯示DBM戰鬥紀錄訊息"
-L.ShowTranscriptorMessage	= "在聊天視窗顯示DBM Transcriptor紀錄訊息"
 L.ShowAllVersions	 		= "在聊天視窗顯示所有隊伍成員的首領模組版本當執行版本檢查。(如果禁用，依舊顯示過期/目前總結)"
 L.CombatMessages			= "戰鬥訊息選項"
 L.ShowEngageMessage 		= "在聊天視窗顯示開戰訊息"
-L.ShowKillMessage 			= "在聊天視窗顯示戰勝訊息"
-L.ShowWipeMessage 			= "在聊天視窗顯示滅團訊息"
+L.ShowDefeatMessage 		= "在聊天視窗顯示戰勝/滅團訊息"
 L.ShowGuildMessages 		= "在聊天視窗顯示公會的開戰/戰勝/滅團的訊息"
-L.ShowRecoveryMessage 		= "在聊天視窗顯示計時器恢復訊息"
 L.WhisperMessages			= "密語訊息選項"
 L.AutoRespond 				= "啟用戰鬥中自動密語回覆"
 L.EnableStatus 				= "回覆'status'的密語"
@@ -125,8 +122,8 @@ L.DisableStatusWhisper 		= "禁用整個團隊狀態密語(需要隊伍隊長)�
 L.BarSetup   				= "計時條樣式"
 L.BarTexture 				= "計時條材質"
 L.BarStyle					= "計時條風格"
-L.BarDBM					= "DBM"
-L.BarBigWigs				= "BigWigs (沒有動畫)"
+L.BarDBM					= "DBM(動畫)"
+L.BarSimple					= "精簡(沒有動畫)"
 L.BarStartColor				= "開始顏色"
 L.BarEndColor 				= "結束顏色"
 L.Bar_Font					= "計時條使用的字型"
@@ -149,6 +146,13 @@ L.BarStartColorRole			= "開始顏色(角色)"
 L.BarEndColorRole			= "結束顏色(角色)"
 L.BarStartColorPhase		= "開始顏色(階段轉換)"
 L.BarEndColorPhase			= "結束顏色(階段轉換)"
+L.BarStartColorUI			= "開始顏色(自訂)"
+L.BarEndColorUI				= "結束顏色(自訂)"
+--Type 7 options
+L.Bar7Header				= "自訂計時條選項"
+L.Bar7ForceLarge			= "總是使用大計時條"
+L.Bar7CustomInline			= "使用自訂的'!'圖示"
+L.Bar7Footer				= "(測試計時條)"
 
 -- Tab: Timers
 L.AreaTitle_BarColors		= "根據計時器類型上色"
@@ -169,6 +173,7 @@ L.BarSpark					= "計時條閃光"
 L.BarFlash					= "快結束時閃爍計時條"
 L.BarSort					= "依剩餘時間排序"
 L.BarColorByType			= "根據類型上色"
+L.BarInlineIcons			= "顯示嵌入圖示"
 
 -- Tab: Spec Warn Frame
 L.Panel_SpecWarnFrame		= "特別警告"
@@ -300,11 +305,12 @@ L.RoleSpecAlert				= "當你加入團隊時捨取專精不符合你目前專精�
 L.CheckGear					= "開怪時顯示裝備警告訊息 (當你裝備的裝備等級低於包包裡40等以上或主手武器沒有裝備時顯示警告訊息)"
 L.WorldBossAlert			= "當你的工會成員或是朋友可能在你的伺服器上開戰世界首領時顯示警告訊息(如果發送者是被戰復的會不準確)"
 --
-L.Area_SoundAlerts			= "聲音警告選項"
-L.LFDEnhance				= "使用主要或對話聲音頻道播放準備確認音效給角色確認和戰場/隨機團隊進場(I.E. 即使因為被關閉了也會發出音效而且很大聲!)"
-L.WorldBossNearAlert		= "當你需要的世界首領在你附近開戰播放準備確認音效(蓋過特定首領選項)"
-L.RLReadyCheckSound			= "從主要或對話音效頻道播放準備確認音效"
-L.AFKHealthWarning			= "播放警告聲音假如你在暫離時被攻擊"
+L.Area_SoundAlerts			= "聲音/閃爍警告選項"
+L.LFDEnhance				= "使用主要或對話聲音頻道播放準備確認音效和閃爍應用程式圖示給角色確認和戰場/隨機團隊進場(I.E. 即使音效被關閉了也會發出音效而且很大聲!)"
+L.WorldBossNearAlert		= "當你需要的世界首領在你附近開戰播放準備確認音效和閃爍應用程式圖示"
+L.RLReadyCheckSound			= "從主要或對話音效頻道播放準備確認音效和閃爍應用程式圖示"
+L.AFKHealthWarning			= "播放警告聲音和閃爍應用程式圖示假如你在暫離時被攻擊"
+L.AutoReplySound			= "當接收到DBM自動回覆密語時播放警告聲和閃爍應用程式圖示"
 --
 L.TimerGeneral 				= "計時器選項"
 L.SKT_Enabled				= "顯示目前戰鬥的最佳紀錄勝利計時器"
@@ -341,9 +347,9 @@ L.PizzaTimer_ButtonStart 	= "開始計時"
 L.PizzaTimer_BroadCast		= "向團隊廣播"
 
 L.Panel_Profile				= "配置檔"
-L.Area_CreateProfile        = "建立配置檔"
+L.Area_CreateProfile        = "建立核心選項配置檔"
 L.EnterProfileName			= "輸入配置檔名稱"
-L.CreateProfile				= "建立DBM核心選項配置檔"
+L.CreateProfile				= "建立預設設定值的新配置檔"
 L.Area_ApplyProfile			= "套用DBM核心選項配置檔"
 L.SelectProfileToApply		= "選擇配置檔套用"
 L.Area_CopyProfile			= "複製DBM核心選項配置檔"

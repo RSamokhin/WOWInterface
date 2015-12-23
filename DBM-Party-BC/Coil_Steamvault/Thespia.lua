@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(573, "DBM-Party-BC", 6, 261)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 526 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 572 $"):sub(12, -3))
 mod:SetCreatureID(17797)
 mod:SetModelID(11268)
 
@@ -16,6 +16,7 @@ mod:RegisterEventsInCombat(
 local warningCloud = mod:NewSpellAnnounce(25033)
 local warningWinds = mod:NewTargetAnnounce(31718)
 local warningBurst = mod:NewTargetAnnounce(31481)
+
 local timerWinds   = mod:NewTargetTimer(6, 31718)
 local timerBurst   = mod:NewTargetTimer(10, 31481)
 

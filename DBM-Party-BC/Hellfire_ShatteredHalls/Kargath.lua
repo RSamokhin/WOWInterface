@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(569, "DBM-Party-BC", 3, 259)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 569 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 578 $"):sub(12, -3))
 mod:SetCreatureID(16808)
 
 mod:RegisterCombat("combat")
@@ -15,12 +15,14 @@ local warnHeathenGuard			= mod:NewCountAnnounce("ej5927", 2, 186782)
 local warnReaverGuard			= mod:NewCountAnnounce("ej5930", 2, 186782)
 local warnSharpShooterGuard		= mod:NewCountAnnounce("ej5934", 2, 186782)
 
-local specWarnBladeDance		= mod:NewSpecialWarningSpell(30739)
+local specWarnBladeDance		= mod:NewSpecialWarningSpell(30739, nil, nil, nil, 2, 2)
 
-local timerHeathenCD			= mod:NewNextTimer(21, "ej5927", nil, nil, nil, nil, 186782)
-local timerReaverCD				= mod:NewNextTimer(21, "ej5930", nil, nil, nil, nil, 186782)
-local timerSharpShooterCD		= mod:NewNextTimer(21, "ej5934", nil, nil, nil, nil, 186782)
-local timerBladeDanceCD			= mod:NewCDTimer(35, 30739)--Probalby a next timer, but need more data
+local timerHeathenCD			= mod:NewNextTimer(21, "ej5927", nil, nil, nil, 1, 186782)
+local timerReaverCD				= mod:NewNextTimer(21, "ej5930", nil, nil, nil, 1, 186782)
+local timerSharpShooterCD		= mod:NewNextTimer(21, "ej5934", nil, nil, nil, 1, 186782)
+local timerBladeDanceCD			= mod:NewCDTimer(35, 30739, nil, nil, nil, 2)
+
+local voiceBladeDance			= mod:NewVoice(30739)--aesoon
 
 mod.vb.addSet = 0
 mod.vb.addType = 0
@@ -45,8 +47,8 @@ end
 function mod:OnCombatStart(delay)
 	self.vb.addSet = 0
 	self.vb.addType = 0
-	timerHeathenCD:Start(29-delay)
-	self:Schedule(29, Adds, self)--When reaches stairs, not when enters/spawns way down hallway.
+	timerHeathenCD:Start(27.5-delay)
+	self:Schedule(27.5, Adds, self)--When reaches stairs, not when enters/spawns way down hallway.
 	timerBladeDanceCD:Start(72-delay)
 end
 
@@ -61,5 +63,6 @@ function mod:OnSync(event, arg)
 	if event == "BladeDance" then
 		specWarnBladeDance:Show()
 		timerBladeDanceCD:Start()
+		voiceBladeDance:Play("aesoon")
 	end
 end

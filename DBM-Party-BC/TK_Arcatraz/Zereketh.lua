@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(548, "DBM-Party-BC", 15, 254)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 568 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 578 $"):sub(12, -3))
 
 mod:SetCreatureID(20870)
 mod:RegisterCombat("combat")
@@ -16,14 +16,17 @@ mod:RegisterEventsInCombat(
 --TODO, GTFO for void zones
 local warnVoid      = mod:NewSpellAnnounce(36119, 3)
 
-local specwarnNova	= mod:NewSpecialWarningSpell(39005, nil, nil, nil, 2)
+local specwarnNova	= mod:NewSpecialWarningSpell(39005, nil, nil, nil, 2, 2)
 local specwarnSoC	= mod:NewSpecialWarningDispel(39367, "Healer")
 
 local timerSoC      = mod:NewTargetTimer(18, 39367, nil, "Healer", 2)
 
+local voiceNova		= mod:NewVoice(39005) --aesoon
+
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(36127, 39005) then
 		specwarnNova:Show()
+		voiceNova:Play("aesoon")
 	end
 end
 

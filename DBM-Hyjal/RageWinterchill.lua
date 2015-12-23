@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Rage", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 535 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
 mod:SetCreatureID(17767)
 mod:SetModelID(17444)
 mod:SetZone()
@@ -19,7 +19,7 @@ local warnIceBolt		= mod:NewSpellAnnounce(31249, 3)
 local warnDnd			= mod:NewSpellAnnounce(31258, 3)
 
 local timerDnd			= mod:NewBuffActiveTimer(16, 31258)
-local timerDndCD		= mod:NewCDTimer(46, 31258)
+local timerDndCD		= mod:NewCDTimer(46, 31258, nil, nil, nil, 3)
 
 local specWarnIceBolt	= mod:NewSpecialWarningYou(31249)
 local specWarnDnD		= mod:NewSpecialWarningMove(31258)

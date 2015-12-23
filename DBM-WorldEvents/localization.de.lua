@@ -75,6 +75,19 @@ L:SetMiscLocalization({
 	YellBarrel			= "Stecke im Fass!"
 })
 
+----------------
+--  Brewfest  --
+----------------
+L = DBM:GetModLocalization("Brew")
+
+L:SetGeneralLocalization({
+	name = "Braufest"
+})
+
+L:SetOptionLocalization({
+	NormalizeVolume			= "Setze im Braufestgebiet die Lautstärke des DIALOG-Audiokanals automatisch auf die Lautstärke des Musik-Audiokanals, damit es nicht so ärgerlich laut ist. (falls keine Musiklautstärke gesetzt ist, wird der Dialog-Audiokanal stummgeschaltet)"
+})
+
 -----------------------------
 --  The Headless Horseman  --
 -----------------------------

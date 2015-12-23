@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Tidewalker", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
 mod:SetCreatureID(21213)
 mod:SetModelID(20739)
 mod:SetZone()
@@ -24,7 +24,7 @@ local warnBubble		= mod:NewSpellAnnounce(37854, 4)
 local specWarnMurlocs	= mod:NewSpecialWarning("SpecWarnMurlocs")
 
 local timerGraveCD		= mod:NewCDTimer(28.5, 38049)
-local timerMurlocs		= mod:NewTimer(51, "TimerMurlocs", 39088)
+local timerMurlocs		= mod:NewTimer(51, "TimerMurlocs", 39088, nil, nil, 1)
 local timerBubble		= mod:NewBuffActiveTimer(35, 37854)
 
 mod:AddBoolOption("GraveIcon", true)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TerestianIllhoof", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
 mod:SetCreatureID(15688)
 mod:SetModelID(11343)
 
@@ -21,9 +21,9 @@ local warningSacrifice	= mod:NewTargetAnnounce(30115, 4)
 
 local specWarnSacrifice	= mod:NewSpecialWarningYou(30115)
 
-local timerWeakened		= mod:NewBuffActiveTimer(31, 30065)
+local timerWeakened		= mod:NewBuffActiveTimer(31, 30065, nil, nil, nil, 6)
 local timerSacrifice	= mod:NewTargetTimer(30, 30115)
-local timerSacrificeCD	= mod:NewNextTimer(43, 30115)
+local timerSacrificeCD	= mod:NewNextTimer(43, 30115, nil, nil, nil, 1)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 

@@ -31,14 +31,14 @@ local Player = LE_BATTLE_PET_ALLY
 --[[ Startup ]]--
 
 function Actions:Startup()
-	for i = 1, 6 do
-		self:CreateButton(i)
-	end
-
 	self:SetSize(175, 55)
 	self:SetScale(.8)
-	self:UpdateLock()
-	
+	self.buttons = {}
+
+	for i = 1, 6 do
+		self.buttons[i] = self:CreateButton(i)
+	end
+
 	self:RegisterEvent('PET_BATTLE_PET_CHANGED')
 	self:RegisterEvent('PET_BATTLE_PET_ROUND_PLAYBACK_COMPLETE')
 	self:SetScript('OnEvent', self.Update)
@@ -46,6 +46,8 @@ function Actions:Startup()
 	self:SetHook('PetBattlePetSelectionFrame_Hide', self.Show)
 	self:SetHook('PetBattlePetSelectionFrame_Show', self.Hide)
 	self:SetScript('OnShow', self.Update)
+
+	self:UpdateLock()
 end
 
 function Actions:AddOptions(panel)
@@ -75,7 +77,7 @@ function Actions:CreateButton(i)
 	button:SetFrameLevel(8-y)
 	button:Enable()
 	
-	self[i] = button
+	return button
 end
 
 
@@ -86,12 +88,12 @@ function Actions:Update()
 	local target = Pets:GetCurrent(Player):GetType()
 	
 	for i = 1, 6 do
-		self[i]:Display(enemy, i, target)
+		self.buttons[i]:Display(enemy, i, target)
 	end
 end
 
 function Actions:UpdateLock()
 	for i = 1, 6 do
-		self[i]:RegisterForDrag(Addon.Sets.UnlockActions and 'LeftButton' or nil)
+		self.buttons[i]:RegisterForDrag(Addon.Sets.UnlockActions and 'LeftButton' or nil)
 	end
 end

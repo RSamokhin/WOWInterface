@@ -2,7 +2,7 @@ local mod	= DBM:NewMod("Chess", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
 local playerFactoin = UnitFactionGroup("player")
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 581 $"):sub(12, -3))
 --UNIT_DIED firing for king assumed
 if playerFactoin == "Alliance" then
 	mod:SetCreatureID(21752)--Warchief Blackhand
@@ -26,8 +26,8 @@ mod:RegisterEventsInCombat(
 
 local timerHeroism			= mod:NewBuffActiveTimer(10, 37471)
 local timerBloodlust		= mod:NewBuffActiveTimer(10, 37472)
-local timerRecentlyInGame	= mod:NewBuffFadesTimer(10, 30529)
-local timerNextCheat		= mod:NewTimer(108, "timerCheat", 39342)
+local timerRecentlyInGame	= mod:NewBuffFadesTimer(10, 30529, nil, nil, nil, 5)
+local timerNextCheat		= mod:NewTimer(108, "timerCheat", 39342, nil, nil, 3)
 
 local firstCheat = false
 local secondCheat = false

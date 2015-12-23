@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(539, "DBM-Party-BC", 11, 251)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 526 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 572 $"):sub(12, -3))
 mod:SetCreatureID(17862)
 
 mod:RegisterCombat("combat")
@@ -17,8 +17,8 @@ mod:RegisterEventsInCombat(
 local warnHeal                  = mod:NewCastAnnounce(29427, 4)
 local warnHammer                = mod:NewTargetAnnounce(13005, 2)
 
-local specWarnHeal			     = mod:NewSpecialWarningInterrupt(29427)
-local specWarnConsecration      = mod:NewSpecialWarningMove(38385)
+local specWarnHeal				= mod:NewSpecialWarningInterrupt(29427)
+local specWarnConsecration		= mod:NewSpecialWarningMove(38385)
 
 local timerHammer               = mod:NewTargetTimer(6, 13005)
 

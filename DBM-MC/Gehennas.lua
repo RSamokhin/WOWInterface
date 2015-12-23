@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Gehennas", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 568 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 576 $"):sub(12, -3))
 mod:SetCreatureID(12259)--, 11661
 --mod:SetEncounterID(665)
 mod:SetModelID(13030)
@@ -14,7 +14,7 @@ mod:RegisterEvents(
 
 local warnRainFire	= mod:NewSpellAnnounce(19717, 2, nil, false)
 local warnCurse		= mod:NewSpellAnnounce(19716, 3)
-local warnFist		= mod:NewTargetAnnounce("OptionVersion2", 20277, 2, nil, false)
+local warnFist		= mod:NewTargetAnnounce(20277, 2, nil, false, 2)
 
 local specWarnRoF	= mod:NewSpecialWarningMove(19717)
 

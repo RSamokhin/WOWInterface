@@ -2,7 +2,7 @@
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: Jul 28 2015, 1:22 UTC@14062
+-- Last update: Nov 24 2015, 03:07 UTC@14665
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
@@ -20,6 +20,7 @@ L.OTabBosses				= "模块"
 L.OTabOptions				= "选项"
 
 L.TabCategory_Options 		= "综合设置"
+L.TabCategory_LEG	 		= "军团再临"
 L.TabCategory_WOD	 		= "德拉诺之王"
 L.TabCategory_MOP	 		= "熊猫人之谜"
 L.TabCategory_CATA	 		= "大地的裂变"
@@ -37,7 +38,7 @@ L.BossModLoad_now 			= [[该模块尚未启动。
 L.PosX 						= 'X坐标'
 L.PosY 						= 'Y坐标'
 
-L.MoveMe					= '移动'
+L.MoveMe					= '移动我'
 L.Button_OK 				= '确定'
 L.Button_Cancel 			= '取消'
 L.Button_LoadMod 			= '加载模块'
@@ -68,14 +69,6 @@ L.UseMasterChannel			= "主声道"
 L.UseDialogChannel			= "对话声道"
 L.UseSFXChannel				= "音效声道"
 L.Latency_Text				= "设定启用同步功能的最高延迟阈值：%d"
--- Tab: General Timer Options
-L.TimerGeneral 				= "DBM计时条综合设置"
-L.SKT_Enabled				= "总是显示最速胜利计时条(覆盖首领特定的选项)"
-L.CRT_Enabled				= "显示下一次可战复CD (限德拉诺团队本)"
-L.ChallengeTimerOptions		= "设置挑战模式最佳记录计时条"
-L.ChallengeTimerPersonal	= "个人"
-L.ChallengeTimerGuild		= "公会"
-L.ChallengeTimerRealm		= "服务器"
 
 L.ModelOptions				= "3D模型选项"
 L.EnableModels				= "在首领选项中启用3D模型"
@@ -86,6 +79,7 @@ L.ModelSoundLong			= "长"
 L.Button_RangeFrame			= "显示/隐藏距离雷达框体"
 L.Button_InfoFrame			= "显示/隐藏信息框体"
 L.Button_TestBars			= "测试计时条"
+L.Button_ResetInfoRange		= "重置信息/距离雷达框体"
 
 -- Tab: Raidwarning
 L.Tab_RaidWarning 			= "团队警报"
@@ -119,17 +113,12 @@ L.RaidWarnSound				= "发出团队警报时播放声音"
 -- Tab: Generalwarnings
 L.Tab_GeneralMessages	 	= "综合信息"
 L.CoreMessages				= "核心信息设置"
-L.ShowLoadMessage 			= "在聊天窗口中显示模块载入信息"
 L.ShowPizzaMessage 			= "在聊天窗口中显示计时条广播信息"
-L.ShowCombatLogMessage 		= "在聊天窗口中显示DBM战斗记录"
-L.ShowTranscriptorMessage	= "在聊天窗口中显示DBM Transcriptor 记录"
 L.ShowAllVersions	 		= "当执行版本检查时,在聊天窗口中显示所有团员的Boss模组版本(如果禁用，仍旧显示过期/目前总结)"
 L.CombatMessages			= "战斗信息设置"
 L.ShowEngageMessage 		= "在聊天窗口中显示开战信息"
-L.ShowKillMessage 			= "在聊天窗口中显示击杀信息"
-L.ShowWipeMessage 			= "在聊天窗口中显示灭团信息"
+L.ShowDefeatMessage 		= "在聊天窗口中显示击杀信息"
 L.ShowGuildMessages 		= "在聊天窗口中显示工会开战，击杀，灭团信息"
-L.ShowRecoveryMessage 		= "在聊天窗口中显示计时条恢复信息"
 L.WhisperMessages			= "密语信息设置"
 L.AutoRespond 				= "在战斗中自动回复私聊"
 L.EnableStatus 				= "回复“status”私聊当前战斗信息"
@@ -140,8 +129,8 @@ L.DisableStatusWhisper 		= "屏蔽全团成员的自动回复私聊(需要团长
 L.BarSetup   				= "计时条设置"
 L.BarTexture 				= "计时条材质"
 L.BarStyle					= "计时条样式"
-L.BarDBM					= "DBM"
-L.BarBigWigs				= "BigWigs (没动画)"
+L.BarDBM					= "DBM(有动画)"
+L.BarSimple					= "简易(没动画)"
 L.BarStartColor				= "初始颜色"
 L.BarEndColor 				= "结束颜色"
 L.Bar_Font					= "计时条字体"
@@ -161,10 +150,17 @@ L.BarStartColorDebuff		= "初始颜色 (点名技能)"
 L.BarEndColorDebuff			= "结束颜色 (点名技能)"
 L.BarStartColorInterrupt	= "初始颜色 (打断)"
 L.BarEndColorInterrupt		= "结束颜色 (打断)"
-L.BarStartColorRole			= "初始颜色 (Role)"
-L.BarEndColorRole			= "结束颜色 (Role)"
+L.BarStartColorRole			= "初始颜色 (剧情)"
+L.BarEndColorRole			= "结束颜色 (剧情)"
 L.BarStartColorPhase		= "初始颜色 (阶段转换)"
 L.BarEndColorPhase			= "结束颜色 (阶段转换)"
+L.BarStartColorUI			= "初始颜色 (自定义)"
+L.BarEndColorUI				= "结束颜色 (自定义)"
+--Type 7 options
+L.Bar7Header				= "自定义计时条选项"
+L.Bar7ForceLarge			= "总是使用大型计时条"
+L.Bar7CustomInline			= "使用自定义 '!' 图标"
+L.Bar7Footer				= "(测试用计时条)"
 
 -- Tab: Timers
 L.AreaTitle_BarColors		= "按类型分类着色"
@@ -174,17 +170,18 @@ L.AreaTitle_BarSetupHuge 	= "大型计时条设置"
 L.EnableHugeBar 			= "开启大型计时条（2号计时条）"
 L.BarIconLeft 				= "左侧图标"
 L.BarIconRight 				= "右侧图标"
-L.ExpandUpwards				= "计时条向上伸展" --感谢飘去的梦， 木沐的小胖狼@NGA
+L.ExpandUpwards				= "快消失的计时条在上"
 L.FillUpBars				= "填充计时条"
 L.ClickThrough				= "禁用鼠标点击事件（允许你点击计时条后面的目标）"
 L.Bar_Decimal				= "%d秒以内显示小数点"
-L.Bar_DBMOnly				= "以下设置只对 \"DBM\" 计时条有效."
-L.Bar_EnlargeTime			= "在%d后计时条变大"
+L.Bar_DBMOnly				= "以下设置只对 \"DBM\" 计时条有效 (两个判断的操作符是或，任一就变大)"
+L.Bar_EnlargeTime			= "在%d秒后计时条变大"
 L.Bar_EnlargePercent		= "在%0.1f%%后计时条变大"
 L.BarSpark					= "计时条闪光"
-L.BarFlash					= "当计时条快走完时闪动"
+L.BarFlash					= "快走完时闪动"
 L.BarSort					= "按剩余时间排序"
-L.BarColorByType			= "计时条按类型分类着色"
+L.BarColorByType			= "按类着色"
+L.BarInlineIcons			= "显示条内图标"
 
 -- Tab: Spec Warn Frame
 L.Panel_SpecWarnFrame		= "特殊警报"
@@ -228,13 +225,13 @@ L.HUDAlphaSlider			= "透明度: %0.1f"
 
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "语音警告"
-L.Area_VoiceSelection		= "语音选项"
+L.Area_VoiceSelection		= "语音选择"
 L.CountdownVoice			= "设置第一倒计时语音"
 L.CountdownVoice2			= "设置第二倒计时语音"
 L.CountdownVoice3			= "设置第三倒计时语音"
 L.VoicePackChoice			= "设置语音报警的语音包(快躲开！)"
 L.Area_CountdownOptions		= "倒计时选项"
-L.ShowCountdownText			= "为第一倒计时显示文本"
+L.ShowCountdownText			= "为第一倒计时显示大型数字(倒计时数字)"
 L.Area_VoicePackOptions		= "语音包选项(第三方)"
 L.SpecWarn_NoSoundsWVoice	= "当技能存在语音包语音时，屏蔽播放特殊警报声（当心，毁灭）"
 L.SWFNever					= "从不"
@@ -252,7 +249,7 @@ L.HP_ShowDemo				= "显示框体"
 L.BarWidth					= "计量条宽度: %d"
 
 -- Tab: Global Filter
-L.Panel_SpamFilter			= "DBM全局及信息过滤"
+L.Panel_SpamFilter			= "DBM全局过滤"
 L.Area_SpamFilter_Outgoing	= "DBM全局过滤设置"
 L.SpamBlockNoShowAnnounce	= "不显示警报或播放警报音效"
 L.SpamBlockNoSpecWarn		= "不要显示特殊特殊警报和特殊警报音效"
@@ -261,31 +258,33 @@ L.SpamBlockNoSetIcon		= "不设定标记在目标上"
 L.SpamBlockNoRangeFrame		= "不显示距离雷达框体"
 L.SpamBlockNoInfoFrame		= "不显示信息框体"
 L.SpamBlockNoHudMap			= "不显示HudMap"
-
 L.SpamBlockNoHealthFrame	= "不显示生命值监视器"
 L.SpamBlockNoCountdowns		= "不要播放倒数语音"
 L.SpamBlockNoYells			= "不要再战斗中大喊我中了..."
 L.SpamBlockNoNoteSync		= "不接受别人分享的自定义注记"
-L.SpamBlockNoIconRestore	= "当战斗结束后不保存团队标记状态(大饼 星星 月亮 方块这些)"
-L.SpamBlockNoRangeRestore	= "当boss暂时消失时不恢复距离指示器"
+
+L.Area_Restore				= "DBM战斗结束重置设置"
+L.SpamBlockNoIconRestore	= "当战斗结束后不保存团队标记状态并重置"
+L.SpamBlockNoRangeRestore	= "当Boss模块隐藏距离窗体时不重置窗体位置"
 
 -- Tab: Spam Filter
 L.Area_SpamFilter			= "信息过滤设置"
 L.DontShowFarWarnings		= "不为过远的事件显示计时条/警报"
 L.StripServerName			= "警告和计时器中不显示服务器名"
 L.SpamBlockBossWhispers		= "战斗中过滤DBM密语警报"
-L.BlockVersionUpdateNotice	= "禁用升级提示"
+L.BlockVersionUpdateNotice	= "禁用DBM过期窗口并改在聊天窗口提示"
 
 L.Area_SpecFilter			= "角色过滤选项"
 L.FilterTankSpec			= "当非坦克专精时，过滤掉给予坦克的专用信息"
 L.FilterInterrupts			= "当目标没有被选中或设置为焦点时，过滤掉打断提示 (注意: 这对那些不打断就灭团的技能无效)"
+L.FilterInterruptNoteName	= "当自定义注记内没有包含你的名字的时候，过滤掉打断提示 (带计数)"
 L.FilterDispels				= "当驱散技能在冷却时, 过滤掉驱散提示"
 L.FilterSelfHud				= "把自己从HudMap中过滤掉 (不包括和距离有关的功能)"
 
-L.Area_PullTimer			= "开怪倒计时过滤设置"
+L.Area_PullTimer			= "开怪和倒计时过滤设置"
 L.DontShowPTNoID			= "不显示不同区域发送的倒计时"
-L.DontShowPT				= "不显示开怪倒计时条"
-L.DontShowPTText			= "不显示开怪倒计时文字"
+L.DontShowPT				= "不显示开怪和倒计时条"
+L.DontShowPTText			= "不显示开怪和倒计时文字"
 L.DontPlayPTCountdown		= "不播放开怪倒计时语音"
 L.DontShowPTCountdownText	= "不显示开怪倒计时动画"
 L.PT_Threshold				= "不显示高于%d秒的倒计时动画"
@@ -307,19 +306,34 @@ L.AfterFirst				= "仅第一次播放"
 L.Always					= "总是跳过"
 
 L.Panel_ExtraFeatures		= "其他功能"
+--
 L.Area_ChatAlerts			= "文字提示警告选项"
 L.RoleSpecAlert				= "当进入团队时，如果拾取专精与当前角色专精不同，则显示警告。"
 L.CheckGear					= "当你身上的装备装等低于背包装等40点时显示警告。(可能没有装备某物品或装备了低等级的任务道具或没有装备主武器)"
 L.WorldBossAlert			= "当世界Boss进入战斗后发送警告，这个信息可能是你的朋友或者同工会成员发送的。 (由于跨服，卡位面等因素，可能不准确)"
-L.Area_SoundAlerts			= "语音警告选项"
-L.LFDEnhance				= "当发起角色检查或随机团队/战场就绪时，在主声道播放准备音效 (即使关闭了音效)"
-L.WorldBossNearAlert		= "当世界附近的Boss进入战斗时发出特殊音效 (全局设置，覆盖单独BOSS设置)"
-L.RLReadyCheckSound			= "在主声道/对话声道播放检查准备音效"
-L.AFKHealthWarning			= "当你在挂机/暂离而受到伤害时发出警报"
+--
+L.Area_SoundAlerts			= "语音/闪动警告选项"
+L.LFDEnhance				= "当发起角色检查或随机团队/战场就绪时，在主声道播放准备音效(即使关闭了音效而且很大声！)并闪烁图标"
+L.WorldBossNearAlert		= "当世界附近的Boss进入战斗时播放准备音效(覆盖单独BOSS设置)并闪烁图标"
+L.RLReadyCheckSound			= "在主声道/对话声道播放检查准备音效并闪烁图标"
+L.AFKHealthWarning			= "当你在挂机/暂离而受到伤害时播放音效并闪烁图标(你会死)"
+L.AutoReplySound			= "当收到DBM可自动回复的信息时播放音效并闪烁图标"
+--
+L.TimerGeneral 				= "计时器选项"
+L.SKT_Enabled				= "总是显示最速胜利计时条(覆盖单独BOSS设置)"
+L.CRT_Enabled				= "显示下一次可战复CD"
+L.ShowRespawn				= "Boss战斗未完成时显示Boss刷新计时条"
+L.ShowQueuePop				= "显示随机小队/团队查找器确认计时条"
+L.ChallengeTimerOptions		= "设置挑战模式最佳记录计时条"
+L.ChallengeTimerPersonal	= "个人"
+L.ChallengeTimerGuild		= "公会"
+L.ChallengeTimerRealm		= "服务器"
+--
 L.Area_AutoLogging			= "自动日志记录选项"
 L.AutologBosses				= "自动采用官方格式记录日志。 (使用 /dbm pull 可提前记录并使得记录更准确，如提前偷药水或是召唤大军。)"
 L.AdvancedAutologBosses		= "自动采用 Transcriptor 记录日志"
 L.LogOnlyRaidBosses			= "只记录团队Boss，而不记录随机团队，5人本，场景战役。"
+--
 L.Area_3rdParty				= "第三方插件选项"
 L.ShowBBOnCombatStart		= "战斗开始时使用Big Brother的buff检测"
 L.BigBrotherAnnounceToRaid	= "报告Big Brother的检测结果给团队"
@@ -340,9 +354,9 @@ L.PizzaTimer_ButtonStart	= "开始计时"
 L.PizzaTimer_BroadCast		= "向全团广播"
 
 L.Panel_Profile				= "配置文件"
-L.Area_CreateProfile        = "创建一个配置文件"
+L.Area_CreateProfile        = "创建DBM核心配置"
 L.EnterProfileName			= "输入配置文件名称"
-L.CreateProfile				= "创建DBM核心配置文件"
+L.CreateProfile				= "创建带有默认设置的配置文件"
 L.Area_ApplyProfile			= "选择一个已有的DBM核心配置文件并应用它"
 L.SelectProfileToApply		= "选择一个配置文件并应用"
 L.Area_CopyProfile			= "复制一个配置文件"

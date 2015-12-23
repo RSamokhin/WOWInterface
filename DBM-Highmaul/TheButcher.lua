@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(971, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14080 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14508 $"):sub(12, -3))
 mod:SetCreatureID(77404)
 mod:SetEncounterID(1706)
 mod:SetZone()
@@ -21,7 +21,7 @@ mod:RegisterEventsInCombat(
 --TODO, Probably fix the update bar if it lua errors or doesn't work right.
 local warnCleave					= mod:NewCountAnnounce(156157, 2, nil, false)
 local warnTenderizer				= mod:NewStackAnnounce(156151, 2, nil, "Tank")
-local warnCleaver					= mod:NewSpellAnnounce("OptionVersion2", 156143, 3, nil, false)--Saberlash
+local warnCleaver					= mod:NewSpellAnnounce(156143, 3, nil, false, 2)--Saberlash
 local warnFrenzy					= mod:NewSpellAnnounce(156598, 4)
 
 local specWarnTenderizer			= mod:NewSpecialWarningStack(156151, nil, 2)
@@ -36,7 +36,7 @@ local timerTenderizerCD				= mod:NewCDTimer(15.2, 156151, nil, "Tank", nil, 5)
 local timerCleaverCD				= mod:NewCDTimer(7.5, 156143, nil, "Tank", nil, 5)
 local timerGushingWounds			= mod:NewBuffFadesTimer(15, 156152)
 local timerBoundingCleaveCD			= mod:NewNextCountTimer(60, 156160, nil, nil, nil, 2)
-local timerBoundingCleave			= mod:NewCastTimer(15, 156160)
+local timerBoundingCleave			= mod:NewCastTimer(15, 156160, nil, nil, nil, 2)
 
 local berserkTimer					= mod:NewBerserkTimer(300)
 

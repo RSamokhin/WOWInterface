@@ -39,6 +39,7 @@ end
 
 local function findCriteria(id, pattern)
   local critString, foundCrit
+  --print("findCriteria " .. id .. " " .. pattern)
   for i=1,GetAchievementNumCriteria(id) do
     critString = GetAchievementCriteriaInfo(id, i)
     foundCrit = strfind(strlower(critString), pattern, 1, true)
@@ -64,7 +65,7 @@ local function AchSearch_Criteria(list, pattern, results)
     for _,cat in ipairs(categories_sel) do
       for i=1,GetCategoryNumAchievements(cat) do
         id = GetAchievementInfo(cat, i)
-        if (findCriteria(id, pattern)) then
+        if (id and findCriteria(id, pattern)) then
           found[#found+1] = id
           anyFound = true
         end

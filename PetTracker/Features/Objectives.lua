@@ -46,7 +46,7 @@ function Objectives:Startup()
 
 	hooksecurefunc('ObjectiveTracker_Update', function()
 		local off = self:GetUsedHeight()
-		local availableEntries = floor((Parent.maxHeight - off - 45) / 20)
+		local availableEntries = floor(((Parent.maxHeight or 0) - off - 45) / 20)
 
 		if availableEntries ~= self.maxEntries then
 			self.maxEntries = availableEntries

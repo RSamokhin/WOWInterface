@@ -17,15 +17,10 @@ This file is part of PetTracker.
 
 local ADDON, Addon = ...
 local Tracker = Addon:NewClass('Frame', 'Tracker', nil, Addon.List)
-local Drop = CreateFrame('Frame', ADDON .. 'ObjectivesDrop', nil, 'UIDropDownMenuTemplate')
 local Journal = Addon.Journal
 
 
 --[[ Startup ]]--
-
-function Tracker:Startup()
-	--UIDropDownMenu_Initialize(Drop, self.ShowOptions, 'MENU')
-end
 
 function Tracker:OnCreate()
 	self:SetScript('OnShow', self.Update)

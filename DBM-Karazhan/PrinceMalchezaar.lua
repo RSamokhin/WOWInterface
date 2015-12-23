@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Prince", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 554 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
 mod:SetCreatureID(15690)
 mod:SetModelID(19274)
 mod:RegisterCombat("combat")
@@ -23,9 +23,9 @@ local warningSWP				= mod:NewTargetAnnounce(30898, 2, nil, false)
 local specWarnEnfeeble			= mod:NewSpecialWarningYou(37277)
 local specWarnNova				= mod:NewSpecialWarningRun(30852, "Melee")
 
-local timerNovaCD				= mod:NewNextTimer(30, 30852)
-local timerNextInfernal			= mod:NewCDTimer(45, 37277)
-local timerEnfeebleCD			= mod:NewNextTimer(30, 30843)
+local timerNovaCD				= mod:NewNextTimer(30, 30852, nil, nil, nil, 2)
+local timerNextInfernal			= mod:NewCDTimer(45, 37277, nil, nil, nil, 1)
+local timerEnfeebleCD			= mod:NewNextTimer(30, 30843, nil, nil, nil, 3)
 local timerEnfeeble				= mod:NewBuffFadesTimer(9, 30843)
 
 local phase	= 0

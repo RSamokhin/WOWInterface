@@ -24,10 +24,10 @@ local Format = PLAYERS_FOUND_OUT_OF_MAX
 
 function Progress:OnCreate()
 	self.Overlay:SetFrameLevel(self:GetFrameLevel() + Addon.MaxQuality + 1)
-	self.text = self.Overlay.Text
+	self.Bars = {}
 	
 	for i = 1, Addon.MaxQuality do
-		self[i] = self:CreateBar(i)
+		self.Bars[i] = self:CreateBar(i)
 	end
 end
 
@@ -51,10 +51,10 @@ function Progress:SetProgress(progress)
 	for i = Addon.MaxQuality, 1, -1 do
 		owned = owned + progress[i].total
 
-		self[i]:SetMinMaxValues(0, progress.total)
-		self[i]:SetValue(owned)
+		self.Bars[i]:SetMinMaxValues(0, progress.total)
+		self.Bars[i]:SetValue(owned)
 	end
 	
-	self.text:SetFormattedText(Format, owned, progress.total)
+	self.Overlay.Text:SetFormattedText(Format, owned, progress.total)
 	self:SetShown(progress.total > 0)
 end

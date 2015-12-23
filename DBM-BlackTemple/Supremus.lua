@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Supremus", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
 mod:SetCreatureID(22898)
 mod:SetModelID(21145)
 mod:SetZone()
@@ -21,7 +21,7 @@ local warnKite			= mod:NewAnnounce("WarnKite", 3, 42052)
 local specWarnMolten	= mod:NewSpecialWarningMove(40265)
 local specWarnVolcano	= mod:NewSpecialWarningMove(42052)
 
-local timerPhase		= mod:NewTimer(60, "TimerPhase", 42052)
+local timerPhase		= mod:NewTimer(60, "TimerPhase", 42052, nil, nil, 6)
 
 local berserkTimer		= mod:NewBerserkTimer(900)
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1161, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14008 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14508 $"):sub(12, -3))
 mod:SetCreatureID(76877)
 mod:SetEncounterID(1691)
 mod:SetZone()
@@ -23,7 +23,7 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, see if there is any way to impliment timers for smash and petrifyig slam. right now they are too variable. has to be a method to it.
-local warnOverwhelmingBlows			= mod:NewStackAnnounce("OptionVersion2", 155078, 3, nil, false)--No special warnings, strats for this revolve around the inferno slice strat, not this debuff, so dbm isn't going to say when tanks should taunt here
+local warnOverwhelmingBlows			= mod:NewStackAnnounce(155078, 3, nil, false, 2)--No special warnings, strats for this revolve around the inferno slice strat, not this debuff, so dbm isn't going to say when tanks should taunt here
 local warnCrumblingRoar				= mod:NewSpellAnnounce(155730, 3, nil, false)--Cave ins
 local warnInfernoSlice				= mod:NewCountAnnounce(155080, 4)
 local warnPetrifyingSlam			= mod:NewTargetAnnounce(155326, 4)--non mythic only. in mythic, applied to all, so target list only spam
@@ -39,7 +39,7 @@ local timerInfernoSliceCD			= mod:NewCDCountTimer(11, 155080, nil, nil, nil, 5)-
 local timerSpecialCD				= mod:NewCDSpecialTimer(20.5)
 local timerPetrifyingSlamCD			= mod:NewCDCountTimer(60, 155323, nil, nil, nil, 2)--60-70 variation
 local timerOverheadSmashCD			= mod:NewCDCountTimer(20.5, 155301)--20-42 variation
-local timerShatter					= mod:NewCastTimer(8, 155529)
+local timerShatter					= mod:NewCastTimer(8, 155529, nil, nil, nil, 2)
 local timerRampage					= mod:NewBuffActiveTimer(30, 155539, nil, nil, nil, 6)
 local timerRampageCD				= mod:NewCDTimer(107, 155539, nil, nil, nil, 6)--Variable, may be even shorter
 

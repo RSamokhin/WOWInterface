@@ -1,0 +1,12 @@
+tag v60200-2.1.0
+db8403ad282d3553f28dc40391c48e26e0d1d24f
+Jim Whitehead <jnwhiteh@gmail.com>
+2015-10-18 19:46:46 +0200
+
+Tagging v60200-2.1.0
+
+
+--------------------
+
+Jim Whitehead:
+	- Update HereBeDragons to version 1.08-release

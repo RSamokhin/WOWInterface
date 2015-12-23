@@ -43,7 +43,7 @@
 --
 
 
-local revision =("$Revision: 14132 $"):sub(12, -3)
+local revision =("$Revision: 14601 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -54,6 +54,21 @@ local L = DBM_GUI_Translations
 
 local modelFrameCreated = false
 local soundsRegistered = false
+
+--Hard code STANDARD_TEXT_FONT since skinning mods like to taint it (or worse, set it to nil, wtf?)
+--http://forums.elitistjerks.com/topic/133901-bug-report-hudmap/#entry2282069
+local standardFont = STANDARD_TEXT_FONT
+if (LOCALE_koKR) then
+	standardFont = "Fonts\\2002.TTF"
+elseif (LOCALE_zhCN) then
+	standardFont = "Fonts\\ARKai_T.ttf"
+elseif (LOCALE_zhTW) then
+	standardFont = "Fonts\\blei00d.TTF"
+elseif (LOCALE_ruRU) then
+	standardFont = "Fonts\\FRIZQT___CYR.TTF"
+else
+	standardFont = "Fonts\\FRIZQT__.TTF"
+end
 
 --------------------------------------------------------
 --  Cache frequently used global variables in locals  --
@@ -418,14 +433,16 @@ do
 		{ sound=true, text = "SW 4", value = 4 },
 	})
 	
+	--TODO, this should be localized
 	local tcolors = {
-		{ text = "Generic Color", value = 0 },
-		{ text = "Add Color", value = 1 },
-		{ text = "AOE Color", value = 2 },
-		{ text = "Targeted Color", value = 3 },
-		{ text = "Interrupt Color", value = 4 },
-		{ text = "Role Color", value = 5 },
-		{ text = "Phase Color", value = 6 },
+		{ text = "Generic", value = 0 },
+		{ text = "Add", value = 1 },
+		{ text = "AOE", value = 2 },
+		{ text = "Targeted", value = 3 },
+		{ text = "Interrupt", value = 4 },
+		{ text = "Role", value = 5 },
+		{ text = "Phase", value = 6 },
+		{ text = "Important (User)", value = 7 },
 	}
 
 	function PanelPrototype:CreateCheckButton(name, autoplace, textleft, dbmvar, dbtvar, mod, modvar, globalvar, isTimer)
@@ -971,7 +988,6 @@ DBM_GUI_Options = CreateNewFauxScrollFrameList()
 
 
 local UpdateAnimationFrame, CreateAnimationFrame
-
 function UpdateAnimationFrame(mod)
 	DBM_BossPreview.currentMod = mod
 	local displayId = nil
@@ -1006,156 +1022,6 @@ local function CreateAnimationFrame()
 	mobstyle:SetPortraitZoom(0.4)
 	mobstyle:SetRotation(0)
 	mobstyle:SetClampRectInsets(0, 0, 24, 0)
-
---[[    ** FANCY STUFF WE DO NOT USE FOR NOW **
-
-	mobstyle.playlist = { 	-- start animation outside of our fov
-				{set_y = 0, set_x = 1.1, set_z = 0, setfacing = -90, setalpha = 1},
-				-- wait outside fov befor begining
-				{mintime = 1000, maxtime = 7000},	-- randomtime to wait
-				-- {time = 10000},  			-- just wait 10 seconds
-
-				-- move in the fov and to waypoint #1
-				{animation = 4, time = 1500, move_x = -0.7},
-				{animation = 0, time = 10, endfacing = -90 }, -- rotate in an animation
-
-				-- stay on waypoint #1
-				{setfacing = -90},
-				{animation = 0, time = 10000},
-				--{animation = 0, time = 2000, randomanimation = {45,46,47}},	-- play a random emote
-
-				-- move to next waypoint
-				{setfacing = -90},
-				{animation = 4, time = 5000, move_x = -2.5},
-
-				-- stay on waypoint #2
-				{setfacing = 0},
-				{animation = 0, time = 10000,},
-
-
-				-- move to the horizont
-				{setfacing = 180},
-				{animation = 4, time = 10000, toscale=0.005},
-
-				-- die and despawn
-				{animation = 1, time = 5000},
-				{animation = 6, time = 2000, toalpha = 0},
-
-				-- we want so sleep a little while on animation end
-				{mintime = 1000, maxtime = 3000},
-	}
-
-	mobstyle.animationTypes = {1, 4, 5, 14, 40} -- die, walk, run, kneel?, swim/fly
-	mobstyle.animation = 3
-	mobstyle:SetScript("OnUpdate", function(self, e)
-		if not self.enabled then return end
-
-		self.atime = self.atime + e*1000
-
-		if self.atime >= 10000 then
-			mobstyle.animation = floor(math.random(1, #mobstyle.animationTypes))
-			self.atime = 0
-		end
-		self:SetSequenceTime(mobstyle.animationTypes[mobstyle.animation], self.atime)
-	end)
-
-	mobstyle:SetScript("OnUpdate", function(self, e)
-		--if true then return end
-		if not self.enabled then return end
-		self.atime = self.atime + e * 1000
-		if self.apos == 0 or self.atime >= (self.playlist[self.apos].time or 0) then
-			self.apos = self.apos + 1
-			if self.apos <= #self.playlist and self.playlist[self.apos].setfacing then
-				self:SetFacing( (self.playlist[self.apos].setfacing + self.modelRotation) * math.pi/180)
-			end
-			if self.apos <= #self.playlist and self.playlist[self.apos].setalpha then
-				self:SetAlpha(self.playlist[self.apos].setalpha)
-			end
-			if self.apos <= #self.playlist and (self.playlist[self.apos].set_y or self.playlist[self.apos].set_x or self.playlist[self.apos].set_z) then
-				self.pos_y = self.playlist[self.apos].set_y or self.pos_y
-				self.pos_x = self.playlist[self.apos].set_x or self.pos_x
-				self.pos_z = self.playlist[self.apos].set_z or self.pos_z
-				self:SetPosition(
-					self.pos_z + self.modelOffsetZ,
-					self.pos_x + self.modelOffsetX,
-					self.pos_y + self.modelOffsetY
-				)
-			end
-			if self.apos > #self.playlist then
-
-				self:SetAlpha(1)
-				self:SetModelScale(1.0)
-				self:SetPosition(0, 0, 0)
-				self:SetCreature(self.currentMod.modelId or self.currentMod.creatureId or 0)
-
-				self.apos = 0
-				self.pos_x = 0
-				self.pos_y = 0
-				self.pos_z = 0
-				self.alpha = 1
-				self.scale = self.modelscale
-
-				self:SetAlpha(self.alpha)
-				self:SetFacing(self.modelRotation)
-				self:SetModelScale(self.modelscale)
-				self:SetPosition(
-					self.pos_z + self.modelOffsetZ,
-					self.pos_x + self.modelOffsetX,
-					self.pos_y + self.modelOffsetY
-				)
-				return
-			end
-			self.rotation = self:GetFacing()
-			if self.playlist[self.apos].randomanimation then
-				self.playlist[self.apos].animation = self.playlist[self.apos].randomanimation[math.random(1, #self.playlist[self.apos].randomanimation)]
-			end
-			if self.playlist[self.apos].mintime and self.playlist[self.apos].maxtime then
-				self.playlist[self.apos].time = math.random(self.playlist[self.apos].mintime, self.playlist[self.apos].maxtime)
-			end
-
-
-			self.atime = 0
-			self.playlist[self.apos].animation = self.playlist[self.apos].animation or 0
-			self:SetSequenceTime(self.playlist[self.apos].animation, self.atime)
-		end
-
-		if self.playlist[self.apos].animation > 0 then
-			self:SetSequenceTime(self.playlist[self.apos].animation,  self.atime)
-		end
-
-		if self.playlist[self.apos].endfacing then -- not self.playlist[self.apos].endfacing == self:GetFacing()
-			self.rotation = self.rotation + (e * 2 * math.pi * -- Rotations per second
-						((self.playlist[self.apos].endfacing/360)
-						/ (self.playlist[self.apos].time/1000))
-						)
-
-			self:SetFacing( self.rotation )
-		end
-		if self.playlist[self.apos].move_x then
-			--self.pos_x = self.pos_x + (self.playlist[self.apos].move_x / (self.playlist[self.apos].time/1000) ) * e
-			self.pos_x = self.pos_x + (((self.playlist[self.apos].move_x / (self.playlist[self.apos].time/1000) ) * e) * self.modelMoveSpeed)
-			self:SetPosition(self.pos_z+self.modelOffsetZ, self.pos_x+self.modelOffsetX, self.pos_y+self.modelOffsetY)
-		end
-		if self.playlist[self.apos].move_y then
-			self.pos_y = self.pos_y + (self.playlist[self.apos].move_y / (self.playlist[self.apos].time/1000) ) * e
-			--self:SetPosition(self.pos_y, self.pos_x, self.pos_z)
-			self:SetPosition(self.pos_z+self.modelOffsetZ, self.pos_x+self.modelOffsetX, self.pos_y+self.modelOffsetY)
-		end
-		if self.playlist[self.apos].move_z then
-			self.pos_z = self.pos_z + (self.playlist[self.apos].move_z / (self.playlist[self.apos].time/1000) ) * e
-			--self:SetPosition(self.pos_y, self.pos_x, self.pos_z)
-			self:SetPosition(self.pos_z+self.modelOffsetZ, self.pos_x+self.modelOffsetX, self.pos_y+self.modelOffsetY)
-		end
-		if self.playlist[self.apos].toalpha then
-			self.alpha = self.alpha - ((1 - self.playlist[self.apos].toalpha) / (self.playlist[self.apos].time/1000) ) * e
-			self:SetAlpha(self.alpha)
-		end
-		if self.playlist[self.apos].toscale then
-			self.scale = self.scale - ((self.modelscale - self.playlist[self.apos].toscale) / (self.playlist[self.apos].time/1000) ) * e
-			if self.scale < 0 then self.scale = 0.0001 end
-			self:SetModelScale(self.scale)
-		end
-	end)--]]
 	return mobstyle
 end
 
@@ -1514,6 +1380,23 @@ local function CreateOptionsMenu()
 		latencySlider:HookScript("OnShow", function(self) self:SetValue(DBM.Options.LatencyThreshold) end)
 		latencySlider:HookScript("OnValueChanged", function(self) DBM.Options.LatencyThreshold = self:GetValue() end)
 
+		local resetbutton = generaloptions:CreateButton(L.Button_ResetInfoRange, 120, 16)
+		resetbutton:SetPoint('BOTTOMRIGHT', generaloptions.frame, "BOTTOMRIGHT", -5, 5)
+		resetbutton:SetNormalFontObject(GameFontNormalSmall)
+		resetbutton:SetHighlightFontObject(GameFontNormalSmall)
+		resetbutton:SetScript("OnClick", function()
+			DBM.Options.InfoFrameX = DBM.DefaultOptions.InfoFrameX
+			DBM.Options.InfoFrameY = DBM.DefaultOptions.InfoFrameY
+			DBM.Options.InfoFramePoint = DBM.DefaultOptions.InfoFramePoint
+			DBM.Options.RangeFrameX = DBM.DefaultOptions.RangeFrameX
+			DBM.Options.RangeFrameY = DBM.DefaultOptions.RangeFrameY
+			DBM.Options.RangeFramePoint = DBM.DefaultOptions.RangeFramePoint
+			DBM.Options.RangeFrameRadarX = DBM.DefaultOptions.RangeFrameRadarX
+			DBM.Options.RangeFrameRadarY = DBM.DefaultOptions.RangeFrameRadarY
+			DBM.Options.RangeFrameRadarPoint = DBM.DefaultOptions.RangeFrameRadarPoint
+			DBM:RepositionFrames()
+		end)
+
 		--Model viewer options
 		local modelarea = DBM_GUI_Frame:CreateArea(L.ModelOptions, nil, 90, true)
 
@@ -1538,18 +1421,13 @@ local function CreateOptionsMenu()
 		-------------------------------------------
 		local generalWarningPanel = DBM_GUI_Frame:CreateNewPanel(L.Tab_GeneralMessages, "option")
 		local generalCoreArea = generalWarningPanel:CreateArea(L.CoreMessages, nil, 120, true)
---		generalCoreArea:CreateCheckButton(L.ShowLoadMessage, true, nil, "ShowLoadMessage")--Only here as a note, this is commented out so inexperienced users don't disable this, but an option for advanced users who want to manually change the value from true to false
 		generalCoreArea:CreateCheckButton(L.ShowPizzaMessage, true, nil, "ShowPizzaMessage")
-		generalCoreArea:CreateCheckButton(L.ShowCombatLogMessage, true, nil, "ShowCombatLogMessage")
-		generalCoreArea:CreateCheckButton(L.ShowTranscriptorMessage, true, nil, "ShowTranscriptorMessage")
 		generalCoreArea:CreateCheckButton(L.ShowAllVersions, true, nil, "ShowAllVersions")
 
 		local generalMessagesArea = generalWarningPanel:CreateArea(L.CombatMessages, nil, 135, true)
 		generalMessagesArea:CreateCheckButton(L.ShowEngageMessage, true, nil, "ShowEngageMessage")
-		generalMessagesArea:CreateCheckButton(L.ShowKillMessage, true, nil, "ShowKillMessage")
-		generalMessagesArea:CreateCheckButton(L.ShowWipeMessage, true, nil, "ShowWipeMessage")
+		generalMessagesArea:CreateCheckButton(L.ShowDefeatMessage, true, nil, "ShowDefeatMessage")
 		generalMessagesArea:CreateCheckButton(L.ShowGuildMessages, true, nil, "ShowGuildMessages")
-		generalMessagesArea:CreateCheckButton(L.ShowRecoveryMessage, true, nil, "ShowRecoveryMessage")
 		local generalWhispersArea = generalWarningPanel:CreateArea(L.WhisperMessages, nil, 135, true)
 		generalWhispersArea:CreateCheckButton(L.AutoRespond, true, nil, "AutoRespond")
 		generalWhispersArea:CreateCheckButton(L.EnableStatus, true, nil, "StatusEnabled")
@@ -1577,7 +1455,7 @@ local function CreateOptionsMenu()
 
 		-- RaidWarn Font
 		local Fonts = MixinSharedMedia3("font", {
-			{	text	= "Default",		value 	= STANDARD_TEXT_FONT,			font = STANDARD_TEXT_FONT		},
+			{	text	= "Default",		value 	= standardFont,					font = standardFont		},
 			{	text	= "Arial",			value 	= "Fonts\\ARIALN.TTF",			font = "Fonts\\ARIALN.TTF"		},
 			{	text	= "Skurri",			value 	= "Fonts\\skurri.ttf",			font = "Fonts\\skurri.ttf"		},
 			{	text	= "Morpheus",		value 	= "Fonts\\MORPHEUS.ttf",		font = "Fonts\\MORPHEUS.ttf"	}
@@ -1730,7 +1608,7 @@ local function CreateOptionsMenu()
 		--------------------------------------
 		local BarSetupPanel = DBM_GUI_Frame:CreateNewPanel(L.BarSetup, "option")
 		
-		local BarColors = BarSetupPanel:CreateArea(L.AreaTitle_BarColors, nil, 480, true)
+		local BarColors = BarSetupPanel:CreateArea(L.AreaTitle_BarColors, nil, 635, true)
 		local movemebutton = BarColors:CreateButton(L.MoveMe, 100, 16)
 		movemebutton:SetPoint('BOTTOMRIGHT', BarColors.frame, "TOPRIGHT", 0, -1)
 		movemebutton:SetNormalFontObject(GameFontNormalSmall)
@@ -2145,6 +2023,86 @@ local function CreateOptionsMenu()
 				_G[self.frame:GetName().."Bar"]:SetWidth(183)
 			end
 		end
+
+		--Color Type 7 (Important (User))
+		local color1Type7 = BarColors:CreateColorSelect(64)
+		local color2Type7 = BarColors:CreateColorSelect(64)
+		color1Type7:SetPoint('TOPLEFT', BarColors.frame, "TOPLEFT", 30, -530)
+		color2Type7:SetPoint('TOPLEFT', color1Type7, "TOPRIGHT", 20, 0)
+
+		local color1Type7reset = BarColors:CreateButton(L.Reset, 64, 10, nil, GameFontNormalSmall)
+		local color2Type7reset = BarColors:CreateButton(L.Reset, 64, 10, nil, GameFontNormalSmall)
+		color1Type7reset:SetPoint('TOP', color1Type7, "BOTTOM", 5, -10)
+		color2Type7reset:SetPoint('TOP', color2Type7, "BOTTOM", 5, -10)
+		color1Type7reset:SetScript("OnClick", function(self)
+			color1Type7:SetColorRGB(DBM.Bars:GetDefaultOption("StartColorUIR"), DBM.Bars:GetDefaultOption("StartColorUIG"), DBM.Bars:GetDefaultOption("StartColorUIB"))
+		end)
+		color2Type7reset:SetScript("OnClick", function(self)
+			color2Type7:SetColorRGB(DBM.Bars:GetDefaultOption("EndColorUIR"), DBM.Bars:GetDefaultOption("EndColorUIG"), DBM.Bars:GetDefaultOption("EndColorUIB"))
+		end)
+
+		local color1Type7text = BarColors:CreateText(L.BarStartColorUI, 80)
+		local color2Type7text = BarColors:CreateText(L.BarEndColorUI, 80)
+		color1Type7text:SetPoint("BOTTOM", color1Type7, "TOP", 0, 4)
+		color2Type7text:SetPoint("BOTTOM", color2Type7, "TOP", 0, 4)
+		color1Type7:SetScript("OnShow", function(self) self:SetColorRGB(
+			DBM.Bars:GetOption("StartColorUIR"),
+			DBM.Bars:GetOption("StartColorUIG"),
+			DBM.Bars:GetOption("StartColorUIB"))
+			color1Type7text:SetTextColor(
+			DBM.Bars:GetOption("StartColorUIR"),
+			DBM.Bars:GetOption("StartColorUIG"),
+			DBM.Bars:GetOption("StartColorUIB")
+			)
+		end)
+		color2Type7:SetScript("OnShow", function(self) self:SetColorRGB(
+			DBM.Bars:GetOption("EndColorUIR"),
+			DBM.Bars:GetOption("EndColorUIG"),
+			DBM.Bars:GetOption("EndColorUIB"))
+			color2Type7text:SetTextColor(
+			DBM.Bars:GetOption("EndColorUIR"),
+			DBM.Bars:GetOption("EndColorUIG"),
+			DBM.Bars:GetOption("EndColorUIB")
+			)
+		end)
+		color1Type7:SetScript("OnColorSelect", function(self)
+			DBM.Bars:SetOption("StartColorUIR", select(1, self:GetColorRGB()))
+			DBM.Bars:SetOption("StartColorUIG", select(2, self:GetColorRGB()))
+			DBM.Bars:SetOption("StartColorUIB", select(3, self:GetColorRGB()))
+			color1Type7text:SetTextColor(self:GetColorRGB())
+		end)
+		color2Type7:SetScript("OnColorSelect", function(self)
+			DBM.Bars:SetOption("EndColorUIR", select(1, self:GetColorRGB()))
+			DBM.Bars:SetOption("EndColorUIG", select(2, self:GetColorRGB()))
+			DBM.Bars:SetOption("EndColorUIB", select(3, self:GetColorRGB()))
+			color2Type7text:SetTextColor(self:GetColorRGB())
+		end)
+		
+		local dummybarcolor7 = DBM.Bars:CreateDummyBar(7)
+		dummybarcolor7.frame:SetParent(BarColors.frame)
+		dummybarcolor7.frame:SetPoint("TOP", color2Type7text, "LEFT", 10, 40)
+		dummybarcolor7.frame:SetScript("OnUpdate", function(self, elapsed) dummybarcolor7:Update(elapsed) end)
+		do
+			-- little hook to prevent this bar from changing size/scale
+			local old = dummybarcolor7.ApplyStyle
+			function dummybarcolor7:ApplyStyle(...)
+				old(self, ...)
+				self.frame:SetWidth(183)
+				self.frame:SetScale(0.9)
+				_G[self.frame:GetName().."Bar"]:SetWidth(183)
+			end
+		end
+
+		--Type 7 Extra Options
+		local bar7OptionsText = BarColors:CreateText(L.Bar7Header, 405, nil, nil, "LEFT")
+		bar7OptionsText:SetPoint("TOPLEFT", color2Type7text, "TOPLEFT", 150, 0)
+		local forceLarge = BarColors:CreateCheckButton(L.Bar7ForceLarge, false, nil, nil, "Bar7ForceLarge")
+		forceLarge:SetPoint("TOPLEFT", bar7OptionsText, "BOTTOMLEFT", 0, 0)
+		local customInline = BarColors:CreateCheckButton(L.Bar7CustomInline, false, nil, nil, "Bar7CustomInline")
+		customInline:SetPoint("TOPLEFT", forceLarge, "BOTTOMLEFT", 0, 0)
+		local bar7OptionsText2 = BarColors:CreateText(L.Bar7Footer, 405, nil, nil, "LEFT")
+		bar7OptionsText2:SetPoint("TOPLEFT", customInline, "TOPLEFT", 0, -60)
+
 		--General Options
 		local BarSetup = BarSetupPanel:CreateArea(L.AreaTitle_BarSetup, nil, 430, true)
 
@@ -2231,16 +2189,16 @@ local function CreateOptionsMenu()
 
 		local Styles = {
 			{	text	= L.BarDBM,				value	= "DBM" },
-			{	text	= L.BarBigWigs,			value 	= "BigWigs" }
+			{	text	= L.BarSimple,			value 	= "NoAnim" }
 		}
 
-		local StyleDropDown = BarSetup:CreateDropdown(L.BarStyle, Styles, "DBT", "Style", function(value)
-			DBM.Bars:SetOption("Style", value)
+		local StyleDropDown = BarSetup:CreateDropdown(L.BarStyle, Styles, "DBT", "BarStyle", function(value)
+			DBM.Bars:SetOption("BarStyle", value)
 		end)
 		StyleDropDown:SetPoint("TOPLEFT", TextureDropDown, "BOTTOMLEFT", 0, -10)
 
 		local Fonts = MixinSharedMedia3("font", {
-			{	text	= "Default",		value 	= STANDARD_TEXT_FONT,			font = STANDARD_TEXT_FONT		},
+			{	text	= "Default",		value 	= standardFont,					font = standardFont	},
 			{	text	= "Arial",			value 	= "Fonts\\ARIALN.TTF",			font = "Fonts\\ARIALN.TTF"		},
 			{	text	= "Skurri",			value 	= "Fonts\\skurri.ttf",			font = "Fonts\\skurri.ttf"		},
 			{	text	= "Morpheus",		value 	= "Fonts\\MORPHEUS.ttf",		font = "Fonts\\MORPHEUS.ttf"	}
@@ -2285,6 +2243,9 @@ local function CreateOptionsMenu()
 		
 		local ColorBars = BarSetup:CreateCheckButton(L.BarColorByType, false, nil, nil, "ColorByType")
 		ColorBars:SetPoint("TOPLEFT", SortBars, "BOTTOMLEFT", 0, 0)
+		
+		local InlineIcons = BarSetup:CreateCheckButton(L.BarInlineIcons, false, nil, nil, "InlineIcons")
+		InlineIcons:SetPoint("LEFT", ColorBars, "LEFT", 130, 0)
 
 		-- Functions for bar setup
 		local function createDBTOnShowHandler(option)
@@ -2329,8 +2290,8 @@ local function CreateOptionsMenu()
 
 		local EnlargeTimeSlider = BarSetup:CreateSlider(L.Bar_EnlargeTime, 6, 30, 1)
 		EnlargeTimeSlider:SetPoint("TOPLEFT", BarSetup.frame, "TOPLEFT", 20, -350)
-		EnlargeTimeSlider:SetScript("OnShow", createDBTOnShowHandler("EnlargeBarsTime"))
-		EnlargeTimeSlider:HookScript("OnValueChanged", createDBTOnValueChangedHandler("EnlargeBarsTime"))
+		EnlargeTimeSlider:SetScript("OnShow", createDBTOnShowHandler("EnlargeBarTime"))
+		EnlargeTimeSlider:HookScript("OnValueChanged", createDBTOnValueChangedHandler("EnlargeBarTime"))
 
 		local EnlargePerecntSlider = BarSetup:CreateSlider(L.Bar_EnlargePercent, 0, 50, 0.5)
 		EnlargePerecntSlider:SetPoint("TOPLEFT", BarSetup.frame, "TOPLEFT", 20, -390)
@@ -2407,7 +2368,6 @@ local function CreateOptionsMenu()
 		HugeBarOffsetYSlider:SetScript("OnShow", createDBTOnShowHandler("HugeBarYOffset"))
 		HugeBarOffsetYSlider:HookScript("OnValueChanged", createDBTOnValueChangedHandler("HugeBarYOffset"))
 
-
 		BarSetupPanel:SetMyOwnHeight()
 	end
 
@@ -2469,7 +2429,7 @@ local function CreateOptionsMenu()
 		end
 
 		local Fonts = MixinSharedMedia3("font", {
-			{	text	= "Default",		value 	= STANDARD_TEXT_FONT,			font = STANDARD_TEXT_FONT		},
+			{	text	= "Default",		value 	= standardFont,					font = standardFont	},
 			{	text	= "Arial",			value 	= "Fonts\\ARIALN.TTF",			font = "Fonts\\ARIALN.TTF"		},
 			{	text	= "Skurri",			value 	= "Fonts\\skurri.ttf",			font = "Fonts\\skurri.ttf"		},
 			{	text	= "Morpheus",		value 	= "Fonts\\MORPHEUS.ttf",		font = "Fonts\\MORPHEUS.ttf"	}
@@ -3302,18 +3262,21 @@ local function CreateOptionsMenu()
 		local CountSoundDropDown = spokenGeneralArea:CreateDropdown(L.CountdownVoice, DBM.Counts, "DBM", "CountdownVoice", function(value)
 			DBM.Options.CountdownVoice = value
 			DBM:PlayCountSound(1, DBM.Options.CountdownVoice)
+			DBM:BuildVoiceCountdownCache()
 		end)
 		CountSoundDropDown:SetPoint("TOPLEFT", spokenGeneralArea.frame, "TOPLEFT", 0, -20)
 
 		local CountSoundDropDown2 = spokenGeneralArea:CreateDropdown(L.CountdownVoice2, DBM.Counts, "DBM", "CountdownVoice2", function(value)
 			DBM.Options.CountdownVoice2 = value
 			DBM:PlayCountSound(1, DBM.Options.CountdownVoice2)
+			DBM:BuildVoiceCountdownCache()
 		end)
 		CountSoundDropDown2:SetPoint("LEFT", CountSoundDropDown, "RIGHT", 50, 0)
 
 		local CountSoundDropDown3 = spokenGeneralArea:CreateDropdown(L.CountdownVoice3, DBM.Counts, "DBM", "CountdownVoice3v2", function(value)
 			DBM.Options.CountdownVoice3v2 = value
 			DBM:PlayCountSound(1, DBM.Options.CountdownVoice3v2)
+			DBM:BuildVoiceCountdownCache()
 		end)
 		CountSoundDropDown3:SetPoint("TOPLEFT", CountSoundDropDown, "TOPLEFT", 0, -45)
 
@@ -3493,6 +3456,7 @@ local function CreateOptionsMenu()
 		local WorldBossNearAlert	= soundAlertsArea:CreateCheckButton(L.WorldBossNearAlert, true, nil, "WorldBossNearAlert")
 		local RLReadyCheckSound		= soundAlertsArea:CreateCheckButton(L.RLReadyCheckSound, true, nil, "RLReadyCheckSound")
 		local AFKHealthWarning		= soundAlertsArea:CreateCheckButton(L.AFKHealthWarning, true, nil, "AFKHealthWarning")
+		local AutoReplySound		= soundAlertsArea:CreateCheckButton(L.AutoReplySound, true, nil, "AutoReplySound")
 
 		local generaltimeroptions	= extraFeaturesPanel:CreateArea(L.TimerGeneral, nil, 125, true)
 
@@ -3827,14 +3791,16 @@ do
 				local savedVarsName = addon.modId:gsub("-", "").."_AllSavedVars"
 				for charname, charTable in pairs(_G[savedVarsName]) do
 					for bossid, optionTable in pairs(charTable) do
-						for i = 0, 3 do
-							if optionTable[i] then
-								local displayText = (i == 0 and charname.." ("..ALL..")") or charname.." ("..SPECIALIZATION..i.."-"..(charTable["talent"..i] or "")..")"
-								local dropdown = { text = displayText, value = charname.."|"..tostring(i) }
-								tinsert(modProfileDropdown, dropdown)
+						if type(optionTable) == "table" then
+							for i = 0, 3 do
+								if optionTable[i] then
+									local displayText = (i == 0 and charname.." ("..ALL..")") or charname.." ("..SPECIALIZATION..i.."-"..(charTable["talent"..i] or "")..")"
+									local dropdown = { text = displayText, value = charname.."|"..tostring(i) }
+									tinsert(modProfileDropdown, dropdown)
+								end
 							end
+							break
 						end
-						break
 					end
 				end
 			end)
@@ -4596,7 +4562,9 @@ do
 			if not Categories[addon.category] then
 				-- Create a Panel for "Wrath of the Lich King" "Burning Crusade" ...
 				local expLevel = GetExpansionLevel()
-				if expLevel == 5 then--Choose default expanded category based on players current expansion is.
+				if expLevel == 6 then--Choose default expanded category based on players current expansion is.
+					Categories[addon.category] = DBM_GUI:CreateNewPanel(L["TabCategory_"..addon.category:upper()] or L.TabCategory_Other, nil, (addon.category:upper()=="LEG"))
+				elseif expLevel == 5 then--Choose default expanded category based on players current expansion is.
 					Categories[addon.category] = DBM_GUI:CreateNewPanel(L["TabCategory_"..addon.category:upper()] or L.TabCategory_Other, nil, (addon.category:upper()=="WOD"))
 				elseif expLevel == 4 then--Choose default expanded category based on players current expansion is.
 					Categories[addon.category] = DBM_GUI:CreateNewPanel(L["TabCategory_"..addon.category:upper()] or L.TabCategory_Other, nil, (addon.category:upper()=="MOP"))

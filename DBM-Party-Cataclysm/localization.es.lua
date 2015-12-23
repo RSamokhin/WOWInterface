@@ -100,10 +100,6 @@ L:SetOptionLocalization{
 	PingBlitz	= "Marcar en el minimapa cuando el General Umbriss vaya a atacarte con Ataque relámpago"
 }
 
-L:SetMiscLocalization{
-	Blitz		= "fija la mirada |cFFFF0000(%S+)"
-}
-
 --------------------------
 -- Forgemaster Throngus --
 --------------------------
@@ -113,11 +109,6 @@ L= DBM:GetModLocalization(132)
 -- Drahga Shadowburner --
 -------------------------
 L= DBM:GetModLocalization(133)
-
-L:SetMiscLocalization{
-	ValionaYell	= "¡Dragón, harás lo que te ordeno! ¡Cógeme!",
-	Add			= "%s Invoca un"
-}
 
 ------------
 -- Erudax --
@@ -224,13 +215,8 @@ L:SetWarningLocalization{
 	specWarnPhase2Soon	= "Fase 2 en 5 segundos"
 }
 
-L:SetTimerLocalization({
-	timerPhase2 	= "Empieza la Fase 2"
-})
-
 L:SetOptionLocalization{
-	specWarnPhase2Soon	= "Mostrar aviso epecial para fase 2 en breve (5 segundos)",
-	timerPhase2 	= "Mostrar tiempo para el inicio de la fase 2"
+	specWarnPhase2Soon	= "Mostrar aviso epecial para fase 2 en breve (5 segundos)"
 }
 
 -----------------------
@@ -415,8 +401,7 @@ L= DBM:GetModLocalization(186)
 L:SetOptionLocalization{
 	StormIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(43648),
 	RangeFrame	= "Mostrar distancia",
-	StormArrow	= "Mostrar flecha para $spell:43648",
-	SetIconOnEagle	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(97318)
+	StormArrow	= "Mostrar flecha para $spell:43648"
 }
 
 ---------------
@@ -548,8 +533,7 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	WarnRevive	= "Anunciar cuantas resurrecciones de fantasmas quedan",
-	SpecWarnOhgan	= "Mostrar aviso cuando Ohgan es resucitado",
-	SetIconOnOhgan	= "Poner un icono a Ohgan cuando resucite" 
+	SpecWarnOhgan	= "Mostrar aviso cuando Ohgan es resucitado" 
 }
 
 ----------------------

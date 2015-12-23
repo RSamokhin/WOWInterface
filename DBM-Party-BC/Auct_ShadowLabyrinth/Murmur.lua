@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(547, "DBM-Party-BC", 10, 253)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 553 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 572 $"):sub(12, -3))
 mod:SetCreatureID(18708)
 mod:SetUsedIcons(8)
 
@@ -19,7 +19,7 @@ local warnTouch         = mod:NewTargetAnnounce(33711, 3)
 local specWarnBoom		= mod:NewSpecialWarningRun(33923, nil, nil, nil, 4)
 local specWarnTouch		= mod:NewSpecialWarningMoveAway(33711)
 
-local timerBoomCast     = mod:NewCastTimer(5, 33923)
+local timerBoomCast     = mod:NewCastTimer(5, 33923, nil, nil, nil, 2)
 local timerTouch        = mod:NewTargetTimer(14, 33711)
 
 mod:AddBoolOption("SetIconOnTouchTarget", true)

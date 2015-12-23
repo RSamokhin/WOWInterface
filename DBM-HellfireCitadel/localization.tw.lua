@@ -30,8 +30,8 @@ L= DBM:GetModLocalization(1425)
 ---------------------------
 L= DBM:GetModLocalization(1432)
 
-L:SetMiscLocalization({
-	Jubeideath		=	"我永不熄滅！"
+L:SetWarningLocalization({
+	reapDelayed =	"收割在夢魘幻貌結束之後"
 })
 
 ------------------
@@ -58,15 +58,17 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(1372)
 
 L:SetTimerLocalization({
-	SoDDPS		= "下一次死亡之影(%s)",
-	SoDTank		= "下一次死亡之影(%s)",
-	SoDHealer	= "下一次死亡之影(%s)"
+	SoDDPS2		= "下一次死亡之影(%s)",
+	SoDTank2	= "下一次死亡之影(%s)",
+	SoDHealer2	= "下一次死亡之影(%s)"
 })
 
 L:SetOptionLocalization({
-	SoDDPS		= "為下一個傷害職中了$spell:179864顯示計時器",
-	SoDTank		= "為下一個坦克職中了$spell:179864顯示計時器",
-	SoDHealer	= "為下一個治療職中了$spell:179864顯示計時器"
+	SoDDPS2		= "為下一個傷害職中了$spell:179864顯示計時器",
+	SoDTank2	= "為下一個坦克職中了$spell:179864顯示計時器",
+	SoDHealer2	= "為下一個治療職中了$spell:179864顯示計時器",
+	ShowOnlyPlayer	= "只顯示HudMap在當你參與到$spell:179909時"
+	
 })
 
 --------------------------
@@ -87,26 +89,17 @@ L:SetOptionLocalization({
 --------------------------
 L= DBM:GetModLocalization(1391)
 
-L:SetWarningLocalization({
-	specWarnSeedPosition =	"種子位置: %s"
-})
-
 L:SetOptionLocalization({
 	SeedsBehavior		= "設定團隊的種子大喊行為(需要團隊隊長)",
 	Iconed				= "星星,圈圈,鑽石,三角,月亮。適用於用於分散站位",
 	Numbered			= "1, 2, 3, 4, 5。適用於分區站位",
 	DirectionLine		= "左, 中偏左, 中間, 中偏右, 右。適用於直線站位",
-	FreeForAll			= "自由模式。不指定佔位，只使用普通的大喊",
-	--Currently these 3 below are unused unless I see anyone want/need them
-	CrossPerception		= "前, 後, 左, 右, 中。適用於十字站位",
-	CrossCardinal		= "北, 南, 東, 西, 中。適用於十字站位",
-	ExCardinal			= "東北, 東南, 西北, 西南, 中。適用於十字站位"
+	FreeForAll			= "自由模式。不指定佔位，只使用普通的大喊"
 })
 
 L:SetMiscLocalization({
 	DBMConfigMsg		= "種子設定已設定為%s以符合團隊隊長設定。",
 	BWConfigMsg			= "團隊隊長使用Bigwigs中，設定DBM為編號以符合Bigwigs的種子大喊。"
-	--TODO, talk to some guilds, maybe trim list above, add finalized directions here
 })
 
 --------------------------
@@ -125,6 +118,14 @@ L:SetOptionLocalization({
 -- Socrethar the Eternal --
 --------------------------
 L= DBM:GetModLocalization(1427)
+
+L:SetOptionLocalization({
+	InterruptBehavior	= "設置團隊的中斷模式(需要團隊隊長)",
+	Count3Resume		= "3人持續計數循環中斷當護盾消失時",--Default
+	Count3Reset			= "3人重置計數循環中斷當護盾消失時",
+	Count4Resume		= "4人持續計數循環中斷當護盾消失時",
+	Count4Reset			= "4人重置計數循環中斷當護盾消失時"
+})
 
 --------------------------
 -- Tyrant Velhari --
@@ -146,12 +147,20 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(1438)
 
 L:SetWarningLocalization({
-	specWarnBreakShackle	= "束縛折磨：拉斷%s!"
+	specWarnBreakShackle	= "束縛折磨：%s拉斷!"
 })
 
 L:SetOptionLocalization({
 	specWarnBreakShackle	= "當中了$spell:184964時顯示特別警告。此警告會自動分配拉斷順序去最小化承受傷害。",
-	FilterOtherPhase		= "過濾掉與你不同階段的警告"
+	ExtendWroughtHud3		= "把HUB連線延伸到$spell:185014目標 (可能會降低連線精準度)",
+	AlternateHudLine		= "為$spell:185014之間的目標HUD連線使用替代連線材質",
+	NamesWroughtHud			= "為$spell:185014目標顯示HUD的玩家名稱",
+	FilterOtherPhase		= "過濾掉與你不同階段的警告",
+	MarkBehavior			= "設置燃燒軍團印記大喊方式(需要團隊隊長)",
+	Numbered				= "星星、圈圈、鑽石、三角。適用任何站位的打法。",--Default
+	LocSmallFront			= "近戰(左星星、右圈圈)、遠程(左鑽石、右三角)。 短時間減益在近戰。",
+	LocSmallBack			= "近戰(左星星、右圈圈)、遠程(左鑽石、右三角)。 短時間減益在遠程。",
+	NoAssignment			= "為整個團隊禁用所有站位大喊/訊息，還有HUD指示。"
 })
 
 L:SetMiscLocalization({

@@ -2,7 +2,7 @@
 ## Title: PetTracker
 ## Notes: Tracking pets in and out of combat since 2012.
 ## Author: Jaliborc (João Cardoso)
-## Version: 6.2.3
+## Version: 6.2.5
 
 ## SavedVariables: PetTracker_Sets
 ## SavedVariablesPerCharacter: PetTracker_State

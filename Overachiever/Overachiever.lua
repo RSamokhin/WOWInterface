@@ -181,23 +181,28 @@ do
     local id, ret, anyFound
     for i=1,GetCategoryNumAchievements(category) do
       id, ret = get_arg1_argN(argnum, GetAchievementInfo(category, i))
-      if (anyCase) then
-        if (not ret) then
-			chatprint("getAchievementID_cat: ret is nil.", "["..THIS_TITLE.." DEBUG]")
-			print("category:",category, "index:",i, "argnum:",argnum)
-			ret = ''
-		else
-			ret = strlower(ret)
-		end
-      end
-      if ( strfind(ret, pattern, 1, true) ) then
-        if (getAll) then
-          found[#(found) + 1] = id;
-          anyFound = true
-        else
-          return id;
+	  if (not id) then
+        -- Absurdly, GetCategoryNumAchievements now seems to be giving the WRONG NUMBER for at least some categories. (Confirmed in WoW 6.2.2. Might have started earlier.)
+		-- Consequently, we need to watch for nil IDs and skip them.
+      else
+        if (anyCase) then
+          if (not ret) then
+            chatprint("getAchievementID_cat: ret is nil.", "["..THIS_TITLE.." DEBUG]")
+            print("category:",category, "index:",i, "argnum:",argnum)
+            ret = ''
+          else
+		  	ret = strlower(ret)
+          end
         end
-      end
+        if ( strfind(ret, pattern, 1, true) ) then
+          if (getAll) then
+            found[#(found) + 1] = id;
+            anyFound = true
+          else
+            return id;
+          end
+        end
+	  end
     end
     if (anyFound) then
       return found;
@@ -332,7 +337,7 @@ do
 end
 
 local function checkGuildMembersTooltip(frame)
-  if (not isGuildAchievement(frame.id)) then  return;  end
+  if (frame.id and not isGuildAchievement(frame.id)) then  return;  end
   local gv = isUIInGuildView()
   if (not gv) then  AchievementFrame_ToggleView();  end  -- Toggle so we're in guild mode so AchievementFrameAchievements_CheckGuildMembersTooltip will work as desired.
   AchievementFrameAchievements_CheckGuildMembersTooltip(frame)
@@ -1323,16 +1328,18 @@ if (Overachiever_Debug) then
       tab[catname] = {}
       for i=1,GetCategoryNumAchievements(category) do
         id, name = GetAchievementInfo(category, i)
-        if (testAchMatch) then
-          trimname = strsub(name,9) -- Cut off "Explore " - meant for use with English client only
-          if (trimname and ZoneID[trimname]) then
-            name = trimname
-          else
-            chatprint("Achievement name doesn't match a zone: "..name)
-            name = "!! "..name
+        if (id) then
+          if (testAchMatch) then
+            trimname = strsub(name,9) -- Cut off "Explore " - meant for use with English client only
+            if (trimname and ZoneID[trimname]) then
+              name = trimname
+            else
+              chatprint("Achievement name doesn't match a zone: "..name)
+              name = "!! "..name
+            end
           end
+          tab[catname][name] = id;
         end
-        tab[catname][name] = id;
       end
     end
     Overachiever_Settings.Debug_ExplorationData = tab

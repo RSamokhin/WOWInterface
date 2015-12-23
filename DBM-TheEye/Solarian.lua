@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Solarian", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
 mod:SetCreatureID(18805)
 mod:SetModelID(18239)
 mod:SetZone()
@@ -25,9 +25,9 @@ local specWarnDomination= mod:NewSpecialWarningInterrupt(37135)
 local specWarnWrath		= mod:NewSpecialWarningYou(42783)
 
 local timerWrath		= mod:NewTargetTimer(6, 42783)
-local timerSplit		= mod:NewTimer(90, "TimerSplit", 39414)
-local timerAgent		= mod:NewTimer(4, "TimerAgent", 39414)
-local timerPriest		= mod:NewTimer(20, "TimerPriest", 39414)
+local timerSplit		= mod:NewTimer(90, "TimerSplit", 39414, nil, nil, 6)
+local timerAgent		= mod:NewTimer(4, "TimerAgent", 39414, nil, nil, 1)
+local timerPriest		= mod:NewTimer(20, "TimerPriest", 39414, nil, nil, 1)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 

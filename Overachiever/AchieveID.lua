@@ -127,7 +127,7 @@ OVERACHIEVER_EXPLOREZONEID = {
 -- Outland:
 	["Blade's Edge Mountains"] = 865,
 	["Hellfire Peninsula"] = 862,
-	["Nagrand"] = 866,
+	--["Nagrand"] = 866, -- PROBLEM: Name conflict. Two zones with same name now. New/adjusted system needed.
 	["Netherstorm"] = 843,
 	["Shadowmoon Valley"] = 864,
 	["Terokkar Forest"] = 867,
@@ -152,6 +152,14 @@ OVERACHIEVER_EXPLOREZONEID = {
 	["Townlong Steppes"] = 6977,
 	["Dread Wastes"] = 6978,
 	["Vale of Eternal Blossoms"] = 6979,
+-- Draenor
+	["Frostfire Ridge"] = 8937,
+	["Shadowmoon Valley"] = 8938,
+	["Gorgrond"] = 8939,
+	["Talador"] = 8940,
+	["Spires of Arak"] = 8941,
+	["Nagrand"] = 8942,
+	["Tanaan Jungle"] = 10260,
 };
 -- "Explore Cataclysm": 4868
 

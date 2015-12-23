@@ -1,11 +1,11 @@
 ## Interface: 60200
-## X-Curse-Packaged-Version: v38
+## X-Curse-Packaged-Version: v39
 ## X-Curse-Project-Name: Garrison Mission Manager
 ## X-Curse-Project-ID: garrison-mission-manager
 ## X-Curse-Repository-ID: wow/garrison-mission-manager/mainline
 
 ## Title: Garrison Mission Manager
-## Version: v38
+## Version: v39
 ## Notes: Assists you with selecting best team for garrison and shipyard missions and other followers management tasks
 ## Author: Oleg "Rowaa[SR13]" Volkov
 

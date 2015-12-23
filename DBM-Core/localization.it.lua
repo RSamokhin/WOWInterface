@@ -14,9 +14,9 @@ DBM_CORE_COMBAT_ENDED_AT			= "Combattimento contro %s (%s) finito dopo %s."
 DBM_CORE_COMBAT_ENDED_AT_LONG		= "Combattimento contro %s (%s) finito dopo %s. Hai %d sconfitte in questa difficolta'."
 DBM_CORE_COMBAT_STATE_RECOVERED		= "%s e' stato ingaggiato %s fa, recupero dei timer..."
 
-DBM_CORE_TIMER_FORMAT_SECS			= "%d |4secondo:secondi;"
+DBM_CORE_TIMER_FORMAT_SECS			= "%.2f |4secondo:secondi;"
 DBM_CORE_TIMER_FORMAT_MINS			= "%d |4minuto:minuti;"
-DBM_CORE_TIMER_FORMAT				= "%d |4minuto:minuti; e %d |4secondo:secondi;"
+DBM_CORE_TIMER_FORMAT				= "%d |4minuto:minuti; e %.2f |4secondo:secondi;"
 
 DBM_CORE_MIN						= "min"
 DBM_CORE_MIN_FMT					= "%d min"
@@ -115,7 +115,7 @@ DBM_CORE_RIGHT						= "Right"--Translate
 DBM_CORE_BACK						= "Back"--Translate
 DBM_CORE_FRONT						= "Front"--Translate
 
-DBM_CORE_BREAK_START				= "Pausa iniziata-- Hai %s minuto(i)!"
+DBM_CORE_BREAK_START				= "Pausa iniziata-- Hai %s!"
 DBM_CORE_BREAK_MIN					= "La Pausa finisce tra %s minuto(i)!"
 DBM_CORE_BREAK_SEC					= "La Pausa finisce tra %s secondi!"
 DBM_CORE_TIMER_BREAK				= "Pausa!"
@@ -208,15 +208,15 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.dodge 	= DBM_CORE_AUTO_SPEC_WARN_TEXTS.move--FIXME
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.run		= "%s - Corri Via!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast		= "%s - Smetti di Attaccare!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack		= "%s (%%d)"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch	= ">%s< - Cambia Bersaglio"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= ">%s< - Cambia Bersaglio (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch	= "%s - Cambia Bersaglio"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= "%s - Cambia Bersaglio (%%d)"
 
 
 DBM_CORE_AUTO_ICONS_OPTION_TEXT			= "Imposta Icone sui bersagli di $spell:%s"
 DBM_CORE_AUTO_SOUND_OPTION_TEXT			= "Fai il suono \"muoviti\" per $spell:%s"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Esegui il conto alla rovescia per $spell:%s"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Esegui il conteggio per la durata di $spell:%s"
-DBM_CORE_AUTO_YELL_OPTION_TEXT			= "Urla quando sei afflitto da $spell:%s"
+DBM_CORE_AUTO_YELL_OPTION_TEXT.yell		= "Urla quando sei afflitto da $spell:%s"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.yell	= "%s su di " .. UnitName("player") .. "!"
 
 

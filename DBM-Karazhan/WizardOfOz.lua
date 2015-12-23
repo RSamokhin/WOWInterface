@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Oz", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 581 $"):sub(12, -3))
 mod:SetCreatureID(18168)
 mod:SetModelID(17550)
 mod:RegisterCombat("yell", L.DBM_OZ_YELL_DOROTHEE)
@@ -25,10 +25,10 @@ local WarnCrone		= mod:NewAnnounce("DBM_OZ_WARN_CRONE", 2, nil, nil, false)
 local warnChain		= mod:NewSpellAnnounce(32337, 3)
 
 local timerFearCD	= mod:NewCDTimer(19, 31013)
-local timerRoar		= mod:NewTimer(13, "DBM_OZ_WARN_ROAR", "Interface\\Icons\\Ability_Druid_ChallangingRoar", nil, false)
-local timerStrawman	= mod:NewTimer(22, "DBM_OZ_WARN_STRAWMAN", "Interface\\Icons\\INV_Helmet_34", nil, false)
-local timerTinhead	= mod:NewTimer(30, "DBM_OZ_WARN_TINHEAD", "Interface\\Icons\\INV_Helmet_02", nil, false)
---local timerTito		= mod:NewTimer(47.5, "DBM_OZ_WARN_TITO", "Interface\\Icons\\Ability_Mount_WhiteDireWolf", nil, false)
+local timerRoar		= mod:NewTimer(13, "DBM_OZ_WARN_ROAR", "Interface\\Icons\\Ability_Druid_ChallangingRoar", nil, false, 1)
+local timerStrawman	= mod:NewTimer(22, "DBM_OZ_WARN_STRAWMAN", "Interface\\Icons\\INV_Helmet_34", nil, false, 1)
+local timerTinhead	= mod:NewTimer(30, "DBM_OZ_WARN_TINHEAD", "Interface\\Icons\\INV_Helmet_02", nil, false, 1)
+--local timerTito		= mod:NewTimer(47.5, "DBM_OZ_WARN_TITO", "Interface\\Icons\\Ability_Mount_WhiteDireWolf", nil, false, 1)
 
 mod:AddBoolOption("AnnounceBosses", true, "announce")
 mod:AddBoolOption("ShowBossTimers", true, "timer")

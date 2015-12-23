@@ -149,8 +149,12 @@ function Battle:GetStats()
 		speedScale  = 100/(speedScale+100)
 		healthScale = 100/(healthScale+100)
 
-		return floor(self:GetMaxHealth() * healthScale - healthBonus + .5),
-			   self:GetPower(),
+		local isWild = self:IsWildBattle() and not self:IsAlly()
+		local healthNerf = isWild and 1.2 or 1
+		local powerNerf = isWild and 1.25 or 1
+
+		return floor((self:GetMaxHealth() * healthScale - healthBonus) * healthNerf + .5),
+			   floor(self:GetPower() * powerNerf + .5),
 			   floor(self:GetSpeed() * speedScale + .5)
 	end
 end
