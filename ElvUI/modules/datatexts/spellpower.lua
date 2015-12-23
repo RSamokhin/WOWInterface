@@ -1,10 +1,16 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local DT = E:GetModule('DataTexts')
 
+--Cache global variables
+--Lua functions
+local join = string.join
+--WoW API / Variables
+local GetSpellBonusDamage = GetSpellBonusDamage
+local GetSpellBonusHealing = GetSpellBonusHealing
+
 local spellpwr, healpwr
 local displayNumberString = ''
 local lastPanel;
-local join = string.join
 
 local function OnEvent(self, event, unit)
 	spellpwr = GetSpellBonusDamage(7)
@@ -40,4 +46,3 @@ E['valueColorUpdateFuncs'][ValueColorUpdate] = true
 	onLeaveFunc - function to fire OnLeave, if not provided one will be set for you that hides the tooltip.
 ]]
 DT:RegisterDatatext('Spell/Heal Power', {"UNIT_STATS", "UNIT_AURA", "FORGE_MASTER_ITEM_CHANGED", "ACTIVE_TALENT_GROUP_CHANGED", "PLAYER_TALENT_UPDATE"}, OnEvent)
-

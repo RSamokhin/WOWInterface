@@ -1,5 +1,6 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local S = E:GetModule('Skins')
+local LBG = LibStub("LibButtonGlow-1.0", true)
 
 local function LoadSkin()
 	LootHistoryFrame:SetFrameStrata('HIGH')
@@ -72,6 +73,7 @@ local function LoadSkin()
 	MasterLooterFrame:StripTextures()
 	MasterLooterFrame:SetTemplate()
 	MasterLooterFrame:SetFrameStrata('FULLSCREEN_DIALOG')
+	MasterLooterFrame:SetFrameLevel(10)
 
 	hooksecurefunc("MasterLooterFrame_Show", function()
 		local b = MasterLooterFrame.Item
@@ -120,6 +122,8 @@ local function LoadSkin()
 	S:HandleCloseButton(LootFrameCloseButton)
 
 	LootFrame:SetTemplate("Transparent")
+	LootFrame:SetFrameStrata("FULLSCREEN")
+	LootFrame:SetFrameLevel(1)
 	LootFramePortraitOverlay:SetParent(E.HiddenFrame)
 
 	for i=1, LootFrame:GetNumRegions() do
@@ -184,11 +188,11 @@ local function LoadSkin()
 
 			if(texture) then
 				if ( questId and not isActive ) then
-					ActionButton_ShowOverlayGlow(button)
+					LBG.ShowOverlayGlow(button)
 				elseif ( questId or isQuestItem ) then
-					ActionButton_ShowOverlayGlow(button)
+					LBG.ShowOverlayGlow(button)
 				else
-					ActionButton_HideOverlayGlow(button)
+					LBG.HideOverlayGlow(button)
 				end
 			end
 		end

@@ -1,11 +1,20 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local UF = E:GetModule('UnitFrames');
-
-local floor = math.floor
-local sub = string.sub
-local utf8sub = string.utf8sub
-local utf8len = string.utf8len
 local LSM = LibStub("LibSharedMedia-3.0");
+
+--Cache global variables
+--Lua functions
+local unpack, tonumber = unpack, tonumber
+local floor, abs = math.floor, abs
+local sub, utf8sub, utf8len = string.sub, string.utf8sub, string.utf8len
+--WoW API / Variables
+local CreateFrame = CreateFrame
+local UnitSpellHaste = UnitSpellHaste
+local UnitBuff = UnitBuff
+local UnitIsPlayer = UnitIsPlayer
+local UnitClass = UnitClass
+local UnitReaction = UnitReaction
+local UnitCanAttack = UnitCanAttack
 
 local _, ns = ...
 local ElvUF = ns.oUF
@@ -262,18 +271,17 @@ function UF:PostCastStart(unit, name, rank, castid)
 
 	local colors = ElvUF.colors
 	local r, g, b = colors.castColor[1], colors.castColor[2], colors.castColor[3]
-	if UF.db.colors.castClassColor then
-		local t
-		if UnitIsPlayer(unit) then
-			local _, class = UnitClass(unit)
-			t = ElvUF.colors.class[class]
-		elseif UnitReaction(unit, 'player') then
-			t = ElvUF.colors.reaction[UnitReaction(unit, "player")]
-		end
 
-		if(t) then
-			r, g, b = t[1], t[2], t[3]
-		end
+	local t
+	if UF.db.colors.castClassColor and UnitIsPlayer(unit) then
+		local _, class = UnitClass(unit)
+		t = ElvUF.colors.class[class]
+	elseif UF.db.colors.castReactionColor and UnitReaction(unit, 'player') then
+		t = ElvUF.colors.reaction[UnitReaction(unit, "player")]
+	end
+
+	if(t) then
+		r, g, b = t[1], t[2], t[3]
 	end
 
 	if  self.interrupt and unit ~= "player" and UnitCanAttack("player", unit) then
@@ -363,18 +371,17 @@ function UF:PostCastInterruptible(unit)
 
 	local colors = ElvUF.colors
 	local r, g, b = colors.castColor[1], colors.castColor[2], colors.castColor[3]
-	if UF.db.colors.castClassColor then
-		local t
-		if UnitIsPlayer(unit) then
-			local _, class = UnitClass(unit)
-			t = ElvUF.colors.class[class]
-		elseif UnitReaction(unit, 'player') then
-			t = ElvUF.colors.reaction[UnitReaction(unit, "player")]
-		end
 
-		if(t) then
-			r, g, b = t[1], t[2], t[3]
-		end
+	local t
+	if UF.db.colors.castClassColor and UnitIsPlayer(unit) then
+		local _, class = UnitClass(unit)
+		t = ElvUF.colors.class[class]
+	elseif UF.db.colors.castReactionColor and UnitReaction(unit, 'player') then
+		t = ElvUF.colors.reaction[UnitReaction(unit, "player")]
+	end
+
+	if(t) then
+		r, g, b = t[1], t[2], t[3]
 	end
 
 	if self.interrupt and UnitCanAttack("player", unit) then

@@ -1,8 +1,26 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
-local grid
 
-local selectedValue = 'ALL'
+--Cache global variables
+--Lua functions
+local _G = _G
+local type, ipairs, tonumber = type, ipairs, tonumber
 local floor = math.floor
+--WoW API / Variables
+local CreateFrame = CreateFrame
+local IsAddOnLoaded = IsAddOnLoaded
+local GetScreenWidth = GetScreenWidth
+local GetScreenHeight = GetScreenHeight
+local InCombatLockdown = InCombatLockdown
+local RESET = RESET
+
+--Global variables that we don't cache, list them here for the mikk's Find Globals script
+-- GLOBALS: LibStub, UIParent, GameTooltip, EditBox_ClearFocus
+-- GLOBALS: ElvUIMoverPopupWindow, ElvUIMoverNudgeWindow, ElvUIMoverPopupWindowDropDown
+-- GLOBALS: UIDropDownMenu_SetSelectedValue, UIDropDownMenu_CreateInfo, UIDropDownMenu_AddButton
+-- GLOBALS: UIDropDownMenu_Initialize, SquareButton_SetIcon
+
+local grid
+local selectedValue = 'ALL'
 
 E.ConfigModeLayouts = {
 	'ALL',
@@ -62,7 +80,7 @@ function E:ToggleConfigMode(override, configType)
 
 		ElvUIMoverPopupWindow:Show()
 		if IsAddOnLoaded("ElvUI_Config") then
-			LibStub("AceConfigDialog-3.0"):Close("ElvUI")
+			LibStub("AceConfigDialog-3.0-ElvUI"):Close("ElvUI")
 			GameTooltip:Hide()
 		end
 		E.ConfigurationMode = true
@@ -293,7 +311,7 @@ function E:CreateMoverPopup()
 
 	lock:SetScript("OnClick", function(self)
 		E:ToggleConfigMode(true)
-		if IsAddOnLoaded("ElvUI_Config") then LibStub("AceConfigDialog-3.0"):Open('ElvUI') end
+		if IsAddOnLoaded("ElvUI_Config") then LibStub("AceConfigDialog-3.0-ElvUI"):Open('ElvUI') end
 		selectedValue = 'ALL'
 		UIDropDownMenu_SetSelectedValue(ElvUIMoverPopupWindowDropDown, selectedValue);
 	end)

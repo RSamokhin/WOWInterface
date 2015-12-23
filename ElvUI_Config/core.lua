@@ -1,11 +1,12 @@
 ﻿local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 
 local tsort, tinsert = table.sort, table.insert
+local floor, ceil = math.floor, math.ceil
 local DEFAULT_WIDTH = 890;
 local DEFAULT_HEIGHT = 651;
-local AC = LibStub("AceConfig-3.0")
-local ACD = LibStub("AceConfigDialog-3.0")
-local ACR = LibStub("AceConfigRegistry-3.0")
+local AC = LibStub("AceConfig-3.0-ElvUI")
+local ACD = LibStub("AceConfigDialog-3.0-ElvUI")
+local ACR = LibStub("AceConfigRegistry-3.0-ElvUI")
 
 AC:RegisterOptionsTable("ElvUI", E.Options)
 ACD:SetDefaultSize("ElvUI", DEFAULT_WIDTH, DEFAULT_HEIGHT)
@@ -205,6 +206,12 @@ E.Options.args.general = {
 					get = function(info) return E.global.general.smallerWorldMap end,
 					set = function(info, value) E.global.general.smallerWorldMap = value; E:StaticPopup_Show("GLOBAL_RL") end
 				},
+				enhancedPvpMessages = {
+					order = 17,
+					type = 'toggle',
+					name = L["Enhanced PVP Messages"],
+					desc = L["Display battleground messages in the middle of the screen."],
+				},
 				chatBubbles = {
 					order = 30,
 					type = "group",
@@ -239,7 +246,7 @@ E.Options.args.general = {
 							name = L["Font Size"],
 							get = function(info) return E.private.general.chatBubbleFontSize end,
 							set = function(info, value) E.private.general.chatBubbleFontSize = value; E:StaticPopup_Show("PRIVATE_RL") end,
-							min = 6, max = 20, step = 1,
+							min = 4, max = 20, step = 1,
 						},
 					},
 				},
@@ -263,7 +270,7 @@ E.Options.args.general = {
 							name = L["Font Size"],
 							desc = L["Set the font size for everything in UI. Note: This doesn't effect somethings that have their own seperate options (UnitFrame Font, Datatext Font, ect..)"],
 							type = "range",
-							min = 6, max = 22, step = 1,
+							min = 4, max = 22, step = 1,
 							set = function(info, value) E.db.general[ info[#info] ] = value; E:UpdateMedia(); E:UpdateFontTemplates(); end,
 						},
 						font = {
@@ -806,13 +813,13 @@ E.Options.args.general = {
 					order = 3,
 					type = "range",
 					name = L["Width"],
-					min = 5, max = 800, step = 1,
+					min = 5, max = ceil(GetScreenWidth() or 800), step = 1,
 				},
 				height = {
 					order = 4,
 					type = "range",
 					name = L["Height"],
-					min = 5, max = 800, step = 1,
+					min = 5, max = ceil(GetScreenHeight() or 800), step = 1,
 				},
 				orientation = {
 					order = 5,
@@ -824,8 +831,13 @@ E.Options.args.general = {
 						['VERTICAL'] = L["Vertical"]
 					}
 				},
-				textFormat = {
+				reverseFill = {
 					order = 6,
+					type = "toggle",
+					name = L["Reverse Fill Direction"],
+				},
+				textFormat = {
+					order = 7,
 					type = 'select',
 					name = L["Text Format"],
 					values = {
@@ -837,7 +849,7 @@ E.Options.args.general = {
 					set = function(info, value) E.db.general.experience[ info[#info] ] = value; E:GetModule('Misc'):UpdateExperience() end,
 				},
 				textSize = {
-					order = 7,
+					order = 8,
 					name = L["Font Size"],
 					type = "range",
 					min = 6, max = 22, step = 1,
@@ -871,13 +883,13 @@ E.Options.args.general = {
 					order = 3,
 					type = "range",
 					name = L["Width"],
-					min = 5, max = 800, step = 1,
+					min = 5, max = ceil(GetScreenWidth() or 800), step = 1,
 				},
 				height = {
 					order = 4,
 					type = "range",
 					name = L["Height"],
-					min = 5, max = 800, step = 1,
+					min = 5, max = ceil(GetScreenHeight() or 800), step = 1,
 				},
 				orientation = {
 					order = 5,
@@ -889,8 +901,13 @@ E.Options.args.general = {
 						['VERTICAL'] = L["Vertical"]
 					}
 				},
-				textFormat = {
+				reverseFill = {
 					order = 6,
+					type = "toggle",
+					name = L["Reverse Fill Direction"],
+				},
+				textFormat = {
+					order = 7,
 					type = 'select',
 					name = L["Text Format"],
 					values = {
@@ -902,7 +919,7 @@ E.Options.args.general = {
 					set = function(info, value) E.db.general.reputation[ info[#info] ] = value; E:GetModule('Misc'):UpdateReputation() end,
 				},
 				textSize = {
-					order = 7,
+					order = 8,
 					name = L["Font Size"],
 					type = "range",
 					min = 6, max = 22, step = 1,

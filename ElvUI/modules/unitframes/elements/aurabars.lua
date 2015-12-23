@@ -1,6 +1,17 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local UF = E:GetModule('UnitFrames');
 
+--Cache global variables
+--Lua functions
+local tostring = tostring
+local format = format
+--WoW API / Variables
+local CreateFrame = CreateFrame
+local IsShiftKeyDown = IsShiftKeyDown
+local IsAltKeyDown = IsAltKeyDown
+local IsControlKeyDown = IsControlKeyDown
+local UnitIsFriend = UnitIsFriend
+
 function UF:Construct_AuraBars()
 	local bar = self.statusBar
 
@@ -30,7 +41,7 @@ function UF:Construct_AuraBars()
 
 	bar.iconHolder:RegisterForClicks('RightButtonUp')
 	bar.iconHolder:SetScript('OnClick', function(self)
-		if not IsShiftKeyDown() then return; end
+		if E.db.unitframe.auraBlacklistModifier == "NONE" or not ((E.db.unitframe.auraBlacklistModifier == "SHIFT" and IsShiftKeyDown()) or (E.db.unitframe.auraBlacklistModifier == "ALT" and IsAltKeyDown()) or (E.db.unitframe.auraBlacklistModifier == "CTRL" and IsControlKeyDown())) then return; end
 		local auraName = self:GetParent().aura.name
 
 		if auraName then
@@ -105,7 +116,7 @@ function UF:AuraBarFilter(unit, name, rank, icon, count, debuffType, duration, e
 	end
 
 	if UF:CheckFilter(db.onlyDispellable, isFriend) then
-		if (self.type == 'buffs' and not isStealable) or (self.type == 'debuffs' and dtype and  not E:IsDispellableByMe(dtype)) or dtype == nil then
+		if (self.type == 'buffs' and not isStealable) or (self.type == 'debuffs' and debuffType and not E:IsDispellableByMe(debuffType)) or debuffType == nil then
 			returnValue = false;
 		end
 		anotherFilterExists = true
@@ -198,7 +209,7 @@ function UF:ColorizeAuraBars(event, unit)
 		if not frame:IsVisible() then break end
 		local spellName = frame.statusBar.aura.name
 		local spellID = frame.statusBar.aura.spellID
-		local colors = E.global.unitframe.AuraBarColors[spellName]
+		local colors = E.global.unitframe.AuraBarColors[tostring(spellID)] or E.global.unitframe.AuraBarColors[spellName]
 
 		if E.db.unitframe.colors.auraBarTurtle and E.global.unitframe.aurafilters.TurtleBuffs.spells[spellName] and not colors and (spellName ~= GOTAK or (spellName == GOTAK and frame.statusBar.aura.spellID == GOTAK_ID)) then
 			colors = E.db.unitframe.colors.auraBarTurtleColor

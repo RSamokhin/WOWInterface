@@ -144,6 +144,18 @@ E.Options.args.datatexts = {
 			name = L["Show Coins"],
 			desc = L["Use coin icons instead of colored text."],
 		},
+		noCombatClick = {
+			order = 11,
+			type = "toggle",
+			name = L["Block Combat Click"],
+			desc = L["Blocks all click events while in combat."],
+		},
+		noCombatHover = {
+			order = 12,
+			type = "toggle",
+			name = L["Block Combat Hover"],
+			desc = L["Blocks datatext tooltip from showing in combat."],
+		},
 		panels = {
 			type = 'group',
 			name = L["Panels"],
@@ -159,18 +171,18 @@ E.Options.args.datatexts = {
 			args = {
 				font = {
 					type = "select", dialogControl = 'LSM30_Font',
-					order = 4,
+					order = 1,
 					name = L["Font"],
 					values = AceGUIWidgetLSMlists.font,
 				},
 				fontSize = {
-					order = 5,
+					order = 2,
 					name = L["Font Size"],
 					type = "range",
-					min = 6, max = 22, step = 1,
+					min = 4, max = 22, step = 1,
 				},
 				fontOutline = {
-					order = 6,
+					order = 3,
 					name = L["Font Outline"],
 					desc = L["Set the font outline."],
 					type = "select",
@@ -181,6 +193,11 @@ E.Options.args.datatexts = {
 						['MONOCHROMEOUTLINE'] = 'MONOCROMEOUTLINE',
 						['THICKOUTLINE'] = 'THICKOUTLINE',
 					},
+				},
+				wordWrap = {
+					order = 4,
+					type = "toggle",
+					name = L["Word Wrap"],
 				},
 			},
 		},

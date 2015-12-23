@@ -5,9 +5,16 @@ local selectedSpell;
 local selectedFilter;
 local filters;
 local tinsert = table.insert
+local tonumber = tonumber
+local format = string.format
+local UNKNOWN = UNKNOWN
 
 local function UpdateFilterGroup()
-	if selectedFilter == 'AuraBar Colors' then
+	--Prevent errors when choosing a new filter, by doing a reset of the groups 
+	E.Options.args.filters.args.filterGroup = nil
+	E.Options.args.filters.args.spellGroup = nil
+
+	if selectedFilter == 'Debuff Highlight' then
 		if not selectedFilter then
 			E.Options.args.filters.args.filterGroup = nil
 			E.Options.args.filters.args.spellGroup = nil
@@ -22,7 +29,121 @@ local function UpdateFilterGroup()
 			args = {
 				addSpell = {
 					order = 1,
-					name = L["Add Spell"],
+					name = L["Add Spell Name"],
+					desc = L["Add a spell to the filter."],
+					type = 'input',
+					get = function(info) return "" end,
+					set = function(info, value)
+						E.global.unitframe.DebuffHighlightColors[value] = {enable = true, style = 'GLOW', color = {r = 0.8, g = 0, b = 0, a = 0.85}}
+						UpdateFilterGroup();
+						UF:Update_AllFrames();
+					end,
+				},
+				removeSpell = {
+					order = 1,
+					name = L["Remove Spell"],
+					desc = L["Remove a spell from the filter."],
+					type = 'input',
+					get = function(info) return "" end,
+					set = function(info, value)
+						E.global.unitframe.DebuffHighlightColors[value] = nil;
+						selectedSpell = nil;
+						UpdateFilterGroup();
+						UF:Update_AllFrames();
+					end,
+				},
+				selectSpell = {
+					name = L["Select Spell"],
+					type = 'select',
+					order = -9,
+					guiInline = true,
+					get = function(info) return selectedSpell end,
+					set = function(info, value) selectedSpell = value; UpdateFilterGroup() end,
+					values = function()
+						local filters = {}
+						filters[''] = NONE
+						for filter in pairs(E.global.unitframe.DebuffHighlightColors) do
+							filters[filter] = filter
+						end
+
+						return filters
+					end,
+				},
+			},
+		}
+
+		if not selectedSpell or E.global.unitframe.DebuffHighlightColors[selectedSpell] == nil then
+			E.Options.args.filters.args.spellGroup = nil
+			return
+		end
+
+		E.Options.args.filters.args.spellGroup = {
+			type = "group",
+			name = selectedSpell,
+			order = 15,
+			guiInline = true,
+			args = {
+				enabled = {
+					name = L["Enable"],
+					order = 0,
+					type = 'toggle',
+					get = function(info)
+						return E.global.unitframe.DebuffHighlightColors[selectedSpell].enable
+					end,
+					set = function(info, value)
+						E.global.unitframe.DebuffHighlightColors[selectedSpell].enable = value
+						UF:Update_AllFrames();
+					end,					
+				},		
+				style = {
+					name = L["Style"],
+					type = 'select',
+					order = 3,
+					values = {
+						['GLOW'] = L["Glow"],
+						['FILL'] = L["Fill"]
+					},
+					get = function(info)
+						return E.global.unitframe.DebuffHighlightColors[selectedSpell].style
+					end,
+					set = function(info, value)
+						E.global.unitframe.DebuffHighlightColors[selectedSpell].style = value
+						UF:Update_AllFrames();
+					end,						
+				},				
+				color = {
+					name = L["Color"],
+					type = 'color',
+					order = 1,
+					hasAlpha = true,
+					get = function(info)
+						local t = E.global.unitframe.DebuffHighlightColors[selectedSpell].color
+						return t.r, t.g, t.b, t.a
+					end,
+					set = function(info, r, g, b, a)
+						local t = E.global.unitframe.DebuffHighlightColors[selectedSpell].color
+						t.r, t.g, t.b, t.a = r, g, b, a
+						UF:Update_AllFrames();
+					end,
+				},
+			},
+		}
+	elseif selectedFilter == 'AuraBar Colors' then
+		if not selectedFilter then
+			E.Options.args.filters.args.filterGroup = nil
+			E.Options.args.filters.args.spellGroup = nil
+			return
+		end
+
+		E.Options.args.filters.args.filterGroup = {
+			type = 'group',
+			name = selectedFilter,
+			guiInline = true,
+			order = 10,
+			args = {
+				addSpell = {
+					order = 1,
+					name = L["Add Spell or spellID"],
 					desc = L["Add a spell to the filter."],
 					type = 'input',
 					get = function(info) return "" end,
@@ -38,7 +159,7 @@ local function UpdateFilterGroup()
 				},
 				removeSpell = {
 					order = 1,
-					name = L["Remove Spell"],
+					name = L["Remove Spell or spellID"],
 					desc = L["Remove a spell from the filter."],
 					type = 'input',
 					get = function(info) return "" end,
@@ -67,7 +188,12 @@ local function UpdateFilterGroup()
 						local filters = {}
 						filters[''] = NONE
 						for filter in pairs(E.global.unitframe.AuraBarColors) do
-							filters[filter] = filter
+							local spellString
+							local spellID = tonumber(filter)
+							if spellID then
+								spellString = format("%s (%s)", filter, (GetSpellInfo(spellID)) or UNKNOWN)
+							end
+							filters[filter] = spellString or filter
 						end
 
 						return filters
@@ -81,9 +207,13 @@ local function UpdateFilterGroup()
 			return
 		end
 
+		local nameString
+		if tonumber(selectedSpell) then
+			nameString = selectedSpell.." ("..(GetSpellInfo(selectedSpell))..")"
+		end
 		E.Options.args.filters.args.spellGroup = {
 			type = "group",
-			name = selectedSpell,
+			name = nameString or selectedSpell,
 			order = 15,
 			guiInline = true,
 			args = {
@@ -229,7 +359,7 @@ local function UpdateFilterGroup()
 							if not E.global.unitframe['aurafilters'][selectedFilter]['spells'][name] then
 								E.global.unitframe['aurafilters'][selectedFilter]['spells'][name] = {
 									['enable'] = true,
-									['spellID'] = value,
+									['spellID'] = tonumber(value),
 									['priority'] = 0,
 								}
 								UpdateFilterGroup();
@@ -267,58 +397,31 @@ local function UpdateFilterGroup()
 						UF:Update_AllFrames();
 					end,
 				},
-				selectSpell = {
-					name = L["Select Spell"],
-					type = 'select',
-					order = 3,
-					guiInline = true,
-					get = function(info) return selectedSpell end,
-					set = function(info, value) selectedSpell = value; UpdateFilterGroup() end,
-					values = function()
-						local filters = {}
-						filters[''] = NONE
-						for filter, _ in pairs(E.global.unitframe['aurafilters'][selectedFilter]['spells']) do
-							filters[filter] = filter
-						end
-
-						return filters
-					end,
-				},
 				desc = {
-					order = 4,
+					order = 3,
 					type = 'description',
 					name = L["This filter is meant to be used when you only want to whitelist specific spellIDs which share names with unwanted spells."],
 				},
+				spellGroup = {
+					order = 4,
+					name = L["Spells"],
+					type = 'group',
+					args = {},
+					guiInline = true,
+				},
 			},
 		}
-
-		if not selectedSpell or not E.global.unitframe['aurafilters'][selectedFilter]['spells'][selectedSpell] then
-			E.Options.args.filters.args.spellGroup = nil
-			return
-		end
-
-		if selectedSpell then
-			local id = E.global.unitframe['aurafilters'][selectedFilter]['spells'][selectedSpell]['spellID']
-			E.Options.args.filters.args.spellGroup = {
-				type = "group",
-				name = selectedSpell..' ('..id..')',
-				order = 15,
-				guiInline = true,
-				args = {
-					enable = {
-						name = L["Enable"],
-						type = "toggle",
-						get = function()
-							if selectedFolder or not selectedSpell then
-								return false
-							else
-								return E.global.unitframe['aurafilters'][selectedFilter]['spells'][selectedSpell].enable
-							end
-						end,
-						set = function(info, value) E.global.unitframe['aurafilters'][selectedFilter]['spells'][selectedSpell].enable = value; UpdateFilterGroup(); UF:Update_AllFrames(); end
-					},
-				},
-			}
+		
+		for spell, value in pairs(E.global.unitframe['aurafilters']['Whitelist (Strict)']['spells']) do
+			local id = value.spellID
+			if id then
+				E.Options.args.filters.args.filterGroup.args.spellGroup.args[id] = {
+					type = 'toggle',
+					name = spell..' ('..id..')',
+					get = function(info) return E.global.unitframe['aurafilters']['Whitelist (Strict)']['spells'][spell].enable end,
+					set = function(info, value) E.global.unitframe['aurafilters']['Whitelist (Strict)']['spells'][spell].enable = value; UF:Update_AllFrames() end,
+				}
+			end
 		end
 	elseif selectedFilter == 'Buff Indicator (Pet)' then
 		local buffs = {};
@@ -1229,13 +1332,14 @@ E.Options.args.filters = {
 				filters['Buff Indicator (Profile)'] = 'Buff Indicator (Profile)'
 				filters['AuraBar Colors'] = 'AuraBar Colors'
 				filters['Blacklist (Strict)'] = 'Blacklist (Strict)'
+				filters['Debuff Highlight'] = 'Debuff Highlight'
 				return filters
 			end,
 		},
 	},
 }
 
-local ACD = LibStub("AceConfigDialog-3.0")
+local ACD = LibStub("AceConfigDialog-3.0-ElvUI")
 function E:SetToFilterConfig(filter)
 	selectedFilter = filter or 'Buff Indicator'
 	UpdateFilterGroup()

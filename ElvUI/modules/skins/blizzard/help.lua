@@ -7,29 +7,19 @@ local function LoadSkin()
 		"HelpFrameLeftInset",
 		"HelpFrameMainInset",
 		"HelpFrameKnowledgebase",
-		"HelpFrameHeader",
 		"HelpFrameKnowledgebaseErrorFrame",
 	}
 
 	local buttons = {
-		-- "HelpFrameOpenTicketHelpItemRestoration",
 		"HelpFrameAccountSecurityOpenTicket",
-		-- "HelpFrameOpenTicketHelpTopIssues",
 		"HelpFrameOpenTicketHelpOpenTicket",
 		"HelpFrameKnowledgebaseSearchButton",
 		"HelpFrameKnowledgebaseNavBarHomeButton",
 		"HelpFrameCharacterStuckStuck",
-		-- "GMChatOpenLog",
-		"HelpFrameTicketSubmit",
-		"HelpFrameTicketCancel",
+		"HelpFrameButton16",
+		"HelpFrameSubmitSuggestionSubmit",
+		"HelpFrameReportBugSubmit",
 	}
-
-	-- 4.3.4 patch
-	if E.wowbuild >= 15595 then
-		tinsert(buttons, "HelpFrameButton16")
-		tinsert(buttons, "HelpFrameSubmitSuggestionSubmit")
-		tinsert(buttons, "HelpFrameReportBugSubmit")
-	end
 
 	-- skin main frames
 	for i = 1, #frames do
@@ -37,6 +27,8 @@ local function LoadSkin()
 		_G[frames[i]]:CreateBackdrop("Transparent")
 	end
 
+	HelpFrameHeader:StripTextures(true)
+	HelpFrameHeader:CreateBackdrop("Default", true)
 	HelpFrameHeader:SetFrameLevel(HelpFrameHeader:GetFrameLevel() + 2)
 	HelpFrameKnowledgebaseErrorFrame:SetFrameLevel(HelpFrameKnowledgebaseErrorFrame:GetFrameLevel() + 2)
 
@@ -65,18 +57,6 @@ local function LoadSkin()
 	end
 
 	S:HandleScrollBar(HelpFrameSubmitSuggestionScrollFrameScrollBar)
-
-	HelpFrameTicketScrollFrame:StripTextures()
-	HelpFrameTicketScrollFrame:CreateBackdrop("Transparent")
-	HelpFrameTicketScrollFrame.backdrop:Point("TOPLEFT", -4, 4)
-	HelpFrameTicketScrollFrame.backdrop:Point("BOTTOMRIGHT", 6, -4)
-	for i=1, HelpFrameTicket:GetNumChildren() do
-		local child = select(i, HelpFrameTicket:GetChildren())
-		if not child:GetName() then
-			child:StripTextures()
-		end
-	end
-
 	S:HandleScrollBar(HelpFrameKnowledgebaseScrollFrame2ScrollBar)
 
 	-- skin sub buttons
@@ -117,7 +97,6 @@ local function LoadSkin()
 	HelpFrame:CreateBackdrop("Transparent")
 	S:HandleEditBox(HelpFrameKnowledgebaseSearchBox)
 	S:HandleScrollBar(HelpFrameKnowledgebaseScrollFrameScrollBar, 5)
-	S:HandleScrollBar(HelpFrameTicketScrollFrameScrollBar, 4)
 	S:HandleCloseButton(HelpFrameCloseButton, HelpFrame.backdrop)
 	S:HandleCloseButton(HelpFrameKnowledgebaseErrorFrameCloseButton, HelpFrameKnowledgebaseErrorFrame.backdrop)
 

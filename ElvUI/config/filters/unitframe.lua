@@ -1,5 +1,13 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Engine
 
+--Cache global variables
+--Lua functions
+local print, unpack, select, pairs = print, unpack, select, pairs
+local lower = string.lower
+--WoW API / Variables
+local GetSpellInfo, IsSpellKnown = GetSpellInfo, IsSpellKnown
+local UnitClass, IsEquippedItem = UnitClass, IsEquippedItem
+
 local function SpellName(id)
 	local name, _, _, _, _, _, _, _, _ = GetSpellInfo(id)
 	if not name then
@@ -860,7 +868,7 @@ f:RegisterEvent("PLAYER_ENTERING_WORLD")
 f:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
 f:SetScript("OnEvent", function(self, event)
 	local class = select(2, UnitClass("player"))
-	if string.lower(class) ~= "priest" then return; end
+	if lower(class) ~= "priest" then return; end
 
 	if event == "PLAYER_ENTERING_WORLD" then
 		self:UnregisterEvent("PLAYER_ENTERING_WORLD")
@@ -897,7 +905,7 @@ G.unitframe.ChannelTicksSize = {
 --Spells Effected By Haste
 G.unitframe.HastedChannelTicks = {
 	--[SpellName(64901)] = true, -- Hymn of Hope
-	[SpellName(64843)] = true, -- Divine Hymn
+	-- [SpellName(64843)] = true, -- Divine Hymn
 }
 
 --This should probably be the same as the whitelist filter + any personal class ones that may be important to watch
@@ -911,4 +919,9 @@ G.unitframe.AuraBarColors = {
 G.unitframe.InvalidSpells = {
 	[65148] = true, --Sacred Shield
 	[95809] = true, --Insanity debuff (Hunter Pet heroism)
+}
+
+
+G.unitframe.DebuffHighlightColors = {
+	[SpellName(25771)] = {enable = false, style = "FILL", color = {r = 0.85, g = 0, b = 0, a = 0.85}},
 }
