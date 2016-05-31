@@ -139,8 +139,8 @@ local TimeColors = {
 
 function NP:SetTargetIndicatorDimensions()
 	if(self.db.targetIndicator.style == 'arrow') then
-		targetIndicator:SetHeight(self.db.targetIndicator.height)
-		targetIndicator:SetWidth(self.db.targetIndicator.width)
+		targetIndicator.arrow:SetHeight(self.db.targetIndicator.height)
+		targetIndicator.arrow:SetWidth(self.db.targetIndicator.width)
 	elseif(self.db.targetIndicator.style == 'doubleArrow' or self.db.targetIndicator.style == 'doubleArrowInverted') then
 		targetIndicator.left:SetHeight(self.db.targetIndicator.height)
 		targetIndicator.left:SetWidth(self.db.targetIndicator.width)
@@ -152,8 +152,8 @@ end
 function NP:PositionTargetIndicator(myPlate)
 	targetIndicator:SetParent(myPlate)
 	if(self.db.targetIndicator.style == 'arrow') then
-		targetIndicator:ClearAllPoints()
-		targetIndicator:SetPoint("BOTTOM", myPlate.healthBar, "TOP", 0, 30 + self.db.targetIndicator.yOffset)
+		targetIndicator.arrow:ClearAllPoints()
+		targetIndicator.arrow:SetPoint("BOTTOM", myPlate.healthBar, "TOP", 0, 30 + self.db.targetIndicator.yOffset)
 	elseif(self.db.targetIndicator.style == 'doubleArrow') then
 		targetIndicator.left:SetPoint("RIGHT", myPlate.healthBar, "LEFT", -self.db.targetIndicator.xOffset, 0)
 		targetIndicator.right:SetPoint("LEFT", myPlate.healthBar, "RIGHT", self.db.targetIndicator.xOffset, 0)
@@ -175,7 +175,7 @@ end
 
 function NP:ColorTargetIndicator(r, g, b)
 	if(self.db.targetIndicator.style == 'arrow') then
-		targetIndicator:SetVertexColor(r, g, b)
+		targetIndicator.arrow:SetVertexColor(r, g, b)
 	elseif(self.db.targetIndicator.style == 'doubleArrow' or self.db.targetIndicator.style == 'doubleArrowInverted') then
 		targetIndicator.left:SetVertexColor(r, g, b)
 		targetIndicator.right:SetVertexColor(r, g, b)
@@ -230,6 +230,7 @@ function NP:OnUpdate(elapsed)
 				NP.SetUnitInfo(blizzPlate, plate)
 				NP.ColorizeAndScale(blizzPlate, plate)
 				NP.UpdateLevelAndName(blizzPlate, plate)
+				plate:SetDepth(25) --See http://git.tukui.org/Elv/elvui/issues/7#note_288
 			end
 		end
 
@@ -387,16 +388,18 @@ function NP:GetThreatReaction(frame)
 	if frame.threat:IsShown() then
 		local r, g, b = frame.threat:GetVertexColor()
 		if g + b == 0 then
-			return 'FULL_THREAT'
+			return "FULL_THREAT", r, g
 		else
-			if self.threatReaction == 'FULL_THREAT' then
-				return 'GAINING_THREAT'
+			if (r == frame.prevRedValue and g == frame.prevGreenValue) then
+				return frame.threatReaction, r, g
+			elseif (r > frame.prevRedValue) or (r > 0.99 and (g < frame.prevGreenValue)) then
+				return "GAINING_THREAT", r, g
 			else
-				return 'LOSING_THREAT'
+				return "LOSING_THREAT", r, g
 			end
 		end
 	else
-		return 'NO_THREAT'
+		return "NO_THREAT", 0, 0
 	end
 end
 
@@ -415,7 +418,7 @@ function NP:ColorizeAndScale(myPlate)
 		color = NP.db.reactions.tapped
 	elseif unitType == "HOSTILE_NPC" or unitType == "NEUTRAL_NPC" then
 		local classRole = E.role
-		local threatReaction = NP:GetThreatReaction(self)
+		local threatReaction, redValue, greenValue = NP:GetThreatReaction(self)
 		canAttack = true
 		if(not NP.db.threat.enable) then
 			if unitType == "NEUTRAL_NPC" then
@@ -460,6 +463,8 @@ function NP:ColorizeAndScale(myPlate)
 		end
 
 		self.threatReaction = threatReaction
+		self.prevRedValue = redValue
+		self.prevGreenValue = greenValue
 	elseif unitType == "FRIENDLY_NPC" then
 		color = NP.db.reactions.friendlyNPC
 	elseif unitType == "FRIENDLY_PLAYER" then
@@ -467,7 +472,7 @@ function NP:ColorizeAndScale(myPlate)
 	else
 		color = NP.db.reactions.enemy
 	end
-	
+
 	if self.raidIcon:IsShown() and NP.db.healthBar.colorByRaidIcon then
 		NP:CheckRaidIcon(self)
 		local raidColor = NP.RaidMarkColors[self.raidIconType]
@@ -495,7 +500,7 @@ function NP:ColorizeAndScale(myPlate)
 			w = NP.db.healthBar.lowHPScale.width * scale
 			h = NP.db.healthBar.lowHPScale.height * scale
 			if NP.db.healthBar.lowHPScale.toFront then
-				myPlate:SetFrameStrata("HIGH")
+				myPlate:SetFrameStrata("MEDIUM")
 			end
 		else
 			if NP.db.healthBar.lowHPScale.toFront then
@@ -503,7 +508,8 @@ function NP:ColorizeAndScale(myPlate)
 			end
 		end
 	end
-	if(not self.customScale and not self.isSmall and myPlate.healthBar:GetWidth() ~= w) then
+	if(not self.customScale and not self.isSmall and (not myPlate.healthBar.prevWidth or (myPlate.healthBar.prevWidth ~= w or myPlate.healthBar.prevHeight ~= h))) then
+		myPlate.healthBar.prevWidth, myPlate.healthBar.prevHeight = w, h
 		myPlate.healthBar:SetSize(w, h)
 		myPlate.castBar.icon:SetSize(NP.db.castBar.height + h + 5, NP.db.castBar.height + h + 5)
 	end
@@ -529,6 +535,7 @@ function NP:SetUnitInfo(myPlate)
 		if(NP.db.targetIndicator.enable) then
 			targetIndicator:Show()
 			NP:PositionTargetIndicator(myPlate)
+			targetIndicator:SetDepth(myPlate:GetDepth())
 		end
 
 		NP:UpdateComboPointsByUnitID('target')
@@ -631,8 +638,9 @@ function NP:Initialize()
 	self:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
 	self:RegisterEvent("UNIT_COMBO_POINTS")
 
-	self.arrowIndicator = WorldFrame:CreateTexture(nil, 'BORDER', -1)
-	self.arrowIndicator:SetTexture([[Interface\AddOns\ElvUI\media\textures\nameplateTargetIndicator.tga]])
+	self.arrowIndicator = CreateFrame("Frame", nil, WorldFrame)
+	self.arrowIndicator.arrow = self.arrowIndicator:CreateTexture(nil, 'BORDER', -1)
+	self.arrowIndicator.arrow:SetTexture([[Interface\AddOns\ElvUI\media\textures\nameplateTargetIndicator.tga]])
 	self.arrowIndicator:Hide()
 
 	self.doubleArrowIndicator = CreateFrame("Frame", nil, WorldFrame)
@@ -646,15 +654,15 @@ function NP:Initialize()
 	self.glowIndicator:SetFrameLevel(0)
 	self.glowIndicator:SetFrameStrata("BACKGROUND")
 	self.glowIndicator:SetBackdrop( {
- 		edgeFile = LSM:Fetch("border", "ElvUI GlowBorder"), edgeSize = 3,
- 		insets = {left = 5, right = 5, top = 5, bottom = 5},
- 	})
+		edgeFile = LSM:Fetch("border", "ElvUI GlowBorder"), edgeSize = 3,
+		insets = {left = 5, right = 5, top = 5, bottom = 5},
+	})
 	self.glowIndicator:SetBackdropColor(0, 0, 0, 0)
 	self.glowIndicator:SetScale(E.PixelMode and 2.5 or 3)
 	self.glowIndicator:Hide()
 
 	self:SetTargetIndicator()
-	self.viewPort = IsAddOnLoaded("SunnArt") or IsAddOnLoaded("CT_Viewport") or IsAddOnLoaded("Btex");
+	self.viewPort = IsAddOnLoaded("SunnArt") or IsAddOnLoaded("CT_Viewport") or IsAddOnLoaded("Btex") or IsAddOnLoaded("LightViewPorter");
 	self:CombatToggle(true)
 end
 
@@ -917,7 +925,12 @@ function NP:UpdateSettings()
 
 	--HealthBar
 	if not self.customScale and not self.isSmall then
-		myPlate.healthBar:SetSize(NP.db.healthBar.width, NP.db.healthBar.height)
+		local width, height = NP.db.healthBar.width, NP.db.healthBar.height
+		if NP.db.healthBar.lowHPScale.enable and myPlate.lowHealth:IsShown() then
+			width = NP.db.healthBar.lowHPScale.width
+			height = NP.db.healthBar.lowHPScale.height
+		end
+		myPlate.healthBar:SetSize(width, height)
 	end
 
 	myPlate.healthBar:SetStatusBarTexture(E.media.normTex)
@@ -993,6 +1006,7 @@ end
 
 function NP:CreatePlate(frame)
 	frame.healthBar = frame.ArtContainer.HealthBar
+
 	-- frame.healthBar.texture = frame.healthBar:GetRegions() --No parentKey, yet?
 
 	-- frame.absorbBar = frame.ArtContainer.AbsorbBar
@@ -1004,7 +1018,7 @@ function NP:CreatePlate(frame)
 	frame.threat = frame.ArtContainer.AggroWarningTexture
 	frame.bossIcon = frame.ArtContainer.HighLevelIcon
 	frame.name = frame.NameContainer.NameText
-	
+
 	frame.castBar = frame.ArtContainer.CastBar
 	-- frame.castBar.texture = frame.castBar:GetRegions() --No parentKey, yet?
 	frame.castBar.border = frame.ArtContainer.CastBarBorder
@@ -1017,13 +1031,14 @@ function NP:CreatePlate(frame)
 	if(self.viewPort) then
 		myPlate:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT")
 	end
-	
+
 	--Hidden Frame (used to hide castbar icon)
 	myPlate.hiddenFrame = CreateFrame("Frame", nil, myPlate)
 	myPlate.hiddenFrame:Hide()
 
 	--HealthBar
 	myPlate.healthBar = CreateFrame("StatusBar", nil, myPlate)
+	E:RegisterStatusBar(myPlate.healthBar)
 	myPlate.healthBar:SetPoint('BOTTOM', myPlate, 'BOTTOM', 0, 5)
 	myPlate.healthBar:SetFrameStrata("BACKGROUND")
 	myPlate.healthBar:SetFrameLevel(0)
@@ -1036,6 +1051,7 @@ function NP:CreatePlate(frame)
 
 	--CastBar
 	myPlate.castBar = CreateFrame("StatusBar", nil, myPlate)
+	E:RegisterStatusBar(myPlate.castBar)
 	myPlate.castBar:SetPoint('TOPLEFT', myPlate.healthBar, 'BOTTOMLEFT', 0, -5)
 	myPlate.castBar:SetPoint('TOPRIGHT', myPlate.healthBar, 'BOTTOMRIGHT', 0, -5)
 	myPlate.castBar:SetFrameStrata("BACKGROUND")
@@ -1115,9 +1131,9 @@ function NP:CreatePlate(frame)
 	myPlate.lowHealth:SetFrameLevel(0)
 	myPlate.lowHealth:SetOutside(myPlate.healthBar, 3, 3)
 	myPlate.lowHealth:SetBackdrop( {
- 		edgeFile = LSM:Fetch("border", "ElvUI GlowBorder"), edgeSize = 3,
- 		insets = {left = 5, right = 5, top = 5, bottom = 5},
- 	})
+		edgeFile = LSM:Fetch("border", "ElvUI GlowBorder"), edgeSize = 3,
+		insets = {left = 5, right = 5, top = 5, bottom = 5},
+	})
 	myPlate.lowHealth:SetBackdropColor(0, 0, 0, 0)
 	myPlate.lowHealth:SetBackdropBorderColor(1, 1, 0, 0.9)
 	myPlate.lowHealth:SetScale(E.PixelMode and 1.5 or 2)
@@ -1781,7 +1797,7 @@ function NP:UpdateAuras(frame)
 end
 
 function NP:UpdateAuraByLookup(guid)
- 	if guid == UnitGUID("target") then
+	if guid == UnitGUID("target") then
 		NP:UpdateAurasByUnitID("target")
 	elseif guid == UnitGUID("mouseover") then
 		NP:UpdateAurasByUnitID("mouseover")

@@ -1,9 +1,10 @@
-﻿## Interface: 60200
+## Interface: 60200
 ## Title: Raid|cff7fff7fAchievement|r   Main
-## Title-ruRU: Raid|cff7fff7fAchievement|r   Основной
+## Title-ruRU: Raid|cff7fff7fAchievement|r   ????????
 ## Author: Shurshik
+## Version: 1.124
 ## Notes: Group and raid achievements tracker
-## Notes-ruRU: Слежение за групповыми и рейдовыми достижениями
+## Notes-ruRU: ???????? ?? ?????????? ? ????????? ????????????
 ## URL: http://phoenixstyle.com
 ## DefaultState: Enabled
 ## LoadOnDemand: 0

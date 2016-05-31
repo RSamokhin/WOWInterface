@@ -5,11 +5,11 @@ local Masque = LibStub("Masque", true)
 --Cache global variables
 --Lua functions
 local _G = _G
-local tonumber, pairs, error, unpack, select = tonumber, pairs, error, unpack, select
-local print, type, collectgarbage, pcall, date = print, type, collectgarbage, pcall, date
-local twipe, tinsert= table.wipe, tinsert
+local tonumber, pairs, ipairs, error, unpack, select, tostring = tonumber, pairs, ipairs, error, unpack, select, tostring
+local assert, print, type, collectgarbage, pcall, date = assert, print, type, collectgarbage, pcall, date
+local twipe, tinsert, tremove = table.wipe, tinsert, tremove
 local floor = floor
-local format, find, split, match = string.format, string.find, string.split, string.match
+local format, find, split, match, strrep, len, sub, gsub = string.format, string.find, string.split, string.match, strrep, string.len, string.sub, string.gsub
 --WoW API / Variables
 local CreateFrame = CreateFrame
 local GetCVar, SetCVar, GetCVarBool = GetCVar, SetCVar, GetCVarBool
@@ -28,6 +28,8 @@ local DoEmote = DoEmote
 local SendChatMessage = SendChatMessage
 local GetFunctionCPUUsage = GetFunctionCPUUsage
 local GetMapNameByID = GetMapNameByID
+local GetBonusBarOffset = GetBonusBarOffset
+local UnitHasVehicleUI = UnitHasVehicleUI
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 local CUSTOM_CLASS_COLORS = CUSTOM_CLASS_COLORS
 local COMBAT_RATING_RESILIENCE_PLAYER_DAMAGE_TAKEN = COMBAT_RATING_RESILIENCE_PLAYER_DAMAGE_TAKEN
@@ -42,8 +44,10 @@ local NUM_PET_ACTION_SLOTS = NUM_PET_ACTION_SLOTS
 -- GLOBALS: ElvUI_StaticPopup1, ElvUI_StaticPopup1Button1, LeftChatToggleButton, RightChatToggleButton
 -- GLOBALS: ElvUI_StanceBar, ObjectiveTrackerFrame, GameTooltip, Minimap
 
+
 --Constants
 E.myclass = select(2, UnitClass("player"));
+E.myspec = GetSpecialization()
 E.myrace = select(2, UnitRace("player"))
 E.myfaction = select(2, UnitFactionGroup('player'))
 E.myname = UnitName("player");
@@ -60,6 +64,7 @@ E.LSM = LSM
 --Tables
 E["media"] = {};
 E["frames"] = {};
+E["statusBars"] = {};
 E["texts"] = {};
 E['snapBars'] = {}
 E["RegisteredModules"] = {}
@@ -67,9 +72,8 @@ E['RegisteredInitialModules'] = {}
 E['valueColorUpdateFuncs'] = {};
 E.TexCoords = {.08, .92, .08, .92}
 E.FrameLocks = {}
+E.VehicleLocks = {}
 E.CreditsList = {};
-E.Spacing = 1;
-E.Border = 2;
 E.PixelMode = false;
 
 E.InversePoints = {
@@ -163,8 +167,8 @@ E.ClassRole = {
 
 E.noop = function() end;
 
-function E:Print(msg)
-	print(self["media"].hexvaluecolor..'ElvUI:|r', msg)
+function E:Print(...)
+	print(self["media"].hexvaluecolor..self.UIName..':|r', ...)
 end
 
 --Workaround for people wanting to use white and it reverting to their class color.
@@ -196,6 +200,11 @@ function E:GetColorTable(data)
 		error("Could not unpack color values.")
 	end
 
+	if data.r > 1 or data.r < 0 then data.r = 1 end
+	if data.g > 1 or data.g < 0 then data.g = 1 end
+	if data.b > 1 or data.b < 0 then data.b = 1 end
+	if data.a and (data.a > 1 or data.a < 0) then data.a = 1 end
+
 	if data.a then
 		return {data.r, data.g, data.b, data.a}
 	else
@@ -225,6 +234,11 @@ function E:UpdateMedia()
 	elseif E.PixelMode then
 		border = {r = 0, g = 0, b = 0}
 	end
+
+	if(self.global.tukuiMode) then
+		border = {r=0.6, g = 0.6, b = 0.6}
+	end
+
 	self["media"].bordercolor = {border.r, border.g, border.b}
 
 	--Backdrop Color
@@ -242,6 +256,11 @@ function E:UpdateMedia()
 		self.db['general'].valuecolor.g = value.g
 		self.db['general'].valuecolor.b = value.b
 	end
+
+	if(self.global.tukuiMode) then
+		value = {r = 1, g = 1, b = 1}
+	end
+
 	self["media"].hexvaluecolor = self:RGBToHex(value.r, value.g, value.b)
 	self["media"].rgbvaluecolor = {value.r, value.g, value.b}
 
@@ -419,6 +438,20 @@ function E:UpdateFontTemplates()
 	end
 end
 
+function E:RegisterStatusBar(statusBar)
+	tinsert(self.statusBars, statusBar)
+end
+
+function E:UpdateStatusBars()
+	for _, statusBar in pairs(self.statusBars) do
+		if statusBar and statusBar:GetObjectType() == "StatusBar" then
+			statusBar:SetStatusBarTexture(self.media.normTex)
+		elseif statusBar and statusBar:GetObjectType() == "Texture" then
+			statusBar:SetTexture(self.media.normTex)
+		end
+	end
+end
+
 --This frame everything in ElvUI should be anchored to for Eyefinity support.
 E.UIParent = CreateFrame('Frame', 'ElvUIParent', UIParent);
 E.UIParent:SetFrameLevel(UIParent:GetFrameLevel());
@@ -473,6 +506,7 @@ function E:CheckRole()
 		IsInPvPGear = true;
 	end
 
+	self.myspec = talentTree
 
 	if type(self.ClassRole[self.myclass]) == "string" then
 		role = self.ClassRole[self.myclass]
@@ -480,7 +514,8 @@ function E:CheckRole()
 		role = self.ClassRole[self.myclass][talentTree]
 	end
 
-	if role == "Tank" and IsInPvPGear then
+	--Check for PvP gear or gladiator stance
+	if role == "Tank" and (IsInPvPGear or (E.myclass == "WARRIOR" and GetBonusBarOffset() == 3)) then
 		role = "Melee"
 	end
 
@@ -566,6 +601,219 @@ function E:CopyTable(currentTable, defaultTable)
 	return currentTable
 end
 
+local function IsTableEmpty(tbl)
+	for _, _ in pairs(tbl) do
+		return false
+	end
+	return true
+end
+
+function E:RemoveEmptySubTables(tbl)
+	if type(tbl) ~= "table" then
+		E:Print("Bad argument #1 to 'RemoveEmptySubTables' (table expected)")
+		return
+	end
+
+	for k, v in pairs(tbl) do
+		if type(v) == "table" then
+			if IsTableEmpty(v) then
+				tbl[k] = nil
+			else
+				self:RemoveEmptySubTables(v)
+			end
+		end
+	end
+end
+
+--Compare 2 tables and remove duplicate key/value pairs
+--param cleanTable : table you want cleaned
+--param checkTable : table you want to check against.
+--return : a copy of cleanTable with duplicate key/value pairs removed
+function E:RemoveTableDuplicates(cleanTable, checkTable)
+	if type(cleanTable) ~= "table" then
+		E:Print("Bad argument #1 to 'RemoveTableDuplicates' (table expected)")
+		return
+	end
+	if type(checkTable) ~=  "table" then
+		E:Print("Bad argument #2 to 'RemoveTableDuplicates' (table expected)")
+		return
+	end
+
+	local cleaned = {}
+	for option, value in pairs(cleanTable) do
+		if type(value) == "table" and checkTable[option] and type(checkTable[option]) == "table" then
+			cleaned[option] = self:RemoveTableDuplicates(value, checkTable[option])
+		else
+			-- Add unique data to our clean table
+			if (cleanTable[option] ~= checkTable[option]) then
+				cleaned[option] = value
+			end
+		end
+	end
+
+	--Clean out empty sub-tables
+	self:RemoveEmptySubTables(cleaned)
+
+	return cleaned
+end
+
+--The code in this function is from WeakAuras, credit goes to Mirrored and the WeakAuras Team
+function E:TableToLuaString(inTable)
+	if type(inTable) ~= "table" then
+		E:Print("Invalid argument #1 to E:TableToLuaString (table expected)")
+		return
+	end
+
+	local ret = "{\n";
+	local function recurse(table, level)
+		for i,v in pairs(table) do
+			ret = ret..strrep("    ", level).."[";
+			if(type(i) == "string") then
+				ret = ret.."\""..i.."\"";
+			else
+				ret = ret..i;
+			end
+			ret = ret.."] = ";
+
+			if(type(v) == "number") then
+				ret = ret..v..",\n"
+			elseif(type(v) == "string") then
+				ret = ret.."\""..v:gsub("\\", "\\\\"):gsub("\n", "\\n"):gsub("\"", "\\\"").."\",\n"
+			elseif(type(v) == "boolean") then
+				if(v) then
+					ret = ret.."true,\n"
+				else
+					ret = ret.."false,\n"
+				end
+			elseif(type(v) == "table") then
+				ret = ret.."{\n"
+				recurse(v, level + 1);
+				ret = ret..strrep("    ", level).."},\n"
+			else
+				ret = ret.."\""..tostring(v).."\",\n"
+			end
+		end
+	end
+
+	if(inTable) then
+		recurse(inTable, 1);
+	end
+	ret = ret.."}";
+
+	return ret;
+end
+
+local profileFormat = {
+	["profile"] = "E.db",
+	["private"] = "E.private",
+	["global"] = "E.global",
+	["filtersNP"] = "E.global",
+	["filtersUF"] = "E.global",
+	["filtersAll"] = "E.global",
+}
+
+local lineStructureTable = {}
+
+function E:ProfileTableToPluginFormat(inTable, profileType)
+	local profileText = profileFormat[profileType]
+	if not profileText then
+		return
+	end
+
+	twipe(lineStructureTable)
+	local returnString = ""
+	local lineStructure = ""
+	local sameLine = false
+
+	local function buildLineStructure()
+		local str = profileText
+		for _, v in ipairs(lineStructureTable) do
+			if type(v) == "string" then
+				str = str.."[\""..v.."\"]"
+			else
+				str = str.."["..v.."]"
+			end
+		end
+
+		return str
+	end
+
+	local function recurse(tbl)
+		lineStructure = buildLineStructure()
+		for k, v in pairs(tbl) do
+			if not sameLine then
+				returnString = returnString..lineStructure
+			end
+
+			returnString = returnString.."[";
+
+			if(type(k) == "string") then
+				returnString = returnString.."\""..k.."\"";
+			else
+				returnString = returnString..k;
+			end
+
+			if type(v) == "table" then
+				tinsert(lineStructureTable, k)
+				sameLine = true
+				returnString = returnString.."]"
+				recurse(v)
+			else
+				sameLine = false
+				returnString = returnString.."] = ";
+
+				if type(v) == "number" then
+					returnString = returnString..v.."\n"
+				elseif type(v) == "string" then
+					returnString = returnString.."\""..v:gsub("\\", "\\\\"):gsub("\n", "\\n"):gsub("\"", "\\\"").."\"\n"
+				elseif type(v) == "boolean" then
+					if v then
+						returnString = returnString.."true\n"
+					else
+						returnString = returnString.."false\n"
+					end
+				else
+					returnString = returnString.."\""..tostring(v).."\"\n"
+				end
+			end
+		end
+
+		tremove(lineStructureTable)
+		lineStructure = buildLineStructure()
+	end
+
+	if inTable and profileType then
+		recurse(inTable);
+	end
+
+	return returnString;
+end
+
+--Split string by multi-character delimiter (the strsplit / string.split function provided by WoW doesn't allow multi-character delimiter)
+function E:SplitString(s, delim)
+	assert(type (delim) == "string" and len(delim) > 0, "bad delimiter")
+
+	local start = 1
+	local t = {}  -- results table
+
+	-- find each instance of a string followed by the delimiter
+	while true do
+		local pos = find(s, delim, start, true) -- plain find
+
+		if not pos then
+			break
+		end
+
+		tinsert(t, sub(s, start, pos - 1))
+		start = pos + len(delim)
+	end -- while
+
+	-- insert final one (after last delimiter)
+	tinsert(t, sub(s, start))
+
+	return unpack(t)
+end
+
 function E:SendMessage()
 	local _, instanceType = IsInInstance()
 	if IsInRaid() then
@@ -583,13 +831,15 @@ end
 local myName = E.myname.."-"..E.myrealm;
 myName = myName:gsub("%s+", "")
 local frames = {}
+
 local function SendRecieve(self, event, prefix, message, channel, sender)
+
 	if event == "CHAT_MSG_ADDON" then
 		if(sender == myName) then return end
 
 		if prefix == "ELVUI_VERSIONCHK" and not E.recievedOutOfDateMessage then
 			if(tonumber(message) ~= nil and tonumber(message) > tonumber(E.version)) then
-				E:Print(L["ElvUI is out of date. You can download the newest version from www.tukui.org. Get premium membership and have ElvUI automatically updated with the Tukui Client!"])
+				E:Print(L["ElvUI is out of date. You can download the newest version from www.tukui.org. Get premium membership and have ElvUI automatically updated with the Tukui Client!"]:gsub("ElvUI", E.UIName))
 
 				if((tonumber(message) - tonumber(E.version)) >= 0.05) then
 					E:StaticPopup_Show("ELVUI_UPDATE_AVAILABLE")
@@ -694,7 +944,8 @@ function E:UpdateAll(ignoreInstall)
 
 	self:UpdateBorderColors()
 	self:UpdateBackdropColors()
-	--self:UpdateFrameTemplates()
+	self:UpdateFrameTemplates()
+	self:UpdateStatusBars()
 
 	local LO = E:GetModule('Layout')
 	LO:ToggleChatPanels()
@@ -710,7 +961,8 @@ end
 function E:RemoveNonPetBattleFrames()
 	if InCombatLockdown() then return end
 	for object, _ in pairs(E.FrameLocks) do
-		_G[object]:SetParent(E.HiddenFrame)
+		local obj = _G[object] or object
+		obj:SetParent(E.HiddenFrame)
 	end
 
 	self:RegisterEvent("PLAYER_REGEN_DISABLED", "AddNonPetBattleFrames")
@@ -719,10 +971,72 @@ end
 function E:AddNonPetBattleFrames(event)
 	if InCombatLockdown() then return end
 	for object, _ in pairs(E.FrameLocks) do
-		_G[object]:SetParent(UIParent)
+		local obj = _G[object] or object
+		obj:SetParent(UIParent)
 	end
 
 	self:UnregisterEvent("PLAYER_REGEN_DISABLED")
+end
+
+function E:EnterVehicleHideFrames(event, unit)
+	if unit ~= "player" then return; end
+	
+	for object in pairs(E.VehicleLocks) do
+		object:SetParent(E.HiddenFrame)
+	end
+end
+
+function E:ExitVehicleShowFrames(event, unit)
+	if unit ~= "player" then return; end
+	
+	for object, originalParent in pairs(E.VehicleLocks) do
+		object:SetParent(originalParent)
+	end
+end
+
+function E:RegisterObjectForVehicleLock(object, originalParent)
+	if not object or not originalParent then
+		E:Print("Error. Usage: RegisterObjectForVehicleLock(object, originalParent)")
+		return
+	end
+
+	local object = _G[object] or object
+	--Entering/Exiting vehicles will often happen in combat.
+	--For this reason we cannot allow protected objects.
+	if object.IsProtected and object:IsProtected() then
+		E:Print("Error. Object is protected and cannot be changed in combat.")
+		return
+	end
+
+	--Check if we are already in a vehicles
+	if UnitHasVehicleUI("player") then
+		object:SetParent(E.HiddenFrame)
+	end
+
+	--Add object to table
+	E.VehicleLocks[object] = originalParent
+end
+
+function E:UnregisterObjectForVehicleLock(object)
+	if not object then
+		E:Print("Error. Usage: UnregisterObjectForVehicleLock(object)")
+		return
+	end
+
+	local object = _G[object] or object
+	--Check if object was registered to begin with
+	if not E.VehicleLocks[object] then
+		return
+	end
+
+	--Change parent of object back to original parent
+	local originalParent = E.VehicleLocks[object]
+	if originalParent then
+		object:SetParent(originalParent)
+	end
+
+	--Remove object from table
+	E.VehicleLocks[object] = nil
 end
 
 function E:ResetAllUI()
@@ -793,43 +1107,6 @@ end
 
 --DATABASE CONVERSIONS
 function E:DBConversions()
-	if(self.private.actionbar) then
-		if(self.private.actionbar.enablecd ~= nil) then
-			self.private.cooldown.enable = self.private.actionbar.enablecd
-			self.private.actionbar.enablecd = nil
-		end
-
-		if(self.db.actionbar.treshold ~= nil) then
-			self.db.cooldown.threshold = self.db.actionbar.treshold
-			self.db.actionbar.treshold = nil
-		end
-
-		if(self.db.actionbar.expiringcolor ~= nil) then
-			self.db.cooldown.expiringColor = self.db.actionbar.expiringcolor
-			self.db.actionbar.expiringcolor = nil
-		end
-
-		if(self.db.actionbar.secondscolor ~= nil) then
-			self.db.cooldown.secondsColor = self.db.actionbar.secondscolor
-			self.db.actionbar.secondscolor = nil
-		end
-
-		if(self.db.actionbar.minutescolor ~= nil) then
-			self.db.cooldown.minutesColor = self.db.actionbar.minutescolor
-			self.db.actionbar.minutescolor = nil
-		end
-
-		if(self.db.actionbar.hourscolor ~= nil) then
-			self.db.cooldown.hoursColor = self.db.actionbar.hourscolor
-			self.db.actionbar.hourscolor = nil
-		end
-
-		if(self.db.actionbar.dayscolor ~= nil) then
-			self.db.cooldown.daysColor = self.db.actionbar.dayscolor
-			self.db.actionbar.dayscolor = nil
-		end
-	end
-	
 	--Add missing Stack Threshold
 	if E.global.unitframe['aurafilters']['RaidDebuffs'].spells then
 		local matchFound
@@ -842,13 +1119,13 @@ function E:DBConversions()
 					end
 				end
 			end
-			
+
 			if not matchFound then
 				E.global.unitframe['aurafilters']['RaidDebuffs']['spells'][k].stackThreshold = 0
 			end
 		end
 	end
-	
+
 	--Convert spellIDs saved as strings to numbers
 	if E.global.unitframe['aurafilters']['Whitelist (Strict)'].spells then
 		for k, v in pairs(E.global.unitframe['aurafilters']['Whitelist (Strict)'].spells) do
@@ -862,9 +1139,6 @@ function E:DBConversions()
 		end
 	end
 
-	self.db.unitframe.units.raid10 = nil
-	self.db.unitframe.units.raid25 = nil
-
 	if E.db.general.experience.width > 100 and E.db.general.experience.height > 100 then
 		E.db.general.experience.width = P.general.experience.width
 		E.db.general.experience.height = P.general.experience.height
@@ -876,13 +1150,13 @@ function E:DBConversions()
 		E.db.general.reputation.height = P.general.reputation.height
 		E:Print("Reputation bar appears to be an odd shape. Resetting to default size.")
 	end
-	
+
 	--Turns out that a chat height lower than 58 will cause the following error: Message: ..\FrameXML\FloatingChatFrame.lua line 1147: attempt to perform arithmetic on a nil value
 	--This only happens if the datatext panel for the respective chat panel is enabled, leaving no room for the chat frame.
 	--Minimum height has been increased to 60, convert any setting lower than this to the new minimum height.
 	if E.db.chat.panelHeight < 60 then E.db.chat.panelHeight = 60 end
 	if E.db.chat.panelHeightRight < 60 then E.db.chat.panelHeightRight = 60 end
-	
+
 	--Boss Frame auras have been changed to support friendly/enemy filters in case there is an encounter with a friendly boss
 	--Try to convert any filter settings the user had to the new format
 	if not E.db.bossAuraFiltersConverted then
@@ -921,8 +1195,141 @@ function E:DBConversions()
 				end
 			end
 		end
-		
+
 		E.db.bossAuraFiltersConverted = true
+	end
+
+	--Convert stored mover strings to use the new comma delimiter
+	if E.db.movers then
+		for mover, moverString in pairs(E.db.movers) do
+		   if find(moverString, "\031") then --Old delimiter found
+			  moverString = gsub(moverString, "\031", ",") --Replace with new delimiter
+			  E.db.movers[mover] = moverString --Store updated mover string
+		   end
+		end
+	end
+
+	--Convert stored BuffIndicator key/value pairs to use spellID as key
+	if not E.global.unitframe.buffwatchBackup then E.global.unitframe.buffwatchBackup = {} end
+	local shouldRemove
+	for class in pairs(E.global.unitframe.buffwatch) do
+		if not E.global.unitframe.buffwatchBackup[class] then E.global.unitframe.buffwatchBackup[class] = {} end
+		shouldRemove = {}
+		for i, values in pairs(E.global.unitframe.buffwatch[class]) do
+			if values.id then --Added by user, all info stored in SavedVariables
+				if i ~= values.id then
+					--Mark entry for removal
+					shouldRemove[i] = true
+				end
+				E.global.unitframe.buffwatch[class][values.id] = values
+				if not E.global.unitframe.buffwatchBackup[class][values.id] then E.global.unitframe.buffwatchBackup[class][values.id] = values end --Store a copy in case something goes wrong
+
+			elseif G.oldBuffWatch[class] and G.oldBuffWatch[class][i] then
+				--Default BuffIndicator, grab info from legacy table
+				local spellID = G.oldBuffWatch[class][i].id
+				if spellID then
+					--Store a copy in case something goes wrong
+					if not E.global.unitframe.buffwatchBackup[class][spellID] then
+						E.global.unitframe.buffwatchBackup[class][spellID] = G.oldBuffWatch[class][i]
+						E:CopyTable(E.global.unitframe.buffwatchBackup[class][spellID], values)
+					end
+					E.global.unitframe.buffwatch[class][spellID] = G.oldBuffWatch[class][i] --Store default info under new spellID key
+					E:CopyTable(E.global.unitframe.buffwatch[class][spellID], values) --Transfer user-changed settings to new table
+					E.global.unitframe.buffwatch[class][i] = nil --Remove old entry
+				end
+			end
+		end
+		--Remove old entries of user-added BuffIndicators
+		for id in pairs(shouldRemove) do
+			E.global.unitframe.buffwatch[class][id] = nil
+		end
+	end
+
+	--Add missing .point, .xOffset and .yOffset values to Buff Indicators that are missing them for whatever reason
+	for class in pairs(E.global.unitframe.buffwatch) do
+		for _, values in pairs(E.global.unitframe.buffwatch[class]) do
+			if not values.point then values.point = "TOPLEFT" end
+			if not values.xOffset then values.xOffset = 0 end
+			if not values.yOffset then values.yOffset = 0 end
+		end
+	end
+	
+	--Font Conversions
+	local fonts = {
+		["ElvUI Alt-Font"] = "Continuum Medium",
+		["ElvUI Alt-Combat"] = "Die Die Die!",
+		["ElvUI Combat"] = "Action Man",
+		["ElvUI Font"] = "PT Sans Narrow",
+		["ElvUI Pixel"] = "Homespun"
+	}
+	if fonts[E.db.general.font] then E.db.general.font = fonts[E.db.general.font] end
+	if fonts[E.db.nameplate.font] then E.db.nameplate.font = fonts[E.db.nameplate.font] end
+	if fonts[E.db.nameplate.buffs.font] then E.db.nameplate.buffs.font = fonts[E.db.nameplate.buffs.font] end
+	if fonts[E.db.nameplate.debuffs.font] then E.db.nameplate.debuffs.font = fonts[E.db.nameplate.debuffs.font] end
+	if fonts[E.db.bags.itemLevelFont] then E.db.bags.itemLevelFont = fonts[E.db.bags.itemLevelFont] end
+	if fonts[E.db.bags.countFont] then E.db.bags.countFont = fonts[E.db.bags.countFont] end
+	if fonts[E.db.auras.font] then E.db.auras.font = fonts[E.db.auras.font] end
+	if fonts[E.db.auras.consolidatedBuffs.font] then E.db.auras.consolidatedBuffs.font = fonts[E.db.auras.consolidatedBuffs.font] end
+	if fonts[E.db.chat.font] then E.db.chat.font = fonts[E.db.chat.font] end
+	if fonts[E.db.chat.tabFont] then E.db.chat.tabFont = fonts[E.db.chat.tabFont] end
+	if fonts[E.db.datatexts.font] then E.db.datatexts.font = fonts[E.db.datatexts.font] end
+	if fonts[E.db.tooltip.font] then E.db.tooltip.font = fonts[E.db.tooltip.font] end
+	if fonts[E.db.tooltip.healthBar.font] then E.db.tooltip.healthBar.font = fonts[E.db.tooltip.healthBar.font] end
+	if fonts[E.db.unitframe.font] then E.db.unitframe.font = fonts[E.db.unitframe.font] end
+	if fonts[E.db.unitframe.units.party.rdebuffs.font] then E.db.unitframe.units.party.rdebuffs.font = fonts[E.db.unitframe.units.party.rdebuffs.font] end
+	if fonts[E.db.unitframe.units.raid.rdebuffs.font] then E.db.unitframe.units.raid.rdebuffs.font = fonts[E.db.unitframe.units.raid.rdebuffs.font] end
+	if fonts[E.db.unitframe.units.raid40.rdebuffs.font] then E.db.unitframe.units.raid40.rdebuffs.font = fonts[E.db.unitframe.units.raid40.rdebuffs.font] end
+	if fonts[E.db.unitframe.units.raidpet.rdebuffs.font] then E.db.unitframe.units.raidpet.rdebuffs.font = fonts[E.db.unitframe.units.raidpet.rdebuffs.font] end
+	if fonts[E.db.unitframe.units.tank.rdebuffs.font] then E.db.unitframe.units.tank.rdebuffs.font = fonts[E.db.unitframe.units.tank.rdebuffs.font] end
+	if fonts[E.db.unitframe.units.assist.rdebuffs.font] then E.db.unitframe.units.assist.rdebuffs.font = fonts[E.db.unitframe.units.assist.rdebuffs.font] end
+	if fonts[E.db.actionbar.font] then E.db.actionbar.font = fonts[E.db.actionbar.font] end
+	if fonts[E.private.dmgfont] then E.private.dmgfont = fonts[E.private.dmgfont] end
+	if fonts[E.private.namefont] then E.private.namefont = fonts[E.private.namefont] end
+	if fonts[E.private.chatBubbleFont] then E.private.chatBubbleFont = fonts[E.private.chatBubbleFont] end
+	
+	--Convert fonts for custom texts too
+	local function ConvertCustomTextFont(unit)
+		local db = E.db.unitframe.units[unit]
+		
+		if db and db.customTexts then
+			for objectName in pairs(db.customTexts) do
+				local objectDB = db.customTexts[objectName]
+				if objectDB.font and fonts[objectDB.font] then
+					objectDB.font = fonts[objectDB.font]
+				end
+			end
+		end
+	end
+	local units = {
+		"player", "target", "targettarget", "targettargettarget", "focus", "focustarget",
+		"pet", "pettarget", "boss", "arena", "party", "raid", "raid40", "raidpet",
+	}
+	for _, unit in pairs(units) do
+		ConvertCustomTextFont(unit)
+	end
+
+	--Convert actionbar button spacing to backdrop spacing, so users don't get any unwanted changes
+	if not E.db.actionbar.backdropSpacingConverted then
+		for i = 1, 10 do
+			if E.db.actionbar["bar"..i] then
+				E.db.actionbar["bar"..i].backdropSpacing = E.db.actionbar["bar"..i].buttonspacing
+			end
+		end
+		E.db.actionbar.barPet.backdropSpacing = E.db.actionbar.barPet.buttonspacing
+		E.db.actionbar.stanceBar.backdropSpacing = E.db.actionbar.stanceBar.buttonspacing
+		
+		E.db.actionbar.backdropSpacingConverted = true
+	end
+	
+	--Convert E.db.actionbar.showGrid to E.db.actionbar["barX"].showGrid
+	if E.db.actionbar.showGrid ~= nil then
+		local gridEnabled = E.db.actionbar.showGrid
+		for i = 1, 10 do
+			if E.db.actionbar["bar"..i] then
+				E.db.actionbar["bar"..i].showGrid = gridEnabled
+			end
+		end
+		E.db.actionbar.showGrid = nil
 	end
 end
 
@@ -1006,6 +1413,10 @@ function E:Initialize()
 		self:HelloKittyFix()
 	end
 
+	if(self.global.tukuiMode) then
+		self.UIName = "Tukui"
+	end
+
 	self:UpdateMedia()
 	self:UpdateFrameTemplates()
 	self:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", "CheckRole");
@@ -1017,6 +1428,8 @@ function E:Initialize()
 	self:RegisterEvent('PLAYER_ENTERING_WORLD')
 	self:RegisterEvent("PET_BATTLE_CLOSE", 'AddNonPetBattleFrames')
 	self:RegisterEvent('PET_BATTLE_OPENING_START', "RemoveNonPetBattleFrames")
+	self:RegisterEvent("UNIT_ENTERED_VEHICLE", "EnterVehicleHideFrames")
+	self:RegisterEvent("UNIT_EXITED_VEHICLE", "ExitVehicleShowFrames")
 
 	if self.myclass == "DRUID" then
 		self:RegisterEvent("SPELLS_CHANGED")
@@ -1032,7 +1445,19 @@ function E:Initialize()
 	self:RefreshModulesDB()
 	collectgarbage("collect");
 
+	if self:IsFoolsDay() and not E.global.aprilFools and not self.global.tukuiMode then
+		self:StaticPopup_Show("TUKUI_MODE")
+	end
+
+
 	if self.db.general.loginmessage then
-		print(select(2, E:GetModule('Chat'):FindURL("CHAT_MSG_DUMMY", format(L["LOGIN_MSG"], self["media"].hexvaluecolor, self["media"].hexvaluecolor, self.version)))..'.')
+		print(select(2, E:GetModule('Chat'):FindURL("CHAT_MSG_DUMMY", format(L["LOGIN_MSG"]:gsub("ElvUI", E.UIName), self["media"].hexvaluecolor, self["media"].hexvaluecolor, self.version)))..'.')
+	end
+
+	if self.global.tukuiMode then
+		if(self:IsFoolsDay()) then
+			self:ShowTukuiFrame()
+		end
+		self:Print("Thank you for being a good sport, type /aprilfools to revert the changes.")
 	end
 end

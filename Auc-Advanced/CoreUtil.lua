@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 5.21e.5566 (SanctimoniousSwamprat)
+	Version: 5.21f.5579 (SanctimoniousSwamprat)
 	Revision: $Id: CoreUtil.lua 5549 2015-03-17 19:51:52Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -947,4 +947,4 @@ function lib.CreateMoney(height)
 	return (tooltip:CreateMoney(height))
 end
 
-lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Advanced/CoreUtil.lua $", "$Rev: 5549 $")
+lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Advanced/CoreUtil.lua $", "$Rev: 5549 $")

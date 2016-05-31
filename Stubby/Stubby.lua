@@ -1,6 +1,6 @@
 --[[
 	Stubby AddOn for World of Watcraft (tm)
-	Version: 5.21e.5566 (SanctimoniousSwamprat)
+	Version: 5.21f.5579 (SanctimoniousSwamprat)
 	Revision: $Id: Stubby.lua 374 2014-10-31 12:11:53Z brykrys $
 	URL: http://auctioneeraddon.com/dl/Stubby/
 

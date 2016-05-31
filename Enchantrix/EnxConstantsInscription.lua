@@ -1,6 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.21e.5566 (SanctimoniousSwamprat)
+	Version: 5.21f.5579 (SanctimoniousSwamprat)
 	Revision: $Id: EnxConstants.lua 4632 2010-01-24 02:33:54Z ccox $
 	URL: http://enchantrix.org/
 
@@ -133,7 +133,7 @@ local HERB_GORGONDFLYTRAP = 109126
 local HERB_STARFLOWER = 109127
 local HERB_NAGRANDARROWBLOOM = 109128
 local HERB_TALADORORCHID = 109129
-local HERB_CHAMELEONLOTUS = 109130 -- green quality, but millable!
+local HERB_CHAMELEONLOTUS = 109130 -- appears to have been removed in beta
 
 
 -- only currently used for autoloot in EnxAutoDisenchant.lua
@@ -216,8 +216,6 @@ const.MillingSkillRequired = {
 	[ASHEN_PIGMENT_HIGH] = 475,
 	[SHADOW_PIGMENT_LOW] = 500,
 	[SHADOW_PIGMENT_HIGH] = 500,
-	
--- WoD TODO - ccox - confirm values
 	[CERULEAN_PEGMENT_LOW] = 1,
 	[CERULEAN_PEGMENT_HIGH] = 1,
 
@@ -301,14 +299,13 @@ const.MillableItems = {
 	[HERB_SNOWLILY] = SHADOW_PIGMENT_LOW,
 	[HERB_FOOLSCAP] = SHADOW_PIGMENT_HIGH,
 
--- TODO - ccox - confirm groupings
 	[HERB_FROSTWEED] = CERULEAN_PEGMENT_LOW,
 	[HERB_FIREWEED] = CERULEAN_PEGMENT_LOW,
 	[HERB_GORGONDFLYTRAP] = CERULEAN_PEGMENT_LOW,
-	[HERB_STARFLOWER] = CERULEAN_PEGMENT_LOW,
+	[HERB_STARFLOWER] = CERULEAN_PEGMENT_HIGH,
 	[HERB_NAGRANDARROWBLOOM] = CERULEAN_PEGMENT_HIGH,
 	[HERB_TALADORORCHID] = CERULEAN_PEGMENT_HIGH,
-	[HERB_CHAMELEONLOTUS] = CERULEAN_PEGMENT_LOW,	-- green quality, but millable!
+	[HERB_CHAMELEONLOTUS] = CERULEAN_PEGMENT_LOW,	-- removed in beta?
 }
 
 
@@ -417,7 +414,6 @@ const.MillGroupYields = {
 		[MISTY_PIGMENT] = 0.56,
 		},
 
--- WoD - TODO - ccox - need more data
 	[CERULEAN_PEGMENT_LOW] = {
 		[CERULEAN_PIGMENT] = 2.10,
 		},

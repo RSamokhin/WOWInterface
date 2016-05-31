@@ -209,19 +209,16 @@ L= DBM:GetModLocalization(663)
 L= DBM:GetModLocalization(665)
 
 L:SetWarningLocalization({
-	SpecWarnGetBoned	= "點骨堆來獲得骨甲術",
-	SpecWarnDoctor		= "醫生來了!"
+	SpecWarnGetBoned	= "點骨堆來獲得骨甲術"
 })
 
 L:SetOptionLocalization({
 	SpecWarnGetBoned	= "當你缺少$spell:113996時顯示特別警告",
-	SpecWarnDoctor		= "當瑟爾林·卡斯迪諾夫醫生出現時顯示特別警告",
 	InfoFrame			= "為沒有$spell:113996的玩家顯示訊息框"
 })
 
 L:SetMiscLocalization({
-	PlayerDebuffs	= "無骨甲術",
-	TheolenSpawn	= "醫生來了!"
+	PlayerDebuffs	= "無骨甲術"
 })
 
 -----------------------

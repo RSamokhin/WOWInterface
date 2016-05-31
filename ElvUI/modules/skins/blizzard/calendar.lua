@@ -1,6 +1,14 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local S = E:GetModule('Skins')
 
+--Cache global variables
+--Lua functions
+local _G = _G
+local ipairs = ipairs
+--WoW API / Variables
+local CLASS_SORT_ORDER = CLASS_SORT_ORDER
+local CLASS_ICON_TCOORDS = CLASS_ICON_TCOORDS
+
 local function LoadSkin()
 	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.calendar ~= true then return end
 
@@ -14,7 +22,7 @@ local function LoadSkin()
 
 	CalendarFilterFrame:StripTextures()
 	CalendarFilterFrame:Width(155)
-	
+
 	CalendarFilterFrameText:ClearAllPoints()
 	CalendarFilterFrameText:Point("RIGHT", CalendarFilterButton, "LEFT", -2, 0)
 
@@ -86,7 +94,7 @@ local function LoadSkin()
 			buttonIcon:SetTexCoord(tcoords[1] + 0.015, tcoords[2] - 0.02, tcoords[3] + 0.018, tcoords[4] - 0.02) --F U C K I N G H A X
 		end
 	end)
-	
+
 	CalendarClassButton1:Point("TOPLEFT", CalendarClassButtonContainer, "TOPLEFT", 5, 0)
 
 	for i = 1, #CLASS_SORT_ORDER do
@@ -95,7 +103,7 @@ local function LoadSkin()
 		button:CreateBackdrop("Default")
 		button:Size(24)
 	end
-	
+
 	CalendarClassTotalsButton:StripTextures()
 	CalendarClassTotalsButton:CreateBackdrop("Default")
 	CalendarClassTotalsButton:Width(24)

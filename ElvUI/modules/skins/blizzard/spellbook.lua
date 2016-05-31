@@ -1,6 +1,11 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local S = E:GetModule('Skins')
 
+--Cache global variables
+--Lua functions
+local _G = _G
+local select, unpack = select, unpack
+
 local function LoadSkin()
 	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.spellbook ~= true then return end
 	S:HandleCloseButton(SpellBookFrameCloseButton)
@@ -13,22 +18,19 @@ local function LoadSkin()
 		"SpellBookPageNavigationFrame",
 	}
 
-	local Kill = {
-		"SpellBookFrameTutorialButton",
-	}
-
 	for _, object in pairs(StripAllTextures) do
 		_G[object]:StripTextures()
 	end
 
-	for _, object in pairs(Kill) do
-		_G[object]:Kill()
+	if E.global.general.disableTutorialButtons then
+		SpellBookFrameTutorialButton:Kill()
 	end
 
 	local pagebackdrop = CreateFrame("Frame", nil, SpellBookFrame)
 	pagebackdrop:SetTemplate("Default")
 	pagebackdrop:Point("TOPLEFT", SpellBookPage1, "TOPLEFT", -2, 2)
 	pagebackdrop:Point("BOTTOMRIGHT", SpellBookFrame, "BOTTOMRIGHT", -8, 4)
+	SpellBookFrame.pagebackdrop = pagebackdrop
 
 	for i=1, 2 do
 		_G['SpellBookPage'..i]:SetParent(pagebackdrop)
@@ -68,8 +70,8 @@ local function LoadSkin()
 
 			if button.shine then
 				button.shine:ClearAllPoints()
-				button.shine:SetPoint('TOPLEFT', button, 'TOPLEFT', -3, 3)
-				button.shine:SetPoint('BOTTOMRIGHT', button, 'BOTTOMRIGHT', 3, -3)
+				button.shine:Point('TOPLEFT', button, 'TOPLEFT', -3, 3)
+				button.shine:Point('BOTTOMRIGHT', button, 'BOTTOMRIGHT', 3, -3)
 			end
 
 			if icon then
@@ -171,7 +173,7 @@ local function LoadSkin()
 		if index > 1 then
 			local point, attachTo, anchorPoint, _, y = button:GetPoint()
 			button:ClearAllPoints()
-			button:SetPoint(point, attachTo, anchorPoint, 0, y)
+			button:Point(point, attachTo, anchorPoint, 0, y)
 		end
 	end
 
@@ -250,11 +252,12 @@ local function LoadSkin()
 		local statusbar = _G[statusbar]
 		statusbar:StripTextures()
 		statusbar:SetStatusBarTexture(E["media"].normTex)
+		E:RegisterStatusBar(statusbar)
 		statusbar:SetStatusBarColor(0, 220/255, 0)
 		statusbar:CreateBackdrop("Default")
 
 		statusbar.rankText:ClearAllPoints()
-		statusbar.rankText:SetPoint("CENTER")
+		statusbar.rankText:Point("CENTER")
 	end
 
 	--Bottom Tabs
@@ -263,7 +266,7 @@ local function LoadSkin()
 	end
 
 	SpellBookFrameTabButton1:ClearAllPoints()
-	SpellBookFrameTabButton1:SetPoint('TOPLEFT', SpellBookFrame, 'BOTTOMLEFT', 0, 2)
+	SpellBookFrameTabButton1:Point('TOPLEFT', SpellBookFrame, 'BOTTOMLEFT', 0, 2)
 end
 
 S:RegisterSkin('ElvUI', LoadSkin)

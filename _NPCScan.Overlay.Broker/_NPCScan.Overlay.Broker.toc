@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 60200
 ## Title: _|cffCCCC88NPCScan|r.Overlay.Broker
 ## Notes: LibDataBroker button to toggle _NPCScan.Overlay's Map Layers and open it's Configuration Options.
 ## Author: Steve Dodds (Darkclaw of Hyjal)

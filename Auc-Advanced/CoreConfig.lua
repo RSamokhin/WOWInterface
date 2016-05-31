@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 5.21e.5566 (SanctimoniousSwamprat)
+	Version: 5.21f.5579 (SanctimoniousSwamprat)
 	Revision: $Id: CoreConfig.lua 5534 2014-12-12 14:15:10Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -193,4 +193,4 @@ coremodule.Processors = {
 	gameactive = function() private.Activate() end,
 }
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Advanced/CoreConfig.lua $", "$Rev: 5534 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Advanced/CoreConfig.lua $", "$Rev: 5534 $")

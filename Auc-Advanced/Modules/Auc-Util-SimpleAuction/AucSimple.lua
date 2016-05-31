@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Basic Auction Posting
-	Version: 5.21e.5566 (SanctimoniousSwamprat)
+	Version: 5.21f.5579 (SanctimoniousSwamprat)
 	Revision: $Id: AucSimple.lua 5507 2014-10-23 16:08:21Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -274,4 +274,4 @@ function private.SetupConfigGui(gui)
 	gui:AddControl(id, "Checkbox",     0, 2, "util.simpleauc.scanbutton.disable.wowecon", "Except if WowEcon is loaded")
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Util-SimpleAuction/AucSimple.lua $", "$Rev: 5507 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Util-SimpleAuction/AucSimple.lua $", "$Rev: 5507 $")

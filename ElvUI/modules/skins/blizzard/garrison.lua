@@ -1,6 +1,12 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local S = E:GetModule('Skins')
 
+--Cache global variables
+--Lua functions
+local unpack = unpack
+--WoW API / Variables
+local CreateFrame = CreateFrame
+
 local function LoadSkin()
 	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.garrison ~= true then return end
 
@@ -19,7 +25,7 @@ local function LoadSkin()
 			ability = abilities[numAbilitiesStyled]
 		end
 		follower.numAbilitiesStyled = numAbilitiesStyled
-		
+
 		if hasItems then
 			local weapon = follower.followerTab.ItemWeapon
 			local armor = follower.followerTab.ItemArmor
@@ -35,7 +41,7 @@ local function LoadSkin()
 			end
 		end
 	end
-	
+
 	local function HandleShipFollowerPage(followerTab)
 		local traits = followerTab.Traits
 		for i = 1, #traits do
@@ -47,7 +53,7 @@ local function LoadSkin()
 				icon:SetTexCoord(unpack(E.TexCoords))
 			end
 		end
-		
+
 		local equipment = followerTab.EquipmentFrame.Equipment
 		for i = 1, #equipment do
 			local icon = equipment[i].Icon
@@ -135,7 +141,7 @@ local function LoadSkin()
 	end
 
 	GarrisonMissionFrameTab1:ClearAllPoints()
-	GarrisonMissionFrameTab1:SetPoint("BOTTOMLEFT", 11, -40)
+	GarrisonMissionFrameTab1:Point("BOTTOMLEFT", 11, -40)
 
 	-- Follower list
 	local FollowerList = GarrisonMissionFrame.FollowerList
@@ -197,7 +203,7 @@ local function LoadSkin()
 	S:HandleTab(GarrisonLandingPageTab2)
 	S:HandleTab(GarrisonLandingPageTab3)
 	GarrisonLandingPageTab1:ClearAllPoints()
-	GarrisonLandingPageTab1:SetPoint("TOPLEFT", GarrisonLandingPage, "BOTTOMLEFT", 70, 2)
+	GarrisonLandingPageTab1:Point("TOPLEFT", GarrisonLandingPage, "BOTTOMLEFT", 70, 2)
 
 	-- Landing page: Report
 	local Report = GarrisonLandingPage.Report
@@ -236,7 +242,7 @@ local function LoadSkin()
 			ability.styled = true
 		end
 	end)
-	
+
 	-- Landing page: Fleet
 	local ShipFollowerList = GarrisonLandingPage.ShipFollowerList
 	ShipFollowerList.FollowerHeaderBar:Hide()
@@ -244,7 +250,7 @@ local function LoadSkin()
 	local scrollFrame = ShipFollowerList.listScroll
 	S:HandleScrollBar(scrollFrame.scrollBar)
 	HandleShipFollowerPage(ShipFollowerList.followerTab)
-	
+
 
 	-- ShipYard
 	GarrisonShipyardFrame:StripTextures(true)
@@ -254,7 +260,7 @@ local function LoadSkin()
 	S:HandleCloseButton(GarrisonShipyardFrame.BorderFrame.CloseButton2)
 	S:HandleTab(GarrisonShipyardFrameTab1)
 	S:HandleTab(GarrisonShipyardFrameTab2)
-	
+
 	-- ShipYard: Naval Map
 	local MissionTab = GarrisonShipyardFrame.MissionTab
 	local MissionList = MissionTab.MissionList
@@ -262,7 +268,7 @@ local function LoadSkin()
 	MissionList.backdrop:SetOutside(MissionList.MapTexture)
 	MissionList.CompleteDialog.BorderFrame:StripTextures()
 	MissionList.CompleteDialog.BorderFrame:SetTemplate("Transparent")
-	
+
 	-- ShipYard: Mission
 	local MissionPage = MissionTab.MissionPage
 	S:HandleCloseButton(MissionPage.CloseButton)
@@ -277,7 +283,7 @@ local function LoadSkin()
 	MissionPage.StartMissionButton.FlashAnim:Stop()
 	MissionPage.StartMissionButton.FlashAnim.Play = E.noop
 	S:HandleButton(GarrisonMissionFrameHelpBoxButton)
-	
+
 	-- ShipYard: Follower List
 	local FollowerList = GarrisonShipyardFrame.FollowerList
 	local scrollFrame = FollowerList.listScroll
@@ -302,7 +308,7 @@ local function LoadSkin()
 	if bonusIcon then
 		S:HandleIcon(bonusIcon) --TODO: Check how this actually looks
 	end
-	
+
 
 	-- Threat Counter Tooltips
 	-- The tooltip starts using blue backdrop and white border unless we re-set the template.

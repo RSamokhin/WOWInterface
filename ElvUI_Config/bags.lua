@@ -35,6 +35,7 @@ E.Options.args.bags = {
 					values = {
 						['ICON'] = L["Icons Only"],
 						['ICON_TEXT'] = L["Icons and Text"],
+						["ICON_TEXT_ABBR"] = L["Icons and Text (Short)"],
 					},
 					set = function(info, value) E.db.bags[ info[#info] ] = value; B:UpdateTokens(); end,
 				},
@@ -60,14 +61,21 @@ E.Options.args.bags = {
 					desc = L["Use coin icons instead of colored text."],
 					set = function(info, value) E.db.bags[ info[#info] ] = value; B:UpdateGoldText(); end,
 				},
+				junkIcon = {
+					order = 3,
+					type = 'toggle',
+					name = L["Show Junk Icon"],
+					desc = L["Display the junk icon on all grey items that can be vendored."],
+					set = function(info, value) E.db.bags[ info[#info] ] = value; B:UpdateAllBagSlots(); end,
+				},
 				sortInverted = {
-					order = 4,
+					order = 5,
 					type = 'toggle',
 					name = L["Sort Inverted"],
 					desc = L["Direction the bag sorting will use to allocate the items."],
 				},
 				countGroup = {
-					order = 5,
+					order = 6,
 					type = "group",
 					name = L["Item Count Font"],
 					args = {
@@ -117,7 +125,7 @@ E.Options.args.bags = {
 					},
 				},
 				itemLevelGroup = {
-					order = 6,
+					order = 7,
 					type = "group",
 					name = L["Item Level"],
 					args = {
@@ -174,15 +182,29 @@ E.Options.args.bags = {
 						},
 					},
 				},
-				ignoreItems = {
-					order = 100,
-					name = L["Ignore Items"],
-					desc = L["List of items to ignore when sorting. If you wish to add multiple items you must seperate the word with a comma."],
-					type = 'input',
-					width = 'full',
-					multiline = true,
-					set = function(info, value) E.db.bags[ info[#info] ] = value; end,
+				bagSortingGroup = {
+					order = 8,
+					type = "group",
+					guiInline = true,
+					name = L["Bag Sorting"],
+					args = {
+						description = {
+							order = 1,
+							type = "description",
+							name = L["Items in this list or items that match any Search Syntax query in this list will be ignored when sorting. Separate each entry with a comma."],
+						},
+						ignoreItems = {
+							order = 100,
+							name = L["Ignore Items"],
+							desc = L["IGNORE_ITEMS_DESC"],
+							type = 'input',
+							width = 'full',
+							multiline = true,
+							set = function(info, value) E.db.bags.ignoreItems = value; end,
+						},
+					},
 				},
+
 			},
 		},
 		sizeAndPos = {

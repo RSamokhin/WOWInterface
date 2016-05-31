@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.21e.5566 (SanctimoniousSwamprat)
-	Revision: $Id: BeanCounterAPI.lua 5563 2015-06-26 10:15:37Z brykrys $
+	Version: 5.21f.5579 (SanctimoniousSwamprat)
+	Revision: $Id: BeanCounterAPI.lua 5572 2015-08-28 11:26:08Z brykrys $
 
 	BeanCounterAPI - Functions for other addons to get BeanCounter Data
 	URL: http://auctioneeraddon.com/
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/BeanCounter/BeanCounterAPI.lua $","$Rev: 5563 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/BeanCounter/BeanCounterAPI.lua $","$Rev: 5572 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local lib = BeanCounter
 lib.API = {}
@@ -184,7 +184,7 @@ function lib.API.getAHProfit(player, item, lowDate, highDate, includeMeta)
 			--Sum the trxns	
 			if v[2] == _BC('UiAucSuccessful') then
 				sum = sum + v[5] - v[9] --sum sale - deposit. fee's have already been subtracted
-			elseif v[2] == _BC('UiAucExpired') then
+			elseif v[2] == _BC('UiAucExpired') or v[2] == _BC('UiAucCancelled') then
 				sum = sum - v[9] --subtract failed deposits
 			elseif v[2] == _BC('UiWononBid') then
 				sum = sum - v[3] --subtract bought items

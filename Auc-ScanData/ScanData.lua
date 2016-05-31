@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - ScanData
-	Version: 5.21e.5566 (SanctimoniousSwamprat)
+	Version: 5.21f.5579 (SanctimoniousSwamprat)
 	Revision: $Id: ScanData.lua 5538 2014-12-19 16:13:26Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -678,4 +678,4 @@ function ChangeServerKey(oldKey, newKey)
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-ScanData/ScanData.lua $", "$Rev: 5538 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-ScanData/ScanData.lua $", "$Rev: 5538 $")

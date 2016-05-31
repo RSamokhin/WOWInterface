@@ -66,7 +66,7 @@ local function LoadSkin()
 
 		if _G[buttons[i]].text then
 			_G[buttons[i]].text:ClearAllPoints()
-			_G[buttons[i]].text:SetPoint("CENTER")
+			_G[buttons[i]].text:Point("CENTER")
 			_G[buttons[i]].text:SetJustifyH("CENTER")
 		end
 	end
@@ -76,7 +76,7 @@ local function LoadSkin()
 		local b = _G["HelpFrameButton"..i]
 		S:HandleButton(b, true)
 		b.text:ClearAllPoints()
-		b.text:SetPoint("CENTER")
+		b.text:Point("CENTER")
 		b.text:SetJustifyH("CENTER")
 	end
 
@@ -86,6 +86,24 @@ local function LoadSkin()
 		b:StripTextures(true)
 		S:HandleButton(b, true)
 	end
+	
+	--Navigation buttons
+    S:HandleButton(HelpBrowserNavHome)
+	HelpBrowserNavHome:Size(26)
+	HelpBrowserNavHome:ClearAllPoints()
+	HelpBrowserNavHome:SetPoint("BOTTOMLEFT", HelpBrowser, "TOPLEFT", -5, 9)
+	S:HandleNextPrevButton(HelpBrowserNavBack)
+	HelpBrowserNavBack:Size(26)
+	S:HandleNextPrevButton(HelpBrowserNavForward)
+	HelpBrowserNavForward:Size(26)
+	S:HandleButton(HelpBrowserNavReload)
+	HelpBrowserNavReload:Size(26)
+	S:HandleButton(HelpBrowserNavStop)
+	HelpBrowserNavStop:Size(26)
+	S:HandleButton(HelpBrowserBrowserSettings)
+	HelpBrowserBrowserSettings:Size(26)
+	HelpBrowserBrowserSettings:ClearAllPoints()
+	HelpBrowserBrowserSettings:SetPoint("TOPRIGHT", HelpFrameCloseButton, "TOPLEFT", -3, -8)
 
 	-- skin misc items
 	HelpFrameKnowledgebaseSearchBox:ClearAllPoints()

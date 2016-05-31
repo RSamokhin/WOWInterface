@@ -76,7 +76,7 @@ function psealocale()
 	pseauierror = "    ¡Error!"
 	pseauierroraddonoff = "¡Error! El addon se ha deshabilitado - ¡este módulo no está disponible!"
 	pseauinomodule1 = "    ¡Error! ¡Módulo no instalado!"
-	pseauinomodule2 = "¡Error! ¡El módulo elegido no está instalado!\r\nDownload it from http://phoenixstyle.com or curse.com"
+	pseauinomodule2 = "¡Error! ¡El módulo elegido no está instalado!"
 	pseaulduarkolf1 = "¡Se ha matado al add!"
 	pseaulduarkolf2 = "¡no se completará si matas al boss ahora!"
 	pseaulduartitle = "    Ulduar"
@@ -123,9 +123,6 @@ function psealocale()
 	whrabrannemo2 = "seguridad desactivada. Comenzando la purga de la memoria y"
 	whragundemo = "así que tienes agallas"
 	whratitle = "    Heróicas del Rey Lich"
-	raerrormodulereq = "Necesita un módulo adicional:"
-	raerroraddoninst = "¡Error! El addon no está ..."
-	
 	
 end
 

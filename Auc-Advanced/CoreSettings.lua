@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 5.21e.5566 (SanctimoniousSwamprat)
-	Revision: $Id: CoreSettings.lua 5549 2015-03-17 19:51:52Z brykrys $
+	Version: 5.21f.5579 (SanctimoniousSwamprat)
+	Revision: $Id: CoreSettings.lua 5574 2015-09-23 17:42:30Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	Settings GUI
@@ -147,7 +147,6 @@ local settingDefaults = {
 	["core.scan.sellernamedelay"] = false,
 	["core.scan.unresolvedtolerance"] = 0,
 	["core.scan.scanallqueries"] = true,
-	["core.scan.hybridscans"] = false,
 	["core.scan.scannerthrottle"] = Const.ALEVEL_MIN,
 	["core.scan.stage1throttle"] = Const.ALEVEL_OFF,
 	["core.scan.stage3garbage"] = Const.ALEVEL_OFF,
@@ -367,7 +366,7 @@ local function setter(setting, value)
 		c = setting
 		b = "flat"
 	end
-	AucAdvanced.SendProcessorMessage("configchanged", setting, callbackValue, c, b)
+	AucAdvanced.SendProcessorMessage("configchanged", setting, callbackValue, c, b, a)
 end
 
 function lib.SetSetting(...)
@@ -605,9 +604,6 @@ function private._MakeGuiConfig() -- Name mangled to block gui creation at first
 	gui:AddControl(id, "Checkbox",	0, 1, "core.scan.stage5garbage", "Processing Finished: Extra memory cleanup")
 	gui:AddTip(id, "Perform extra memory cleanup when scan processing finishes. Will cause a momentary freeze at the end of every scan")
 
-	gui:AddControl(id, "Checkbox",	0, 1, "core.scan.hybridscans", _TRANS("ADV_Interface_HybridScanning")) --Enable Hybrid scanning for very large Auction Houses
-	gui:AddTip(id, _TRANS("ADV_HelpTooltip_HybridScanning")) --For very large Auction Houses, a GetAll scan will not be able to retrieve all the auctions. A Hybrid scan will start Normal scanning to retrive the auctions missed by the GetAll
-
 	gui:AddHelp(id, "why show summation",
 		_TRANS('ADV_Help_WhyShowSummation'), --"What is the post scan summary?",
 		_TRANS('ADV_Help_WhyShowSummationAnswer')) --"It displays the number of new, updated, or unchanged auctions gathered from a scan of the auction house."
@@ -781,6 +777,9 @@ function private.CheckObsolete()
 	if getter("core.scan.scannerthrottle") == true then
 		setter("core.scan.scannerthrottle", Const.ALEVEL_MED)
 	end
+	if getter("core.scan.hybridscans") then
+		setter("core.scan.hybridscans", nil)
+	end
 
 	local old
 	local old = getter("matcherlist")
@@ -799,4 +798,4 @@ function private.CheckObsolete()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Advanced/CoreSettings.lua $", "$Rev: 5549 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Advanced/CoreSettings.lua $", "$Rev: 5574 $")

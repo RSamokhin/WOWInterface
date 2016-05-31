@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(726, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 71 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 3 $"):sub(12, -3))
 mod:SetCreatureID(60410)--Energy Charge (60913), Emphyreal Focus (60776), Cosmic Spark (62618), Celestial Protector (60793)
 mod:SetEncounterID(1500)
 mod:DisableESCombatDetection()
@@ -20,25 +20,29 @@ mod:RegisterEventsInCombat(
 
 local warnPhase1					= mod:NewPhaseAnnounce(1, 2)--117727 Charge Vortex
 local warnBreath					= mod:NewSpellAnnounce(117960, 3)
+local warnProtector					= mod:NewCountAnnounce(117954, 3)
 local warnArcingEnergy				= mod:NewSpellAnnounce(117945, 2)--Cast randomly at 2 players, it is avoidable.
-local warnClosedCircuit				= mod:NewTargetAnnounce(117949, 3, nil, "Healer")--what happens if you fail to avoid the above
-local warnStunned					= mod:NewTargetAnnounce(132222, 3, nil, "Healer")--Heroic / 132222 is stun debuff, 132226 is 2 min debuff. 
+local warnClosedCircuit				= mod:NewTargetAnnounce(117949, 3, nil, mod:IsHealer())--what happens if you fail to avoid the above
+local warnTotalAnnihilation			= mod:NewCastAnnounce(129711, 4)--Protector dying(exploding)
+local warnStunned					= mod:NewTargetAnnounce(132222, 3, nil, mod:IsHealer())--Heroic / 132222 is stun debuff, 132226 is 2 min debuff. 
 local warnPhase2					= mod:NewPhaseAnnounce(2, 3)--124967 Draw Power
+local warnDrawPower					= mod:NewCountAnnounce(119387, 4)
 local warnPhase3					= mod:NewPhaseAnnounce(3, 3)--116994 Unstable Energy Starting
+local warnRadiatingEnergies			= mod:NewSpellAnnounce(118310, 4)
 
 local specWarnOvercharged			= mod:NewSpecialWarningStack(117878, nil, 6)
 local specWarnTotalAnnihilation		= mod:NewSpecialWarningSpell(129711, nil, nil, nil, 2)
-local specWarnProtector				= mod:NewSpecialWarningSwitchCount("ej6178", "-Healer")
+local specWarnProtector				= mod:NewSpecialWarningSwitch("ej6178", mod:IsDps() or mod:IsTank())
 local specWarnDrawPower				= mod:NewSpecialWarningCount(119387)
 local specWarnDespawnFloor			= mod:NewSpecialWarning("specWarnDespawnFloor", nil, nil, nil, 3)
 local specWarnRadiatingEnergies		= mod:NewSpecialWarningSpell(118310, nil, nil, nil, 2)
 
-local timerBreathCD					= mod:NewCDTimer(18, 117960, nil, "Tank", 2, 5)
-local timerProtectorCD				= mod:NewCDTimer(41, 117954, nil, nil, nil, 1)
-local timerArcingEnergyCD			= mod:NewCDTimer(11.5, 117945, nil, nil, nil, 3)
+local timerBreathCD					= mod:NewCDTimer(18, 117960)
+local timerProtectorCD				= mod:NewCDTimer(41, 117954)
+local timerArcingEnergyCD			= mod:NewCDTimer(11.5, 117945)
 local timerTotalAnnihilation		= mod:NewCastTimer(4, 129711)
 local timerDestabilized				= mod:NewBuffFadesTimer(120, 132226)
-local timerFocusPower				= mod:NewCastTimer(16, 119358, nil, nil, nil, 6)
+local timerFocusPower				= mod:NewCastTimer(16, 119358)
 local timerDespawnFloor				= mod:NewTimer(6.5, "timerDespawnFloor", 116994)--6.5-7.5 variation. 6.5 is safed to use so you don't fall and die.
 
 local berserkTimer					= mod:NewBerserkTimer(570)
@@ -91,15 +95,15 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnPhase3:Show()
 	elseif spellId == 117878 and args:IsPlayer() then
 		local amount = args.amount or 1
-		local badAmount = self:IsTrivial(100) and 30 or 6
-		if (amount >= badAmount) and amount % 3 == 0 then--Warn every 3 stacks at 30/6 and above.
+		if amount >= 6 and amount % 3 == 0 then--Warn every 3 stacks at 6 and above.
 			specWarnOvercharged:Show(amount)
 		end
 	elseif spellId == 119387 then -- do not add other spellids.
 		powerCount = powerCount + 1
+		warnDrawPower:Show(powerCount)
 		specWarnDrawPower:Show(powerCount)
-		timerFocusPower:Cancel()
 	elseif spellId == 118310 then--Below 50% health
+		warnRadiatingEnergies:Show()
 		specWarnRadiatingEnergies:Show()--Give a good warning so people standing outside barrior don't die.
 	elseif spellId == 132226 and args:IsPlayer() then
 		timerDestabilized:Start()
@@ -156,7 +160,8 @@ function mod:SPELL_CAST_START(args)
 		timerBreathCD:Start()
 	elseif spellId == 117954 then
 		protectorCount = protectorCount + 1
-		specWarnProtector:Show(protectorCount)
+		warnProtector:Show(protectorCount)
+		specWarnProtector:Show()
 		if self:IsHeroic() then
 			timerProtectorCD:Start(26)--26-28 variation on heroic
 		else
@@ -167,6 +172,7 @@ function mod:SPELL_CAST_START(args)
 		timerArcingEnergyCD:Start(args.sourceGUID)
 	elseif spellId == 129711 then
 		stunIcon = 8
+		warnTotalAnnihilation:Show()
 		specWarnTotalAnnihilation:Show()
 		timerTotalAnnihilation:Start()
 		timerArcingEnergyCD:Cancel(args.sourceGUID)--add is dying, so this add is done casting arcing Energy

@@ -5,7 +5,7 @@ function pzraonload()
 	_, pzraenglishclass = UnitClass("player")
 	pzrahuntertime=0
 
-if select(3,GetInstanceInfo())==11 or select(3,GetInstanceInfo())==12 then
+if select(3,GetInstanceInfo())==1 then
 	RaidAchievement_pzra:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	RaidAchievement_pzra:RegisterEvent("CHAT_MSG_MONSTER_YELL")
 	RaidAchievement_pzra:RegisterEvent("CHAT_MSG_MONSTER_SAY")
@@ -48,10 +48,6 @@ pzraspisokach5={
 
 7984,
 --7986,
-
-8330,
-8347,
-8295,
 }
 
 if UnitFactionGroup("player")=="Alliance" then
@@ -77,7 +73,7 @@ if pzracheckzonedelay and GetTime()>pzracheckzonedelay then
 pzracheckzonedelay=nil
 
 
-if select(3,GetInstanceInfo())==11 or select(3,GetInstanceInfo())==12 then
+if select(3,GetInstanceInfo())==1 then
 	RaidAchievement_pzra:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	RaidAchievement_pzra:RegisterEvent("CHAT_MSG_MONSTER_YELL")
 	RaidAchievement_pzra:RegisterEvent("CHAT_MSG_MONSTER_SAY")
@@ -121,7 +117,7 @@ pzracounter1=0
 
 if UnitGUID("boss1") and UnitName("boss1")~="" then
 	local id2=UnitGUID("boss1")
-	local id=raGetUnitID(id2)
+	local id=tonumber(string.sub(id2,6,10),16)
 
 else
 rachtimerbossrecheck=GetTime()+3
@@ -141,7 +137,7 @@ racountaddskilled=nil
 
 if UnitGUID("boss1") and UnitName("boss1")~="" then
 	local id2=UnitGUID("boss1")
-	local id=raGetUnitID(id2)
+	local id=tonumber(string.sub(id2,6,10),16)
 
 
 
@@ -225,7 +221,7 @@ end
 
 if arg2=="UNIT_DIED" and razfailekilloneadd==nil then
   if pzraspisokon[2]==1 then
-  local id=raGetUnitID(arg7)
+  local id=tonumber(string.sub(arg7,6,10),16)
   if id==59779 or id==64381 then
     pzrafailnoreason(2)
     razfailekilloneadd=1
@@ -287,7 +283,7 @@ if GetCurrentMapAreaID()==880 then
 
 if arg2=="UNIT_DIED" and rascbochka==nil then
   if pzraspisokon[6]==1 then
-  local id=raGetUnitID(arg7)
+  local id=tonumber(string.sub(arg7,6,10),16)
   if id==62682 then
       pzrafailnoreason(6)
       rascbochka=1
@@ -326,7 +322,7 @@ end
 if GetCurrentMapAreaID()==906 then
 
 if arg2=="UNIT_DIED" then
-  local id=raGetUnitID(arg7)
+  local id=tonumber(string.sub(arg7,6,10),16)
   if id==64956 then
     if pzraspisokon[9]==1 and pzraachdone1 then
       pzrafailnoreason(9)
@@ -347,7 +343,7 @@ end
 --свинг удар от вратолома
 if arg2=="SWING_DAMAGE" then
   if pzraspisokon[10]==1 and pzraachdone1 then
-    local id=raGetUnitID(arg4)
+    local id=tonumber(string.sub(arg4,6,10),16)
     if id==64479 or id==58787 then
       pzrafailnoreason(10,arg8)
     end
@@ -363,7 +359,7 @@ end
 if GetCurrentMapAreaID()==883 then
 
 if arg2=="UNIT_DIED" then
-  local id=raGetUnitID(arg7)
+  local id=tonumber(string.sub(arg7,6,10),16)
   if id==2351 then
     if pzraspisokon[11]==1 and pzraachdone1 then
       pzrafailnoreason(11)
@@ -382,7 +378,7 @@ if arg2=="SPELL_DAMAGE" and arg10==133121 then
   if racountaddskilled==nil then
     racountaddskilled=0
   end
-  local id=raGetUnitID(arg7)
+  local id=tonumber(string.sub(arg7,6,10),16)
   if id==68037 or id==67257 or id==67259 then
     racountaddskilled=racountaddskilled+1
   end
@@ -405,47 +401,6 @@ end
 
 
 
-
-end
---
-
-
-
-
-
-if arg2=="SPELL_CAST_SUCCESS" and arg10==141423 then
-  if pzraspisokon[13]==1 then
-    local id=raGetUnitID(arg3)
-    if id==70544 then
-      pzrafailnoreason(13)
-    end
-  end
-end
-
-if arg2=="SPELL_DAMAGE" and arg10==132938 and rascbochka2==nil then
-  if pzraspisokon[14]==1 then
-    raunitisplayer(arg7,arg8)
-    if raunitplayertrue then
-      pzrafailnoreason(14,arg8)
-      rascbochka2=1
-    end
-  end
-end
-
-
---секреты огненной пропасти
-if GetCurrentMapAreaID()==938 then
-
-if (arg2=="SPELL_DAMAGE" or arg2=="SWING_DAMAGE") and rascbochka2==nil then
-  --получение ид
-  if pzraspisokon[15]==1 then
-      local id=raGetUnitID(arg7)
-      if id==70605 or id==70606 or id==70607 or id==70608 or id==70609 then
-        pzrafailnoreason(15,arg8)
-        rascbochka2=1
-      end
-  end
-end
 
 end
 --
@@ -553,7 +508,7 @@ end
 function pzragalochki()
 for i=1,#pzraspisokach5 do
 if pzracbset[i] then
-if(pzraspisokon[i]==1)then pzracbset[i]:SetChecked(true) else pzracbset[i]:SetChecked(false) end
+if(pzraspisokon[i]==1)then pzracbset[i]:SetChecked() else pzracbset[i]:SetChecked(false) end
 end
 end
 end

@@ -1,4 +1,4 @@
-## Interface: 60000
+## Interface: 60200
 ## Title: RareCoordinator
 ## Notes: Syncs the rare mob kill timers on the Timeless Isle across the realm
 ## Author: Elvador

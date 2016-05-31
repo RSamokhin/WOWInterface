@@ -1,6 +1,14 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local S = E:GetModule('Skins')
 
+--Cache global variables
+--Lua functions
+local _G = _G
+local unpack = unpack
+--WoW API / Variables
+local GuildControlGetNumRanks = GuildControlGetNumRanks
+local MAX_BUY_GUILDBANK_TABS = MAX_BUY_GUILDBANK_TABS
+
 local function LoadSkin()
 	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.guildcontrol ~= true then return end
 	GuildControlUI:StripTextures()
@@ -59,6 +67,7 @@ local function LoadSkin()
 			frame.bg1 = frame:CreateTexture(nil, "BACKGROUND")
 			frame.bg1:SetDrawLayer("BACKGROUND", 4)
 			frame.bg1:SetTexture(E["media"].normTex) --Default TukUI users this is normTex, normTex doesn't exist
+			E:RegisterStatusBar(frame.bg1)
 			frame.bg1:SetVertexColor(unpack(E['media'].backdropcolor))
 			frame.bg1:Point("TOPLEFT", frame.backdrop, 'TOPLEFT', E.mult*4, -E.mult*4)
 			frame.bg1:Point("BOTTOMRIGHT", frame.backdrop, 'BOTTOMRIGHT', -E.mult*4, E.mult*4)
@@ -84,6 +93,7 @@ local function LoadSkin()
 			frame.bg1 = frame:CreateTexture(nil, "BACKGROUND")
 			frame.bg1:SetDrawLayer("BACKGROUND", 4)
 			frame.bg1:SetTexture(E["media"].normTex) --Default TukUI users this is normTex, normTex doesn't exist
+			E:RegisterStatusBar(frame.bg1)
 			frame.bg1:SetVertexColor(unpack(E['media'].backdropcolor))
 			frame.bg1:SetInside(frame.backdrop, E.mult)
 

@@ -5,7 +5,7 @@
 ## Dependancies: Auc-Advanced
 ## OptionalDependencies: Auc-Util-Appraiser, Enchantrix, Auc-Util-ItemSuggest, LibDataBroker
 ##
-## Version: 5.21e.5566 (SanctimoniousSwamprat)
+## Version: 5.21f.5579 (SanctimoniousSwamprat)
 ## Revision: $Id: Auc-Util-AutoMagic.toc 5564 2015-06-26 23:43:33Z dinesh $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer

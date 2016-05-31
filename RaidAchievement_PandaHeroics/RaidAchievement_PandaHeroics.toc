@@ -1,9 +1,9 @@
-﻿## Interface: 60200
+## Interface: 60200
 ## Title: Raid|cff7fff7fAchievement|r - Pandaria Dungeons
-## Title-ruRU: Raid|cff7fff7fAchievement|r - Подземелья Пандарии
+## Title-ruRU: Raid|cff7fff7fAchievement|r - ?????????? ????????
 ## Author: Shurshik
 ## Notes: RaidAchievement Pandaria Dungeons Module
-## Notes-ruRU: Модуль RaidAchievement - Подземелья Пандарии
+## Notes-ruRU: ?????? RaidAchievement - ?????????? ????????
 ## Dependencies: RaidAchievement
 ## LoadOnDemand: 1
 ## SavedVariablesPerCharacter: phraspisokon

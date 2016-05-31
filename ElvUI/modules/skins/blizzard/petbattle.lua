@@ -1,6 +1,16 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local S = E:GetModule('Skins')
 
+--Cache global variables
+--Lua functions
+local pairs, unpack = pairs, unpack
+--WoW API / Variables
+local C_PetBattles_GetPetType = C_PetBattles.GetPetType
+local C_PetBattles_GetNumAuras = C_PetBattles.GetNumAuras
+local C_PetBattles_GetAuraInfo = C_PetBattles.GetAuraInfo
+local PET_TYPE_SUFFIX = PET_TYPE_SUFFIX
+local PET_BATTLE_PAD_INDEX = PET_BATTLE_PAD_INDEX
+
 local function LoadSkin()
 	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.petbattleui ~= true then return end
 	local f = PetBattleFrame
@@ -31,7 +41,7 @@ local function LoadSkin()
 		infoBar.HealthBarBackdrop:SetTemplate("Transparent")
 		infoBar.HealthBarBackdrop:Width(infoBar.healthBarWidth + (E.Border * 2))
 		infoBar.ActualHealthBar:SetTexture(E.media.normTex)
-
+		E:RegisterStatusBar(infoBar.ActualHealthBar)
 		infoBar.PetTypeFrame = CreateFrame("Frame", nil, infoBar)
 		infoBar.PetTypeFrame:Size(100, 23)
 		infoBar.PetTypeFrame.text = infoBar.PetTypeFrame:CreateFontString(nil, 'OVERLAY')
@@ -53,10 +63,10 @@ local function LoadSkin()
 
 			infoBar.ActualHealthBar:Point('BOTTOMLEFT', infoBar.Icon, 'BOTTOMRIGHT', 10, 0)
 			infoBar.Name:Point('BOTTOMLEFT', infoBar.ActualHealthBar, 'TOPLEFT', 0, 10)
-			infoBar.PetTypeFrame:SetPoint("BOTTOMRIGHT",infoBar.HealthBarBackdrop, "TOPRIGHT", 0, 4)
-			infoBar.PetTypeFrame.text:SetPoint("RIGHT")
+			infoBar.PetTypeFrame:Point("BOTTOMRIGHT",infoBar.HealthBarBackdrop, "TOPRIGHT", 0, 4)
+			infoBar.PetTypeFrame.text:Point("RIGHT")
 
-			infoBar.FirstAttack:SetPoint("LEFT", infoBar.HealthBarBackdrop, "RIGHT", 5, 0)
+			infoBar.FirstAttack:Point("LEFT", infoBar.HealthBarBackdrop, "RIGHT", 5, 0)
 			infoBar.FirstAttack:SetTexCoord(infoBar.SpeedIcon:GetTexCoord())
 			infoBar.FirstAttack:SetVertexColor(.1,.1,.1,1)
 
@@ -70,16 +80,16 @@ local function LoadSkin()
 			infoBar.ActualHealthBar:Point('BOTTOMRIGHT', infoBar.Icon, 'BOTTOMLEFT', -10, 0)
 			infoBar.Name:Point('BOTTOMRIGHT', infoBar.ActualHealthBar, 'TOPRIGHT', 0, 10)
 
-			infoBar.PetTypeFrame:SetPoint("BOTTOMLEFT",infoBar.HealthBarBackdrop, "TOPLEFT", 2, 4)
-			infoBar.PetTypeFrame.text:SetPoint("LEFT")
+			infoBar.PetTypeFrame:Point("BOTTOMLEFT",infoBar.HealthBarBackdrop, "TOPLEFT", 2, 4)
+			infoBar.PetTypeFrame.text:Point("LEFT")
 
-			infoBar.FirstAttack:SetPoint("RIGHT", infoBar.HealthBarBackdrop, "LEFT", -5, 0)
+			infoBar.FirstAttack:Point("RIGHT", infoBar.HealthBarBackdrop, "LEFT", -5, 0)
 			infoBar.FirstAttack:SetTexCoord(.5, 0, .5, 1)
 			infoBar.FirstAttack:SetVertexColor(.1,.1,.1,1)
 		end
 
 		infoBar.HealthText:ClearAllPoints()
-		infoBar.HealthText:SetPoint('CENTER', infoBar.HealthBarBackdrop, 'CENTER')
+		infoBar.HealthText:Point('CENTER', infoBar.HealthBarBackdrop, 'CENTER')
 
 		infoBar.PetType:ClearAllPoints()
 		infoBar.PetType:SetAllPoints(infoBar.PetTypeFrame)
@@ -92,7 +102,7 @@ local function LoadSkin()
 		infoBar.Level:Point('BOTTOMLEFT', infoBar.Icon, 'BOTTOMLEFT', 2, 2)
 		if infoBar.SpeedIcon then
 			infoBar.SpeedIcon:ClearAllPoints()
-			infoBar.SpeedIcon:SetPoint("CENTER") -- to set
+			infoBar.SpeedIcon:Point("CENTER") -- to set
 			infoBar.SpeedIcon:SetAlpha(0)
 			infoBar.SpeedUnderlay:SetAlpha(0)
 		end
@@ -120,7 +130,7 @@ local function LoadSkin()
 	-- PETS UNITFRAMES PET TYPE UPDATE
 	hooksecurefunc("PetBattleUnitFrame_UpdatePetType", function(self)
 		if self.PetType then
-			local petType = C_PetBattles.GetPetType(self.petOwner, self.petIndex)
+			local petType = C_PetBattles_GetPetType(self.petOwner, self.petIndex)
 			if self.PetTypeFrame then
 				self.PetTypeFrame.text:SetText(PET_TYPE_SUFFIX[petType])
 			end
@@ -132,8 +142,8 @@ local function LoadSkin()
 		if not self.petOwner or not self.petIndex then return end
 
 		local nextFrame = 1
-		for i=1, C_PetBattles.GetNumAuras(self.petOwner, self.petIndex) do
-			local auraID, instanceID, turnsRemaining, isBuff = C_PetBattles.GetAuraInfo(self.petOwner, self.petIndex, i)
+		for i=1, C_PetBattles_GetNumAuras(self.petOwner, self.petIndex) do
+			local auraID, instanceID, turnsRemaining, isBuff = C_PetBattles_GetAuraInfo(self.petOwner, self.petIndex, i)
 			if (isBuff and self.displayBuffs) or (not isBuff and self.displayDebuffs) then
 				local frame = self.frames[nextFrame]
 
@@ -154,28 +164,28 @@ local function LoadSkin()
 				end
 
 				-- move duration and change font
-				frame.Duration:FontTemplate(E.media.font, 12, "OUTLINE")
+				frame.Duration:FontTemplate(E.media.normFont, 12, "OUTLINE")
 				frame.Duration:ClearAllPoints()
-				frame.Duration:SetPoint("TOP", frame.Icon, "BOTTOM", 1, -4)
+				frame.Duration:Point("TOP", frame.Icon, "BOTTOM", 1, -4)
 				if turnsRemaining > 0 then
 					frame.Duration:SetText(turnsRemaining)
 				end
 				nextFrame = nextFrame + 1
 			end
 		end
-end)
+	end)
 
 	-- WEATHER
 	hooksecurefunc("PetBattleWeatherFrame_Update", function(self)
-		local weather = C_PetBattles.GetAuraInfo(LE_BATTLE_PET_WEATHER, PET_BATTLE_PAD_INDEX, 1)
+		local weather = C_PetBattles_GetAuraInfo(LE_BATTLE_PET_WEATHER, PET_BATTLE_PAD_INDEX, 1)
 		if weather then
 			self.Icon:Hide()
 			self.Name:Hide()
 			self.DurationShadow:Hide()
 			self.Label:Hide()
-			self.Duration:SetPoint("CENTER", self, 0, 8)
+			self.Duration:Point("CENTER", self, 0, 8)
 			self:ClearAllPoints()
-			self:SetPoint("TOP", E.UIParent, 0, -15)
+			self:Point("TOP", E.UIParent, 0, -15)
 		end
 	end)
 
@@ -184,7 +194,7 @@ end)
 	end)
 
 	f.TopVersusText:ClearAllPoints()
-	f.TopVersusText:SetPoint("TOP", f, "TOP", 0, -42)
+	f.TopVersusText:Point("TOP", f, "TOP", 0, -42)
 
 	-- TOOLTIPS SKINNING
 	local function SkinPetTooltip(tt)
@@ -221,7 +231,7 @@ end)
 			point, x, y = "BOTTOMRIGHT", -4, 4
 		end
 		t:ClearAllPoints()
-		t:SetPoint(point, E.UIParent, point, x, y)
+		t:Point(point, E.UIParent, point, x, y)
 	end)
 
 
@@ -242,7 +252,7 @@ end)
 
 		infoBar.healthBarWidth = 40
 		infoBar.ActualHealthBar:ClearAllPoints()
-		infoBar.ActualHealthBar:SetPoint("TOPLEFT", infoBar.backdrop, 'BOTTOMLEFT', E.Border, -3)
+		infoBar.ActualHealthBar:Point("TOPLEFT", infoBar.backdrop, 'BOTTOMLEFT', E.Border, -3)
 
 		infoBar.HealthBarBackdrop = CreateFrame("Frame", nil, infoBar)
 		infoBar.HealthBarBackdrop:SetFrameLevel(infoBar:GetFrameLevel() - 1)
@@ -252,10 +262,10 @@ end)
 		infoBar.HealthBarBackdrop:Point('BOTTOMLEFT', infoBar.ActualHealthBar, 'BOTTOMLEFT', -E.Border, -E.Spacing)
 	end
 
-	f.Ally2:SetPoint("TOPRIGHT", f.Ally2.iconPoint, "TOPLEFT", -6, -2)
-	f.Ally3:SetPoint('TOPRIGHT', f.Ally2, 'TOPLEFT', -8, 0)
-	f.Enemy2:SetPoint("TOPLEFT", f.Enemy2.iconPoint, "TOPRIGHT", 6, -2)
-	f.Enemy3:SetPoint('TOPLEFT', f.Enemy2, 'TOPRIGHT', 8, 0)
+	f.Ally2:Point("TOPRIGHT", f.Ally2.iconPoint, "TOPLEFT", -6, -2)
+	f.Ally3:Point('TOPRIGHT', f.Ally2, 'TOPLEFT', -8, 0)
+	f.Enemy2:Point("TOPLEFT", f.Enemy2.iconPoint, "TOPRIGHT", 6, -2)
+	f.Enemy3:Point('TOPLEFT', f.Enemy2, 'TOPRIGHT', 8, 0)
 
 	---------------------------------
 	-- PET BATTLE ACTION BAR SETUP --
@@ -265,7 +275,7 @@ end)
 	bar:SetSize (52*6 + 7*10, 52 * 1 + 10*2)
 	bar:EnableMouse(true)
 	bar:SetTemplate()
-	bar:SetPoint("BOTTOM", E.UIParent, "BOTTOM", 0, 4)
+	bar:Point("BOTTOM", E.UIParent, "BOTTOM", 0, 4)
 	bar:SetFrameLevel(0)
 	bar:SetFrameStrata('BACKGROUND')
 	bar.backdropTexture:SetDrawLayer('BACKGROUND', 0)
@@ -285,7 +295,7 @@ end)
 
 	bf.TurnTimer.SkipButton:Width(bar:GetWidth())
 	bf.TurnTimer.SkipButton:ClearAllPoints()
-	bf.TurnTimer.SkipButton:SetPoint("BOTTOM", bar, "TOP", 0, E.PixelMode and -1 or 1)
+	bf.TurnTimer.SkipButton:Point("BOTTOM", bar, "TOP", 0, E.PixelMode and -1 or 1)
 	hooksecurefunc(bf.TurnTimer.SkipButton, "SetPoint", function(self, point, attachTo, anchorPoint, xOffset, yOffset)
 		if point ~= "BOTTOM" or anchorPoint ~= "TOP" or xOffset ~= 0 or yOffset ~= (E.PixelMode and -1 or 1) then
 			bf.TurnTimer.SkipButton:ClearAllPoints()
@@ -295,8 +305,8 @@ end)
 
 	bf.TurnTimer:Size(bf.TurnTimer.SkipButton:GetWidth(), bf.TurnTimer.SkipButton:GetHeight())
 	bf.TurnTimer:ClearAllPoints()
-	bf.TurnTimer:SetPoint("TOP", E.UIParent, "TOP", 0, -140)
-	bf.TurnTimer.TimerText:SetPoint("CENTER")
+	bf.TurnTimer:Point("TOP", E.UIParent, "TOP", 0, -140)
+	bf.TurnTimer.TimerText:Point("CENTER")
 
 	bf.FlowFrame:StripTextures()
 	bf.MicroButtonFrame:Kill()
@@ -305,9 +315,9 @@ end)
 	bf.xpBar:Width(bar:GetWidth() - (E.Border * 2))
 	bf.xpBar:CreateBackdrop()
 	bf.xpBar:ClearAllPoints()
-	bf.xpBar:SetPoint("BOTTOM", bf.TurnTimer.SkipButton, "TOP", 0, E.PixelMode and 0 or 3)
+	bf.xpBar:Point("BOTTOM", bf.TurnTimer.SkipButton, "TOP", 0, E.PixelMode and 0 or 3)
 	bf.xpBar:SetScript("OnShow", function(self) self:StripTextures() self:SetStatusBarTexture(E.media.normTex) end)
-
+	E:RegisterStatusBar(bf.xpBar)
 	-- PETS SELECTION SKIN
 	for i = 1, 3 do
 		local pet = bf.PetSelectionFrame["Pet"..i]
@@ -328,7 +338,7 @@ end)
 	-- MOVE DEFAULT POSITION OF PETS SELECTION
 	hooksecurefunc("PetBattlePetSelectionFrame_Show", function()
 		bf.PetSelectionFrame:ClearAllPoints()
-		bf.PetSelectionFrame:SetPoint("BOTTOM", bf.xpBar, "TOP", 0, 8)
+		bf.PetSelectionFrame:Point("BOTTOM", bf.xpBar, "TOP", 0, 8)
 	end)
 
 
@@ -356,23 +366,23 @@ end)
 			b:SetParent(bar)
 			b:ClearAllPoints()
 			if i == 1 then
-				b:SetPoint("BOTTOMLEFT", 10, 10)
+				b:Point("BOTTOMLEFT", 10, 10)
 			else
 				local previous = bf.abilityButtons[i-1]
-				b:SetPoint("LEFT", previous, "RIGHT", 10, 0)
+				b:Point("LEFT", previous, "RIGHT", 10, 0)
 			end
 		end
 
 		bf.SwitchPetButton:ClearAllPoints()
-		bf.SwitchPetButton:SetPoint("LEFT", bf.abilityButtons[3], "RIGHT", 10, 0)
+		bf.SwitchPetButton:Point("LEFT", bf.abilityButtons[3], "RIGHT", 10, 0)
 		SkinPetButton(bf.SwitchPetButton)
 		bf.CatchButton:SetParent(bar)
 		bf.CatchButton:ClearAllPoints()
-		bf.CatchButton:SetPoint("LEFT", bf.SwitchPetButton, "RIGHT", 10, 0)
+		bf.CatchButton:Point("LEFT", bf.SwitchPetButton, "RIGHT", 10, 0)
 		SkinPetButton(bf.CatchButton)
 		bf.ForfeitButton:SetParent(bar)
 		bf.ForfeitButton:ClearAllPoints()
-		bf.ForfeitButton:SetPoint("LEFT", bf.CatchButton, "RIGHT", 10, 0)
+		bf.ForfeitButton:Point("LEFT", bf.CatchButton, "RIGHT", 10, 0)
 		SkinPetButton(bf.ForfeitButton)
 	end)
 

@@ -1,13 +1,13 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local B = E:GetModule('Bags');
-
+local Search = LibStub('LibItemSearch-1.2-ElvUI');
 --Cache global variables
 --Lua functions
 local ipairs, pairs, tonumber, select, unpack = ipairs, pairs, tonumber, select, unpack
 local tinsert, tremove, tsort, twipe = table.insert, table.remove, table.sort, table.wipe
 local floor = math.floor
 local band = bit.band
-local match, split, gmatch = string.match, string.split, string.gmatch
+local match, split, gmatch, find = string.match, string.split, string.gmatch, string.find
 --WoW API / Variables
 local GetTime = GetTime
 local InCombatLockdown = InCombatLockdown
@@ -268,10 +268,6 @@ local function UpdateSorted(source, destination)
 	end
 end
 
-local blackList = {
-	["Hearthstone"] = true,
-}
-
 local function ShouldMove(source, destination)
 	if destination == source then return end
 
@@ -525,14 +521,22 @@ end
 
 local blackListedSlots = {}
 local blackList = {}
+local blackListQueries = {}
 
 local function buildBlacklist(...)
 	twipe(blackList)
+	twipe(blackListQueries)
 	for index = 1, select('#', ...) do
-		local name = select(index, ...)
-		local isLink = GetItemInfo(name)
-		if isLink then
-			blackList[isLink] = true
+		local entry = select(index, ...)
+		local itemName = GetItemInfo(entry)
+		if itemName then
+			blackList[itemName] = true
+		elseif entry ~= "" then
+			if find(entry, "%[") and find(entry, "%]") then
+				--For some reason the entry was not treated as a valid item. Extract the item name.
+				entry = match(entry, "%[(.*)%]")
+			end
+			blackListQueries[#blackListQueries+1] = entry
 		end
 	end
 end
@@ -545,14 +549,27 @@ function B.Sort(bags, sorter, invertDirection)
 
 	local ignoreItems = B.db.ignoreItems
 	ignoreItems = ignoreItems:gsub(',%s', ',') --remove spaces that follow a comma
+	ignoreItems = ignoreItems:gsub("\n", "") --remove accidental newlines
 	buildBlacklist(split(",", ignoreItems))
 
 	for i, bag, slot in B.IterateBags(bags, nil, 'both') do
 		local bagSlot = B:Encode_BagSlot(bag, slot)
 		local link = B:GetItemLink(bag, slot);
 
-		if link and blackList[GetItemInfo(link)] then
-			blackListedSlots[bagSlot] = true
+		if link then
+			if blackList[GetItemInfo(link)] then
+				blackListedSlots[bagSlot] = true
+			end
+
+			if not blackListedSlots[bagSlot] then
+				for _,itemsearchquery in pairs(blackListQueries) do
+					local success, result = pcall(Search.Matches, Search, link, itemsearchquery)
+					if success and result then
+						blackListedSlots[bagSlot] = result
+						break
+					end
+				end
+			end
 		end
 
 		if not blackListedSlots[bagSlot] then

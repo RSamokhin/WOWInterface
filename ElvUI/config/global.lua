@@ -4,6 +4,9 @@
 G['general'] = {
 	["autoScale"] = true,
 	["eyefinity"] = false,
+	['smallerWorldMap'] = true,
+	['WorldMapCoordinates'] = true,
+	["disableTutorialButtons"] = true,
 }
 
 G['classtimer'] = {}

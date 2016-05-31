@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(846, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 74 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 5 $"):sub(12, -3))
 mod:SetCreatureID(71454)
 mod:SetEncounterID(1595)
 mod:SetZone()
@@ -23,10 +23,13 @@ spellid = 143913 or spellid =  143805 or spellid = 142851 or (spellid = 143199 o
 http://worldoflogs.com/reports/rt-092xfequ7ks2205b/xe/?s=7029&e=7304&x=spellid+%3D+143913+or+spellid+%3D++143805+or+spellid+%3D+142851+or+%28spellid+%3D+143199+or+spellid+%3D+142842+or+spellid+%3D+142879%29+and+fulltype+%3D+SPELL_CAST_START
 --]]
 --Endless Rage
+local warnBloodRage						= mod:NewSpellAnnounce(142879, 3)
 local warnDisplacedEnergy				= mod:NewTargetAnnounce(142913, 3)
 --Might of the Kor'kron
+local warnArcingSmash					= mod:NewCountAnnounce(142815, 4)--Target scanning doesn't work, no boss1target or boss1targettarget
 local warnSeismicSlam					= mod:NewCountAnnounce(142851, 3)
-local warnFatalStrike					= mod:NewStackAnnounce(142990, 2, nil, "Tank")
+local warnBreathofYShaarj				= mod:NewCountAnnounce(142842, 4)
+local warnFatalStrike					= mod:NewStackAnnounce(142990, 2, nil, mod:IsTank())
 
 --Endless Rage
 local specWarnBloodRage					= mod:NewSpecialWarningSpell(142879, nil, nil, nil, 2)
@@ -40,20 +43,22 @@ local specWarnBreathofYShaarj			= mod:NewSpecialWarningCount(142842, nil, nil, n
 local specWarnFatalStrike				= mod:NewSpecialWarningStack(142990, nil, 12)--stack guessed, based on CD
 local specWarnFatalStrikeOther			= mod:NewSpecialWarningTaunt(142990)
 
-local timerBloodRage					= mod:NewBuffActiveTimer(22.5, 142879, nil, nil, nil, 6)--2.5sec cast plus 20 second duration
-local timerDisplacedEnergyCD			= mod:NewNextTimer(11, 142913, nil, nil, nil, 3)
+local timerBloodRage					= mod:NewBuffActiveTimer(22.5, 142879)--2.5sec cast plus 20 second duration
+local timerDisplacedEnergyCD			= mod:NewNextTimer(11, 142913)
 --Might of the Kor'kron
-local timerArcingSmashCD				= mod:NewCDCountTimer(19, 142815, nil, nil, nil, 3)
-local timerImplodingEnergy				= mod:NewCastTimer(10, 142986, nil, nil, nil, 5)--Always 10 seconds after arcing
-local timerSeismicSlamCD				= mod:NewNextCountTimer(19.5, 142851, nil, nil, nil, 3)--Works exactly same as arcingsmash 18 sec unless delayed by breath. two sets of 3
-local timerBreathofYShaarjCD			= mod:NewNextCountTimer(70, 142842, nil, nil, nil, 2)
-local timerFatalStrike					= mod:NewTargetTimer(30, 142990, nil, "Tank", nil, 5)
+local timerArcingSmashCD				= mod:NewCDCountTimer(19, 142815)
+local timerImplodingEnergy				= mod:NewCastTimer(10, 142986)--Always 10 seconds after arcing
+local timerSeismicSlamCD				= mod:NewNextCountTimer(19.5, 142851)--Works exactly same as arcingsmash 18 sec unless delayed by breath. two sets of 3
+local timerBreathofYShaarjCD			= mod:NewNextCountTimer(70, 142842)
+local timerFatalStrike					= mod:NewTargetTimer(30, 142990, nil, mod:IsTank())
 
 local berserkTimer						= mod:NewBerserkTimer(360)
 
 local countdownImplodingEnergy			= mod:NewCountdown(10, 142986, nil, nil, 5)
 
 local countdownBreathofYShaarj			= mod:NewCountdown(10, 142842, nil, nil, 5, nil, true)
+
+local soundDisplacedEnergy				= mod:NewSound(142913)
 
 mod:AddRangeFrameOption("8/5")--Various things
 mod:AddSetIconOption("SetIconOnDisplacedEnergy", 142913, false)
@@ -114,11 +119,13 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 142879 then
 		self.vb.displacedCast = false
 		self.vb.rageActive = true
+		warnBloodRage:Show()
 		specWarnBloodRage:Show()
 		timerBloodRage:Start()
 		timerDisplacedEnergyCD:Start(3.5)
 	elseif spellId == 142842 then
 		self.vb.breathCast = self.vb.breathCast + 1
+		warnBreathofYShaarj:Show(self.vb.breathCast)
 		specWarnBreathofYShaarj:Show(self.vb.breathCast)
 		if self.vb.breathCast == 1 then
 			self.vb.arcingSmashCount = 0
@@ -133,7 +140,7 @@ function mod:SPELL_CAST_START(args)
 					local tanking, status = UnitDetailedThreatSituation(uId, "boss1")
 					if status == 3 then
 						if UnitIsUnit("player", uId) then return end
-						DBM.Arrow:ShowRunTo(uId, 3, 5)
+						DBM.Arrow:ShowRunTo(uId, 3, 3, 5)
 						break
 					end
 				end
@@ -179,6 +186,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		playerDebuffs = playerDebuffs + 1
 		if args:IsPlayer() then
 			specWarnDisplacedEnergy:Show()
+			soundDisplacedEnergy:Play()
 			yellDisplacedEnergy:Yell()
 		end
 		if not self.vb.displacedCast then--Only cast twice, so we only start cd bar once here
@@ -233,6 +241,7 @@ end
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 142898 then--Faster than combat log
 		self.vb.arcingSmashCount = self.vb.arcingSmashCount + 1
+		warnArcingSmash:Show(self.vb.arcingSmashCount)
 		specWarnArcingSmash:Show(self.vb.arcingSmashCount)
 		timerImplodingEnergy:Start()
 		countdownImplodingEnergy:Start()

@@ -1,4 +1,4 @@
-## Interface: 60000
+## Interface: 60200
 ## Author: Jaybee
 ## Version: 1.01
 ## Title: |cff1784d1RaidachievmentsAFKModuleElvUI|r

@@ -16,6 +16,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(849)
 
 L:SetWarningLocalization({
+	warnCalamity		= "%s",
 	specWarnCalamity	= "%s",
 	specWarnMeasures	= "Verzweifelte Maßnahmen bald (%s)!"
 })

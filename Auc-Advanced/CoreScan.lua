@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21e.5566 (SanctimoniousSwamprat)
-	Revision: $Id: CoreScan.lua 5549 2015-03-17 19:51:52Z brykrys $
+	Version: 5.21f.5579 (SanctimoniousSwamprat)
+	Revision: $Id: CoreScan.lua 5577 2015-12-16 18:46:12Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -156,6 +156,7 @@ local Const = _G.AucAdvanced.Const
 local Resources = AucAdvanced.Resources
 local _print,decode,_,_,replicate,empty,get,set,default,debugPrint,fill, _TRANS = _G.AucAdvanced.GetModuleLocals()
 local GetFaction = _G.AucAdvanced.GetFaction
+local ResolveServerKey = AucAdvanced.ResolveServerKey
 local EquipCodeToInvIndex = _G.AucAdvanced.Const.EquipCodeToInvIndex
 
 local table, tinsert, tremove, gsub, string, coroutine, pcall, time = _G.table, _G.tinsert, _G.tremove, _G.gsub, _G.string, _G.coroutine, _G.pcall, _G.time
@@ -231,9 +232,14 @@ function private.LoadScanData()
 		-- cannot load Auc-ScanData, go to fallback image handler
 		local fallbackscandata = {}
 		private.GetScanData = function(serverKey)
+			serverKey = ResolveServerKey(serverKey)
+			if not serverKey then
+				debugPrint("Fallback-ScanData: invalid serverKey passed to GetScanData", "ScanData", "Invalid serverKey", "Error")
+				return
+			end
 			local scandata = fallbackscandata[serverKey]
 			if scandata then return scandata end
-			local test = _G.AucAdvanced.SplitServerKey(serverKey)
+			local test = AucAdvanced.SplitServerKey(serverKey)
 			if not test then return end
 			scandata = {image = {}, scanstats = {ImageUpdated = time()}}
 			fallbackscandata[serverKey] = scandata
@@ -971,6 +977,7 @@ local Commitfunction = function()
 
 	local progresscounter = 0
 	local progresstotal = 3*oldCount + 7*scanCount
+	if progresstotal == 0 then progresstotal = 1 end -- dummy value to avoid potential div0. ### this needs a better solution
 
 	local filterOldCount, filterNewCount, updateCount, sameCount, newCount, updateRecoveredCount, sameRecoveredCount, missedCount = 0,0,0,0, 0,0,0,0
 	local unresolvedCount = 0
@@ -2072,38 +2079,20 @@ local StorePageFunction = function()
 	local numBatchAuctions, totalAuctions = GetNumAuctionItems("list")
 	local maxPages = ceil(totalAuctions / NUM_AUCTION_ITEMS_PER_PAGE)
 	local isGetAll = false
-	local isGetAllFail = false -- used to handle Blizzard bug {ADV-595}
-	local hybridStartScanPage
-	if (numBatchAuctions > NUM_AUCTION_ITEMS_PER_PAGE) then
+	local isGetAllFail = false -- flag to handle certain GetAll failure situations
+	if numBatchAuctions > NUM_AUCTION_ITEMS_PER_PAGE then
 		isGetAll = true
 		maxPages = 1
-		if totalAuctions ~= numBatchAuctions then
-			-- Blizzard bug - these should be the same for a GetAll scan {ADV-595}
-			if get("core.scan.hybridscans") and not private.warningCanSendBug then
-				qryinfo.hybrid = true
-				hybridStartScanPage = floor(numBatchAuctions / NUM_AUCTION_ITEMS_PER_PAGE) -- where to start paged part of hybrid scan from
-				local wholePageAuctions = hybridStartScanPage * NUM_AUCTION_ITEMS_PER_PAGE -- where to end scanning GetAll to match up with paged part (this may be less than numBatchAuctions)
-				if nLog then
-					nLog.AddMessage("Auctioneer", "Scan", N_INFO, "StorePage commencing Hybrid scan",
-						format("Batch size %d\nHybrid start page %d\nGetAll limit %d\nReported total auctions %d",
-						numBatchAuctions, hybridStartScanPage, wholePageAuctions, totalAuctions))
-				end
-
-				numBatchAuctions = wholePageAuctions
-				totalAuctions = numBatchAuctions
-				_print("|cffff7f3fThe Server has not sent all data for this GetAll scan.|r")
-				_print("Auctioneer will use Hybrid scanning to retrieve the missing auctions.")
-			else
-				isGetAllFail = true
-				if nLog then
-					nLog.AddMessage("Auctioneer", "Scan", N_INFO, "StorePage incomplete GetAll",
-						format("Batch size %d\nReported total auctions %d",
-						numBatchAuctions, totalAuctions))
-				end
-				totalAuctions = numBatchAuctions
-				_print("|cffff7f3fThe Server has not sent all data for this GetAll scan. The scan will be incomplete.|r")
-				_print("It may not be possible to complete a GetAll scan on this server at this time.")
+		if totalAuctions ~= numBatchAuctions then -- check for invalid values from server (residual test in case it starts to happen again...)
+			isGetAllFail = true
+			if nLog then
+				nLog.AddMessage("Auctioneer", "Scan", N_WARNING, "StorePage incomplete GetAll",
+					format("Batch size %d\nReported total auctions %d",
+					numBatchAuctions, totalAuctions))
 			end
+			totalAuctions = numBatchAuctions
+			_print("|cffff7f3fThe Server has not sent all data for this GetAll scan. The scan will be incomplete.|r")
+			_print("Please report this in the Auctioneer forums.")
 		end
 		EventFramesRegistered = {GetFramesRegisteredForEvent("AUCTION_ITEM_LIST_UPDATE")}
 		for _, frame in pairs(EventFramesRegistered) do
@@ -2359,20 +2348,7 @@ local StorePageFunction = function()
 	local endTime = GetTime()
 	if not private.breakStorePage then
 		-- Send the next page query or finish scanning
-		if qryinfo.hybrid then
-			if hybridStartScanPage then
-				-- we've just done the GetAll part of the hybrid; start the paged part
-				private.ScanPage(hybridStartScanPage)
-			else
-				if (page+1 < maxPages) then
-					private.ScanPage(page + 1)
-				else
-					elapsed = endTime - private.scanStarted - private.totalPaused
-					private.UpdateScanProgress(nil, totalAuctions, #curScan, elapsed, page+2, maxPages, curQuery)
-					private.Commit(false, false, false)
-				end
-			end
-		elseif isGetAll then
+		if isGetAll then
 				elapsed = endTime - private.scanStarted - private.totalPaused
 				private.UpdateScanProgress(nil, totalAuctions, #curScan, elapsed, page+2, maxPages, curQuery) -- page+2 signals that scan is done
 				private.Commit(isGetAllFail, false, true)
@@ -2430,7 +2406,7 @@ local StorePageFunction = function()
 	if private.warningCanSendBug then
 		private.warningCanSendBug = nil
 		if not CanSendAuctionQuery() then
-			_G.message("The Server is not responding correctly.\nClosing and reopening the Auctionhouse may fix this problem.")
+			--_G.message("The Server is not responding correctly.\nClosing and reopening the Auctionhouse may fix this problem.") -- ### suppressed
 		end
 	end
 end
@@ -2682,12 +2658,30 @@ end
 private.CanSend = CanSendAuctionQuery
 
 function QueryAuctionItems(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, page, isUsable, qualityIndex, GetAll, exactMatch, ...)
-	if not private.isAuctioneerQuery and not get("core.scan.scanallqueries")then
+	if not private.isAuctioneerQuery then
 		-- Optional bypass to handle compatibility problems with other AddOns
-		return private.Hook.QueryAuctionItems(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, page, isUsable, qualityIndex, GetAll, exactMatch, ...)
+		local doBypass = false
+		if private.compatModeLocks then
+			local scanbit = private.isBlizzardQuery and 2 or 1
+			for lock, mode in pairs(private.compatModeLocks) do
+				if bitand(mode, scanbit) ~= 0 then -- another AddOn has requested we bypass this scan type
+					doBypass = true
+					break
+				end
+			end
+			private.compatModeLocks[""] = nil -- remove anonymous lock (if present)
+		end
+		doBypass = doBypass or not get("core.scan.scanallqueries")
+		if doBypass then
+			return private.Hook.QueryAuctionItems(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, page, isUsable, qualityIndex, GetAll, exactMatch, ...)
+		end
 	end
 
 	private.isAuctioneerQuery = nil
+	private.isBlizzardQuery = nil
+	if private.compatModeLocks and not next(private.compatModeLocks) then
+		private.compatModeLocks = nil -- remove table if empty
+	end
 	if private.warnTaint then
 		_print("\nAuctioneer:\n  WARNING, The CanSendAuctionQuery() function was tainted by the addon: {{"..private.warnTaint.."}}.\n  This may cause minor inconsistencies with scanning.\n  If possible, adjust the load order to get me to load first.\n ")
 		private.warnTaint = nil
@@ -2758,6 +2752,32 @@ end
 -- Function to indicate that the next call to QueryAuctionItems comes from Auctioneer itself.
 function lib.SetAuctioneerQuery()
 	private.isAuctioneerQuery = true
+end
+
+--[[ Function for third-party AddOns to change Auctioneer's scanning behaviour to avoid compatibility issues
+	Duplicates or overrides certain compatibility Config settings
+	mode 1 : don't scan next raw call to QueryAuctionItems (i.e. neither isAuctioneerQuery nor isBlizzardQuery is set)
+	mode 2 : don't scan next Blizzard query (i.e. isBlizzardQuery is set but isAuctioneerQuery is not set)
+
+	lock : optional lock "key" (preferably string containing AddOn name for uniqueness)
+		given mode will persist until cancelled: cancel by calling CompatibilityMode with mode 0 and the same lock "key"
+--]]
+function lib.CompatibilityMode(mode, lock)
+	if type(mode) ~= "number" or floor(mode) ~= mode then
+		error("AucAdvanced.Scan.CompatibilityMode(mode, lock)\nmode must be a number (bitfield)", 2)
+	end
+	lock = lock or "" -- use "" as key for anonymous locks, which are removed by the next call to QueryAuctionItems
+	if not private.compatModeLocks then
+		private.compatModeLocks = {}
+	end
+
+	if lock == "" then -- anonymous lock
+		private.compatModeLocks[lock] = bitor(private.compatModeLocks[lock] or 0, mode) -- merge modes
+	elseif mode == 0 then
+		private.compatModeLocks[lock] = nil
+	else
+		private.compatModeLocks[lock] = mode -- overwrite mode
+	end
 end
 
 function lib.SetPaused(pause)
@@ -3093,12 +3113,7 @@ function lib.GetStackedScanCount()
 	return scanCount
 end
 
-function lib.AHClosed()
-	lib.Interrupt()
-end
-
-function lib.Logout()
-	_G.AucAdvancedData.Scandata = nil -- delete obsolete data. it's here because CoreScan doesn't have an OnLoad processor
+function coremodule.OnUnload()
 	if (private.curQuery) then
 		private.Commit(true, false, false)
 	end
@@ -3109,8 +3124,16 @@ function lib.Logout()
 	end
 end
 
-
 coremodule.Processors = {}
+function coremodule.Processors.auctionui()
+	private.Hook.AuctionFrameBrowse_Search = AuctionFrameBrowse_Search
+	function AuctionFrameBrowse_Search()
+		private.isBlizzardQuery = true
+		private.Hook.AuctionFrameBrowse_Search()
+		private.isBlizzardQuery = nil
+	end
+end
+
 function coremodule.Processors.scanstats(event, scanstats)
 	private.clearImageCaches(event, scanstats)
 end
@@ -3119,6 +3142,7 @@ function coremodule.Processors.auctionclose(event)
 	-- clearup memory usage when AH closed
 	private.ResetItemInfoCache()
 	private.clearImageCaches(event)
+	lib.Interrupt()
 end
 
 if Resources.PlayerFaction == "Neutral" then
@@ -3150,7 +3174,4 @@ function internal.Scan.NotifyOwnedListUpdated()
 --	end
 end
 
-internal.Scan.Logout = lib.Logout
-internal.Scan.AHClosed = lib.AHClosed
-
-_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Advanced/CoreScan.lua $", "$Rev: 5549 $")
+_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Advanced/CoreScan.lua $", "$Rev: 5577 $")

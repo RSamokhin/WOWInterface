@@ -12,6 +12,7 @@ L= DBM:GetModLocalization(852)
 L= DBM:GetModLocalization(849)
 
 L:SetWarningLocalization({
+	warnCalamity		= "%s",
 	specWarnCalamity	= "%s",
 	specWarnMeasures	= "곧 궁책 (%s)!"
 })

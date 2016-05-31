@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 5.21e.5566 (SanctimoniousSwamprat)
+	Version: 5.21f.5579 (SanctimoniousSwamprat)
 	Revision: $Id: CoreResources.lua 5285 2012-04-17 15:45:55Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -126,7 +126,6 @@ local function OnEvent(self, event, ...)
 		if lib.AuctionHouseOpen then
 			lib.AuctionHouseOpen = false
 			AucAdvanced.SendProcessorMessage("auctionclose")
-			internal.Scan.AHClosed()
 		end
 	elseif event == "MAIL_SHOW" then
 		lib.MailboxOpen = true

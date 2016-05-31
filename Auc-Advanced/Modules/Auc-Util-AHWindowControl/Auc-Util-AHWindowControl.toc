@@ -6,7 +6,7 @@
 ## Disabled: 0
 ## Dependencies: Auc-Advanced
 ##
-## Version: 5.21e.5566 (SanctimoniousSwamprat)
+## Version: 5.21f.5579 (SanctimoniousSwamprat)
 ## Revision: $Id: Auc-Util-AHWindowControl.toc
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer

@@ -1,6 +1,6 @@
 ﻿-- Mini Dragon(projecteurs@gmail.com)
 -- Blizzard Entertainment
--- Last update: Dec 13 2015, 04:13 UTC@14710
+-- Last update: Feb 18 2016, 18:59 UTC@14798
 
 if GetLocale() ~= "zhCN" then return end
 local L
@@ -135,6 +135,10 @@ L= DBM:GetModLocalization(1394)
 --------------------------
 L= DBM:GetModLocalization(1395)
 
+L:SetOptionLocalization({
+	CustomAssignWrath	= "使用玩家角色决定$spell:186348的图标(团长开启有效, 可能和BW或过期DBM冲突)"
+})
+
 L:SetMiscLocalization({
 	felSpire		=	"开始强化邪能尖塔！"
 })
@@ -158,7 +162,8 @@ L:SetOptionLocalization({
 	Numbered				= "星星，大饼，菱形，三角。 适合任何站位方式。",--Default
 	LocSmallFront			= "近战（左星星，右大饼），远程（左菱形，右三角）。Debuff时间短的去近战位。",
 	LocSmallBack			= "近战（左星星，右大饼），远程（左菱形，右三角）。Debuff时间短的去远程位。",
-	NoAssignment			= "关闭全部提示。如果你用了其他插件。"
+	NoAssignment			= "关闭全部提示。如果你用了其他插件。",
+	overrideMarkOfLegion	= "不允许团长覆盖军团印记的行为(只推荐给自信满满的高级玩家使用)"
 })
 
 L:SetMiscLocalization({

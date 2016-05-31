@@ -1,6 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.21e.5566 (SanctimoniousSwamprat)
+	Version: 5.21f.5579 (SanctimoniousSwamprat)
 	Revision: $Id: EnxSettings.lua 5536 2014-12-12 15:26:40Z brykrys $
 	URL: http://enchantrix.org/
 
@@ -63,7 +63,7 @@ Usage:
 
 ]]
 
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Enchantrix/EnxSettings.lua $", "$Rev: 5536 $")
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Enchantrix/EnxSettings.lua $", "$Rev: 5536 $")
 
 local lib = {}
 Enchantrix.Settings = lib

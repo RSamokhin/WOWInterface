@@ -1,30 +1,28 @@
-﻿## Interface: 60200
+## Interface: 60200
 ## X-Min-Interface: 50001
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Scenario-MoP|r
-## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Сценарии-MoP|r
-## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0시나리오-판다리아의 안개|r
+## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0????????-MoP|r
+## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0????-????? ??|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Szenarien-MoP|r
-## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0场景战役|r
-## Title-frFR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Scénario-MoP|r
-## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0事件-潘達利亞之謎|r
+## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0????|r
+## Title-frFR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Sc�nario-MoP|r
+## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0??-??????|r
 ## Author: MysticalOS/Arta
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
-## SavedVariables: DBMScenarioMoP_AllSavedVars
-## SavedVariablesPerCharacter: DBMScenarioMoP_SavedStats
+## SavedVariablesPerCharacter: DBMScenarioMoP_SavedVars, DBMScenarioMoP_SavedStats
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: SCENARIO
 ## X-DBM-Mod-Category: MOP
 ## X-DBM-Mod-Name: Scenario (MoP)
-## X-DBM-Mod-Name-ruRU: Сценарии (MoP)
-## X-DBM-Mod-Name-koKR: 시나리오(판다리아의 안개)
+## X-DBM-Mod-Name-ruRU: ???????? (MoP)
+## X-DBM-Mod-Name-koKR: ????(????? ??)
 ## X-DBM-Mod-Name-deDE: Szenarien (MoP)
-## X-DBM-Mod-Name-zhTW: 事件 (潘達利亞之謎)
-## X-DBM-Mod-Name-zhCN: 场景战役 (熊猫人之谜)
-## X-DBM-Mod-Name-frFR: Scénario (MoP)
+## X-DBM-Mod-Name-zhTW: ?? (??????)
+## X-DBM-Mod-Name-zhCN: ???? (?????)
+## X-DBM-Mod-Name-frFR: Sc�nario (MoP)
 ## X-DBM-Mod-Sort: 230
 ## X-DBM-Mod-MapID: 1000,999,1031,1103,1102,1135,1112,1030,1005,1104,1050,1048,1051,1095,1024,1130,1144,1099,1131,1157
-## X-DBM-Mod-MinCoreRevision: 14565
 localization.en.lua
 localization.kr.lua
 localization.de.lua

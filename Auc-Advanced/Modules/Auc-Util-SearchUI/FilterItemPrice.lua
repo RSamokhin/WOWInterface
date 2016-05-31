@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreItemPrice
-	Version: 5.21e.5566 (SanctimoniousSwamprat)
+	Version: 5.21f.5579 (SanctimoniousSwamprat)
 	Revision: $Id: FilterItemPrice.lua 5556 2015-04-15 11:20:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -288,4 +288,4 @@ function lib.PostFilter(item, searcher, buyorbid)
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Util-SearchUI/FilterItemPrice.lua $", "$Rev: 5556 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Util-SearchUI/FilterItemPrice.lua $", "$Rev: 5556 $")

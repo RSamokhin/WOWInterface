@@ -1,6 +1,17 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local S = E:GetModule('Skins')
 
+--Cache global variables
+--Lua functions
+local _G = _G
+local unpack, select, pairs = unpack, select, pairs
+--WoW API / Variables
+local CreateFrame = CreateFrame
+local SquareButton_SetIcon = SquareButton_SetIcon
+
+--Global variables that we don't cache, list them here for mikk's FindGlobals script
+-- GLOBALS: LibStub
+
 local AceGUI = LibStub("AceGUI-3.0", true)
 local RegisterAsWidget, RegisterAsContainer
 local function SetModifiedBackdrop(self)
@@ -108,10 +119,10 @@ function S:SkinAce3()
 
 			SkinButton(widget.button)
 			SkinScrollBar(widget.scrollBar)
-			widget.scrollBar:SetPoint("RIGHT", frame, "RIGHT", 0 -4)
-			widget.scrollBG:SetPoint("TOPRIGHT", widget.scrollBar, "TOPLEFT", -2, 19)
-			widget.scrollBG:SetPoint("BOTTOMLEFT", widget.button, "TOPLEFT")
-			widget.scrollFrame:SetPoint("BOTTOMRIGHT", widget.scrollBG, "BOTTOMRIGHT", -4, 8)
+			widget.scrollBar:Point("RIGHT", frame, "RIGHT", 0 -4)
+			widget.scrollBG:Point("TOPRIGHT", widget.scrollBar, "TOPLEFT", -2, 19)
+			widget.scrollBG:Point("BOTTOMLEFT", widget.button, "TOPLEFT")
+			widget.scrollFrame:Point("BOTTOMRIGHT", widget.scrollBG, "BOTTOMRIGHT", -4, 8)
 		elseif TYPE == "CheckBox" then
 			widget.checkbg:Kill()
 			widget.highlight:Kill()
@@ -206,6 +217,13 @@ function S:SkinAce3()
 			frame:CreateBackdrop('Default', true)
 			frame.backdrop:SetInside()
 			widget.text:SetParent(frame.backdrop)
+		elseif TYPE == "Button-ElvUI" then
+			local frame = widget.frame
+			SkinButton(frame, nil, true)
+			frame:StripTextures()
+			frame:CreateBackdrop('Default', true)
+			frame.backdrop:SetInside()
+			widget.text:SetParent(frame.backdrop)
 		elseif TYPE == "Slider" then
 			local frame = widget.slider
 			local editbox = widget.editbox
@@ -224,8 +242,8 @@ function S:SkinAce3()
 			editbox:Height(15)
 			editbox:Point("TOP", frame, "BOTTOM", 0, -1)
 
-			lowtext:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 2, -2)
-			hightext:SetPoint("TOPRIGHT", frame, "BOTTOMRIGHT", -2, -2)
+			lowtext:Point("TOPLEFT", frame, "BOTTOMLEFT", 2, -2)
+			hightext:Point("TOPRIGHT", frame, "BOTTOMRIGHT", -2, -2)
 
 
 		--[[elseif TYPE == "ColorPicker" then
@@ -276,7 +294,7 @@ function S:SkinAce3()
 					button.toggle.SetPushedTexture = E.noop
 					button.toggleText = button.toggle:CreateFontString(nil, 'OVERLAY')
 					button.toggleText:FontTemplate(nil, 19)
-					button.toggleText:SetPoint('CENTER')
+					button.toggleText:Point('CENTER')
 					button.toggleText:SetText('+')
 					return button
 				end

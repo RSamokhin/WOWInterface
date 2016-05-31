@@ -40,7 +40,7 @@ function M:SetLargeWorldMap()
 	WorldMapFrameSizeDownButton:Show()
 
 	WorldMapFrame:ClearAllPoints()
-	WorldMapFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 100)
+	WorldMapFrame:Point("CENTER", UIParent, "CENTER", 0, 100)
 	WorldMapFrame:SetSize(1002, 668)
 end
 
@@ -103,21 +103,23 @@ end
 function M:Initialize()
 	--setfenv(WorldMapFrame_OnShow, setmetatable({ UpdateMicroButtons = function() end }, { __index = _G })) --blizzard taint fix
 
-	local CoordsHolder = CreateFrame('Frame', 'CoordsHolder', WorldMapFrame)
-	CoordsHolder:SetFrameLevel(WorldMapDetailFrame:GetFrameLevel() + 1)
-	CoordsHolder:SetFrameStrata(WorldMapDetailFrame:GetFrameStrata())
-	CoordsHolder.playerCoords = CoordsHolder:CreateFontString(nil, 'OVERLAY')
-	CoordsHolder.mouseCoords = CoordsHolder:CreateFontString(nil, 'OVERLAY')
-	CoordsHolder.playerCoords:SetTextColor(1, 1 ,0)
-	CoordsHolder.mouseCoords:SetTextColor(1, 1 ,0)
-	CoordsHolder.playerCoords:SetFontObject(NumberFontNormal)
-	CoordsHolder.mouseCoords:SetFontObject(NumberFontNormal)
-	CoordsHolder.playerCoords:SetPoint("BOTTOMLEFT", WorldMapFrame.BorderFrame.Inset, "BOTTOMLEFT", 5, 5)
-	CoordsHolder.playerCoords:SetText(PLAYER..":   0, 0")
-	CoordsHolder.mouseCoords:SetPoint("BOTTOMLEFT", CoordsHolder.playerCoords, "TOPLEFT", 0, 5)
-	CoordsHolder.mouseCoords:SetText(MOUSE_LABEL..":   0, 0")
+	if(E.global.general.WorldMapCoordinates) then
+		local CoordsHolder = CreateFrame('Frame', 'CoordsHolder', WorldMapFrame)
+		CoordsHolder:SetFrameLevel(WorldMapDetailFrame:GetFrameLevel() + 1)
+		CoordsHolder:SetFrameStrata(WorldMapDetailFrame:GetFrameStrata())
+		CoordsHolder.playerCoords = CoordsHolder:CreateFontString(nil, 'OVERLAY')
+		CoordsHolder.mouseCoords = CoordsHolder:CreateFontString(nil, 'OVERLAY')
+		CoordsHolder.playerCoords:SetTextColor(1, 1 ,0)
+		CoordsHolder.mouseCoords:SetTextColor(1, 1 ,0)
+		CoordsHolder.playerCoords:SetFontObject(NumberFontNormal)
+		CoordsHolder.mouseCoords:SetFontObject(NumberFontNormal)
+		CoordsHolder.playerCoords:Point("BOTTOMLEFT", WorldMapFrame.BorderFrame.Inset, "BOTTOMLEFT", 5, 5)
+		CoordsHolder.playerCoords:SetText(PLAYER..":   0, 0")
+		CoordsHolder.mouseCoords:Point("BOTTOMLEFT", CoordsHolder.playerCoords, "TOPLEFT", 0, 5)
+		CoordsHolder.mouseCoords:SetText(MOUSE_LABEL..":   0, 0")
 
-	self:ScheduleRepeatingTimer('UpdateCoords', 0.05)
+		self:ScheduleRepeatingTimer('UpdateCoords', 0.05)
+	end
 
 	if(E.global.general.smallerWorldMap) then
 		BlackoutWorld:SetTexture(nil)

@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 5.21e.5566 (SanctimoniousSwamprat)
-	Revision: $Id: CoreMain.lua 5524 2014-11-23 18:06:32Z brykrys $
+	Version: 5.21f.5579 (SanctimoniousSwamprat)
+	Revision: $Id: CoreMain.lua 5569 2015-08-15 16:51:11Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -378,7 +378,6 @@ local function OnEvent(self, event, arg1, arg2, ...)
 		-- they should check for their own name (lowercased) in arg1
 		AucAdvanced.SendProcessorMessage("loadfail", arg1, event)
 	elseif event == "PLAYER_LOGOUT" then
-		internal.Scan.Logout()
 		OnUnload()
 	elseif event == "PLAYER_ENTERING_WORLD" then
 		OnEnteringWorld(self)
@@ -411,4 +410,4 @@ do -- ScheduleMessage handler
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Advanced/CoreMain.lua $", "$Rev: 5524 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Advanced/CoreMain.lua $", "$Rev: 5569 $")

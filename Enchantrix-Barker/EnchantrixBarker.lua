@@ -1,6 +1,6 @@
 ﻿--[[
 	Enchantrix:Barker Addon for World of Warcraft(tm).
-	Version: 5.21e.5566 (SanctimoniousSwamprat)
+	Version: 5.21f.5579 (SanctimoniousSwamprat)
 	Revision: $Id: EnchantrixBarker.lua 5139 2011-05-01 18:22:28Z kandoko $
 	URL: http://enchantrix.org/
 
@@ -30,7 +30,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 
 ]]
-EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Enchantrix-Barker/EnchantrixBarker.lua $", "$Rev: 5139 $")
+EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Enchantrix-Barker/EnchantrixBarker.lua $", "$Rev: 5139 $")
 
 -- ccox - WoW 3.0 API change
 local GetCraftInfoFunc = GetCraftInfo or GetTradeSkillInfo;

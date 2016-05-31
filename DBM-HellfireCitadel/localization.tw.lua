@@ -137,6 +137,10 @@ L= DBM:GetModLocalization(1394)
 --------------------------
 L= DBM:GetModLocalization(1395)
 
+L:SetOptionLocalization({
+	CustomAssignWrath	= "基於角色專精設置$spell:186348的團隊圖示(必須由團隊隊長開啟。可能會與BW或過期DBM衝突)"
+})
+
 L:SetMiscLocalization({
 	felSpire		=	"開始強化惡魔尖塔！"
 })
@@ -160,7 +164,8 @@ L:SetOptionLocalization({
 	Numbered				= "星星、圈圈、鑽石、三角。適用任何站位的打法。",--Default
 	LocSmallFront			= "近戰(左星星、右圈圈)、遠程(左鑽石、右三角)。 短時間減益在近戰。",
 	LocSmallBack			= "近戰(左星星、右圈圈)、遠程(左鑽石、右三角)。 短時間減益在遠程。",
-	NoAssignment			= "為整個團隊禁用所有站位大喊/訊息，還有HUD指示。"
+	NoAssignment			= "為整個團隊禁用所有站位大喊/訊息，還有HUD指示。",
+	overrideMarkOfLegion	= "不允許團隊隊長覆蓋軍團印記的行為(只推薦給進階玩家使用)"
 })
 
 L:SetMiscLocalization({

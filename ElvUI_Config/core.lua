@@ -1,7 +1,10 @@
 ﻿local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local D = E:GetModule("Distributor")
+local AceGUI = LibStub("AceGUI-3.0")
 
 local tsort, tinsert = table.sort, table.insert
 local floor, ceil = math.floor, math.ceil
+local format = string.format
 local DEFAULT_WIDTH = 890;
 local DEFAULT_HEIGHT = 651;
 local AC = LibStub("AceConfig-3.0-ElvUI")
@@ -16,7 +19,7 @@ function E:RefreshGUI()
 	self:RefreshCustomTextsConfigs()
 	ACR:NotifyChange("ElvUI")
 end
-
+E.Options.name = E.UIName
 E.Options.args = {
 	ElvUI_Header = {
 		order = 1,
@@ -71,7 +74,7 @@ E.Options.args.general = {
 		intro = {
 			order = 1,
 			type = "description",
-			name = L["ELVUI_DESC"],
+			name = L["ELVUI_DESC"]:gsub('ElvUI', E.UIName),
 		},
 		general = {
 			order = 2,
@@ -80,8 +83,8 @@ E.Options.args.general = {
 			args = {
 				pixelPerfect = {
 					order = 1,
-					name = L["Pixel Perfect"],
-					desc = L["The Pixel Perfect option will change the overall apperance of your UI. Using Pixel Perfect is a slight performance increase over the traditional layout."],
+					name = L["Thin Border Theme"],
+					desc = L["The Thin Border Theme option will change the overall apperance of your UI. Using Thin Border Theme is a slight performance increase over the traditional layout."],
 					type = 'toggle',
 					get = function(info) return E.private.general.pixelPerfect end,
 					set = function(info, value) E.private.general.pixelPerfect = value; E:StaticPopup_Show("PRIVATE_RL") end
@@ -206,11 +209,27 @@ E.Options.args.general = {
 					get = function(info) return E.global.general.smallerWorldMap end,
 					set = function(info, value) E.global.general.smallerWorldMap = value; E:StaticPopup_Show("GLOBAL_RL") end
 				},
-				enhancedPvpMessages = {
+				WorldMapCoordinates = {
 					order = 17,
+					type = 'toggle',
+					name = L["World Map Coordinates"],
+					desc = L["Puts coordinates on the world map."],
+					get = function(info) return E.global.general.WorldMapCoordinates end,
+					set = function(info, value) E.global.general.WorldMapCoordinates = value; E:StaticPopup_Show("GLOBAL_RL") end
+				},
+				enhancedPvpMessages = {
+					order = 18,
 					type = 'toggle',
 					name = L["Enhanced PVP Messages"],
 					desc = L["Display battleground messages in the middle of the screen."],
+				},
+				disableTutorialButtons = {
+					order = 19,
+					type = 'toggle',
+					name = L["Disable Tutorial Buttons"],
+					desc = L["Disables the tutorial button found on some frames."],
+					get = function(info) return E.global.general.disableTutorialButtons end,
+					set = function(info, value) E.global.general.disableTutorialButtons = value; E:StaticPopup_Show("GLOBAL_RL") end,
 				},
 				chatBubbles = {
 					order = 30,
@@ -281,9 +300,54 @@ E.Options.args.general = {
 							values = AceGUIWidgetLSMlists.font,
 							set = function(info, value) E.db.general[ info[#info] ] = value; E:UpdateMedia(); E:UpdateFontTemplates(); end,
 						},
+						applyFontToAll = {
+							order = 3,
+							type = 'execute',
+							name = L["Apply Font To All"],
+							desc = L["Applies the font and font size settings throughout the entire user interface. Note: Some font size settings will be skipped due to them having a smaller font size by default."],
+							func = function()
+								local font = E.db.general.font
+								local fontSize = E.db.general.fontSize
+
+								E.db.bags.itemLevelFont = font
+								E.db.bags.itemLevelFontSize = fontSize
+								E.db.bags.countFont = font
+								E.db.bags.countFontSize = fontSize
+								E.db.nameplate.font = font
+								--E.db.nameplate.fontSize = fontSize --Dont use this because nameplate font it somewhat smaller than the rest of the font sizes
+								E.db.nameplate.buffs.font = font
+								--E.db.nameplate.buffs.fontSize = fontSize  --Dont use this because nameplate font it somewhat smaller than the rest of the font sizes
+								E.db.nameplate.debuffs.font = font
+								--E.db.nameplate.debuffs.fontSize = fontSize   --Dont use this because nameplate font it somewhat smaller than the rest of the font sizes
+								E.db.auras.font = font
+								E.db.auras.fontSize = fontSize
+								E.db.auras.consolidatedBuffs.font = font
+								--E.db.auras.consolidatedBuffs.fontSize = fontSize --Size is smaller by default
+								E.db.chat.font = font
+								E.db.chat.fontSize = fontSize
+								E.db.chat.tabFont = font
+								E.db.chat.tapFontSize = fontSize
+								E.db.datatexts.font = font
+								E.db.datatexts.fontSize = fontSize
+								E.db.tooltip.font = font
+								E.db.tooltip.fontSize = fontSize
+								E.db.tooltip.headerFontSize = fontSize
+								E.db.tooltip.textFontSize = fontSize
+								E.db.tooltip.smallTextFontSize = fontSize
+								E.db.tooltip.healthBar.font = font
+								--E.db.tooltip.healthbar.fontSize = fontSize -- Size is smaller than default
+								E.db.unitframe.font = font
+								--E.db.unitframe.fontSize = fontSize  -- Size is smaller than default
+								E.db.unitframe.units.party.rdebuffs.font = font
+								E.db.unitframe.units.raid.rdebuffs.font = font
+								E.db.unitframe.units.raid40.rdebuffs.font = font
+
+								E:UpdateAll(true)
+							end,
+						},
 						dmgfont = {
 							type = "select", dialogControl = 'LSM30_Font',
-							order = 3,
+							order = 4,
 							name = L["CombatText Font"],
 							desc = L["The font that combat text will use. |cffFF0000WARNING: This requires a game restart or re-log for this change to take effect.|r"],
 							values = AceGUIWidgetLSMlists.font,
@@ -292,7 +356,7 @@ E.Options.args.general = {
 						},
 						namefont = {
 							type = "select", dialogControl = 'LSM30_Font',
-							order = 4,
+							order = 5,
 							name = L["Name Font"],
 							desc = L["The font that appears on the text above players heads. |cffFF0000WARNING: This requires a game restart or re-log for this change to take effect.|r"],
 							values = AceGUIWidgetLSMlists.font,
@@ -300,7 +364,7 @@ E.Options.args.general = {
 							set = function(info, value) E.private.general[ info[#info] ] = value; E:UpdateMedia(); E:UpdateFontTemplates(); E:StaticPopup_Show("PRIVATE_RL"); end,
 						},
 						replaceBlizzFonts = {
-							order = 5,
+							order = 6,
 							type = 'toggle',
 							name = L["Replace Blizzard Fonts"],
 							desc = L["Replaces the default Blizzard fonts on various panels and frames with the fonts chosen in the Media section of the ElvUI config. NOTE: Any font that inherits from the fonts ElvUI usually replaces will be affected as well if you disable this. Enabled by default."],
@@ -322,7 +386,19 @@ E.Options.args.general = {
 							desc = L["The texture that will be used mainly for statusbars."],
 							values = AceGUIWidgetLSMlists.statusbar,
 							get = function(info) return E.private.general[ info[#info] ] end,
-							set = function(info, value) E.private.general[ info[#info] ] = value; E:StaticPopup_Show("PRIVATE_RL") end
+							set = function(info, value)
+								local previousValue = E.private.general[ info[#info] ]
+								E.private.general[ info[#info] ] = value;
+
+								if(E.db.unitframe.statusbar == previousValue) then
+									E.db.unitframe.statusbar = value
+									E:UpdateAll(true)
+								else
+									E:UpdateMedia()
+									E:UpdateStatusBars()
+								end
+
+							end
 						},
 						glossTex = {
 							type = "select", dialogControl = 'LSM30_Statusbar',
@@ -331,7 +407,22 @@ E.Options.args.general = {
 							desc = L["This texture will get used on objects like chat windows and dropdown menus."],
 							values = AceGUIWidgetLSMlists.statusbar,
 							get = function(info) return E.private.general[ info[#info] ] end,
-							set = function(info, value) E.private.general[ info[#info] ] = value; E:StaticPopup_Show("PRIVATE_RL") end
+							set = function(info, value)
+								E.private.general[ info[#info] ] = value;
+								E:UpdateMedia()
+								E:UpdateFrameTemplates()
+							end
+						},
+						applyFontToAll = {
+							order = 3,
+							type = 'execute',
+							name = L["Apply Texture To All"],
+							desc = L["Applies the primary texture to all statusbars."],
+							func = function()
+								local texture = E.private.general.normTex
+								E.db.unitframe.statusbar = texture
+								E:UpdateAll(true)
+							end,
 						},
 					},
 				},
@@ -345,7 +436,7 @@ E.Options.args.general = {
 							type = "color",
 							order = 1,
 							name = L["Border Color"],
-							desc = L["Main border color of the UI. |cffFF0000This is disabled if you are using the pixel perfect theme.|r"],
+							desc = L["Main border color of the UI. |cffFF0000This is disabled if you are using the Thin Border Theme.|r"],
 							hasAlpha = false,
 							get = function(info)
 								local t = E.db.general[ info[#info] ]
@@ -780,6 +871,11 @@ E.Options.args.general = {
 									name = L["yOffset"],
 									min = -50, max = 50, step = 1,
 								},
+								hide = {
+									order = 5,
+									type = 'toggle',
+									name = L["Hide"],
+								},
 							},
 						},
 					},
@@ -804,22 +900,22 @@ E.Options.args.general = {
 					type = "toggle",
 					name = L["Mouseover"],
 				},
-				spacer = {
+				hideAtMaxLevel = {
 					order = 2,
-					type = 'description',
-					name = ' '
+					type = "toggle",
+					name = L["Hide At Max Level"],
+					set = function(info, value) E.db.general.experience[ info[#info] ] = value; E:GetModule('Misc'):UpdateExperience() end,
 				},
-				width = {
+				hideInVehicle = {
 					order = 3,
-					type = "range",
-					name = L["Width"],
-					min = 5, max = ceil(GetScreenWidth() or 800), step = 1,
+					type = "toggle",
+					name = L["Hide In Vehicle"],
+					set = function(info, value) E.db.general.experience[ info[#info] ] = value; E:GetModule('Misc'):UpdateExperience() end,
 				},
-				height = {
+				reverseFill = {
 					order = 4,
-					type = "range",
-					name = L["Height"],
-					min = 5, max = ceil(GetScreenHeight() or 800), step = 1,
+					type = "toggle",
+					name = L["Reverse Fill Direction"],
 				},
 				orientation = {
 					order = 5,
@@ -831,13 +927,26 @@ E.Options.args.general = {
 						['VERTICAL'] = L["Vertical"]
 					}
 				},
-				reverseFill = {
+				width = {
 					order = 6,
-					type = "toggle",
-					name = L["Reverse Fill Direction"],
+					type = "range",
+					name = L["Width"],
+					min = 5, max = ceil(GetScreenWidth() or 800), step = 1,
+				},
+				height = {
+					order = 7,
+					type = "range",
+					name = L["Height"],
+					min = 5, max = ceil(GetScreenHeight() or 800), step = 1,
+				},
+				textSize = {
+					order = 8,
+					name = L["Font Size"],
+					type = "range",
+					min = 6, max = 22, step = 1,
 				},
 				textFormat = {
-					order = 7,
+					order = 9,
 					type = 'select',
 					name = L["Text Format"],
 					values = {
@@ -847,12 +956,6 @@ E.Options.args.general = {
 						CURPERC = L["Current - Percent"],
 					},
 					set = function(info, value) E.db.general.experience[ info[#info] ] = value; E:GetModule('Misc'):UpdateExperience() end,
-				},
-				textSize = {
-					order = 8,
-					name = L["Font Size"],
-					type = "range",
-					min = 6, max = 22, step = 1,
 				},
 			},
 		},
@@ -874,25 +977,19 @@ E.Options.args.general = {
 					type = "toggle",
 					name = L["Mouseover"],
 				},
-				spacer = {
+				hideInVehicle = {
 					order = 2,
-					type = 'description',
-					name = ' '
+					type = "toggle",
+					name = L["Hide In Vehicle"],
+					set = function(info, value) E.db.general.reputation[ info[#info] ] = value; E:GetModule('Misc'):UpdateReputation() end,
 				},
-				width = {
+				reverseFill = {
 					order = 3,
-					type = "range",
-					name = L["Width"],
-					min = 5, max = ceil(GetScreenWidth() or 800), step = 1,
-				},
-				height = {
-					order = 4,
-					type = "range",
-					name = L["Height"],
-					min = 5, max = ceil(GetScreenHeight() or 800), step = 1,
+					type = "toggle",
+					name = L["Reverse Fill Direction"],
 				},
 				orientation = {
-					order = 5,
+					order = 4,
 					type = "select",
 					name = L["Orientation"],
 					desc = L["Direction the bar moves on gains/losses"],
@@ -901,13 +998,8 @@ E.Options.args.general = {
 						['VERTICAL'] = L["Vertical"]
 					}
 				},
-				reverseFill = {
-					order = 6,
-					type = "toggle",
-					name = L["Reverse Fill Direction"],
-				},
 				textFormat = {
-					order = 7,
+					order = 5,
 					type = 'select',
 					name = L["Text Format"],
 					values = {
@@ -917,6 +1009,18 @@ E.Options.args.general = {
 						CURPERC = L["Current - Percent"],
 					},
 					set = function(info, value) E.db.general.reputation[ info[#info] ] = value; E:GetModule('Misc'):UpdateReputation() end,
+				},
+				width = {
+					order = 6,
+					type = "range",
+					name = L["Width"],
+					min = 5, max = ceil(GetScreenWidth() or 800), step = 1,
+				},
+				height = {
+					order = 7,
+					type = "range",
+					name = L["Height"],
+					min = 5, max = ceil(GetScreenHeight() or 800), step = 1,
 				},
 				textSize = {
 					order = 8,
@@ -1208,6 +1312,223 @@ E.Options.args.credits = {
 	},
 }
 
+local profileTypeItems = {
+	["profile"] = L["Profile"],
+	["private"] = L["Private (Character Settings)"],
+	["global"] = L["Global (Account Settings)"],
+	["filtersNP"] = L["Filters (NamePlates)"],
+	["filtersUF"] = L["Filters (UnitFrames)"],
+	["filtersAll"] = L["Filters (All)"],
+}
+local profileTypeListOrder = {
+	"profile",
+	"private",
+	"global",
+	"filtersNP",
+	"filtersUF",
+	"filtersAll",
+}
+local exportTypeItems = {
+	["text"] = L["Text"],
+	["luaTable"] = L["Table"],
+	["luaPlugin"] = L["Plugin"],
+}
+local exportTypeListOrder = {
+	"text",
+	"luaTable",
+	"luaPlugin",
+}
+
+local exportString = ""
+local function ExportImport_Open(mode)
+	local Frame = AceGUI:Create("Frame")
+	Frame:SetTitle("")
+	Frame:EnableResize(false)
+	Frame:SetWidth(800)
+	Frame:SetHeight(600)
+	Frame.frame:SetFrameStrata("FULLSCREEN_DIALOG")
+	Frame:SetLayout("flow")
+
+
+	local Box = AceGUI:Create("MultiLineEditBox");
+	Box:SetNumLines(30)
+	Box:DisableButton(true)
+	Box:SetWidth(800)
+	Box:SetLabel("")
+	Frame:AddChild(Box)
+	--Save original script so we can restore it later
+	Box.editBox.OnTextChangedOrig = Box.editBox:GetScript("OnTextChanged")
+
+	local Label1 = AceGUI:Create("Label")
+	local font = GameFontHighlightSmall:GetFont()
+	Label1:SetFont(font, 14)
+	Label1:SetText(".") --Set temporary text so height is set correctly
+	Label1:SetWidth(800)
+	Frame:AddChild(Label1)
+
+	local Label2 = AceGUI:Create("Label")
+	local font = GameFontHighlightSmall:GetFont()
+	Label2:SetFont(font, 14)
+	Label2:SetText(".\n.")
+	Label2:SetWidth(800)
+	Frame:AddChild(Label2)
+
+	if mode == "export" then
+		Frame:SetTitle(L["Export Profile"])
+
+		local ProfileTypeDropdown = AceGUI:Create("Dropdown")
+		ProfileTypeDropdown:SetMultiselect(false)
+		ProfileTypeDropdown:SetLabel(L["Choose What To Export"])
+		ProfileTypeDropdown:SetList(profileTypeItems, profileTypeListOrder)
+		ProfileTypeDropdown:SetValue("profile") --Default export
+		Frame:AddChild(ProfileTypeDropdown)
+
+		local ExportFormatDropdown = AceGUI:Create("Dropdown")
+		ExportFormatDropdown:SetMultiselect(false)
+		ExportFormatDropdown:SetLabel(L["Choose Export Format"])
+		ExportFormatDropdown:SetList(exportTypeItems, exportTypeListOrder)
+		ExportFormatDropdown:SetValue("text") --Default format
+		ExportFormatDropdown:SetWidth(150)
+		Frame:AddChild(ExportFormatDropdown)
+
+		local exportButton = AceGUI:Create("Button")
+		exportButton:SetText(L["Export Now"])
+		exportButton:SetAutoWidth(true)
+		local function OnClick(self)
+			--Clear labels
+			Label1:SetText("")
+			Label2:SetText("")
+
+			local profileType, exportFormat = ProfileTypeDropdown:GetValue(), ExportFormatDropdown:GetValue()
+			local profileKey, profileExport = D:ExportProfile(profileType, exportFormat)
+			if not profileKey or not profileExport then
+				Label1:SetText(L["Error exporting profile!"])
+			else
+				Label1:SetText(format("%s: %s%s|r", L["Exported"], E.media.hexvaluecolor, profileTypeItems[profileType]))
+				if profileType == "profile" then
+					Label2:SetText(format("%s: %s%s|r", L["Profile Name"], E.media.hexvaluecolor, profileKey))
+				end
+			end
+			Box:SetText(profileExport);
+			Box.editBox:HighlightText();
+			Box:SetFocus();
+			exportString = profileExport
+		end
+		exportButton:SetCallback("OnClick", OnClick)
+		Frame:AddChild(exportButton)
+
+		--Set scripts
+		Box.editBox:SetScript("OnChar", function() Box:SetText(exportString); Box.editBox:HighlightText(); end);
+		Box.editBox:SetScript("OnTextChanged", function(self, userInput)
+			if userInput then
+				--Prevent user from changing export string
+				Box:SetText(exportString)
+				Box.editBox:HighlightText();
+			end
+		end)
+
+	elseif mode == "import" then
+		Frame:SetTitle(L["Import Profile"])
+		local importButton = AceGUI:Create("Button-ElvUI") --This version changes text color on SetDisabled
+		importButton:SetDisabled(true)
+		importButton:SetText(L["Import Now"])
+		importButton:SetAutoWidth(true)
+		importButton:SetCallback("OnClick", function()
+			--Clear labels
+			Label1:SetText("")
+			Label2:SetText("")
+
+			local text
+			local success = D:ImportProfile(Box:GetText())
+			if success then
+				text = L["Profile imported successfully!"]
+			else
+				text = L["Error decoding data. Import string may be corrupted!"]
+			end
+			Label1:SetText(text)
+		end)
+		Frame:AddChild(importButton)
+
+		local decodeButton = AceGUI:Create("Button-ElvUI")
+		decodeButton:SetDisabled(true)
+		decodeButton:SetText(L["Decode Text"])
+		decodeButton:SetAutoWidth(true)
+		decodeButton:SetCallback("OnClick", function()
+			--Clear labels
+			Label1:SetText("")
+			Label2:SetText("")
+			local decodedText
+			local profileType, profileKey, profileData = D:Decode(Box:GetText())
+			if profileData then
+				decodedText = E:TableToLuaString(profileData)
+			end
+			local importText = D:CreateProfileExport(decodedText, profileType, profileKey)
+			Box:SetText(importText)
+		end)
+		Frame:AddChild(decodeButton)
+
+		local function OnTextChanged()
+			local text = Box:GetText()
+			if text == "" then
+				Label1:SetText("")
+				Label2:SetText("")
+				importButton:SetDisabled(true)
+				decodeButton:SetDisabled(true)
+			else
+				local stringType = D:GetImportStringType(text)
+				if stringType == "Base64" then
+					decodeButton:SetDisabled(false)
+				else
+					decodeButton:SetDisabled(true)
+				end
+
+				local profileType, profileKey = D:Decode(text)
+				if not profileType or (profileType and profileType == "profile" and not profileKey) then
+					Label1:SetText(L["Error decoding data. Import string may be corrupted!"])
+					Label2:SetText("")
+					importButton:SetDisabled(true)
+					decodeButton:SetDisabled(true)
+				else
+					Label1:SetText(format("%s: %s%s|r", L["Importing"], E.media.hexvaluecolor, profileTypeItems[profileType] or ""))
+					if profileType == "profile" then
+						Label2:SetText(format("%s: %s%s|r", L["Profile Name"], E.media.hexvaluecolor, profileKey))
+					end
+					importButton:SetDisabled(false)
+				end
+
+				--Scroll frame doesn't scroll to the bottom by itself, so let's do that now
+				Box.scrollFrame:SetVerticalScroll(Box.scrollFrame:GetVerticalScrollRange())
+			end
+		end
+
+		Box.editBox:SetFocus()
+		--Set scripts
+		Box.editBox:SetScript("OnChar", nil);
+		Box.editBox:SetScript("OnTextChanged", OnTextChanged)
+	end
+
+	Frame:SetCallback("OnClose", function(widget)
+		--Restore changed scripts
+		Box.editBox:SetScript("OnChar", nil)
+		Box.editBox:SetScript("OnTextChanged", Box.editBox.OnTextChangedOrig)
+		Box.editBox.OnTextChangedOrig = nil
+
+		--Clear stored export string
+		exportString = ""
+
+		AceGUI:Release(widget)
+		ACD:Open("ElvUI")
+	end)
+
+	--Clear default text
+	Label1:SetText("")
+	Label2:SetText("")
+
+	--Close ElvUI Config
+	ACD:Close("ElvUI")
+
+	GameTooltip_Hide() --The tooltip from the Export/Import button stays on screen, so hide it
+end
 
 --Create Profiles Table
 E.Options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(E.data);
@@ -1238,9 +1559,9 @@ E.Options.args.profiles.plugins["ElvUI"] = {
 			end
 			local name, server = UnitName("target")
 			if name and (not server or server == "") then
-				E:GetModule("Distributor"):Distribute(name)
+				D:Distribute(name)
 			elseif server then
-				E:GetModule("Distributor"):Distribute(name, true)
+				D:Distribute(name, true)
 			end
 		end,
 	},
@@ -1257,10 +1578,27 @@ E.Options.args.profiles.plugins["ElvUI"] = {
 
 			local name, server = UnitName("target")
 			if name and (not server or server == "") then
-				E:GetModule("Distributor"):Distribute(name, false, true)
+				D:Distribute(name, false, true)
 			elseif server then
-				E:GetModule("Distributor"):Distribute(name, true, true)
+				D:Distribute(name, true, true)
 			end
 		end,
+	},
+	spacer = {
+		order = 40.7,
+		type = 'description',
+		name = '',
+	},
+	exportProfile = {
+		name = L["Export Profile"],
+		type = 'execute',
+		order = 40.8,
+		func = function() ExportImport_Open("export") end,
+	},
+	importProfile = {
+		name = L["Import Profile"],
+		type = 'execute',
+		order = 40.9,
+		func = function() ExportImport_Open("import") end,
 	},
 }

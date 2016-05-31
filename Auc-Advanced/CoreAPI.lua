@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Advanced
-	Version: 5.21e.5566 (SanctimoniousSwamprat)
-	Revision: $Id: CoreAPI.lua 5562 2015-06-25 19:07:43Z brykrys $
+	Version: 5.21f.5579 (SanctimoniousSwamprat)
+	Revision: $Id: CoreAPI.lua 5570 2015-08-15 17:36:05Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -507,6 +507,10 @@ lib.GetScanStats = AucAdvanced.Scan.GetScanStats
 -- imageTable = AucAdvanced.API.GetImageCopy(serverKey)
 -- Generates an independent copy of the current scan data image for the specified serverKey
 lib.GetImageCopy = AucAdvanced.Scan.GetImageCopy
+
+-- AucAdvanced.API.CompatibilityMode(mode, lock)
+-- Set scan compatibility modes, to help avoid having Auctioneer interfere with other AddOns using the AuctionHouse API
+lib.CompatibilityMode = AucAdvanced.Scan.CompatibilityMode
 
 function lib.ListUpdate()
 	if lib.IsBlocked() then return end
@@ -1527,4 +1531,4 @@ do
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21e/Auc-Advanced/CoreAPI.lua $", "$Rev: 5562 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Advanced/CoreAPI.lua $", "$Rev: 5570 $")
