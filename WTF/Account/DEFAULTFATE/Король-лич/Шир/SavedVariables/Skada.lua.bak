@@ -1,0 +1,3391 @@
+
+SkadaPerCharDB = {
+	["total"] = {
+		["healingabsorbed"] = 0,
+		["dispells"] = 0,
+		["ccbreaks"] = 0,
+		["overhealing"] = 0,
+		["interrupts"] = 0,
+		["damage"] = 637229,
+		["players"] = {
+			{
+				["healingabsorbed"] = 0,
+				["class"] = "PALADIN",
+				["damaged"] = {
+				},
+				["auras"] = {
+					["Божественный замысел"] = {
+						["name"] = "Божественный замысел",
+						["active"] = 1,
+						["id"] = 90174,
+						["auratype"] = "BUFF",
+						["uptime"] = 125,
+					},
+					["Экзорцизм!"] = {
+						["name"] = "Экзорцизм!",
+						["active"] = 1,
+						["id"] = 59578,
+						["auratype"] = "BUFF",
+						["uptime"] = 114,
+					},
+					["Самоотверженный целитель"] = {
+						["name"] = "Самоотверженный целитель",
+						["active"] = 6,
+						["id"] = 114250,
+						["auratype"] = "BUFF",
+						["uptime"] = 133,
+					},
+					["Знак Кровавой Глазницы"] = {
+						["name"] = "Знак Кровавой Глазницы",
+						["active"] = 4,
+						["id"] = 173322,
+						["auratype"] = "BUFF",
+						["uptime"] = 131,
+					},
+					["Порицание"] = {
+						["name"] = "Порицание",
+						["active"] = 0,
+						["id"] = 31803,
+						["auratype"] = "DEBUFF",
+						["uptime"] = 43,
+					},
+					["Мольба"] = {
+						["name"] = "Мольба",
+						["active"] = 9,
+						["id"] = 94686,
+						["auratype"] = "BUFF",
+						["uptime"] = 128,
+					},
+					["Вопящие духи"] = {
+						["name"] = "Вопящие духи",
+						["active"] = 1,
+						["id"] = 177042,
+						["auratype"] = "BUFF",
+						["uptime"] = 108,
+					},
+				},
+				["role"] = "DAMAGER",
+				["overhealing"] = 0,
+				["interrupts"] = 0,
+				["deathlog"] = {
+					{
+						["ts"] = 1465326433.337,
+						["amount"] = -417,
+						["hp"] = 239422,
+						["spellid"] = 88163,
+						["srcname"] = "Шра'тик-быстрокрыл",
+					}, -- [1]
+					{
+						["ts"] = 1465326434.665,
+						["amount"] = -473,
+						["hp"] = 239005,
+						["spellid"] = 88163,
+						["srcname"] = "Шра'тик-расчленитель",
+					}, -- [2]
+					{
+						["ts"] = 1465326435.368,
+						["amount"] = -440,
+						["hp"] = 238532,
+						["spellid"] = 88163,
+						["srcname"] = "Шра'тик-быстрокрыл",
+					}, -- [3]
+					{
+						["ts"] = 1465326435.644,
+						["amount"] = -367,
+						["hp"] = 238092,
+						["spellid"] = 88163,
+						["srcname"] = "Шра'тик-крохофит",
+					}, -- [4]
+					{
+						["ts"] = 1465326435.644,
+						["amount"] = -238,
+						["hp"] = 238092,
+						["spellid"] = 88163,
+						["srcname"] = "Шра'тик-расчленитель",
+					}, -- [5]
+					{
+						["ts"] = 1465326436.972,
+						["amount"] = -293,
+						["hp"] = 237487,
+						["spellid"] = 88163,
+						["srcname"] = "Шра'тик-крохофит",
+					}, -- [6]
+					{
+						["ts"] = 1465326437.174,
+						["amount"] = -504,
+						["hp"] = 237194,
+						["spellid"] = 88163,
+						["srcname"] = "Шра'тик-расчленитель",
+					}, -- [7]
+					{
+						["ts"] = 1465326437.735,
+						["amount"] = -391,
+						["hp"] = 236690,
+						["spellid"] = 88163,
+						["srcname"] = "Шра'тик-крохофит",
+					}, -- [8]
+					{
+						["ts"] = 1465326455.849,
+						["amount"] = -394,
+						["hp"] = 241260,
+						["spellid"] = 88163,
+						["srcname"] = "Шра'тик-быстрокрыл",
+					}, -- [9]
+					{
+						["ts"] = 1465326457.811,
+						["amount"] = -465,
+						["hp"] = 240866,
+						["spellid"] = 88163,
+						["srcname"] = "Шра'тик-быстрокрыл",
+					}, -- [10]
+					{
+						["ts"] = 1465326413.877,
+						["amount"] = -449,
+						["hp"] = 240785,
+						["spellid"] = 88163,
+						["srcname"] = "Новорожденный куньчун",
+					}, -- [11]
+					{
+						["ts"] = 1465326429.726,
+						["amount"] = -414,
+						["hp"] = 240964,
+						["spellid"] = 88163,
+						["srcname"] = "Шра'тик-быстрокрыл",
+					}, -- [12]
+					{
+						["ts"] = 1465326431.974,
+						["amount"] = -297,
+						["hp"] = 240550,
+						["spellid"] = 88163,
+						["srcname"] = "Шра'тик-рабочий",
+					}, -- [13]
+					{
+						["ts"] = 1465326432.623,
+						["amount"] = -430,
+						["hp"] = 240253,
+						["spellid"] = 88163,
+						["srcname"] = "Шра'тик-расчленитель",
+					}, -- [14]
+					{
+						["ts"] = 1465326432.623,
+						["amount"] = -401,
+						["hp"] = 239852,
+						["spellid"] = 60195,
+						["srcname"] = "Шра'тик-расчленитель",
+					}, -- [15]
+					["pos"] = 11,
+				},
+				["damage"] = 637229,
+				["damagespells"] = {
+					["Длань Света"] = {
+						["min"] = 478,
+						["hit"] = 26,
+						["totalhits"] = 26,
+						["id"] = 96172,
+						["max"] = 4667,
+						["damage"] = 49199,
+					},
+					["Атака"] = {
+						["min"] = 6175,
+						["multistrike"] = 2,
+						["critical"] = 1,
+						["hit"] = 21,
+						["totalhits"] = 22,
+						["id"] = 6603,
+						["max"] = 13052,
+						["damage"] = 151605,
+					},
+					["Удар воина Света"] = {
+						["min"] = 7992,
+						["hit"] = 1,
+						["totalhits"] = 1,
+						["id"] = 35395,
+						["max"] = 7992,
+						["damage"] = 7992,
+					},
+					["Правосудие"] = {
+						["min"] = 7554,
+						["multistrike"] = 5,
+						["critical"] = 5,
+						["hit"] = 12,
+						["totalhits"] = 17,
+						["id"] = 20271,
+						["max"] = 15109,
+						["damage"] = 177519,
+					},
+					["Тэнь-у Красный Дым: Потрошение"] = {
+						["min"] = 623,
+						["hit"] = 1,
+						["totalhits"] = 1,
+						["id"] = 79852,
+						["max"] = 623,
+						["damage"] = 623,
+					},
+					["Молот гнева"] = {
+						["min"] = 13196,
+						["hit"] = 2,
+						["totalhits"] = 2,
+						["id"] = 158392,
+						["max"] = 13196,
+						["damage"] = 26392,
+					},
+					["Тэнь-у Красный Дым: Коварный удар"] = {
+						["min"] = 832,
+						["multistrike"] = 1,
+						["hit"] = 6,
+						["totalhits"] = 6,
+						["id"] = 60195,
+						["max"] = 1100,
+						["damage"] = 5867,
+					},
+					["Печать правды"] = {
+						["min"] = 891,
+						["multistrike"] = 4,
+						["critical"] = 5,
+						["hit"] = 26,
+						["totalhits"] = 31,
+						["id"] = 42463,
+						["max"] = 1932,
+						["damage"] = 34595,
+					},
+					["Тэнь-у Красный Дым: Атака"] = {
+						["id"] = 6603,
+						["min"] = 318,
+						["multistrike"] = 8,
+						["critical"] = 1,
+						["hit"] = 29,
+						["totalhits"] = 32,
+						["max"] = 1076,
+						["MISS"] = 2,
+						["damage"] = 24491,
+					},
+					["Тэнь-у Красный Дым: Веер клинков"] = {
+						["min"] = 747,
+						["multistrike"] = 1,
+						["critical"] = 2,
+						["hit"] = 12,
+						["totalhits"] = 14,
+						["id"] = 79851,
+						["max"] = 2156,
+						["damage"] = 15517,
+					},
+					["Порицание"] = {
+						["min"] = 283,
+						["hit"] = 5,
+						["totalhits"] = 5,
+						["id"] = 31803,
+						["max"] = 847,
+						["damage"] = 2824,
+					},
+					["Божественная буря"] = {
+						["min"] = 5486,
+						["critical"] = 2,
+						["hit"] = 14,
+						["totalhits"] = 16,
+						["id"] = 53385,
+						["max"] = 11957,
+						["damage"] = 102842,
+					},
+					["Молот праведника"] = {
+						["min"] = 1553,
+						["critical"] = 2,
+						["hit"] = 15,
+						["totalhits"] = 17,
+						["id"] = 53595,
+						["max"] = 4910,
+						["damage"] = 37763,
+					},
+				},
+				["deaths"] = {
+					{
+						["ts"] = 1465247307.54209,
+						["maxhp"] = 254100,
+						["log"] = {
+							{
+								["ts"] = 1465247305.79901,
+								["amount"] = -1383,
+								["srcname"] = "Кельталасс-Гордунни",
+								["hp"] = 108398,
+								["spellid"] = 113780,
+							}, -- [1]
+							{
+								["ts"] = 1465247305.79902,
+								["amount"] = -14440,
+								["srcname"] = "Кельталасс-Гордунни",
+								["hp"] = 93958,
+								["spellid"] = 79136,
+							}, -- [2]
+							{
+								["ts"] = 1465247305.79903,
+								["amount"] = -8962,
+								["srcname"] = "Кельталасс-Гордунни",
+								["hp"] = 84996,
+								["spellid"] = 2818,
+							}, -- [3]
+							{
+								["ts"] = 1465247305.79904,
+								["amount"] = -16675,
+								["srcname"] = "Кельталасс-Гордунни",
+								["hp"] = 68321,
+								["spellid"] = 152150,
+							}, -- [4]
+							{
+								["ts"] = 1465247305.79905,
+								["amount"] = -4611,
+								["hp"] = 63710,
+								["spellid"] = 113780,
+								["srcname"] = "Кельталасс-Гордунни",
+							}, -- [5]
+							{
+								["ts"] = 1465247306.08806,
+								["amount"] = -3335,
+								["hp"] = 56511,
+								["spellid"] = 152150,
+								["srcname"] = "Кельталасс-Гордунни",
+							}, -- [6]
+							{
+								["ts"] = 1465247306.08807,
+								["amount"] = -1383,
+								["spellid"] = 113780,
+								["srcname"] = "Кельталасс-Гордунни",
+								["hp"] = 55128,
+							}, -- [7]
+							{
+								["ts"] = 1465247307.28808,
+								["amount"] = -74683,
+								["spellid"] = 32645,
+								["srcname"] = "Кельталасс-Гордунни",
+								["hp"] = 1,
+							}, -- [8]
+							{
+								["spellname"] = "Шир умирает",
+								["ts"] = 1465247307.54209,
+								["hp"] = 0,
+								["spellid"] = 41220,
+							}, -- [9]
+							{
+								["ts"] = 1465247305.6121,
+								["amount"] = -1746,
+								["spellid"] = 88163,
+								["srcname"] = "Кельталасс-Гордунни",
+								["hp"] = 116820,
+							}, -- [10]
+							{
+								["ts"] = 1465247305.79811,
+								["amount"] = -2995,
+								["spellid"] = 88163,
+								["srcname"] = "Кельталасс-Гордунни",
+								["hp"] = 116820,
+							}, -- [11]
+							{
+								["ts"] = 1465247305.79812,
+								["amount"] = -869,
+								["spellid"] = 88163,
+								["srcname"] = "Кельталасс-Гордунни",
+								["hp"] = 116820,
+							}, -- [12]
+							{
+								["ts"] = 1465247305.79813,
+								["amount"] = -4612,
+								["spellid"] = 113780,
+								["srcname"] = "Кельталасс-Гордунни",
+								["hp"] = 112208,
+							}, -- [13]
+							{
+								["ts"] = 1465247305.79814,
+								["amount"] = -1867,
+								["spellid"] = 1943,
+								["srcname"] = "Кельталасс-Гордунни",
+								["hp"] = 110341,
+							}, -- [14]
+							{
+								["ts"] = 1465247305.79815,
+								["amount"] = -560,
+								["spellid"] = 1943,
+								["srcname"] = "Кельталасс-Гордунни",
+								["hp"] = 109781,
+							}, -- [15]
+							["pos"] = 10,
+						},
+					}, -- [1]
+				},
+				["healed"] = {
+				},
+				["shielding"] = 0,
+				["id"] = "Player-1603-07FF5342",
+				["maxhp"] = 241260,
+				["dispells"] = 0,
+				["damagetakenspells"] = {
+					["Расправа (левая рука)"] = {
+						["crushing"] = 0,
+						["id"] = 27576,
+						["absorbed"] = 0,
+						["glancing"] = 0,
+						["critical"] = 2,
+						["min"] = 3565,
+						["multistrike"] = 1,
+						["name"] = "Расправа (левая рука)",
+						["blocked"] = 0,
+						["totalhits"] = 3,
+						["resisted"] = 0,
+						["max"] = 11882,
+						["damage"] = 23259,
+					},
+					["Атака"] = {
+						["crushing"] = 0,
+						["id"] = 6603,
+						["absorbed"] = 0,
+						["min"] = 197,
+						["critical"] = 5,
+						["glancing"] = 0,
+						["multistrike"] = 4,
+						["name"] = "Атака",
+						["blocked"] = 0,
+						["totalhits"] = 41,
+						["resisted"] = 0,
+						["max"] = 9040,
+						["damage"] = 62572,
+					},
+					["Коварный удар"] = {
+						["crushing"] = 0,
+						["id"] = 60195,
+						["min"] = 401,
+						["absorbed"] = 0,
+						["critical"] = 0,
+						["glancing"] = 0,
+						["multistrike"] = 0,
+						["name"] = "Коварный удар",
+						["blocked"] = 0,
+						["totalhits"] = 2,
+						["resisted"] = 0,
+						["max"] = 471,
+						["damage"] = 872,
+					},
+					["Смерть с небес"] = {
+						["crushing"] = 0,
+						["id"] = 152150,
+						["absorbed"] = 0,
+						["glancing"] = 0,
+						["critical"] = 1,
+						["min"] = 3335,
+						["multistrike"] = 1,
+						["name"] = "Смерть с небес",
+						["blocked"] = 0,
+						["totalhits"] = 2,
+						["resisted"] = 0,
+						["max"] = 16675,
+						["damage"] = 20010,
+					},
+					["Смертоносный яд"] = {
+						["crushing"] = 0,
+						["id"] = 113780,
+						["absorbed"] = 0,
+						["glancing"] = 0,
+						["critical"] = 5,
+						["min"] = 1383,
+						["multistrike"] = 2,
+						["name"] = "Смертоносный яд",
+						["blocked"] = 0,
+						["totalhits"] = 6,
+						["resisted"] = 0,
+						["max"] = 8962,
+						["damage"] = 24025,
+					},
+					["Отравление"] = {
+						["crushing"] = 0,
+						["id"] = 32645,
+						["absorbed"] = 0,
+						["glancing"] = 0,
+						["critical"] = 0,
+						["min"] = 74683,
+						["multistrike"] = 0,
+						["name"] = "Отравление",
+						["blocked"] = 0,
+						["totalhits"] = 1,
+						["resisted"] = 0,
+						["max"] = 74683,
+						["damage"] = 74683,
+					},
+					["Расправа"] = {
+						["crushing"] = 0,
+						["id"] = 5374,
+						["absorbed"] = 0,
+						["glancing"] = 0,
+						["critical"] = 2,
+						["min"] = 4553,
+						["multistrike"] = 1,
+						["name"] = "Расправа",
+						["blocked"] = 0,
+						["totalhits"] = 3,
+						["resisted"] = 0,
+						["max"] = 23548,
+						["damage"] = 50867,
+					},
+					["Рваная рана"] = {
+						["crushing"] = 0,
+						["id"] = 1943,
+						["absorbed"] = 0,
+						["glancing"] = 0,
+						["critical"] = 1,
+						["min"] = 560,
+						["multistrike"] = 1,
+						["name"] = "Рваная рана",
+						["blocked"] = 0,
+						["totalhits"] = 3,
+						["resisted"] = 0,
+						["max"] = 2800,
+						["damage"] = 5227,
+					},
+					["Отравленная рана"] = {
+						["crushing"] = 0,
+						["id"] = 79136,
+						["absorbed"] = 0,
+						["glancing"] = 0,
+						["critical"] = 1,
+						["min"] = 9627,
+						["multistrike"] = 0,
+						["name"] = "Отравленная рана",
+						["blocked"] = 0,
+						["totalhits"] = 2,
+						["resisted"] = 0,
+						["max"] = 14440,
+						["damage"] = 24067,
+					},
+				},
+				["power"] = {
+					[9] = {
+						["amount"] = 22,
+						["spells"] = {
+							[111528] = 12,
+							[141459] = 2,
+							[53595] = 7,
+							[35395] = 1,
+						},
+					},
+				},
+				["damagetaken"] = 285582,
+				["name"] = "Шир",
+				["healingspells"] = {
+				},
+				["ccbreaks"] = 0,
+				["time"] = 101,
+				["healing"] = 0,
+				["multistrikes"] = 0,
+			}, -- [1]
+			{
+				["healingabsorbed"] = 0,
+				["damaged"] = {
+				},
+				["auras"] = {
+					["Незаметность"] = {
+						["name"] = "Незаметность",
+						["active"] = 4,
+						["id"] = 125774,
+						["auratype"] = "BUFF",
+						["uptime"] = 68,
+					},
+				},
+				["role"] = "NONE",
+				["overhealing"] = 0,
+				["interrupts"] = 0,
+				["maxhp"] = 0,
+				["damage"] = 0,
+				["damagespells"] = {
+				},
+				["deathlog"] = {
+				},
+				["healed"] = {
+				},
+				["shielding"] = 0,
+				["id"] = "Creature-0-1927-870-65-63622-0000571ABB",
+				["healing"] = 0,
+				["dispells"] = 0,
+				["damagetakenspells"] = {
+				},
+				["power"] = {
+				},
+				["damagetaken"] = 0,
+				["name"] = "Тэнь",
+				["ccbreaks"] = 0,
+				["time"] = 8,
+				["healingspells"] = {
+				},
+				["multistrikes"] = 0,
+			}, -- [2]
+			{
+				["healingabsorbed"] = 0,
+				["damaged"] = {
+				},
+				["auras"] = {
+					["Незаметность"] = {
+						["name"] = "Незаметность",
+						["active"] = 5,
+						["id"] = 125774,
+						["auratype"] = "BUFF",
+						["uptime"] = 55,
+					},
+				},
+				["role"] = "NONE",
+				["overhealing"] = 0,
+				["interrupts"] = 0,
+				["maxhp"] = 0,
+				["damage"] = 0,
+				["damagespells"] = {
+				},
+				["deathlog"] = {
+				},
+				["healed"] = {
+				},
+				["shielding"] = 0,
+				["id"] = "Creature-0-1927-870-65-63622-0000571AEA",
+				["healing"] = 0,
+				["dispells"] = 0,
+				["damagetakenspells"] = {
+				},
+				["power"] = {
+				},
+				["damagetaken"] = 0,
+				["name"] = "Тэнь",
+				["ccbreaks"] = 0,
+				["time"] = 40,
+				["healingspells"] = {
+				},
+				["multistrikes"] = 0,
+			}, -- [3]
+			{
+				["healingabsorbed"] = 0,
+				["damaged"] = {
+				},
+				["auras"] = {
+					["Незаметность"] = {
+						["name"] = "Незаметность",
+						["active"] = 1,
+						["id"] = 125774,
+						["auratype"] = "BUFF",
+						["uptime"] = 0,
+					},
+				},
+				["role"] = "NONE",
+				["overhealing"] = 0,
+				["interrupts"] = 0,
+				["maxhp"] = 0,
+				["damage"] = 0,
+				["damagespells"] = {
+				},
+				["deathlog"] = {
+				},
+				["healed"] = {
+				},
+				["shielding"] = 0,
+				["id"] = "Creature-0-1927-870-65-63622-0000571B83",
+				["healing"] = 0,
+				["dispells"] = 0,
+				["damagetakenspells"] = {
+				},
+				["power"] = {
+				},
+				["damagetaken"] = 0,
+				["name"] = "Тэнь",
+				["ccbreaks"] = 0,
+				["time"] = 0,
+				["healingspells"] = {
+				},
+				["multistrikes"] = 0,
+			}, -- [4]
+		},
+		["deaths"] = 1,
+		["mobs"] = {
+			["Прожорливый куньчун"] = {
+				["players"] = {
+					["Тэнь-у Красный Дым"] = {
+						["taken"] = 4924,
+						["done"] = 0,
+						["role"] = "NONE",
+					},
+					["Шир"] = {
+						["taken"] = 73376,
+						["done"] = 366,
+						["role"] = "NONE",
+						["class"] = "PALADIN",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 78300,
+				["done"] = 366,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Кельталасс-Гордунни"] = {
+				["players"] = {
+					["Шир"] = {
+						["taken"] = 0,
+						["done"] = 273655,
+						["role"] = "NONE",
+						["class"] = "PALADIN",
+					},
+				},
+				["hdone"] = 0,
+				["done"] = 273655,
+				["taken"] = 0,
+				["htakenspell"] = {
+				},
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Яунгол Гай-Чо"] = {
+				["players"] = {
+					["Шир"] = {
+						["taken"] = 13438,
+						["done"] = 1329,
+						["role"] = "DAMAGER",
+						["class"] = "PALADIN",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 13438,
+				["done"] = 1329,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Головорез из Доцзяна"] = {
+				["players"] = {
+					["Шир"] = {
+						["taken"] = 23554,
+						["done"] = 0,
+						["class"] = "PALADIN",
+						["role"] = "NONE",
+					},
+				},
+				["hdone"] = 0,
+				["hdonespell"] = {
+				},
+				["taken"] = 23554,
+				["done"] = 0,
+				["htaken"] = 0,
+				["htakenspell"] = {
+				},
+			},
+			["Шра'тик-быстрокрыл"] = {
+				["players"] = {
+					["Тэнь-у Красный Дым"] = {
+						["taken"] = 3212,
+						["done"] = 0,
+						["role"] = "NONE",
+					},
+					["Шир"] = {
+						["taken"] = 80264,
+						["done"] = 2578,
+						["role"] = "NONE",
+						["class"] = "PALADIN",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 83476,
+				["done"] = 2578,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Луговой кузнечик"] = {
+				["players"] = {
+					["Тэнь-у Красный Дым"] = {
+						["taken"] = 1207,
+						["done"] = 0,
+						["role"] = "NONE",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 1207,
+				["done"] = 0,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Новорожденный куньчун"] = {
+				["players"] = {
+					["Тэнь-у Красный Дым"] = {
+						["taken"] = 3888,
+						["done"] = 0,
+						["role"] = "NONE",
+					},
+					["Шир"] = {
+						["taken"] = 58953,
+						["done"] = 924,
+						["role"] = "NONE",
+						["class"] = "PALADIN",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 62841,
+				["done"] = 924,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Искатель из Доцзяна"] = {
+				["players"] = {
+					["Шир"] = {
+						["taken"] = 34881,
+						["done"] = 649,
+						["class"] = "PALADIN",
+						["role"] = "NONE",
+					},
+				},
+				["hdone"] = 0,
+				["hdonespell"] = {
+				},
+				["taken"] = 34881,
+				["done"] = 649,
+				["htaken"] = 0,
+				["htakenspell"] = {
+				},
+			},
+			["Шра'тик - лидер роя"] = {
+				["players"] = {
+					["Шир"] = {
+						["taken"] = 36672,
+						["done"] = 382,
+						["role"] = "NONE",
+						["class"] = "PALADIN",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 36672,
+				["done"] = 382,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Чэн Бо"] = {
+				["players"] = {
+					["Шир"] = {
+						["taken"] = 36504,
+						["done"] = 0,
+						["role"] = "DAMAGER",
+						["class"] = "PALADIN",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+					["Волна исцеления"] = {
+						["min"] = 6384,
+						["crits"] = 0,
+						["max"] = 6384,
+						["healing"] = 6384,
+						["overhealing"] = 0,
+						["hits"] = 1,
+					},
+				},
+				["taken"] = 36504,
+				["done"] = 0,
+				["htaken"] = 6384,
+				["hdonespell"] = {
+				},
+			},
+			["Шра'тик-рабочий"] = {
+				["players"] = {
+					["Тэнь-у Красный Дым"] = {
+						["taken"] = 14303,
+						["done"] = 0,
+						["role"] = "NONE",
+					},
+					["Шир"] = {
+						["taken"] = 51538,
+						["done"] = 297,
+						["role"] = "NONE",
+						["class"] = "PALADIN",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 65841,
+				["done"] = 297,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Метатель смолы Гай-Чо"] = {
+				["players"] = {
+					["Шир"] = {
+						["taken"] = 13548,
+						["done"] = 485,
+						["role"] = "DAMAGER",
+						["class"] = "PALADIN",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 13548,
+				["done"] = 485,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Толкователь земли Гай-Чо"] = {
+				["players"] = {
+					["Шир"] = {
+						["taken"] = 12835,
+						["done"] = 0,
+						["role"] = "DAMAGER",
+						["class"] = "PALADIN",
+					},
+				},
+				["hdone"] = 6384,
+				["htakenspell"] = {
+				},
+				["taken"] = 12835,
+				["done"] = 0,
+				["htaken"] = 0,
+				["hdonespell"] = {
+					["Волна исцеления"] = {
+						["min"] = 6384,
+						["crits"] = 0,
+						["max"] = 6384,
+						["healing"] = 6384,
+						["overhealing"] = 0,
+						["hits"] = 1,
+					},
+				},
+			},
+			["Шра'тик-восстановитель"] = {
+				["players"] = {
+					["Тэнь-у Красный Дым"] = {
+						["taken"] = 936,
+						["done"] = 0,
+						["role"] = "NONE",
+					},
+					["Шир"] = {
+						["taken"] = 63098,
+						["done"] = 431,
+						["role"] = "NONE",
+						["class"] = "PALADIN",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 64034,
+				["done"] = 431,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Шра'тик-расчленитель"] = {
+				["players"] = {
+					["Тэнь-у Красный Дым"] = {
+						["taken"] = 10255,
+						["done"] = 0,
+						["role"] = "NONE",
+					},
+					["Шир"] = {
+						["taken"] = 33890,
+						["done"] = 2730,
+						["role"] = "NONE",
+						["class"] = "PALADIN",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 44145,
+				["done"] = 2730,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Шра'тик-крохофит"] = {
+				["players"] = {
+					["Тэнь-у Красный Дым"] = {
+						["taken"] = 7773,
+						["done"] = 0,
+						["role"] = "NONE",
+					},
+					["Шир"] = {
+						["taken"] = 58180,
+						["done"] = 1756,
+						["role"] = "NONE",
+						["class"] = "PALADIN",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 65953,
+				["done"] = 1756,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+		},
+		["mobtaken"] = 637229,
+		["healing"] = 0,
+		["mobdone"] = 285582,
+		["damagetaken"] = 285582,
+		["starttime"] = 1465067529,
+		["shielding"] = 0,
+		["name"] = "Всего",
+		["power"] = {
+			[9] = 22,
+		},
+		["time"] = 110,
+		["mobhdone"] = 6384,
+		["last_action"] = 1465067529,
+		["multistrikes"] = 0,
+	},
+	["sets"] = {
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["overhealing"] = 0,
+			["interrupts"] = 0,
+			["endtime"] = 1465326460,
+			["damage"] = 30551,
+			["players"] = {
+				{
+					["last"] = 1465326458,
+					["healingabsorbed"] = 0,
+					["class"] = "PALADIN",
+					["damaged"] = {
+						["Шра'тик-быстрокрыл"] = 30551,
+					},
+					["auras"] = {
+						["Мольба"] = {
+							["name"] = "Мольба",
+							["active"] = 1,
+							["id"] = 94686,
+							["auratype"] = "BUFF",
+							["uptime"] = 7,
+						},
+						["Порицание"] = {
+							["name"] = "Порицание",
+							["active"] = 0,
+							["id"] = 31803,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 2,
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 30551,
+					["damagespells"] = {
+						["Молот праведника"] = {
+							["min"] = 2474,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 53595,
+							["max"] = 2474,
+							["damage"] = 2474,
+						},
+						["Печать правды"] = {
+							["min"] = 891,
+							["hit"] = 2,
+							["totalhits"] = 2,
+							["id"] = 42463,
+							["max"] = 962,
+							["damage"] = 1853,
+						},
+						["Тэнь-у Красный Дым: Атака"] = {
+							["min"] = 920,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 6603,
+							["max"] = 920,
+							["damage"] = 920,
+						},
+						["Правосудие"] = {
+							["min"] = 15108,
+							["multistrike"] = 1,
+							["critical"] = 1,
+							["totalhits"] = 1,
+							["max"] = 15108,
+							["id"] = 20271,
+							["damage"] = 17374,
+						},
+						["Длань Света"] = {
+							["min"] = 1755,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 96172,
+							["max"] = 1755,
+							["damage"] = 1755,
+						},
+						["Атака"] = {
+							["min"] = 6175,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 6603,
+							["max"] = 6175,
+							["damage"] = 6175,
+						},
+					},
+					["maxhp"] = 241260,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Player-1603-07FF5342",
+					["first"] = 1465326452,
+					["dispells"] = 0,
+					["damagetakenspells"] = {
+						["Атака"] = {
+							["crushing"] = 0,
+							["id"] = 6603,
+							["min"] = 394,
+							["absorbed"] = 0,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["multistrike"] = 0,
+							["name"] = "Атака",
+							["blocked"] = 0,
+							["totalhits"] = 2,
+							["resisted"] = 0,
+							["max"] = 465,
+							["damage"] = 859,
+						},
+					},
+					["power"] = {
+						[9] = {
+							["amount"] = 2,
+							["spells"] = {
+								[53595] = 1,
+								[111528] = 1,
+							},
+						},
+					},
+					["damagetaken"] = 859,
+					["name"] = "Шир",
+					["healingspells"] = {
+					},
+					["ccbreaks"] = 0,
+					["time"] = 6,
+					["healing"] = 0,
+					["multistrikes"] = 0,
+				}, -- [1]
+				{
+					["last"] = 1465326454,
+					["healingabsorbed"] = 0,
+					["damaged"] = {
+					},
+					["auras"] = {
+						["Незаметность"] = {
+							["name"] = "Незаметность",
+							["active"] = 0,
+							["id"] = 125774,
+							["auratype"] = "BUFF",
+							["uptime"] = 1,
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 0,
+					["damagespells"] = {
+					},
+					["maxhp"] = 0,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Creature-0-1927-870-65-63622-0000571AEA",
+					["healing"] = 0,
+					["dispells"] = 0,
+					["damagetakenspells"] = {
+					},
+					["power"] = {
+					},
+					["damagetaken"] = 0,
+					["name"] = "Тэнь",
+					["first"] = 1465326453,
+					["ccbreaks"] = 0,
+					["time"] = 1,
+					["healingspells"] = {
+					},
+					["multistrikes"] = 0,
+				}, -- [2]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Шра'тик-быстрокрыл"] = {
+					["players"] = {
+						["Тэнь-у Красный Дым"] = {
+							["taken"] = 920,
+							["done"] = 0,
+							["role"] = "NONE",
+						},
+						["Шир"] = {
+							["taken"] = 29631,
+							["done"] = 859,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 30551,
+					["done"] = 859,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 30551,
+			["mobdone"] = 859,
+			["healing"] = 0,
+			["power"] = {
+				[9] = 2,
+			},
+			["damagetaken"] = 859,
+			["starttime"] = 1465326452,
+			["shielding"] = 0,
+			["name"] = "Шра'тик-быстрокрыл (3)",
+			["mobname"] = "Шра'тик-быстрокрыл",
+			["time"] = 8,
+			["mobhdone"] = 0,
+			["last_action"] = 1465326452,
+			["multistrikes"] = 0,
+		}, -- [1]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["overhealing"] = 0,
+			["interrupts"] = 0,
+			["endtime"] = 1465326444,
+			["damage"] = 101620,
+			["players"] = {
+				{
+					["last"] = 1465326444,
+					["healingabsorbed"] = 0,
+					["damaged"] = {
+					},
+					["auras"] = {
+						["Незаметность"] = {
+							["name"] = "Незаметность",
+							["active"] = 0,
+							["id"] = 125774,
+							["auratype"] = "BUFF",
+							["uptime"] = 7,
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 0,
+					["damagespells"] = {
+					},
+					["maxhp"] = 0,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Creature-0-1927-870-65-63622-0000571AEA",
+					["healing"] = 0,
+					["dispells"] = 0,
+					["damagetakenspells"] = {
+					},
+					["power"] = {
+					},
+					["damagetaken"] = 0,
+					["name"] = "Тэнь",
+					["first"] = 1465326427,
+					["ccbreaks"] = 0,
+					["time"] = 17,
+					["healingspells"] = {
+					},
+					["multistrikes"] = 0,
+				}, -- [1]
+				{
+					["last"] = 1465326443,
+					["healingabsorbed"] = 0,
+					["class"] = "PALADIN",
+					["damaged"] = {
+						["Шра'тик-рабочий"] = 11937,
+						["Шра'тик-восстановитель"] = 9433,
+						["Шра'тик-быстрокрыл"] = 12394,
+						["Луговой кузнечик"] = 1207,
+						["Шра'тик-расчленитель"] = 13191,
+						["Шра'тик-крохофит"] = 53458,
+					},
+					["auras"] = {
+						["Мольба"] = {
+							["name"] = "Мольба",
+							["active"] = 1,
+							["id"] = 94686,
+							["auratype"] = "BUFF",
+							["uptime"] = 11,
+						},
+						["Самоотверженный целитель"] = {
+							["name"] = "Самоотверженный целитель",
+							["active"] = 1,
+							["id"] = 114250,
+							["auratype"] = "BUFF",
+							["uptime"] = 11,
+						},
+						["Знак Кровавой Глазницы"] = {
+							["name"] = "Знак Кровавой Глазницы",
+							["active"] = 1,
+							["id"] = 173322,
+							["auratype"] = "BUFF",
+							["uptime"] = 11,
+						},
+						["Порицание"] = {
+							["name"] = "Порицание",
+							["active"] = 0,
+							["id"] = 31803,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 0,
+						},
+						["Экзорцизм!"] = {
+							["name"] = "Экзорцизм!",
+							["active"] = 0,
+							["id"] = 59578,
+							["auratype"] = "BUFF",
+							["uptime"] = 6,
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 101620,
+					["damagespells"] = {
+						["Длань Света"] = {
+							["min"] = 2293,
+							["hit"] = 3,
+							["totalhits"] = 3,
+							["id"] = 96172,
+							["max"] = 2408,
+							["damage"] = 7090,
+						},
+						["Атака"] = {
+							["min"] = 6455,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 6603,
+							["max"] = 6455,
+							["damage"] = 6455,
+						},
+						["Удар воина Света"] = {
+							["min"] = 7992,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 35395,
+							["max"] = 7992,
+							["damage"] = 7992,
+						},
+						["Правосудие"] = {
+							["min"] = 7554,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 20271,
+							["max"] = 7554,
+							["damage"] = 7554,
+						},
+						["Тэнь-у Красный Дым: Веер клинков"] = {
+							["min"] = 794,
+							["multistrike"] = 1,
+							["critical"] = 1,
+							["hit"] = 6,
+							["totalhits"] = 7,
+							["id"] = 79851,
+							["max"] = 1835,
+							["damage"] = 7927,
+						},
+						["Тэнь-у Красный Дым: Атака"] = {
+							["max"] = 1076,
+							["min"] = 451,
+							["multistrike"] = 2,
+							["critical"] = 1,
+							["hit"] = 7,
+							["totalhits"] = 9,
+							["id"] = 6603,
+							["MISS"] = 1,
+							["damage"] = 7259,
+						},
+						["Молот гнева"] = {
+							["min"] = 13196,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 158392,
+							["max"] = 13196,
+							["damage"] = 13196,
+						},
+						["Божественная буря"] = {
+							["min"] = 5664,
+							["critical"] = 1,
+							["hit"] = 5,
+							["totalhits"] = 6,
+							["id"] = 53385,
+							["max"] = 10997,
+							["damage"] = 40212,
+						},
+						["Тэнь-у Красный Дым: Коварный удар"] = {
+							["min"] = 861,
+							["multistrike"] = 1,
+							["hit"] = 2,
+							["totalhits"] = 2,
+							["id"] = 60195,
+							["max"] = 919,
+							["damage"] = 2056,
+						},
+						["Печать правды"] = {
+							["min"] = 1879,
+							["critical"] = 1,
+							["totalhits"] = 1,
+							["id"] = 42463,
+							["max"] = 1879,
+							["damage"] = 1879,
+						},
+					},
+					["maxhp"] = 241260,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Player-1603-07FF5342",
+					["first"] = 1465326428,
+					["dispells"] = 0,
+					["damagetakenspells"] = {
+						["Атака"] = {
+							["crushing"] = 0,
+							["id"] = 6603,
+							["min"] = 238,
+							["absorbed"] = 0,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["multistrike"] = 0,
+							["name"] = "Атака",
+							["blocked"] = 0,
+							["totalhits"] = 11,
+							["resisted"] = 0,
+							["max"] = 504,
+							["damage"] = 4264,
+						},
+						["Коварный удар"] = {
+							["crushing"] = 0,
+							["id"] = 60195,
+							["min"] = 401,
+							["absorbed"] = 0,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["multistrike"] = 0,
+							["name"] = "Коварный удар",
+							["blocked"] = 0,
+							["totalhits"] = 1,
+							["resisted"] = 0,
+							["max"] = 401,
+							["damage"] = 401,
+						},
+					},
+					["power"] = {
+						[9] = {
+							["amount"] = 3,
+							["spells"] = {
+								[111528] = 1,
+								[141459] = 1,
+								[35395] = 1,
+							},
+						},
+					},
+					["damagetaken"] = 4665,
+					["name"] = "Шир",
+					["healingspells"] = {
+					},
+					["ccbreaks"] = 0,
+					["time"] = 15,
+					["healing"] = 0,
+					["multistrikes"] = 0,
+				}, -- [2]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Шра'тик-рабочий"] = {
+					["players"] = {
+						["Тэнь-у Красный Дым"] = {
+							["taken"] = 3980,
+							["done"] = 0,
+							["role"] = "NONE",
+						},
+						["Шир"] = {
+							["taken"] = 7957,
+							["done"] = 297,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 11937,
+					["done"] = 297,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+				["Шра'тик-восстановитель"] = {
+					["players"] = {
+						["Шир"] = {
+							["taken"] = 9433,
+							["done"] = 0,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 9433,
+					["done"] = 0,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+				["Шра'тик-быстрокрыл"] = {
+					["players"] = {
+						["Тэнь-у Красный Дым"] = {
+							["taken"] = 1397,
+							["done"] = 0,
+							["role"] = "NONE",
+						},
+						["Шир"] = {
+							["taken"] = 10997,
+							["done"] = 1271,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 12394,
+					["done"] = 1271,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+				["Луговой кузнечик"] = {
+					["players"] = {
+						["Тэнь-у Красный Дым"] = {
+							["taken"] = 1207,
+							["done"] = 0,
+							["role"] = "NONE",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 1207,
+					["done"] = 0,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+				["Шра'тик-расчленитель"] = {
+					["players"] = {
+						["Тэнь-у Красный Дым"] = {
+							["taken"] = 7221,
+							["done"] = 0,
+							["role"] = "NONE",
+						},
+						["Шир"] = {
+							["taken"] = 5970,
+							["done"] = 2046,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 13191,
+					["done"] = 2046,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+				["Шра'тик-крохофит"] = {
+					["players"] = {
+						["Тэнь-у Красный Дым"] = {
+							["taken"] = 3437,
+							["done"] = 0,
+							["role"] = "NONE",
+						},
+						["Шир"] = {
+							["taken"] = 50021,
+							["done"] = 1051,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 53458,
+					["done"] = 1051,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 101620,
+			["mobdone"] = 4665,
+			["healing"] = 0,
+			["power"] = {
+				[9] = 3,
+			},
+			["damagetaken"] = 4665,
+			["starttime"] = 1465326427,
+			["shielding"] = 0,
+			["name"] = "Шра'тик-расчленитель (2)",
+			["mobname"] = "Шра'тик-расчленитель",
+			["time"] = 17,
+			["mobhdone"] = 0,
+			["last_action"] = 1465326427,
+			["multistrikes"] = 0,
+		}, -- [2]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["overhealing"] = 0,
+			["interrupts"] = 0,
+			["endtime"] = 1465326420,
+			["damage"] = 62841,
+			["players"] = {
+				{
+					["last"] = 1465326417,
+					["healingabsorbed"] = 0,
+					["class"] = "PALADIN",
+					["damaged"] = {
+						["Новорожденный куньчун"] = 62841,
+					},
+					["auras"] = {
+						["Мольба"] = {
+							["name"] = "Мольба",
+							["active"] = 1,
+							["id"] = 94686,
+							["auratype"] = "BUFF",
+							["uptime"] = 9,
+						},
+						["Порицание"] = {
+							["name"] = "Порицание",
+							["active"] = 0,
+							["id"] = 31803,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 1,
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 62841,
+					["damagespells"] = {
+						["Молот праведника"] = {
+							["min"] = 1614,
+							["critical"] = 1,
+							["hit"] = 4,
+							["totalhits"] = 5,
+							["id"] = 53595,
+							["max"] = 4910,
+							["damage"] = 11425,
+						},
+						["Атака"] = {
+							["min"] = 13052,
+							["critical"] = 1,
+							["totalhits"] = 1,
+							["id"] = 6603,
+							["max"] = 13052,
+							["damage"] = 13052,
+						},
+						["Правосудие"] = {
+							["min"] = 7554,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 20271,
+							["max"] = 7554,
+							["damage"] = 7554,
+						},
+						["Печать правды"] = {
+							["min"] = 965,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 42463,
+							["max"] = 965,
+							["damage"] = 965,
+						},
+						["Тэнь-у Красный Дым: Атака"] = {
+							["min"] = 954,
+							["multistrike"] = 1,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 6603,
+							["max"] = 954,
+							["damage"] = 1268,
+						},
+						["Тэнь-у Красный Дым: Коварный удар"] = {
+							["min"] = 832,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 60195,
+							["max"] = 832,
+							["damage"] = 832,
+						},
+						["Длань Света"] = {
+							["min"] = 654,
+							["hit"] = 7,
+							["totalhits"] = 7,
+							["id"] = 96172,
+							["max"] = 2264,
+							["damage"] = 9359,
+						},
+						["Божественная буря"] = {
+							["min"] = 5486,
+							["hit"] = 3,
+							["totalhits"] = 3,
+							["id"] = 53385,
+							["max"] = 5591,
+							["damage"] = 16598,
+						},
+						["Тэнь-у Красный Дым: Веер клинков"] = {
+							["min"] = 747,
+							["hit"] = 2,
+							["totalhits"] = 2,
+							["id"] = 79851,
+							["max"] = 1041,
+							["damage"] = 1788,
+						},
+					},
+					["maxhp"] = 241260,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Player-1603-07FF5342",
+					["first"] = 1465326410,
+					["dispells"] = 0,
+					["damagetakenspells"] = {
+						["Атака"] = {
+							["crushing"] = 0,
+							["id"] = 6603,
+							["min"] = 449,
+							["absorbed"] = 0,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["multistrike"] = 0,
+							["name"] = "Атака",
+							["blocked"] = 0,
+							["totalhits"] = 2,
+							["resisted"] = 0,
+							["max"] = 475,
+							["damage"] = 924,
+						},
+					},
+					["power"] = {
+						[9] = {
+							["amount"] = 2,
+							["spells"] = {
+								[53595] = 1,
+								[111528] = 1,
+							},
+						},
+					},
+					["damagetaken"] = 924,
+					["name"] = "Шир",
+					["healingspells"] = {
+					},
+					["ccbreaks"] = 0,
+					["time"] = 7,
+					["healing"] = 0,
+					["multistrikes"] = 0,
+				}, -- [1]
+				{
+					["last"] = 1465326418,
+					["healingabsorbed"] = 0,
+					["damaged"] = {
+					},
+					["auras"] = {
+						["Незаметность"] = {
+							["name"] = "Незаметность",
+							["active"] = 2,
+							["id"] = 125774,
+							["auratype"] = "BUFF",
+							["uptime"] = 3,
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 0,
+					["damagespells"] = {
+					},
+					["maxhp"] = 0,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Creature-0-1927-870-65-63622-0000571AEA",
+					["healing"] = 0,
+					["dispells"] = 0,
+					["damagetakenspells"] = {
+					},
+					["power"] = {
+					},
+					["damagetaken"] = 0,
+					["name"] = "Тэнь",
+					["first"] = 1465326411,
+					["ccbreaks"] = 0,
+					["time"] = 7,
+					["healingspells"] = {
+					},
+					["multistrikes"] = 0,
+				}, -- [2]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Новорожденный куньчун"] = {
+					["players"] = {
+						["Тэнь-у Красный Дым"] = {
+							["taken"] = 3888,
+							["done"] = 0,
+							["role"] = "NONE",
+						},
+						["Шир"] = {
+							["taken"] = 58953,
+							["done"] = 924,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 62841,
+					["done"] = 924,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 62841,
+			["mobdone"] = 924,
+			["healing"] = 0,
+			["power"] = {
+				[9] = 2,
+			},
+			["damagetaken"] = 924,
+			["starttime"] = 1465326410,
+			["shielding"] = 0,
+			["name"] = "Новорожденный куньчун",
+			["mobname"] = "Новорожденный куньчун",
+			["time"] = 10,
+			["mobhdone"] = 0,
+			["last_action"] = 1465326410,
+			["multistrikes"] = 0,
+		}, -- [3]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["overhealing"] = 0,
+			["interrupts"] = 0,
+			["endtime"] = 1465326392,
+			["damage"] = 80115,
+			["players"] = {
+				{
+					["last"] = 1465326391,
+					["healingabsorbed"] = 0,
+					["class"] = "PALADIN",
+					["damaged"] = {
+						["Шра'тик-рабочий"] = 25432,
+						["Прожорливый куньчун"] = 45244,
+						["Шра'тик-восстановитель"] = 9439,
+					},
+					["auras"] = {
+						["Мольба"] = {
+							["name"] = "Мольба",
+							["active"] = 1,
+							["id"] = 94686,
+							["auratype"] = "BUFF",
+							["uptime"] = 11,
+						},
+						["Самоотверженный целитель"] = {
+							["name"] = "Самоотверженный целитель",
+							["active"] = 1,
+							["id"] = 114250,
+							["auratype"] = "BUFF",
+							["uptime"] = 16,
+						},
+						["Знак Кровавой Глазницы"] = {
+							["name"] = "Знак Кровавой Глазницы",
+							["active"] = 0,
+							["id"] = 173322,
+							["auratype"] = "BUFF",
+							["uptime"] = 12,
+						},
+						["Порицание"] = {
+							["name"] = "Порицание",
+							["active"] = 0,
+							["id"] = 31803,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 6,
+						},
+						["Экзорцизм!"] = {
+							["name"] = "Экзорцизм!",
+							["active"] = 0,
+							["id"] = 59578,
+							["auratype"] = "BUFF",
+							["uptime"] = 6,
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 80115,
+					["damagespells"] = {
+						["Молот праведника"] = {
+							["min"] = 2602,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 53595,
+							["max"] = 2602,
+							["damage"] = 2602,
+						},
+						["Атака"] = {
+							["min"] = 6403,
+							["multistrike"] = 1,
+							["hit"] = 2,
+							["totalhits"] = 2,
+							["id"] = 6603,
+							["max"] = 6614,
+							["damage"] = 14865,
+						},
+						["Правосудие"] = {
+							["min"] = 7554,
+							["critical"] = 1,
+							["hit"] = 2,
+							["totalhits"] = 3,
+							["id"] = 20271,
+							["max"] = 15109,
+							["damage"] = 30217,
+						},
+						["Тэнь-у Красный Дым: Потрошение"] = {
+							["min"] = 623,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 79852,
+							["max"] = 623,
+							["damage"] = 623,
+						},
+						["Молот гнева"] = {
+							["min"] = 13196,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 158392,
+							["max"] = 13196,
+							["damage"] = 13196,
+						},
+						["Тэнь-у Красный Дым: Веер клинков"] = {
+							["min"] = 989,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 79851,
+							["max"] = 989,
+							["damage"] = 989,
+						},
+						["Тэнь-у Красный Дым: Атака"] = {
+							["min"] = 408,
+							["multistrike"] = 3,
+							["max"] = 1055,
+							["hit"] = 10,
+							["totalhits"] = 11,
+							["id"] = 6603,
+							["MISS"] = 1,
+							["damage"] = 7602,
+						},
+						["Длань Света"] = {
+							["min"] = 1054,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 96172,
+							["max"] = 1054,
+							["damage"] = 1054,
+						},
+						["Порицание"] = {
+							["min"] = 847,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 31803,
+							["max"] = 847,
+							["damage"] = 847,
+						},
+						["Тэнь-у Красный Дым: Коварный удар"] = {
+							["min"] = 945,
+							["hit"] = 2,
+							["totalhits"] = 2,
+							["id"] = 60195,
+							["max"] = 1100,
+							["damage"] = 2045,
+						},
+						["Печать правды"] = {
+							["min"] = 927,
+							["multistrike"] = 2,
+							["critical"] = 1,
+							["hit"] = 4,
+							["totalhits"] = 5,
+							["id"] = 42463,
+							["max"] = 1781,
+							["damage"] = 6075,
+						},
+					},
+					["maxhp"] = 241260,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Player-1603-07FF5342",
+					["first"] = 1465326376,
+					["dispells"] = 0,
+					["damagetakenspells"] = {
+						["Атака"] = {
+							["crushing"] = 0,
+							["id"] = 6603,
+							["min"] = 234,
+							["absorbed"] = 0,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["multistrike"] = 0,
+							["name"] = "Атака",
+							["blocked"] = 0,
+							["totalhits"] = 1,
+							["resisted"] = 0,
+							["max"] = 234,
+							["damage"] = 234,
+						},
+					},
+					["power"] = {
+						[9] = {
+							["amount"] = 5,
+							["spells"] = {
+								[111528] = 3,
+								[141459] = 1,
+								[53595] = 1,
+							},
+						},
+					},
+					["damagetaken"] = 234,
+					["name"] = "Шир",
+					["healingspells"] = {
+					},
+					["ccbreaks"] = 0,
+					["time"] = 15,
+					["healing"] = 0,
+					["multistrikes"] = 0,
+				}, -- [1]
+				{
+					["last"] = 1465326391,
+					["healingabsorbed"] = 0,
+					["damaged"] = {
+					},
+					["auras"] = {
+						["Незаметность"] = {
+							["name"] = "Незаметность",
+							["active"] = 2,
+							["id"] = 125774,
+							["auratype"] = "BUFF",
+							["uptime"] = 4,
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 0,
+					["damagespells"] = {
+					},
+					["maxhp"] = 0,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Creature-0-1927-870-65-63622-0000571AEA",
+					["healing"] = 0,
+					["dispells"] = 0,
+					["damagetakenspells"] = {
+					},
+					["power"] = {
+					},
+					["damagetaken"] = 0,
+					["name"] = "Тэнь",
+					["first"] = 1465326376,
+					["ccbreaks"] = 0,
+					["time"] = 15,
+					["healingspells"] = {
+					},
+					["multistrikes"] = 0,
+				}, -- [2]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Шра'тик-рабочий"] = {
+					["players"] = {
+						["Шир"] = {
+							["taken"] = 15109,
+							["done"] = 0,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+						["Тэнь-у Красный Дым"] = {
+							["taken"] = 10323,
+							["done"] = 0,
+							["role"] = "NONE",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 25432,
+					["done"] = 0,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+				["Прожорливый куньчун"] = {
+					["players"] = {
+						["Шир"] = {
+							["taken"] = 45244,
+							["done"] = 0,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 45244,
+					["done"] = 0,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+				["Шра'тик-восстановитель"] = {
+					["players"] = {
+						["Тэнь-у Красный Дым"] = {
+							["taken"] = 936,
+							["done"] = 0,
+							["role"] = "NONE",
+						},
+						["Шир"] = {
+							["taken"] = 8503,
+							["done"] = 234,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 9439,
+					["done"] = 234,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 80115,
+			["mobdone"] = 234,
+			["healing"] = 0,
+			["power"] = {
+				[9] = 5,
+			},
+			["damagetaken"] = 234,
+			["starttime"] = 1465326376,
+			["shielding"] = 0,
+			["name"] = "Шра'тик-восстановитель",
+			["mobname"] = "Шра'тик-восстановитель",
+			["time"] = 16,
+			["mobhdone"] = 0,
+			["last_action"] = 1465326376,
+			["multistrikes"] = 0,
+		}, -- [4]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["overhealing"] = 0,
+			["interrupts"] = 0,
+			["endtime"] = 1465326326,
+			["damage"] = 33056,
+			["players"] = {
+				{
+					["last"] = 1465326324,
+					["healingabsorbed"] = 0,
+					["class"] = "PALADIN",
+					["damaged"] = {
+						["Прожорливый куньчун"] = 33056,
+					},
+					["auras"] = {
+						["Мольба"] = {
+							["name"] = "Мольба",
+							["active"] = 1,
+							["id"] = 94686,
+							["auratype"] = "BUFF",
+							["uptime"] = 2,
+						},
+						["Порицание"] = {
+							["name"] = "Порицание",
+							["active"] = 0,
+							["id"] = 31803,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 5,
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 33056,
+					["damagespells"] = {
+						["Тэнь-у Красный Дым: Веер клинков"] = {
+							["min"] = 757,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 79851,
+							["max"] = 757,
+							["damage"] = 757,
+						},
+						["Печать правды"] = {
+							["min"] = 1861,
+							["critical"] = 2,
+							["totalhits"] = 2,
+							["id"] = 42463,
+							["max"] = 1932,
+							["damage"] = 3793,
+						},
+						["Тэнь-у Красный Дым: Атака"] = {
+							["min"] = 318,
+							["hit"] = 5,
+							["totalhits"] = 5,
+							["id"] = 6603,
+							["max"] = 857,
+							["damage"] = 3233,
+						},
+						["Правосудие"] = {
+							["min"] = 15108,
+							["multistrike"] = 1,
+							["critical"] = 1,
+							["totalhits"] = 1,
+							["max"] = 15108,
+							["id"] = 20271,
+							["damage"] = 17374,
+						},
+						["Порицание"] = {
+							["min"] = 565,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 31803,
+							["max"] = 565,
+							["damage"] = 565,
+						},
+						["Тэнь-у Красный Дым: Коварный удар"] = {
+							["min"] = 934,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 60195,
+							["max"] = 934,
+							["damage"] = 934,
+						},
+						["Атака"] = {
+							["min"] = 6400,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 6603,
+							["max"] = 6400,
+							["damage"] = 6400,
+						},
+					},
+					["maxhp"] = 241260,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Player-1603-07FF5342",
+					["first"] = 1465326319,
+					["dispells"] = 0,
+					["damagetakenspells"] = {
+						["Атака"] = {
+							["crushing"] = 0,
+							["id"] = 6603,
+							["min"] = 366,
+							["absorbed"] = 0,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["multistrike"] = 0,
+							["name"] = "Атака",
+							["blocked"] = 0,
+							["totalhits"] = 1,
+							["resisted"] = 0,
+							["max"] = 366,
+							["damage"] = 366,
+						},
+					},
+					["power"] = {
+						[9] = {
+							["amount"] = 1,
+							["spells"] = {
+								[111528] = 1,
+							},
+						},
+					},
+					["damagetaken"] = 366,
+					["name"] = "Шир",
+					["healingspells"] = {
+					},
+					["ccbreaks"] = 0,
+					["time"] = 5,
+					["healing"] = 0,
+					["multistrikes"] = 0,
+				}, -- [1]
+				{
+					["last"] = 1465326325,
+					["healingabsorbed"] = 0,
+					["damaged"] = {
+					},
+					["auras"] = {
+						["Незаметность"] = {
+							["name"] = "Незаметность",
+							["active"] = 2,
+							["id"] = 125774,
+							["auratype"] = "BUFF",
+							["uptime"] = 1,
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 0,
+					["damagespells"] = {
+					},
+					["maxhp"] = 0,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Creature-0-1927-870-65-63622-0000571AEA",
+					["healing"] = 0,
+					["dispells"] = 0,
+					["damagetakenspells"] = {
+					},
+					["power"] = {
+					},
+					["damagetaken"] = 0,
+					["name"] = "Тэнь",
+					["first"] = 1465326325,
+					["ccbreaks"] = 0,
+					["time"] = 0,
+					["healingspells"] = {
+					},
+					["multistrikes"] = 0,
+				}, -- [2]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Прожорливый куньчун"] = {
+					["players"] = {
+						["Тэнь-у Красный Дым"] = {
+							["taken"] = 4924,
+							["done"] = 0,
+							["role"] = "NONE",
+						},
+						["Шир"] = {
+							["taken"] = 28132,
+							["done"] = 366,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 33056,
+					["done"] = 366,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 33056,
+			["mobdone"] = 366,
+			["healing"] = 0,
+			["power"] = {
+				[9] = 1,
+			},
+			["damagetaken"] = 366,
+			["starttime"] = 1465326319,
+			["shielding"] = 0,
+			["name"] = "Прожорливый куньчун",
+			["mobname"] = "Прожорливый куньчун",
+			["time"] = 7,
+			["mobhdone"] = 0,
+			["last_action"] = 1465326319,
+			["multistrikes"] = 0,
+		}, -- [5]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["overhealing"] = 0,
+			["interrupts"] = 0,
+			["endtime"] = 1465326282,
+			["damage"] = 55068,
+			["players"] = {
+				{
+					["last"] = 1465326281,
+					["healingabsorbed"] = 0,
+					["damaged"] = {
+					},
+					["auras"] = {
+						["Незаметность"] = {
+							["name"] = "Незаметность",
+							["active"] = 2,
+							["id"] = 125774,
+							["auratype"] = "BUFF",
+							["uptime"] = 3,
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 0,
+					["damagespells"] = {
+					},
+					["maxhp"] = 0,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Creature-0-1927-870-65-63622-0000571ABB",
+					["healing"] = 0,
+					["dispells"] = 0,
+					["damagetakenspells"] = {
+					},
+					["power"] = {
+					},
+					["damagetaken"] = 0,
+					["name"] = "Тэнь",
+					["first"] = 1465326273,
+					["ccbreaks"] = 0,
+					["time"] = 8,
+					["healingspells"] = {
+					},
+					["multistrikes"] = 0,
+				}, -- [1]
+				{
+					["last"] = 1465326281,
+					["healingabsorbed"] = 0,
+					["class"] = "PALADIN",
+					["damaged"] = {
+						["Шра'тик-быстрокрыл"] = 15771,
+						["Шра'тик-расчленитель"] = 26802,
+						["Шра'тик-крохофит"] = 12495,
+					},
+					["auras"] = {
+						["Знак Кровавой Глазницы"] = {
+							["name"] = "Знак Кровавой Глазницы",
+							["active"] = 1,
+							["id"] = 173322,
+							["auratype"] = "BUFF",
+							["uptime"] = 7,
+						},
+						["Порицание"] = {
+							["name"] = "Порицание",
+							["active"] = 0,
+							["id"] = 31803,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 2,
+						},
+						["Мольба"] = {
+							["name"] = "Мольба",
+							["active"] = 1,
+							["id"] = 94686,
+							["auratype"] = "BUFF",
+							["uptime"] = 7,
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 55068,
+					["damagespells"] = {
+						["Длань Света"] = {
+							["min"] = 2352,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 96172,
+							["max"] = 2352,
+							["damage"] = 2352,
+						},
+						["Печать правды"] = {
+							["min"] = 909,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 42463,
+							["max"] = 909,
+							["damage"] = 909,
+						},
+						["Тэнь-у Красный Дым: Атака"] = {
+							["min"] = 387,
+							["multistrike"] = 2,
+							["hit"] = 5,
+							["totalhits"] = 5,
+							["id"] = 6603,
+							["max"] = 1073,
+							["damage"] = 4209,
+						},
+						["Правосудие"] = {
+							["min"] = 7554,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 20271,
+							["max"] = 7554,
+							["damage"] = 7554,
+						},
+						["Тэнь-у Красный Дым: Веер клинков"] = {
+							["min"] = 878,
+							["critical"] = 1,
+							["hit"] = 2,
+							["totalhits"] = 3,
+							["id"] = 79851,
+							["max"] = 2156,
+							["damage"] = 4056,
+						},
+						["Божественная буря"] = {
+							["min"] = 5550,
+							["critical"] = 1,
+							["hit"] = 2,
+							["totalhits"] = 3,
+							["id"] = 53385,
+							["max"] = 11957,
+							["damage"] = 23314,
+						},
+						["Атака"] = {
+							["min"] = 6261,
+							["hit"] = 2,
+							["totalhits"] = 2,
+							["id"] = 6603,
+							["max"] = 6413,
+							["damage"] = 12674,
+						},
+					},
+					["maxhp"] = 241260,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Player-1603-07FF5342",
+					["first"] = 1465326273,
+					["dispells"] = 0,
+					["damagetakenspells"] = {
+						["Атака"] = {
+							["crushing"] = 0,
+							["id"] = 6603,
+							["min"] = 213,
+							["absorbed"] = 0,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["multistrike"] = 0,
+							["name"] = "Атака",
+							["blocked"] = 0,
+							["totalhits"] = 3,
+							["resisted"] = 0,
+							["max"] = 402,
+							["damage"] = 918,
+						},
+						["Коварный удар"] = {
+							["crushing"] = 0,
+							["id"] = 60195,
+							["min"] = 471,
+							["absorbed"] = 0,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["multistrike"] = 0,
+							["name"] = "Коварный удар",
+							["blocked"] = 0,
+							["totalhits"] = 1,
+							["resisted"] = 0,
+							["max"] = 471,
+							["damage"] = 471,
+						},
+					},
+					["power"] = {
+					},
+					["damagetaken"] = 1389,
+					["name"] = "Шир",
+					["healingspells"] = {
+					},
+					["ccbreaks"] = 0,
+					["time"] = 8,
+					["healing"] = 0,
+					["multistrikes"] = 0,
+				}, -- [2]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Шра'тик-быстрокрыл"] = {
+					["players"] = {
+						["Тэнь-у Красный Дым"] = {
+							["taken"] = 895,
+							["done"] = 0,
+							["role"] = "NONE",
+						},
+						["Шир"] = {
+							["taken"] = 14876,
+							["done"] = 0,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 15771,
+					["done"] = 0,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+				["Шра'тик-расчленитель"] = {
+					["players"] = {
+						["Тэнь-у Красный Дым"] = {
+							["taken"] = 3034,
+							["done"] = 0,
+							["role"] = "NONE",
+						},
+						["Шир"] = {
+							["taken"] = 23768,
+							["done"] = 684,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 26802,
+					["done"] = 684,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+				["Шра'тик-крохофит"] = {
+					["players"] = {
+						["Тэнь-у Красный Дым"] = {
+							["taken"] = 4336,
+							["done"] = 0,
+							["role"] = "NONE",
+						},
+						["Шир"] = {
+							["taken"] = 8159,
+							["done"] = 705,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 12495,
+					["done"] = 705,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 55068,
+			["mobdone"] = 1389,
+			["healing"] = 0,
+			["power"] = {
+			},
+			["damagetaken"] = 1389,
+			["starttime"] = 1465326273,
+			["shielding"] = 0,
+			["name"] = "Шра'тик-быстрокрыл (2)",
+			["mobname"] = "Шра'тик-быстрокрыл",
+			["time"] = 9,
+			["mobhdone"] = 0,
+			["last_action"] = 1465326273,
+			["multistrikes"] = 0,
+		}, -- [6]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["overhealing"] = 0,
+			["interrupts"] = 0,
+			["endtime"] = 1465326266,
+			["damage"] = 20942,
+			["players"] = {
+				{
+					["last"] = 1465326264,
+					["healingabsorbed"] = 0,
+					["class"] = "PALADIN",
+					["damaged"] = {
+						["Шра'тик-расчленитель"] = 4152,
+						["Шра'тик-рабочий"] = 16790,
+					},
+					["auras"] = {
+						["Порицание"] = {
+							["name"] = "Порицание",
+							["active"] = 0,
+							["id"] = 31803,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 5,
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 20942,
+					["damagespells"] = {
+						["Длань Света"] = {
+							["min"] = 478,
+							["hit"] = 2,
+							["totalhits"] = 2,
+							["id"] = 96172,
+							["max"] = 746,
+							["damage"] = 1224,
+						},
+						["Печать правды"] = {
+							["min"] = 910,
+							["hit"] = 2,
+							["totalhits"] = 2,
+							["id"] = 42463,
+							["max"] = 950,
+							["damage"] = 1860,
+						},
+						["Правосудие"] = {
+							["min"] = 7554,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 20271,
+							["max"] = 7554,
+							["damage"] = 7554,
+						},
+						["Молот праведника"] = {
+							["min"] = 1576,
+							["hit"] = 2,
+							["totalhits"] = 2,
+							["id"] = 53595,
+							["max"] = 2456,
+							["damage"] = 4032,
+						},
+						["Атака"] = {
+							["min"] = 6272,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 6603,
+							["max"] = 6272,
+							["damage"] = 6272,
+						},
+					},
+					["maxhp"] = 241260,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Player-1603-07FF5342",
+					["first"] = 1465326258,
+					["dispells"] = 0,
+					["damagetakenspells"] = {
+					},
+					["power"] = {
+						[9] = {
+							["amount"] = 2,
+							["spells"] = {
+								[53595] = 1,
+								[111528] = 1,
+							},
+						},
+					},
+					["damagetaken"] = 0,
+					["name"] = "Шир",
+					["healingspells"] = {
+					},
+					["ccbreaks"] = 0,
+					["time"] = 6,
+					["healing"] = 0,
+					["multistrikes"] = 0,
+				}, -- [1]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Шра'тик-расчленитель"] = {
+					["players"] = {
+						["Шир"] = {
+							["taken"] = 4152,
+							["done"] = 0,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 4152,
+					["done"] = 0,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+				["Шра'тик-рабочий"] = {
+					["players"] = {
+						["Шир"] = {
+							["taken"] = 16790,
+							["done"] = 0,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 16790,
+					["done"] = 0,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 20942,
+			["mobdone"] = 0,
+			["healing"] = 0,
+			["power"] = {
+				[9] = 2,
+			},
+			["damagetaken"] = 0,
+			["starttime"] = 1465326258,
+			["shielding"] = 0,
+			["name"] = "Шра'тик-расчленитель",
+			["mobname"] = "Шра'тик-расчленитель",
+			["time"] = 8,
+			["mobhdone"] = 0,
+			["last_action"] = 1465326258,
+			["multistrikes"] = 0,
+		}, -- [7]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["overhealing"] = 0,
+			["interrupts"] = 0,
+			["endtime"] = 1465326255,
+			["damage"] = 19222,
+			["players"] = {
+				{
+					["last"] = 1465326253,
+					["healingabsorbed"] = 0,
+					["class"] = "PALADIN",
+					["damaged"] = {
+						["Шра'тик-быстрокрыл"] = 9641,
+						["Шра'тик-восстановитель"] = 9581,
+					},
+					["auras"] = {
+						["Порицание"] = {
+							["name"] = "Порицание",
+							["active"] = 0,
+							["id"] = 31803,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 1,
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 19222,
+					["damagespells"] = {
+						["Правосудие"] = {
+							["id"] = 20271,
+							["multistrike"] = 1,
+							["totalhits"] = 0,
+							["damage"] = 2266,
+						},
+						["Печать правды"] = {
+							["min"] = 896,
+							["hit"] = 2,
+							["totalhits"] = 2,
+							["id"] = 42463,
+							["max"] = 937,
+							["damage"] = 1833,
+						},
+						["Атака"] = {
+							["min"] = 6479,
+							["multistrike"] = 1,
+							["hit"] = 2,
+							["totalhits"] = 2,
+							["id"] = 6603,
+							["max"] = 6619,
+							["damage"] = 15123,
+						},
+					},
+					["maxhp"] = 241260,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Player-1603-07FF5342",
+					["first"] = 1465326249,
+					["dispells"] = 0,
+					["damagetakenspells"] = {
+					},
+					["power"] = {
+					},
+					["damagetaken"] = 0,
+					["name"] = "Шир",
+					["healingspells"] = {
+					},
+					["ccbreaks"] = 0,
+					["time"] = 4,
+					["healing"] = 0,
+					["multistrikes"] = 0,
+				}, -- [1]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Шра'тик-быстрокрыл"] = {
+					["players"] = {
+						["Шир"] = {
+							["taken"] = 9641,
+							["done"] = 0,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 9641,
+					["done"] = 0,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+				["Шра'тик-восстановитель"] = {
+					["players"] = {
+						["Шир"] = {
+							["taken"] = 9581,
+							["done"] = 0,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 9581,
+					["done"] = 0,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 19222,
+			["mobdone"] = 0,
+			["healing"] = 0,
+			["power"] = {
+			},
+			["damagetaken"] = 0,
+			["starttime"] = 1465326249,
+			["shielding"] = 0,
+			["name"] = "Шра'тик-быстрокрыл",
+			["mobname"] = "Шра'тик-быстрокрыл",
+			["time"] = 6,
+			["mobhdone"] = 0,
+			["last_action"] = 1465326249,
+			["multistrikes"] = 0,
+		}, -- [8]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["overhealing"] = 0,
+			["interrupts"] = 0,
+			["endtime"] = 1465326245,
+			["damage"] = 64689,
+			["players"] = {
+				{
+					["last"] = 1465326243,
+					["healingabsorbed"] = 0,
+					["class"] = "PALADIN",
+					["damaged"] = {
+						["Шра'тик - лидер роя"] = 36672,
+						["Шра'тик-быстрокрыл"] = 15119,
+						["Шра'тик-восстановитель"] = 12898,
+					},
+					["auras"] = {
+						["Мольба"] = {
+							["name"] = "Мольба",
+							["active"] = 1,
+							["id"] = 94686,
+							["auratype"] = "BUFF",
+							["uptime"] = 4,
+						},
+						["Самоотверженный целитель"] = {
+							["name"] = "Самоотверженный целитель",
+							["active"] = 1,
+							["id"] = 114250,
+							["auratype"] = "BUFF",
+							["uptime"] = 9,
+						},
+						["Знак Кровавой Глазницы"] = {
+							["name"] = "Знак Кровавой Глазницы",
+							["active"] = 1,
+							["id"] = 173322,
+							["auratype"] = "BUFF",
+							["uptime"] = 9,
+						},
+						["Порицание"] = {
+							["name"] = "Порицание",
+							["active"] = 0,
+							["id"] = 31803,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 5,
+						},
+						["Вопящие духи"] = {
+							["name"] = "Вопящие духи",
+							["active"] = 1,
+							["id"] = 177042,
+							["auratype"] = "BUFF",
+							["uptime"] = 9,
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 64689,
+					["damagespells"] = {
+						["Молот праведника"] = {
+							["min"] = 1558,
+							["hit"] = 3,
+							["totalhits"] = 3,
+							["id"] = 53595,
+							["max"] = 2572,
+							["damage"] = 5705,
+						},
+						["Атака"] = {
+							["min"] = 6275,
+							["hit"] = 3,
+							["totalhits"] = 3,
+							["id"] = 6603,
+							["max"] = 6412,
+							["damage"] = 19001,
+						},
+						["Длань Света"] = {
+							["min"] = 1262,
+							["hit"] = 4,
+							["totalhits"] = 4,
+							["id"] = 96172,
+							["max"] = 4511,
+							["damage"] = 9133,
+						},
+						["Правосудие"] = {
+							["min"] = 7554,
+							["hit"] = 2,
+							["totalhits"] = 2,
+							["id"] = 20271,
+							["max"] = 7554,
+							["damage"] = 15108,
+						},
+						["Порицание"] = {
+							["min"] = 565,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 31803,
+							["max"] = 565,
+							["damage"] = 565,
+						},
+						["Божественная буря"] = {
+							["min"] = 5567,
+							["hit"] = 2,
+							["totalhits"] = 2,
+							["id"] = 53385,
+							["max"] = 5856,
+							["damage"] = 11423,
+						},
+						["Печать правды"] = {
+							["min"] = 928,
+							["hit"] = 4,
+							["totalhits"] = 4,
+							["id"] = 42463,
+							["max"] = 944,
+							["damage"] = 3754,
+						},
+					},
+					["maxhp"] = 241260,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Player-1603-07FF5342",
+					["first"] = 1465326236,
+					["dispells"] = 0,
+					["damagetakenspells"] = {
+						["Атака"] = {
+							["crushing"] = 0,
+							["id"] = 6603,
+							["min"] = 197,
+							["absorbed"] = 0,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["multistrike"] = 0,
+							["name"] = "Атака",
+							["blocked"] = 0,
+							["totalhits"] = 3,
+							["resisted"] = 0,
+							["max"] = 448,
+							["damage"] = 1027,
+						},
+					},
+					["power"] = {
+						[9] = {
+							["amount"] = 2,
+							["spells"] = {
+								[53595] = 1,
+								[111528] = 1,
+							},
+						},
+					},
+					["damagetaken"] = 1027,
+					["name"] = "Шир",
+					["healingspells"] = {
+					},
+					["ccbreaks"] = 0,
+					["time"] = 7,
+					["healing"] = 0,
+					["multistrikes"] = 0,
+				}, -- [1]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Шра'тик - лидер роя"] = {
+					["players"] = {
+						["Шир"] = {
+							["taken"] = 36672,
+							["done"] = 382,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 36672,
+					["done"] = 382,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+				["Шра'тик-быстрокрыл"] = {
+					["players"] = {
+						["Шир"] = {
+							["taken"] = 15119,
+							["done"] = 448,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 15119,
+					["done"] = 448,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+				["Шра'тик-восстановитель"] = {
+					["players"] = {
+						["Шир"] = {
+							["taken"] = 12898,
+							["done"] = 197,
+							["role"] = "NONE",
+							["class"] = "PALADIN",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 12898,
+					["done"] = 197,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 64689,
+			["mobdone"] = 1027,
+			["healing"] = 0,
+			["power"] = {
+				[9] = 2,
+			},
+			["damagetaken"] = 1027,
+			["starttime"] = 1465326236,
+			["shielding"] = 0,
+			["name"] = "Шра'тик - лидер роя",
+			["mobname"] = "Шра'тик - лидер роя",
+			["time"] = 9,
+			["mobhdone"] = 0,
+			["last_action"] = 1465326236,
+			["multistrikes"] = 0,
+		}, -- [9]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["overhealing"] = 0,
+			["interrupts"] = 0,
+			["multistrikes"] = 0,
+			["damage"] = 16607,
+			["players"] = {
+				{
+					["last"] = 1465209816,
+					["healingabsorbed"] = 0,
+					["class"] = "PALADIN",
+					["damaged"] = {
+						["Искатель из Доцзяна"] = 16607,
+					},
+					["auras"] = {
+						["Знак Кровавой Глазницы"] = {
+							["name"] = "Знак Кровавой Глазницы",
+							["active"] = 1,
+							["id"] = 173322,
+							["uptime"] = 6,
+							["auratype"] = "BUFF",
+						},
+						["Порицание"] = {
+							["name"] = "Порицание",
+							["active"] = 0,
+							["id"] = 31803,
+							["uptime"] = 6,
+							["auratype"] = "DEBUFF",
+						},
+						["Самоотверженный целитель"] = {
+							["name"] = "Самоотверженный целитель",
+							["active"] = 1,
+							["id"] = 114250,
+							["uptime"] = 6,
+							["auratype"] = "BUFF",
+						},
+					},
+					["role"] = "NONE",
+					["overhealing"] = 0,
+					["interrupts"] = 0,
+					["damage"] = 16607,
+					["damagespells"] = {
+						["Правосудие"] = {
+							["min"] = 15108,
+							["critical"] = 1,
+							["totalhits"] = 1,
+							["id"] = 20271,
+							["max"] = 15108,
+							["damage"] = 15108,
+						},
+						["Порицание"] = {
+							["min"] = 283,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 31803,
+							["max"] = 283,
+							["damage"] = 283,
+						},
+						["Печать правды"] = {
+							["min"] = 936,
+							["multistrike"] = 1,
+							["hit"] = 1,
+							["totalhits"] = 1,
+							["id"] = 42463,
+							["max"] = 936,
+							["damage"] = 1216,
+						},
+					},
+					["first"] = 1465209810,
+					["healed"] = {
+					},
+					["shielding"] = 0,
+					["id"] = "Player-1603-07FF5342",
+					["maxhp"] = 241260,
+					["healing"] = 0,
+					["damagetakenspells"] = {
+						["Атака"] = {
+							["crushing"] = 0,
+							["id"] = 6603,
+							["damage"] = 649,
+							["max"] = 330,
+							["name"] = "Атака",
+							["glancing"] = 0,
+							["multistrike"] = 0,
+							["critical"] = 0,
+							["blocked"] = 0,
+							["totalhits"] = 2,
+							["resisted"] = 0,
+							["min"] = 319,
+							["absorbed"] = 0,
+						},
+					},
+					["time"] = 6,
+					["ccbreaks"] = 0,
+					["name"] = "Шир",
+					["healingspells"] = {
+					},
+					["damagetaken"] = 649,
+					["power"] = {
+						[9] = {
+							["spells"] = {
+								[111528] = 1,
+							},
+							["amount"] = 1,
+						},
+					},
+					["dispells"] = 0,
+					["multistrikes"] = 0,
+				}, -- [1]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Искатель из Доцзяна"] = {
+					["players"] = {
+						["Шир"] = {
+							["taken"] = 16607,
+							["done"] = 649,
+							["class"] = "PALADIN",
+							["role"] = "NONE",
+						},
+					},
+					["hdone"] = 0,
+					["hdonespell"] = {
+					},
+					["taken"] = 16607,
+					["done"] = 649,
+					["htaken"] = 0,
+					["htakenspell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 16607,
+			["mobdone"] = 649,
+			["healing"] = 0,
+			["power"] = {
+				[9] = 1,
+			},
+			["time"] = 6,
+			["starttime"] = 1465209810,
+			["shielding"] = 0,
+			["name"] = "Искатель из Доцзяна",
+			["mobname"] = "Искатель из Доцзяна",
+			["damagetaken"] = 649,
+			["mobhdone"] = 0,
+			["last_action"] = 1465209810,
+			["endtime"] = 1465209816,
+		}, -- [10]
+	},
+}

@@ -1,0 +1,61 @@
+
+AucAdvancedConfig = {
+	["users.Король-лич.Шир"] = "Default",
+	["profile.Default"] = {
+		["stat"] = {
+			["sales"] = {
+				["ignoredsigs"] = {
+				},
+			},
+		},
+		["util"] = {
+			["automagic"] = {
+				["ammailguix"] = 160,
+				["uierrormsg"] = 1,
+				["ammailguiy"] = 99.9999923706055,
+				["SavedMailButtons"] = {
+				},
+			},
+			["ahwindowcontrol"] = {
+				["ahframeanchors"] = "TOPLEFT:TOPLEFT:0.0:-32.5",
+			},
+		},
+	},
+	["version"] = 1,
+}
+AucAdvancedData = {
+	["AserArbitrageRealms"] = {
+		["Король-лич"] = "Шир",
+	},
+	["Stats"] = {
+	},
+	["UtilSearchUiData"] = {
+		["Version"] = 1,
+		["Current"] = {
+			["snatch.itemsList"] = {
+			},
+		},
+		["Global"] = {
+			["configator.left"] = 164.400024414063,
+			["configator.top"] = 634,
+		},
+		["SavedSearches"] = {
+		},
+	},
+}
+AucAdvancedServers = {
+	["ConnectedRealmTables"] = {
+		["#Король-лич"] = {
+			"Корольлич", -- [1]
+			"Седогрив", -- [2]
+		},
+	},
+	["Version"] = 1,
+	["KnownRealms"] = {
+		["Король-лич"] = "#Король-лич",
+	},
+	["KnownServerKeys"] = {
+		["#Король-лич"] = 1465326091,
+	},
+	["Timestamp"] = 1464719750,
+}
