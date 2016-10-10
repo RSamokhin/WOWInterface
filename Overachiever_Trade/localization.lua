@@ -18,8 +18,7 @@ elseif (locale == "deDE") then  -- German
 L["TRADE_COOKING_OBJRENAME"] = [=[Rhinoziöses Wyrmsteak=Rhinoziöses Wurmsteak
 Würziger Wyrmburger=Würziger Wurmburger
 Wyrmfrikadellen=Wurmfrikadellen
-Verwende dies, wenn in der Erfolgskriterienliste ein Gericht falsch benannt ist. Verwende dieses Format "<falscher name>=<richtiger Gegenstandsname>". Trenne die Gegenstände mittels ENTER-Taste.
-Handel]=]
+]=]
 L["TRADE_SKILLET_ACHSORT"] = "Nach Erfolg"
 
 
@@ -40,7 +39,7 @@ L["TRADE_SKILLET_ACHSORT"] = "的成就"
 
 
 elseif (locale == "zhCN") then  -- Simplified Chinese
--- L["TRADE_COOKING_OBJRENAME"] = ""
+L["TRADE_COOKING_OBJRENAME"] = "交易"
 L["TRADE_SKILLET_ACHSORT"] = "的成就"
 
 

@@ -16,28 +16,26 @@ This file is part of PetTracker.
 --]]
 
 local Addon = PetTracker
-local Tabs = LibStub('SecureTabs-1.0')
 local Journal = PetTrackerTamerJournal
 local L = Addon.Locals
 
 
 --[[ Startup ]]--
 
-function Journal:OnShow()
-	CollectionsJournalTitleText:SetText(L.Rivals)
-	SetPortraitToTexture(CollectionsJournalPortrait, 'Interface/Icons/PetJournalPortrait')
-	self:Startup()
-end
-
 function Journal:Startup()
 	HybridScrollFrame_CreateButtons(self.List, 'PetTrackerTamerEntry', 44, 0)
+	SetPortraitToTexture(self.portrait, 'Interface/Icons/PetJournalPortrait')
 
 	self.Startup = function() end
+	self.TitleText:SetText(L.Rivals)
 	self.List.scrollBar.doNotHide = true
 	self.Count.Label:SetText(L.TotalTamers)
 	self.Count.Number:SetText(#Addon.TamerOrder)
 	self.SearchBox:SetText(Addon.Sets.TamerSearch or '')
 	self.SearchBox:SetScript('OnTextChanged', self.Search)
+	self.CloseButton:SetScript('OnClick', function() CollectionsJournal:Hide() end)
+	self:SetFrameLevel(self:GetFrameLevel() + 100)
+	self:EnableMouse(true)
 
 	self.Tab1.tip = TEAM
 	self.Tab1.Icon:SetTexture('Interface/Icons/ability_hunter_pet_goto')
@@ -273,20 +271,16 @@ function Journal.History:LoadTeam()
 end
 
 
---[[ Start this Baby ]]--
+--[[ Make a Tab ]]--
 
-local function Startup()
-	Tabs:Startup(CollectionsJournal, MountJournal, PetJournal, ToyBox, HeirloomsJournal)
-	Journal.Tab = Tabs:Add(CollectionsJournal, Journal, L.Rivals, PetJournal)
-	Journal:SetScript('OnShow', Journal.OnShow)
+Journal.Tab = TabAppender_New(CollectionsJournal)
+Journal.Tab:SetText(L.Rivals)
+Journal.Tab.OnClick = function()
+	Journal:Show() 
+	Journal:Startup()
 end
 
-if not UnitAffectingCombat('player') then
-	Startup()
-else
-	Journal:RegisterEvent('PLAYER_REGEN_ENABLED')
-	Journal:SetScript('OnEvent', function(self, event)
-		self:UnregisterEvent(event)
-		Startup()
-	end)
-end
+hooksecurefunc('CollectionsJournal_UpdateSelectedTab', function(self)
+	local selected = PanelTemplates_GetSelectedTab(self)
+	Journal:SetShown(selected == Journal.Tab:GetID())
+end)

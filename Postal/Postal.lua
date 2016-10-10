@@ -27,6 +27,7 @@ local defaults = {
 			NeutralAHOutbid = true,
 			NeutralAHSuccess = true,
 			NeutralAHWon = true,
+			Postmaster = true,
 			Attachments = true,
 			SpamChat = true,
 			KeepFreeSpace = 1,
@@ -499,7 +500,7 @@ function Postal.About()
 	tinsert(t, "-----")
 	tinsert(t, "")
 	for name, module in Postal:IterateModules() do
-		tinsert(t, "|cffffcc00"..name.."|r")
+		tinsert(t, "|cffffcc00"..L[name].."|r")
 		if module.description then
 			tinsert(t, module.description)
 		end

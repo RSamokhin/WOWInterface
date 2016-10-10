@@ -24,7 +24,7 @@
 	</Button>
 
 	<!-- Frame -->
-	<Frame name="PetTrackerTamerJournal" parent="CollectionsJournal" setAllPoints="true" hidden="true">
+	<Frame name="PetTrackerTamerJournal" parent="CollectionsJournal" inherits="ButtonFrameTemplate" setAllPoints="true" hidden="true">
 		<Frames>
 			<Frame parentKey="Count" useParentLevel="true" inherits="InsetFrameTemplate3">
 				<Size x="130" y="20"/>
@@ -140,7 +140,7 @@
 						<Scripts>
 							<OnEnter>
 								GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMRIGHT')
-								GameTooltip:SetHyperlink('quest:' .. tostring(self.id))
+								GameTooltip:SetHyperlink('quest:' .. tostring(self.id) .. ':-1')
 							</OnEnter>
 							<OnLeave>
 								GameTooltip:Hide()

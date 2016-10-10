@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Milling
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
-	Revision: $Id: SearcherMilling.lua 5498 2014-10-18 13:24:18Z brykrys $
+	Version: 7.1.5675 (TasmanianThylacine)
+	Revision: $Id: SearcherMilling.lua 5606 2016-06-13 16:33:33Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -173,7 +173,7 @@ function lib.Search(item)
 
 		-- calculate deposit for each result
 		if includeDeposit then
-			local aadvdepcost = GetDepositCost(result, depositAucLength, depositFaction, nil) or 0
+			local aadvdepcost = GetDepositCost(result, depositAucLength) or 0
 			deposit = deposit + aadvdepcost * yield * depositRelistTimes
 		end
 	end
@@ -195,4 +195,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Util-SearchUI/SearcherMilling.lua $", "$Rev: 5498 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-SearchUI/SearcherMilling.lua $", "$Rev: 5606 $")

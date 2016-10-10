@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(741, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(62397)
 mod:SetEncounterID(1498)
 mod:SetZone()
@@ -30,9 +30,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_AURA_UNFILTERED"
 )
 
-local warnWhirlingBlade					= mod:NewTargetAnnounce(121896, 4)--Target scanning not tested
-local warnRainOfBlades					= mod:NewSpellAnnounce(122406, 4)
-local warnRecklessness					= mod:NewTargetAnnounce(125873, 3)
 local warnImpalingSpear					= mod:NewPreWarnAnnounce(122224, 10, 3)--Pre warn your CC is about to break. Maybe need to localize it later to better explain what option is for.
 local warnAmberPrison					= mod:NewTargetAnnounce(121881, 3)
 local warnCorrosiveResin				= mod:NewTargetAnnounce(122064, 3)
@@ -41,8 +38,8 @@ local warnQuickening					= mod:NewTargetCountAnnounce(122149, 4)
 local warnKorthikStrike					= mod:NewTargetAnnounce(123963, 3)
 local warnWindBomb						= mod:NewTargetAnnounce(131830, 4)
 
-local specWarnWhirlingBlade				= mod:NewSpecialWarningSpell(121896, nil, nil, nil, true)
-local specWarnRainOfBlades				= mod:NewSpecialWarningSpell(122406, nil, nil, nil, true)
+local specWarnWhirlingBlade				= mod:NewSpecialWarningSpell(121896, nil, nil, nil, 2)
+local specWarnRainOfBlades				= mod:NewSpecialWarningSpell(122406, nil, nil, nil, 2)
 local specWarnRecklessness				= mod:NewSpecialWarningTarget(125873)
 local specWarnAmberPrison				= mod:NewSpecialWarningYou(121881)
 local yellAmberPrison					= mod:NewYell(121881)
@@ -51,28 +48,27 @@ local specWarnCorrosiveResin			= mod:NewSpecialWarningRun(122064)
 local yellCorrosiveResin				= mod:NewYell(122064, nil, false)
 local specWarnCorrosiveResinPool		= mod:NewSpecialWarningMove(122125)
 local specWarnMending					= mod:NewSpecialWarningInterrupt(122193)--Whoever is doing this or feels responsible should turn it on.
-local specWarnQuickening				= mod:NewSpecialWarningCount(122149, mod:IsMagicDispeller())--This is not stack warning.
+local specWarnQuickening				= mod:NewSpecialWarningCount(122149, "MagicDispeller")--This is not stack warning.
 local specWarnKorthikStrike				= mod:NewSpecialWarningYou(123963)
-local specWarnKorthikStrikeOther		= mod:NewSpecialWarningTarget(123963, mod:IsHealer())
+local specWarnKorthikStrikeOther		= mod:NewSpecialWarningTarget(123963, "Healer")
 local yellKorthikStrike					= mod:NewYell(123963)
 local specWarnWindBomb					= mod:NewSpecialWarningMove(131830, nil, nil, nil, 3)
 local specWarnWhirlingBladeMove			= mod:NewSpecialWarningMove(121898)
 local yellWindBomb						= mod:NewYell(131830)
-local specWarnReinforcements			= mod:NewSpecialWarningTarget("ej6554", not mod:IsHealer(), "specWarnReinforcements")--Also important to dps. (Espcially CC classes)
+local specWarnReinforcements			= mod:NewSpecialWarningTarget("ej6554", "-Healer", "specWarnReinforcements")--Also important to dps. (Espcially CC classes)
 
-local timerRainOfBladesCD				= mod:NewCDTimer(48, 122406)--48-64 sec variation now. so much for it being a precise timer.
+local timerRainOfBladesCD				= mod:NewCDTimer(48, 122406, nil, nil, nil, 2)--48-64 sec variation now. so much for it being a precise timer.
 local timerRainOfBlades					= mod:NewBuffActiveTimer(7.5, 122406)
-local timerRecklessness					= mod:NewBuffActiveTimer(30, 125873)--Heroic recklessness
-local timerReinforcementsCD				= mod:NewNextCountTimer(50, "ej6554")--EJ says it's 45 seconds after adds die but it's actually 50 in logs. EJ is not updated for current tuning.
+local timerRecklessness					= mod:NewBuffActiveTimer(30, 125873, nil, nil, nil, 6)--Heroic recklessness
+local timerReinforcementsCD				= mod:NewNextCountTimer(50, "ej6554", nil, nil, nil, 1)--EJ says it's 45 seconds after adds die but it's actually 50 in logs. EJ is not updated for current tuning.
 local timerImpalingSpear				= mod:NewTargetTimer(50, 122224)--Filtered to only show your own target, may change to a popup option later that lets you pick whether you show ALL of them or your own (all will be spammy)
-local timerAmberPrisonCD				= mod:NewCDTimer(36, 121876, nil, false)--Reduce bar spam like Zarthik / each add has their own CD. This is on by default since it concerns everyone.
-local timerCorrosiveResinCD				= mod:NewCDTimer(36, 122064, nil, false)--^^
+local timerAmberPrisonCD				= mod:NewCDTimer(36, 121876, nil, false, nil, 5)--Reduce bar spam like Zarthik / each add has their own CD. This is on by default since it concerns everyone.
+local timerCorrosiveResinCD				= mod:NewCDTimer(36, 122064, nil, false, nil, 5)--^^
 local timerResidue						= mod:NewBuffFadesTimer(120, 122055)
-local timerMendingCD					= mod:NewNextTimer(37, 122193, nil, false)--To reduce bar spam, only those dealing with this should turn CD bar on, off by default / 37~37.5 sec
-local timerQuickeningCD					= mod:NewNextTimer(37.3, 122149, nil, false)--^^37.3~37.6sec.
+local timerMendingCD					= mod:NewNextTimer(37, 122193, nil, false, nil, 4)--To reduce bar spam, only those dealing with this should turn CD bar on, off by default / 37~37.5 sec
+local timerQuickeningCD					= mod:NewNextTimer(37.3, 122149, nil, false, nil, 5)--^^37.3~37.6sec.
 local timerKorthikStrikeCD				= mod:NewCDTimer(50, 123963)--^^
-local timerWindBombCD					= mod:NewCDTimer(6, 131830)--^^
-local timerReinforcementsCD				= mod:NewNextCountTimer(50, "ej6554")--EJ says it's 45 seconds after adds die but it's actually 50 in logs. EJ is not updated for current tuning.
+local timerWindBombCD					= mod:NewCDTimer(6, 131830, nil, nil, nil, 3)--^^
 
 local berserkTimer						= mod:NewBerserkTimer(480)
 
@@ -143,7 +139,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 122055 and args:IsPlayer() then
 		local _, _, _, _, _, duration, expires, _, _ = UnitDebuff("player", args.spellName)
-		timerResidue:Start(expires-GetTime())
+		if expires then
+			timerResidue:Start(expires-GetTime())
+		end
 	end
 end
 mod.SPELL_AURA_REFRESH = mod.SPELL_AURA_APPLIED
@@ -162,7 +160,6 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 122406 then
-		warnRainOfBlades:Show()
 		specWarnRainOfBlades:Show()
 		timerRainOfBlades:Start()
 		timerRainOfBladesCD:Start()
@@ -244,7 +241,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	elseif spellId == 125873 then -- If adds die before Recklessness fades, CLEU not firing at all. To prevent fail, changes Recklessness check to UNIT_SPELLCAST_SUCCEEDED.
 		local mobname = UnitName(uId)
 		addsCount = addsCount + 1
-		warnRecklessness:Show(L.name)
 		specWarnRecklessness:Show(L.name)
 		timerRecklessness:Start()
 		timerReinforcementsCD:Start(50, addsCount)--We count them cause some groups may elect to kill a 2nd group of adds and start a second bar to form before first ends.

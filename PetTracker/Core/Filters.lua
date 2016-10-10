@@ -47,6 +47,22 @@ Filters.level = {
 	end
 }
 
+Filters.abilities = {
+	canSearch = function(self, operator, search, target)
+		return not operator and target.GetAbilities and search
+	end,
+
+	match = function(self, target, _, search)
+		for i, id in ipairs(target:GetAbilities()) do
+			local id, name = C_PetBattles.GetAbilityInfoByID(id)
+			
+			if Search:Find(search, name) then
+				return true
+			end
+		end
+	end
+}
+
 do
 	local qualities = {[L.Maximized] = 4, [ADDON_MISSING] = 0, [NONE] = 0}
 	for i = 1, #ITEM_QUALITY_COLORS-2 do

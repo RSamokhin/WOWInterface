@@ -1,6 +1,6 @@
 ﻿if GetLocale() ~= "zhTW" then return end
 
-DBM_CORE_NEED_SUPPORT				= "你是否擁有良好的程式開發或語言能力? 如果是的話, DBM需要你的本地化翻譯。拜訪我們的討論區|HDBM:localizersneeded|h|cff3588ffclicking here|r"
+DBM_CORE_NEED_LOCALS				= "你是否擁有良好的程式開發或語言能力? 如果是的話, DBM需要你的本地化翻譯。拜訪我們的討論區|HDBM:localizersneeded|h|cff3588ffclicking here|r"
 DBM_CORE_NEED_LOGS					= "DBM需要Transcriptor (http://www.wowace.com/addons/transcriptor/) 去紀錄測試伺服器的戰鬥紀錄讓插件更加完美。如果你願意幫忙，請使用transcriptor去紀錄這些戰鬥過程然後將記錄發佈在。需要7.0的團隊和五人副本戰鬥紀錄，。"
 DBM_HOW_TO_USE_MOD					= "歡迎使用DBM。在聊天頻道輸入 /dbm 打開設定開始設定。你可以載入特定區域後為任何首領設定你喜歡的特別設置。DBM會在第一次啟動時嘗試掃描你的職業天賦，但有些選項你可能想打開。"
 
@@ -12,12 +12,19 @@ DBM_CORE_LOAD_MOD_ERROR				= "載入%s模組時發生錯誤：%s"
 DBM_CORE_LOAD_MOD_SUCCESS			= "成功載入%s模組。輸入/dbm 可自訂警告音效和個人化註記。"
 DBM_CORE_LOAD_MOD_COMBAT			= "延遲載入'%s'直到離開戰鬥"
 DBM_CORE_LOAD_GUI_ERROR				= "無法載入圖形介面：%s"
-DBM_CORE_LOAD_GUI_COMBAT			= "圖形介面不能在戰鬥中初始化。圖形介面將在脫離戰鬥後自動讀取，這樣就能夠再次在戰鬥中使用。"
+DBM_CORE_LOAD_GUI_COMBAT			= "圖形介面不能在戰鬥中初始化。圖形介面將在脫離戰鬥後自動開啟，這樣就能夠再次在戰鬥中使用。"
 DBM_CORE_BAD_LOAD					= "DBM偵測到你的此副本的模組在戰鬥中讀取失敗。一旦脫離戰鬥，請立即輸入/consoel reloadui重新載入。"
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s不能被讀取因為你的DBM核心未達需求，請更新版本。"
 
---DBM_CORE_WHATS_NEW					= "此版本新功能：計時條選項加入嵌入圖示和自訂可計時條顏色選項。"
-DBM_CORE_WHATS_NEW_LINK			= "此版本新功能： 計時條選項加入嵌入圖示和自訂可計時條顏色選項。想知道此功能的詳細資訊請至|HDBM:forumsnews|h|cff3588ffclicking here|r"
+DBM_CORE_WHATS_NEW					= "版本更新：修正一個DBM版本更新的問題。DBM不再會不顧使用者的設定去過濾破碎群島的片段動畫。加入惡魔入侵模組。"
+DBM_CORE_WHATS_NEW_LINK				= "在接下來的DBM版本，因為暴雪將在7.1版本將移除副本中的單位位置的API，許多與單位位置的功能如：距離雷達將被刪除。想了解為什麼：|HDBM:forumsnews|h|cff3588ff點擊這裡|r"
+
+--Pre Patch 7.1 Notice
+DBM_CORE_NO_RANGE_SOON				= "注意：在7.1版後，距離雷達將不能在副本中使用。"
+--Post Patch 7.1
+DBM_CORE_NO_RANGE					= "距離雷達不能在副本中使用，使用傳統文字距離框架取代"
+DBM_CORE_NO_ARROW					= "箭頭不能在副本中使用"
+DBM_CORE_NO_HUD						= "HUDMap 不能在副本中使用"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM已中禁用動態距離框架，你目前的團隊人數在這場戰鬥中的機制資訊不足。"
 DBM_CORE_DYNAMIC_ADD_COUNT			= "DBM已中禁用小怪計數警告，你目前的團隊人數在這場戰鬥中的機制資訊不足。"
@@ -148,7 +155,7 @@ DBM_CORE_VOICE_MISSING				= "DBM找不到你所選取的語音包。你的語音
 DBM_CORE_VOICE_COUNT_MISSING		= "所選取的語音/倒數語音包%d找不到倒數語音。設定已被重置回預設值。"
 
 DBM_CORE_UPDATEREMINDER_HEADER			= "你的Deadly Boss Mod已經過期。\n你可以在Curse網站或是wowinterface網站以及此網址下載到新版本%s(r%d)："
-DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "你的alpha版本Deadly Boss Mods已經過期。\n 你至少落後%d個測試版本。建議DBM使用者使用最新的alpha或最新的穩定版本。過期的alpha版本可能會有效能低落或未完成的功能。"
+DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "你的ALPHA版本Deadly Boss Mods已經過期。\n 你至少落後%d個測試版本。建議DBM使用者使用最新的ALPHA或最新的穩定版本。過期的alpha版本可能會有效能低落或未完成的功能。"
 DBM_CORE_UPDATEREMINDER_FOOTER			= "按下" .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "：複製下載網址到剪貼簿。"
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "按下" .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "：複製網址到剪貼簿。"
 DBM_CORE_UPDATEREMINDER_DISABLE			= "警告: 你的DBM版本已過期太多版本(至少過期%d個版本)，DBM已被強制禁用了而不能啟用除非更新至最新版本。這是為了確保舊而不相容的程式碼不會對你而團隊夥伴造成低落的遊戲體驗。"
@@ -161,7 +168,6 @@ DBM_CORE_3RDPROFILES					= "警告:DBM-Profiles不相容此版本DBM。請移除
 DBM_CORE_DPMCORE						= "警告:Deadly PvP 模組已經停止更新而且不相容此版本的DBM。請移除避免衝突。"
 DBM_CORE_UPDATE_REQUIRES_RELAUNCH		= "警告:如果你沒有重啟你的遊戲，這次DBM更新可能無法正確運作。這次更新包含了新的檔案或是.toc檔更新而不能使用ReloadUI載入。如果沒有將遊戲完全重啟可能會導致錯誤或功能不完整。"
 DBM_CORE_OUT_OF_DATE_NAG				= "你的DBM版本已經過期你設定忽略彈出更新提示。還是建議你更新避免缺少一些重要的警告或是計時器，而其他人也看不到從你發出的大喊警告。"
-DBM_CORE_DISABLED_REMINDER				= "提醒：Deadly Boss Mods已載入但選項功能被停用。在頻道上輸入/dbm 然後至'選項/綜合設置'中選取啟用DBM去啟用DBM"
 
 DBM_CORE_MOVABLE_BAR				= "拖動我!"
 
@@ -303,6 +309,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.youpos		= "你中了%s (站位：%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.soakpos		= "%s - 快到%%s分傷"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target		= ">%%s<中了%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.targetcount	= ">%%2$s<中了%s (%%1$s)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.defensive		= "%s - 使用防禦技能"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt			= ">%%s<中了%s - 快嘲諷"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close			= "你附近的>%%s<中了%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.move			= "%s - 快移動"
@@ -316,7 +323,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect		= "%s - 停止攻擊"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.count			= "%s!(%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack			= "你中了%%d層%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch		= "%s - 快更換目標!"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= "%s - 快更換目標!(%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= "%s - 快更換目標!(%%s)"
 
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell		= "為$spell:%s顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.ends 		= "為$spell:%s結束顯示特別警告"
@@ -332,6 +339,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.youpos		= "當你中了$spell:%s時(站位)顯�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.soakpos		= "當需要為$spell:%s分傷時(站位)顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target		= "當有人中了$spell:%s時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.targetcount	= "當有人中了$spell:%s時(次數)顯示特別警告"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.defensive	= "需對$spell:%s使用防禦技能時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.taunt 		= "當其他坦克中了$spell:%s顯示特別警告去嘲諷"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.close		= "當你附近有人中了$spell:%s時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move		= "當你中了$spell:%s時顯示特別警告"
@@ -347,7 +355,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack		= "為中了>=%d層$spell:%s時顯示特�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch		= "需對$spell:%s更換目標時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = "需對$spell:%s更換目標時(次數)顯示特別警告"
 
-DBM_CORE_AUTO_TIMER_TEXTS.target			= "%s:>%%s<"
+DBM_CORE_AUTO_TIMER_TEXTS.target			= "%s:%%s"
 DBM_CORE_AUTO_TIMER_TEXTS.cast				= "%s"
 DBM_CORE_AUTO_TIMER_TEXTS.active			= "%s結束"
 DBM_CORE_AUTO_TIMER_TEXTS.fades				= "%s消退"
@@ -358,7 +366,7 @@ DBM_CORE_AUTO_TIMER_TEXTS.cdsource			= "%s冷卻:>%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.cdspecial			= "特別技能冷卻"
 DBM_CORE_AUTO_TIMER_TEXTS.next 				= "下一次%s"
 DBM_CORE_AUTO_TIMER_TEXTS.nextcount 		= "下一次%s (%%s)"
-DBM_CORE_AUTO_TIMER_TEXTS.nextsource		= "下一次%s:>%%s<"
+DBM_CORE_AUTO_TIMER_TEXTS.nextsource		= "下一次%s:%%s"
 DBM_CORE_AUTO_TIMER_TEXTS.nextspecial		= "下一次特別技能"
 DBM_CORE_AUTO_TIMER_TEXTS.achievement		= "%s"
 DBM_CORE_AUTO_TIMER_TEXTS.phase				= "下一個階段"
@@ -429,6 +437,8 @@ DBM_CORE_HUD_USAGE	= {
 }
 
 DBM_ARROW_MOVABLE					= "可移動箭頭"
+DBM_ARROW_WAY_USAGE					= "/dway <x> <y>: 建立一個箭頭來指向特定位置(使用區域地圖坐標)"
+DBM_ARROW_WAY_SUCCESS				= "要隱藏箭頭, 輸入 '/dbm arrow hide' 或是抵達箭頭"
 DBM_ARROW_ERROR_USAGE	= {
 	"DBM-Arrow 用法:",
 	"/dbm arrow <x> <y>  建立一個箭頭在特定的位置(使用世界地圖座標)",

@@ -21,6 +21,7 @@ AtrL["Wowecon server price"] = "WoWecon Serverpreis"
 
 AtrL["No current auctions with buyouts found"] = "Keine aktuellen Sofortkauf-Auktionen gefunden."
 AtrL["Really delete the shopping list %s ?"] = "Einkaufsliste wirklich löschen?"
+AtrL["Entry must not be blank"] = ""
 AtrL["There is a more recent version of Auctionator: VERSION"] = "Es gibt eine neuere Version von Auctionator: VERSION"
 AtrL["You can buy at most %d auctions"] = "Du kannst maximal %d Auktionen kaufen"            -- don't overspend!
 AtrL["You can create at most %d auctions"] = "Du kannst maximal %d Auktionen erstellen"
@@ -160,7 +161,6 @@ AtrL["Items updated:"] = "Aktualisiert:"
 --   Basic Options
 AtrL["Basic Options for %s"] = "Grundeinstellungen für %s"
 AtrL["Enable alt-key shortcut"] = "ALT-Shortcut nutzen"
-AtrL["Automatically open all bags"] = "Automatisch alle Taschen öffnen"
 AtrL["Show Starting Price on the Sell Tab"] = "Gebotspreis im Verkaufsfenster anzeigen"
 AtrL["Set a default duration"] = "Standarddauer einstellen"
 AtrL["Default Auctionator tab"] = "Standard-Tab"
@@ -168,7 +168,6 @@ AtrL["Select the Auctionator panel to be displayed first whenever you open the A
 
 
 --     descriptive texts
-AtrL["If this option is checked, ALL your bags will be opened when you first open the Auctionator panel."] = "Wenn diese Option aktiviert ist, werden ALLE deine Taschen geöffnet, wenn du im Auktionshaus bist."
 AtrL["If this option is checked, every time you initiate a new auction the auction duration will be reset to the default duration you've selected."] = "Wenn diese Option aktiviert ist, wird jede neue Auktion mit dieser Dauer gestartet."
 AtrL["If this option is checked, holding the Alt key down while clicking an item in your bags will switch to the Auctionator panel, place the item in the Auction Item area, and start the scan."] = "Wenn diese Option aktiviert ist, kannst du mit alt-Klick auf ein Item dieses in den Verkaufsbereich legen und den Scan starten."
 AtrL["If this option is checked, the Auctionator BUY panel will display first whenever you open the Auction House window."] = "Wenn diese Option aktiviert ist, startet das Auktionsfenster im KAUFEN-Tab."
@@ -249,7 +248,7 @@ AtrL["German translation courtesy of %s"] = "Deutsche Übersetzung von %s"
 AtrL["Swedish translation courtesy of %s"] = "Schwedische Lokalisierung von %s"
 AtrL["Russian translation courtesy of %s"] = "Russische Übersetzung von %s"
 AtrL["Auctionator"] = "Auctionator"
-AtrL["Author:  Zirco"] = "Autor: Zirco"
+AtrL["Author:  Borjamacare"] = "Autor: Borjamacare"
 AtrL["Version"] = "Version"
 
 

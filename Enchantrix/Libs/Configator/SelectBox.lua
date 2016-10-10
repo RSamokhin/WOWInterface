@@ -1,6 +1,6 @@
 --[[
 	SelectBox
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
+	Version: 7.1.5675 (TasmanianThylacine)
 	Revision: $Id: SelectBox.lua 396 2015-10-01 16:35:24Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 

@@ -5,7 +5,7 @@
 
 	AddOn: Enchantrix
 	Revision: $Id: EnxStrings.lua 5419 2013-06-12 04:01:17Z LocalizerAutoCommit $
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
+	Version: 7.1.5675 (TasmanianThylacine)
 
 	License:
 		This program is free software; you can redistribute it and/or

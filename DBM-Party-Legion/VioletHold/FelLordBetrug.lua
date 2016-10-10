@@ -1,10 +1,12 @@
 local mod	= DBM:NewMod(1711, "DBM-Party-Legion", 9, 777)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14886 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15197 $"):sub(12, -3))
 mod:SetCreatureID(102446)
 mod:SetEncounterID(1856)
 mod:SetZone()
+
+mod.imaspecialsnowflake = true
 
 mod:RegisterCombat("combat")
 
@@ -27,7 +29,7 @@ local yellSeedsofDestruction	= mod:NewYell(210879)
 
 --local timerFelSlashCD			= mod:NewCDTimer(18, 203641, nil, nil, nil, 3)--Too unreliable do to smash/executions
 local timerMightySmashCD		= mod:NewCDTimer(50, 202328, nil, nil, nil, 2)--50-57
-local timerSeedsCD				= mod:NewCDTimer(22, 210879, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)--22-40
+local timerSeedsCD				= mod:NewCDTimer(21.8, 210879, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)--22-40
 local timerExecute				= mod:NewTargetTimer(20, 205233, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)--22-40
 
 local voiceFelSlash				= mod:NewVoice(203641)--shockwave
@@ -54,7 +56,7 @@ function mod:OnCombatStart(delay)
 	if not self:IsNormal() then
 		timerSeedsCD:Start(17-delay)
 	end
-	timerMightySmashCD:Start(37-delay)
+	timerMightySmashCD:Start(30-delay)
 end
 
 function mod:OnCombatEnd()
@@ -73,7 +75,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			voiceSeedsofDestruction:Play("runout")
 		end
 		if self.Options.SetIconOnSeeds then
-			self:SetAlphaIcon(0.5, args.destName, 2)
+			self:SetAlphaIcon(0.5, args.destName)
 		end
 	elseif spellId == 205233 then
 		warnExecute:Show(args.destName)
@@ -101,7 +103,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 203641 then
 		specWarnFelSlash:Show()
 		voiceFelSlash:Play("shockwave")
-		self:BossUnitTargetScanner("boss1", "SlashTarget")
+		self:BossUnitTargetScanner("boss1", "SlashTarget", 3)
 		--timerFelSlashCD:Start()
 	elseif spellId == 202328 then
 		specWarnMightySmash:Show()

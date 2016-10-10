@@ -5,13 +5,17 @@ local GetStatistic = GetStatistic
 local GetAchievementInfo = Overachiever.GetAchievementInfo
 local GetAchievementCriteriaInfo = Overachiever.GetAchievementCriteriaInfo
 
+local REMINDER_EXPIRE_SECONDS = 120  -- Allow reminders from up to 2 minutes ago
+
 local AchievementIcon = "Interface\\AddOns\\Overachiever\\AchShield"
 local tooltip_complete = { r = 0.2, g = 0.5, b = 0.2 }
 local tooltip_incomplete = { r = 1, g = 0.1, b = 0.1 }
 
 local time = time
 
-local skipNextExamineOneLiner
+local chatprint = Overachiever.chatprint
+
+--local skipNextExamineOneLiner
 
 local isCriteria
 do
@@ -43,7 +47,12 @@ do
       local n
       for i=1,GetAchievementNumCriteria(achID) do
         n = GetAchievementCriteriaInfo(achID, i)
-        cache[achID][base:format(n)] = i  -- Creating lookup table
+		local arr = { strsplit("\n", base) }
+		-- Creating lookup table
+		--cache[achID][base:format(n)] = i
+		for k,v in ipairs(arr) do
+		  cache[achID][v:format(n)] = i
+		end
       end
     end
     if (cache[achID][name]) then
@@ -107,12 +116,29 @@ local function isCriteria_hidden(achID, name)
 end
 --]]
 
+
+local function getMobID(unit)
+  local guid = UnitGUID(unit)
+  if (not guid) then  return;  end
+  local unitType, _, _, _, _, id = ("-"):split(guid)
+  if (unitType == "Creature") then
+    --chatprint("ExamineSetUnit "..(id and tonumber(id) or "nil"))
+    return tonumber(id)
+  end
+  --guid = tonumber( "0x"..strsub(guid, 6, 10) )
+  --guid = tonumber(guid:sub(6,10), 16)
+  --guid = tonumber((guid):sub(-12, -9), 16)
+  --return guid
+end
+
+
 local lastreminder = 0
 local SharedMedia = LibStub:GetLibrary("LibSharedMedia-3.0")
 
 local function PlayReminder()
   if (Overachiever_Settings.SoundAchIncomplete ~= 0 and time() >= lastreminder + 15) then
     local sound = SharedMedia:Fetch("sound", Overachiever_Settings.SoundAchIncomplete)
+	--chatprint("sound: " .. (sound and sound or "nope"))
     if (sound) then
       PlaySoundFile(sound)
       lastreminder = time()
@@ -122,22 +148,88 @@ end
 
 
 Overachiever.RecentReminders = {}  -- Used by Tabs module
+Overachiever.RecentReminders_Criteria = {}
 local RecentReminders = Overachiever.RecentReminders
+local RecentReminders_Criteria = Overachiever.RecentReminders_Criteria
 
 function Overachiever.RecentReminders_Check()
-  local earliest = time() - 120  -- Allow reminders from up to 2 minutes ago
+  local earliest = time() - REMINDER_EXPIRE_SECONDS
   for id,t in pairs(RecentReminders) do
     if (t < earliest) then
       RecentReminders[id] = nil
+	  RecentReminders_Criteria[id] = nil
     end
   end
 end
 
+local function isTwentyFiver(diffID)
+  if (diffID == 4 or diffID == 6 or diffID == 7 or diffID == 20) then  return true;  end
+  return false
+end
+
+function Overachiever.GetDifficulty()
+  if (IsInInstance()) then
+  -- IF IN AN INSTANCE:
+  -- Returns: <instance type ("arena", "party", "pvp", "raid", or "scenario")>, <Is Heroic?>, <Is Mythic?>, <Challenge Mode?>, <Legacy raid size 25 players?>, <Heroic Raid?>, <Mythic Raid?>
+  --   If in a raid, the "Heroic Raid?" return will match the "Heroic?" return. Otherwise, it will be nil. (Similar for "Mythic Raid?".)
+  --   Note: While it may seem that the "Heroic?" and "Heroic Raid?" returns are redundant here, it's done this
+  --   way to make the return values consistent with those given when you're NOT in an instance.
+
+    --local name, itype, difficultyID, difficultyName, maxPlayers, playerDifficulty, isDynamicInstance, mapID, instanceGroupSize = GetInstanceInfo()
+	--local difficultyName, instanceType, isHeroic, isChallengeMode, displayHeroic, displayMythic, toggleDifficultyID = GetDifficultyInfo(difficultyID);
+	local _, itype, difficultyID = GetInstanceInfo()
+	local _, _, isHeroic, isChallengeMode, _, displayMythic, toggleDifficultyID = GetDifficultyInfo(difficultyID)
+	if (itype == "raid") then  return itype, isHeroic, displayMythic, isChallengeMode, isHeroic, displayMythic, isTwentyFiver(difficultyID);  end
+	return itype, isHeroic, displayMythic, isChallengeMode, nil, nil, nil
+  else
+  -- IF NOT IN AN INSTANCE:
+  -- Returns: false, <Dungeon set as Heroic?>, <Dungeon set as Mythic?>, nil, <Legacy raid size is 25 players?>, <Raid set as Heroic?>, <Raid set as Mythic?>
+
+    local d = GetDungeonDifficultyID()
+	local _, _, isHeroicD, _, _, displayMythicD = GetDifficultyInfo(d);
+    local r = GetLegacyRaidDifficultyID() --GetRaidDifficultyID()
+	local _, _, isHeroicR, _, _, displayMythicR = GetDifficultyInfo(r)
+	return false, isHeroicD, displayMythicD, nil, isTwentyFiver(r), isHeroicR, displayMythicR --isTwentyFiver(GetLegacyRaidDifficultyID())
+  end
+end
+
+--[[
+http://wowprogramming.com/docs/api/GetInstanceInfo
+local name, itype, difficulty, difficultyName, maxPlayers, playerDifficulty, isDynamicInstance, mapID, instanceGroupSize = GetInstanceInfo()
+difficulty:
+0 - None; not in an Instance.
+1 - 5-player Instance.
+2 - 5-player Heroic Instance.
+3 - 10-player Raid Instance.
+4 - 25-player Raid Instance.
+5 - 10-player Heroic Raid Instance.
+6 - 25-player Heroic Raid Instance.
+7 - 25-player Raid Finder Instance.
+8 - Challenge Mode Instance.
+9 - 40-player Raid Instance.
+10 - Not used.
+11 - Heroic Scenario Instance.
+12 - Scenario Instance.
+13 - Not used.
+14 - 10-30-player Normal Raid Instance.
+15 - 10-30-player Heroic Raid Instance.
+16 - 20-player Mythic Raid Instance .
+17 - 10-30-player Raid Finder Instance.
+18 - 40-player Event raid (Used by the level 100 version of Molten Core for WoW's 10th anniversary).
+19 - 5-player Event instance (Used by the level 90 version of UBRS at WoD launch).
+20 - 25-player Event scenario (unknown usage).
+21 - Not used.
+22 - Not used.
+23 - Mythic 5-player Instance.
+24 - Timewalker 5-player Instance.
+--]]
+
+--[[
 function Overachiever.GetDifficulty()
   local inInstance = IsInInstance()
   if (inInstance) then
 -- IF IN AN INSTANCE:
-  -- Returns: <instance type ("pvp"/"arena"/"party"/"raid")>, <Heroic?>, <25-player Raid?>, <Heroic Raid?>, <Dynamic?>
+  -- Returns: <instance type ("arena", "party", "pvp", "raid", or "scenario")>, <Heroic?>, <25-player Raid?>, <Heroic Raid?>, <Dynamic?>
   --   If in a raid, the "Heroic Raid?" return will match the "Heroic?" return. Otherwise, it will be nil (actually
   --   no return). "Dynamic?" refers to whether the current instance's difficulty can be changed on the fly, as is
   --   the case with the Icecrown Citadel raid.
@@ -154,6 +246,7 @@ function Overachiever.GetDifficulty()
   local r = GetRaidDifficultyID()
   return false, (d > 1), (r == 4 or r == 6), (r > 4)
 end
+--]]
 
 
 -- UNIT TOOLTIP HOOK
@@ -252,15 +345,15 @@ local function RaceClassCheck(ach, tab, raceclass, race, unit)
 end
 
 function Overachiever.ExamineSetUnit(tooltip)
-  skipNextExamineOneLiner = true
+  --skipNextExamineOneLiner = true
   tooltip = tooltip or GameTooltip  -- Workaround since another addon is known to break this
   local name, unit = tooltip:GetUnit()
   if (not unit) then  return;  end
   local id, text, complete, needtipshow
 
   if (UnitIsPlayer(unit)) then
-    local _, r, c = UnitRace(unit)
-    _, c = UnitClass(unit)
+    local raceName, r = UnitRace(unit)
+	local className, c = UnitClass(unit)
     if (r and c) then
       local raceclass = r.." "..c
       for key,tab in pairs(RaceClassAch) do
@@ -274,6 +367,8 @@ function Overachiever.ExamineSetUnit(tooltip)
               r, g, b = tooltip_incomplete.r, tooltip_incomplete.g, tooltip_incomplete.b
               PlayReminder()
               RecentReminders[id] = time()
+			  local playername = UnitName(unit)
+			  if (playername) then  RecentReminders_Criteria[id] = playername .. " (" .. raceName .. " " .. className .. ")";  end
             end
             tooltip:AddLine(text, r, g, b)
             tooltip:AddTexture(AchievementIcon)
@@ -297,6 +392,7 @@ function Overachiever.ExamineSetUnit(tooltip)
               r, g, b = tooltip_incomplete.r, tooltip_incomplete.g, tooltip_incomplete.b
               PlayReminder()
               RecentReminders[id] = time()
+			  RecentReminders_Criteria[id] = name
             end
             tooltip:AddLine(text, r, g, b)
             tooltip:AddTexture(AchievementIcon)
@@ -306,9 +402,7 @@ function Overachiever.ExamineSetUnit(tooltip)
       end
 
     elseif (Overachiever_Settings.CreatureTip_killed and UnitCanAttack("player", unit)) then
-      local guid = UnitGUID(unit)
-      --guid = tonumber( "0x"..strsub(guid, 6, 10) )
-      guid = tonumber(guid:sub(6,10), 16)
+      local guid = getMobID(unit)
       local tab = Overachiever.AchLookup_kill[guid]
       if (tab) then
         local num, numincomplete, potential, _, achcom, c, t = 0, 0
@@ -321,7 +415,7 @@ function Overachiever.ExamineSetUnit(tooltip)
             if (not c) then
               numincomplete = numincomplete + 1
               potential = potential or {}
-              potential[id] = i+1
+			  potential[id] = tab[i+1]
             end
           end
         end
@@ -329,8 +423,9 @@ function Overachiever.ExamineSetUnit(tooltip)
         if (num > 0) then
           if (numincomplete > 0) then
             local cat, t
-            local instype, heroic, twentyfive = Overachiever.GetDifficulty()
+            local instype, heroic, mythic, challenge, twentyfive = Overachiever.GetDifficulty()
             for id, crit in pairs(potential) do
+			  --[[
               cat = GetAchievementCategory(id)
               if (((not instype or not heroic) and (OVERACHIEVER_CATEGORY_HEROIC[cat] or (OVERACHIEVER_HEROIC_CRITERIA[id] and OVERACHIEVER_HEROIC_CRITERIA[id][crit])))
                   or ((not instype or not twentyfive) and OVERACHIEVER_CATEGORY_25[cat])) then
@@ -338,6 +433,16 @@ function Overachiever.ExamineSetUnit(tooltip)
               else
                 t = t or time()
                 RecentReminders[id] = t
+              end
+			  --]]
+			  -- We don't have an easy way to detect whether the achievement is heroic-only any more here. (Maybe add a new function for this later?)
+			  -- We can still use the criteria-specific table, though:
+              if ((not instype or not heroic) and (OVERACHIEVER_HEROIC_CRITERIA[id] and OVERACHIEVER_HEROIC_CRITERIA[id][crit])) then
+                numincomplete = numincomplete - 1 -- Discount this reminder if it's heroic-only and you're not in a heroic instance or if it's 25-man only and you're not in a 25-man instance.
+              else
+                t = t or time()
+                RecentReminders[id] = t
+				RecentReminders_Criteria[id] = crit
               end
             end
           end
@@ -396,11 +501,18 @@ end
 do
   local last_check, last_tiptext = 0
   local last_id, last_text, last_complete, last_angler
+  local tooltipUsed
+
   function Overachiever.ExamineOneLiner(tooltip)
-  -- Unfortunately, we couldn't find a "GameTooltip:SetWorldObject" or similar type of thing, so we have to check for
+  -- Unfortunately, there isn't a "GameTooltip:SetWorldObject" or similar type of thing, so we have to check for
   -- these sorts of tooltips in a less direct way.
-    if (skipNextExamineOneLiner) then  skipNextExamineOneLiner = nil;  return;  end
+
+    tooltipUsed = nil
+
+    --if (skipNextExamineOneLiner) then  skipNextExamineOneLiner = nil;  return;  end
     -- Skipping works because this function is consistently called after the functions that set skipNextExamineOneLiner to true.
+	-- At least, it used to or seemed like it did. On second examination (years later, perhaps due to API changes?), it seems unnecessary so we can
+	-- do without it.
 
     tooltip = tooltip or GameTooltip  -- Workaround since another addon is known to break this
     if (tooltip:NumLines() == 1) then
@@ -411,6 +523,7 @@ do
       local t = time()
 
       local cache_used
+	  --local prev_tiptext = last_tiptext
       if (tiptext ~= last_tiptext or t ~= last_check) then
         for key,tab in pairs(WorldObjAch) do
           if (Overachiever_Settings[ tab[1] ]) then
@@ -433,17 +546,43 @@ do
           r, g, b = tooltip_incomplete.r, tooltip_incomplete.g, tooltip_incomplete.b
           if (not cache_used) then
             RecentReminders[id] = time()
-            if (not angler or not Overachiever_Settings.SoundAchIncomplete_AnglerCheckPole or
-                not IsEquippedItemType("Fishing Poles")) then
-              PlayReminder()
-            end
+			RecentReminders_Criteria[id] = tiptext
+			--if (tiptext ~= prev_tiptext) then
+              if (not angler or not Overachiever_Settings.SoundAchIncomplete_AnglerCheckPole or
+                  not IsEquippedItemType("Fishing Poles")) then
+                PlayReminder()
+              end
+			--end
           end
         end
         tooltip:AddLine(text, r, g, b)
         tooltip:AddTexture(AchievementIcon)
         tooltip:Show()
+		tooltipUsed = true
       end
     end
+  end
+
+  local function delayedExamine()
+    if (GameTooltip:IsShown()) then  Overachiever.ExamineOneLiner(GameTooltip);  end
+  end
+
+  -- We need this function because something is making the tooltip refresh its text while it's open, causing us to lose what we added:
+  function Overachiever.ExamineOneLiner_clear(tooltip)
+    -- This is a workaround. I'm not sure why Blizzard makes the tooltip refresh like they do. Anyway, we know the tooltip's either not going to be
+	-- displayed or about to be "shown" again (even though the text might be the same as before), but the problem is that if it's the latter, our
+	-- OnShow hook (Overachiever.ExamineOneLiner) doesn't get called if the frame was still visible. So, we hide it, so when GameTooltip:Show() is
+	-- called next, our hook is always called. (And if it was the latter, the tooltip not being displayed, then hiding it *shouldn't* cause problems.)
+	--tooltip:Hide()
+	-- We can't just do the above, as if causes the tooltip to be hidden when we don't want it to. (Depends on addons you're using. Seems most common in
+	-- my testing with buffs/debuffs that have a timer ticking.) So, we use a variable to track when we know we need to do this. However, that doesn't
+	-- catch all instances, so the C_Timer.After call is used to catch the rest. (We don't want to only use the timer call because if it's the refreshing
+	-- tooltip issue, what we add is for a brief moment not shown - repeatedly, every few seconds, since the tooltip keeps refreshing.)
+	if (tooltipUsed) then
+	  tooltip:Hide()
+	elseif (tooltip == GameTooltip) then
+	  C_Timer.After(0, delayedExamine)
+	end
   end
 end
 
@@ -452,8 +591,10 @@ end
 ----------------------
 
 -- All this consumable item tracking stuff really should be rewritten when you've got the time. (It's so disorganized and confusing because Blizzard kept changing things on me but I didn't want to take too long fixing things.)
+-- It should be much easier to add stuff in the new version, as well. Make it so you can just add to the data table; don't require additional lines of code
+-- to process it (e.g. instead of calling BuildItemLookupTab for each directly, use a loop through the table).
 
-local FoodCriteria, DrinkCriteria, FoodCriteria2, DrinkCriteria2, PandaEats, PandaEats2 = {}, {}, {}, {}, {}, {}
+local FoodCriteria, DrinkCriteria, FoodCriteria2, DrinkCriteria2, PandaEats, PandaEats2, DraenorEats, BrewfestEats, DarkmoonFaireEats = {}, {}, {}, {}, {}, {}, {}, {}, {}
 local numDrinksConsumed, numFoodConsumed
 
 local ConsumeItemAch = {
@@ -463,11 +604,14 @@ local ConsumeItemAch = {
   DrownYourSorrows = { "Item_consumed", L.ACH_CONSUME_COMPLETE, L.ACH_CONSUME_INCOMPLETE, L.ACH_CONSUME_INCOMPLETE_EXTRA, DrinkCriteria2 },
   PandarenCuisine = { "Item_consumed", L.ACH_CONSUME_COMPLETE, L.ACH_CONSUME_INCOMPLETE, L.ACH_CONSUME_INCOMPLETE_EXTRA, PandaEats, "PandaEats" },
   PandarenDelicacies = { "Item_consumed", L.ACH_CONSUME_COMPLETE, L.ACH_CONSUME_INCOMPLETE, L.ACH_CONSUME_INCOMPLETE_EXTRA, PandaEats2, "PandaEats2" },
+  DraenorCuisine = { "Item_consumed", L.ACH_CONSUME_COMPLETE, L.ACH_CONSUME_INCOMPLETE, L.ACH_CONSUME_INCOMPLETE_EXTRA, DraenorEats },
+  BrewfestDiet = { "Brewfest_consumed", L.ACH_CONSUME_COMPLETE, L.ACH_CONSUME_INCOMPLETE, L.ACH_CONSUME_INCOMPLETE_EXTRA, BrewfestEats },
+  DarkmoonFaireFeast = { "Darkmoon_consumed", L.ACH_CONSUME_COMPLETE, L.ACH_CONSUME_INCOMPLETE, L.ACH_CONSUME_INCOMPLETE_EXTRA, DarkmoonFaireEats },
 };
 
 --local lastitemTime, lastitemLink = 0
 
-function Overachiever.BuildItemLookupTab(THIS_VERSION, id, savedtab, tab, duptab)
+function Overachiever.BuildItemLookupTab(THIS_VERSION, id, savedtab, tab, duptab, alwaysLookup)
   if (id) then  -- Build lookup tables (since examining the criteria each time is time-consuming):
 -- This is separate from the BuildCriteriaLookupTab function because while that gave some good achievements
 -- involving consumable items, it also gave some that didn't fit well. This function instead uses hardcoded IDs
@@ -491,11 +635,11 @@ function Overachiever.BuildItemLookupTab(THIS_VERSION, id, savedtab, tab, duptab
           tab[k] = v;
           if (savedtab) then  savedtab[k] = v;  end
         end
-        if (Overachiever_Debug) then  Overachiever.chatprint("Skipped lookup table rebuild for Ach #"..id..": Used default list because WoW API no longer supports the required method and character has no relevant saved data.");  end
+        if (Overachiever_Debug) then  chatprint("Skipped lookup table rebuild for Ach #"..id..": Used default list because WoW API no longer supports the required method and character has no relevant saved data.");  end
       elseif (savedtab) then
         wipe(tab)
         for k,v in pairs(savedtab) do  tab[k] = v;  end  -- Copy table (cannot just set using "=" or reference will be lost)
-        if (Overachiever_Debug) then  Overachiever.chatprint("Skipped lookup table rebuild for Ach #"..id..": Retrieved from saved variables because WoW API no longer supports the required method.");  end
+        if (Overachiever_Debug) then  chatprint("Skipped lookup table rebuild for Ach #"..id..": Retrieved from saved variables because WoW API no longer supports the required method.");  end
       end
       return tab
     end
@@ -506,9 +650,12 @@ function Overachiever.BuildItemLookupTab(THIS_VERSION, id, savedtab, tab, duptab
       if (duptab) then
         tab[asset] = completed or 0
         if (duptab[asset]) then  duptab[asset] = completed or 0;  end
-      else
+      elseif (savedtab) then
         tab[asset] = savedtab[asset] or 0
+      else
+        tab[asset] = completed or 0
       end
+	  if (alwaysLookup and tab[asset] == 0) then  tab[asset] = -1;  end
       i = i + 1
       _, _, completed, _, _, _, _, asset = GetAchievementCriteriaInfo(id, i)
     end
@@ -546,6 +693,8 @@ function Overachiever.BuildItemLookupTab(THIS_VERSION, id, savedtab, tab, duptab
     Overachiever_CharVars_Consumed.Drink2 = Overachiever_CharVars_Consumed.Drink2 or {}
     Overachiever_CharVars_Consumed.PandaEats = Overachiever_CharVars_Consumed.PandaEats or {}
     Overachiever_CharVars_Consumed.PandaEats2 = Overachiever_CharVars_Consumed.PandaEats2 or {}
+    -- Saving char vars for these ones is pointless since the API gives us data on criteria completion: (some achievements from above should probably be given this treatment instead)
+    --Overachiever_CharVars_Consumed.Brewfest = Overachiever_CharVars_Consumed.Brewfest or {}
     needBuild = true
   else
     local oldver, oldbuild = strsplit("|", Overachiever_CharVars_Consumed.LastBuilt, 2)
@@ -567,8 +716,13 @@ function Overachiever.BuildItemLookupTab(THIS_VERSION, id, savedtab, tab, duptab
     ConsumeItemAch.TastesLikeChicken[5], ConsumeItemAch.HappyHour[5] = FoodCriteria, DrinkCriteria
     ConsumeItemAch.CataclysmicallyDelicious[5], ConsumeItemAch.DrownYourSorrows[5] = FoodCriteria2, DrinkCriteria2
     ConsumeItemAch.PandarenCuisine[5], ConsumeItemAch.PandarenDelicacies[5] = PandaEats, PandaEats2
-    if (Overachiever_Debug) then  Overachiever.chatprint("Skipped food/drink lookup table rebuild: Retrieved from saved variables.");  end
+    if (Overachiever_Debug) then  chatprint("Skipped food/drink lookup table rebuild: Retrieved from saved variables.");  end
   end
+  -- Since the API gives us data on criteria completion, we don't need char vars for this so gather their data now: (some achievements from above should probably be given this treatment instead)
+  Overachiever.BuildItemLookupTab(nil, OVERACHIEVER_ACHID.DraenorCuisine, nil, DraenorEats, nil, true)
+  Overachiever.BuildItemLookupTab(nil, OVERACHIEVER_ACHID.BrewfestDiet, nil, BrewfestEats, nil, true)
+  Overachiever.BuildItemLookupTab(nil, OVERACHIEVER_ACHID.DarkmoonFaireFeast, nil, DarkmoonFaireEats, nil, true)
+
   Overachiever.Consumed_Default = nil
 end
 -- Run periodically (then "/dump TESTTAB") to see if Blizzard reinstated API-accessible tracking:
@@ -588,12 +742,20 @@ local function ItemConsumedCheck(ach, itemID)
   local isCrit = ach[5][itemID]
   if (isCrit) then
     local complete
-    if (ach[6]) then -- Special case for criteria we can't track by seeing what was consumed (consumed food/drink statistic doesn't change - Blizzard bug?) but CAN track through the achievement itself:
+	if (isCrit == -1) then
+      isCrit, complete = isCriteria_asset(id, itemID)
+      if (not isCrit) then  return;  end  -- That should never happen..
+      -- Update the table so we don't have to look this criteria up again:
+      if (complete) then  ach[5][itemID] = true;  end
+
+    elseif (ach[6]) then -- Special case for criteria we can't track by seeing what was consumed (consumed food/drink statistic doesn't change - Blizzard bug?) but CAN track through the achievement itself:
+	-- Note for rewrite: ach[6] is a pointless thing, isn't it? All the ones using it should instead be using this alwaysLookup (-1) thing instead and not use saved vars, right?
       isCrit, complete = isCriteria_asset(id, itemID)
       if (not isCrit) then  return;  end  -- That should never happen..
       -- Update the table for tracking purposes, just to be consistent (mostly for the saved variable, in case we use it in some other way in the future):
       ach[5][itemID] = complete or 0
       Overachiever_CharVars_Consumed[ ach[6] ][itemID] = complete or 0
+
     else
       complete = isCrit == true
     end
@@ -618,24 +780,39 @@ end
 
 
 function Overachiever.ExamineItem(tooltip)
-  skipNextExamineOneLiner = true
+  --skipNextExamineOneLiner = true
   tooltip = tooltip or this or GameTooltip  -- Workaround in case another addon breaks this
   local name, link = tooltip:GetItem() -- Issue: This doesn't reliably get the item we want?
   if (not link) then  return;  end
   -- Could check IsUsableItem(link) to see if it's something in your inventory..
   local itemMinLevel, itemType, subtype = select(5, GetItemInfo(link))
-  if ((itemType == LBI["Consumable"] and (subtype == LBI["Food & Drink"] or subtype == LBI["Consumable"])) or
+  if ((itemType == LBI["Consumable"] and (subtype == LBI["Food & Drink"] or subtype == LBI["Consumable"] or subtype == LBI["Other"])) or
       (itemType == LBI["Trade Goods"] and subtype == LBI["Meat"])) then
     local _, _, itemID  = strfind(link, "item:(%d+)")
     itemID = tonumber(itemID)
     if (not itemID) then  return;  end  -- Ignores special objects not classified as normal items, like battlepets
     local id, text, complete, achcomplete
+	local idPrev, textPrev, completePrev, achcomplete
     for key,tab in pairs(ConsumeItemAch) do
       if (Overachiever_Settings[ tab[1] ]) then
         id, text, complete, achcomplete = ItemConsumedCheck(key, itemID)
-        if (text) then  break;  end
+        --if (text) then  break;  end -- Can't be as simple as that, or else we won't check multiple achievements to find the "least complete" one.
+		if (text) then
+		  if (not complete and not achcomplete) then
+		    RecentReminders[id] = time()
+            RecentReminders_Criteria[id] = name
+			--idPrev = nil
+		    --break
+			idPrev, textPrev, completePrev, achcompletePrev = id, text, complete, achcomplete
+		  elseif (not idPrev or (not achcomplete and (completePrev or not complete))) then
+		    idPrev, textPrev, completePrev, achcompletePrev = id, text, complete, achcomplete
+		  end
+		end
       end
     end
+	if (idPrev) then
+	  id, text, complete, achcomplete = idPrev, textPrev, completePrev, achcompletePrev
+	end
     if (text) then
       local r, g, b
       if (complete) then
@@ -645,7 +822,6 @@ function Overachiever.ExamineItem(tooltip)
         if (not achcomplete and tooltip == GameTooltip and itemMinLevel <= UnitLevel("player")) then
           -- Extra checks needed since the previous item sometimes shows up on the tooltip?
           PlayReminder()
-          RecentReminders[id] = time()
         end
       end
       tooltip:AddLine(text, r, g, b)
@@ -665,6 +841,7 @@ function Overachiever.ExamineItem(tooltip)
             -- Extra checks needed since the previous item sometimes shows up on the tooltip?
             PlayReminder()
             RecentReminders[id] = time()
+            RecentReminders_Criteria[id] = name
           end
         end
         tooltip:AddLine(text, r, g, b)
@@ -685,7 +862,7 @@ local function BagUpdate(...)
 
   --print("BagUpdate?",numFoodConsumed,oldF < numFoodConsumed, numDrinksConsumed,oldD < numDrinksConsumed)
 
-  local changeF, changeD = oldF < numFoodConsumed, oldD < numDrinksConsumed
+  local changeF, changeD = oldF < numFoodConsumed, oldD < numDrinksConsumed -- This isn't reliable any more. At least, it doesn't work for the newer achievements I've tried. Probably should rewrite this, not even bother grabbing these numbers, etc.
   if (changeF or changeD) then
     local itemID, old, new
     for i=1,select("#", ...),3 do
@@ -765,33 +942,60 @@ TjBagWatch.RegisterFunc(BagUpdate, true)
 
 if (SharedMedia) then
   local soundtab = {
-  ["Sound\\Doodad\\BellTollAlliance.wav"] = L.SOUND_BELL_ALLIANCE,
-  ["Sound\\Doodad\\BellTollHorde.wav"] = L.SOUND_BELL_HORDE,
-  ["Sound\\Doodad\\BellTollNightElf.wav"] = L.SOUND_BELL_NIGHTELF,
-  ["Sound\\Doodad\\BellTollTribal.wav"] = L.SOUND_DRUMHIT,
-  ["Sound\\Doodad\\BoatDockedWarning.wav"] = L.SOUND_BELL_BOATARRIVED,
-  ["Sound\\Doodad\\G_GongTroll01.wav"] = L.SOUND_GONG_TROLL,
-  ["Sound\\Spells\\ShaysBell.wav"] = L.SOUND_BELL_MELLOW,
+  ["Sound\\Doodad\\BellTollAlliance.ogg"] = L.SOUND_BELL_ALLIANCE,
+  ["Sound\\Doodad\\BellTollHorde.ogg"] = L.SOUND_BELL_HORDE,
+  ["Sound\\Doodad\\BellTollNightElf.ogg"] = L.SOUND_BELL_NIGHTELF,
+  ["Sound\\Doodad\\BellTollTribal.ogg"] = L.SOUND_DRUMHIT,
+  ["Sound\\Doodad\\BoatDockedWarning.ogg"] = L.SOUND_BELL_BOATARRIVED,
+  ["Sound\\Doodad\\G_GongTroll01.ogg"] = L.SOUND_GONG_TROLL,
+  ["Sound\\Spells\\ShaysBell.ogg"] = L.SOUND_BELL_MELLOW,
 
-  ["Sound\\Spells\\PVPEnterQueue.wav"] = L.SOUND_ENTERQUEUE,
-  ["Sound\\Spells\\bind2_Impact_Base.wav"] = L.SOUND_HEARTHBIND,
-  ["Sound\\Doodad\\KharazahnBellToll.wav"] = L.SOUND_BELL_KARA,
+  ["Sound\\Spells\\PVPEnterQueue.ogg"] = L.SOUND_ENTERQUEUE,
+  ["Sound\\Spells\\bind2_Impact_Base.ogg"] = L.SOUND_HEARTHBIND,
+  ["Sound\\Doodad\\KharazahnBellToll.ogg"] = L.SOUND_BELL_KARA,
 
-  ["Sound\\Interface\\AuctionWindowOpen.wav"] = L.SOUND_DING_AUCTION,
-  ["Sound\\Interface\\AuctionWindowClose.wav"] = L.SOUND_BELL_AUCTION,
-  ["Sound\\Interface\\AlarmClockWarning1.wav"] = L.SOUND_ALARM1,
-  ["Sound\\Interface\\AlarmClockWarning2.wav"] = L.SOUND_ALARM2,
-  ["Sound\\Interface\\AlarmClockWarning3.wav"] = L.SOUND_ALARM3,
-  ["Sound\\Interface\\MapPing.wav"] = L.SOUND_MAP_PING,
+  ["Sound\\Interface\\AuctionWindowOpen.ogg"] = L.SOUND_DING_AUCTION,
+  ["Sound\\Interface\\AuctionWindowClose.ogg"] = L.SOUND_BELL_AUCTION,
+  ["Sound\\Interface\\AlarmClockWarning1.ogg"] = L.SOUND_ALARM1,
+  ["Sound\\Interface\\AlarmClockWarning2.ogg"] = L.SOUND_ALARM2,
+  ["Sound\\Interface\\AlarmClockWarning3.ogg"] = L.SOUND_ALARM3,
+  ["Sound\\Interface\\MapPing.ogg"] = L.SOUND_MAP_PING,
 
-  ["Sound\\Spells\\SimonGame_Visual_GameTick.wav"] = L.SOUND_SIMON_DING,
-  ["Sound\\Spells\\SimonGame_Visual_LevelStart.wav"] = L.SOUND_SIMON_STARTGAME,
-  ["Sound\\Spells\\SimonGame_Visual_GameStart.wav"] = L.SOUND_SIMON_STARTLEVEL,
+  ["Sound\\Spells\\SimonGame_Visual_GameTick.ogg"] = L.SOUND_SIMON_DING,
+  ["Sound\\Spells\\SimonGame_Visual_LevelStart.ogg"] = L.SOUND_SIMON_STARTGAME,
+  ["Sound\\Spells\\SimonGame_Visual_GameStart.ogg"] = L.SOUND_SIMON_STARTLEVEL,
 
-  ["Sound\\Spells\\YarrrrImpact.wav"] = L.SOUND_YAR,
+  ["Sound\\Spells\\YarrrrImpact.ogg"] = L.SOUND_YAR,
+  
+  ["Sound\\Interface\\Aggro_Enter_Warning_State.ogg"] = L.SOUND_AGGRO_WARNING,
+  ["Sound\\Interface\\Aggro_Pulled_Aggro.ogg"] = L.SOUND_AGGRO_PULLED,
+  ["Sound\\Interface\\Glyph_MajorCreate.ogg"] = L.SOUND_GLYPH_CREATE_MAJOR,
+  ["Sound\\Interface\\Glyph_MinorCreate.ogg"] = L.SOUND_GLYPH_CREATE_MINOR,
+  ["Sound\\Interface\\Glyph_MajorDestroy.ogg"] = L.SOUND_GLYPH_DESTROY_MAJOR,
+  ["Sound\\Interface\\Glyph_MinorDestroy.ogg"] = L.SOUND_GLYPH_DESTROY_MINOR,
+  ["Sound\\Interface\\UI_BattlegroundCountdown_Timer.ogg"] = L.SOUND_BGTIMER,
+  ["Sound\\Interface\\UI_Challenges_MedalExpires.ogg"] = L.SOUND_MEDAL_EXPIRES,
+  ["Sound\\Interface\\UI_Garrison_Toast_InvasionAlert.ogg"] = L.SOUND_GARRISON_INVASION,
+  --[[ don't work for some reason
+  ["Sound\\Interface\\Deathbind Sound.ogg"] = "Deathbind",
+  ["Sound\\Interface\\FX_Shimmer_Whoosh_Generic.ogg"] = "Shimmer Whoosh",
+  ["Sound\\Interface\\GLUECREATECHARACTERBUTTON.mp3"] = "Create Character",
+  ["Sound\\Interface\\gsCharacterCreationCreateChar.ogg"] = "Create Character",
+  ["Sound\\Interface\\UI_AutoQuestComplete.ogg"] = "Auto Quest Complete",
+  ["Sound\\Interface\\UI_BattlegroundCountdown_Finished.ogg"] = "Battleground Countdown Finished",
+  ["Sound\\Interface\\UI_BonusEventSystemVignettes.ogg"] = "Bonus Event",
+  ["Sound\\Interface\\UI_Challenges_MedalExpires_GoldtoSilver.ogg"] = "Medal Gold to Silver",
+  ["Sound\\Interface\\UI_Challenges_MedalExpires_SilvertoBronze.ogg"] = "Medal Silver to Bronze",
+  ["Sound\\Interface\\UI_DigsiteCompletion_Toast.ogg"] = "Digsite Complete",
+  ["Sound\\Interface\\UI_Garrison_Invasion_AlertPing.ogg"] = "Garrison Invasion Alert",
+  ["Sound\\Interface\\UI_igStore_ConfirmPurchase_Button.ogg"] = "Store Confirmation",
+  ["Sound\\Interface\\UI_igStore_PurchaseDelivered_Toast_01.ogg"] = "Store Delivered",
+  --]]
   }
   for data,name in pairs(soundtab) do
-    SharedMedia:Register("sound", "Blizzard: "..name, data)
+    if (not SharedMedia:Register("sound", "Blizzard: "..name, data)) then
+	  chatprint('Error: Failed to register Blizzard sound "' .. name .. '"')
+	end
   end
   soundtab = nil
 end

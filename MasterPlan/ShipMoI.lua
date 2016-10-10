@@ -1,33 +1,14 @@
 local _, T = ...
 if T.Mark ~= 50 then return end
-local L, G, api = T.L, T.Garrison, T.MissionsUI
+local L, G, EV, api = T.L, T.Garrison, T.Evie, T.MissionsUI
 
 local function dismissTooltip(self)
 	if GameTooltip:IsOwned(self) then
 		GameTooltip:Hide()
 	end
 end
-local function SyncVariants()
-	local m = T.ShipMissionReplacements
-	SyncVariants = nil
-	for i=1,#m do
-		local c = m[i]
-		for j=2,#c do
-			local _, _, _, la = G.GetMissionSeen(c[j])
-			if la then
-				for j=2,#c do
-					local e = T.ShipInterestPool[j-1]
-					e[1], e.s[4] = c[j], c[1]
-				end
-				return
-			end
-		end
-	end
-end
 
-
-local moiContainer, core, loader = CreateFrame("Frame", nil, GarrisonShipyardFrame, "GarrisonBaseInfoBoxTemplate") do
-	local scrollFrame
+local moiContainer, core, loader = CreateFrame("Frame", "MPShipMoI", GarrisonShipyardFrame, "GarrisonBaseInfoBoxTemplate") do
 	moiContainer:SetPoint("TOPLEFT", 33, -64)
 	moiContainer:SetPoint("BOTTOMRIGHT", -35, 34)
 	moiContainer:Hide() do
@@ -46,19 +27,18 @@ local moiContainer, core, loader = CreateFrame("Frame", nil, GarrisonShipyardFra
 		t:SetTexCoord(1,0, 1,0)
 		t:SetPoint("BOTTOMRIGHT")
 	end
-	core, scrollFrame = api.createScrollList(moiContainer, 882)
+	core, moiContainer.List = api.createScrollList(moiContainer, 882)
 	GarrisonShipyardFrame.InterestTab = moiContainer
 	loader = api.CreateLoader(moiContainer, 20, 30, 20)
 	loader:SetPoint("CENTER")
-	local fadeIn = scrollFrame:CreateAnimationGroup() do
-		fadeIn:SetIgnoreFramerateThrottle(true)
+	local fadeIn = moiContainer.List:CreateAnimationGroup() do
 		local a = fadeIn:CreateAnimation("Alpha")
 		a:SetFromAlpha(0)
 		a:SetToAlpha(1)
 		a:SetDuration(0.25)
 	end
 	
-	function loader.OnFinish(nf)
+	function loader:OnFinish(nf)
 		if nf > 2 then
 			fadeIn:Play()
 		end
@@ -162,10 +142,13 @@ local moiHandle do
 		end
 		local nf = best and s[2] or 0
 		self.chance:SetText(best and ("%d%%"):format(best[5]) or "")
-		if best and best[5] >= 100 then
-			self.chance:SetTextColor(0, 1, 0)
+		local sc = best and best[5] or 0
+		if sc >= 100 then
+			self.chance:SetTextColor(0, 1, 0.25)
+		elseif sc >= 90 then
+			self.chance:SetTextColor(0.95, 1, 0)
 		else
-			self.chance:SetTextColor(1, 0.55, 0)
+			self.chance:SetTextColor(1, 0.45, 0)
 		end
 
 		local ab = best and best[4] and nf > 0 and T.ShipTraitStack[s[4]]
@@ -200,21 +183,28 @@ local moiHandle do
 		r:Show()
 	end
 	moiHandle = core:CreateHandle(CreateShipInterestMission, SetShipInterestMission, 60)
-	local function SyncMoI()
-		if SyncVariants then
-			SyncVariants()
-		end
-		core:SetData()
-		G.UpdateGroupEstimates(T.ShipInterestPool, nil, coroutine.yield)
-		core:SetData(T.ShipInterestPool, moiHandle)
-	end
 	moiContainer:SetScript("OnShow", function()
 		GarrisonShipyardFrame.MissionTab:Hide()
 		GarrisonShipyardFrame.FollowerTab:Hide()
 		GarrisonShipyardFrame.FollowerList:Hide()
-		loader.job = coroutine.create(SyncMoI)
-		loader:Show()
+		local info, job = G.GetBestGroupInfo(2, false, true)
+		if info then
+			-- This part is actually cheating.
+			for _, mi, b in G.MoIMissions(2, info) do
+				mi.best = b
+			end
+			core:SetData(T.ShipInterestPool, moiHandle)
+		else
+			core:SetData()
+			loader.job = job
+			loader:Show()
+		end
 	end)
+	function EV:MP_MOI_GROUPS_READY()
+		if moiContainer:IsVisible() then
+			moiContainer:GetScript("OnShow")(moiContainer)
+		end
+	end
 end
 
 local moiTab = CreateFrame("Button", "GarrisonShipyardFrameTab3", GarrisonShipyardFrame, "GarrisonMissionFrameTabTemplate", 3) do
@@ -223,6 +213,7 @@ local moiTab = CreateFrame("Button", "GarrisonShipyardFrameTab3", GarrisonShipya
 	followerTab:SetPoint("LEFT", moiTab, "RIGHT", -5, 0)
 	moiTab:SetText(L"Missions of Interest")
 	PanelTemplates_DeselectTab(moiTab)
+	PanelTemplates_TabResize(moiTab, 10)
 
 	moiTab:SetScript("OnClick", function()
 		PlaySound("UI_Garrison_Nav_Tabs")

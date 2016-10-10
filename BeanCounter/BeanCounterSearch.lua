@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
-	Revision: $Id: BeanCounterSearch.lua 5572 2015-08-28 11:26:08Z brykrys $
+	Version: 7.1.5675 (TasmanianThylacine)
+	Revision: $Id: BeanCounterSearch.lua 5597 2016-04-26 11:50:40Z brykrys $
 
 	BeanCounterSearch - Search routines for BeanCounter data
 	URL: http://auctioneeraddon.com/
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/BeanCounter/BeanCounterSearch.lua $","$Rev: 5572 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/7.1/BeanCounter/BeanCounterSearch.lua $","$Rev: 5597 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local lib = BeanCounter
 local private, print, get, set, _BC = lib.getLocals()
@@ -200,7 +200,7 @@ end
 --Helper functions for the Search
 function private.searchServerData(serverName, data, tbl, settings)
 	local server = BeanCounterDB[serverName]
-	if not server then return end
+	if not server then return data end -- return data table unchanged
 
 	--Retrives all matching results
 	for i in pairs(server) do

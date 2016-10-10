@@ -1,6 +1,6 @@
 --[[
 	Enchantrix:Barker Addon for World of Warcraft(tm).
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
+	Version: 7.1.5675 (TasmanianThylacine)
 	Revision: $Id: BarkerUtil.lua 4937 2010-10-14 14:40:51Z kandoko $
 	URL: http://enchantrix.org/
 
@@ -28,7 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Enchantrix-Barker/BarkerUtil.lua $", "$Rev: 4937 $")
+EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Enchantrix-Barker/BarkerUtil.lua $", "$Rev: 4937 $")
 
 -- Global functions
 

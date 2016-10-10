@@ -1,0 +1,19 @@
+## Interface: 70000
+## Title: World Quest Group Finder
+## Version: 0.10.6
+## Notes: Makes it easy to find groups for World Quests by using the Group Finder tool.
+## Notes-frFR: Permet de trouver facilement des groupes pour les explorations en utilisant l'outil de recherche de groupe.
+## Notes-ptBR: Torna facil achar grupos para Missões Mundiais usando a ferramenta de Busca de Grupo.
+## Description: Makes it easy to find groups for World Quests by using the Group Finder tool.
+## Description-frFR: Permet de trouver facilement des groupes pour les explorations en utilisant l'outil de recherche de groupe.
+## Description-ptBR: Torna facil achar grupos para Missões Mundiais usando a ferramenta de Busca de Grupo.
+## Author: Robou (Hyjal-EU)
+## SavedVariablesPerCharacter: WorldQuestGroupFinderCharacterConfig
+## SavedVariables: WorldQuestGroupFinderConfig
+
+localization\core.lua
+localization\frFR.lua
+localization\ptBR.lua
+WorldQuestGroupFinderConf.lua
+WorldQuestGroupFinderDialogs.lua
+WorldQuestGroupFinder.lua

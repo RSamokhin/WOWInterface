@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Outlier Filter
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
+	Version: 7.1.5675 (TasmanianThylacine)
 	Revision: $Id: OutlierFilter.lua 5459 2014-06-14 13:01:00Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -245,4 +245,4 @@ setmetatable(CFromZ, {__index = function(t,k)
 end});
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Filter-Outlier/OutlierFilter.lua $", "$Rev: 5459 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Filter-Outlier/OutlierFilter.lua $", "$Rev: 5459 $")

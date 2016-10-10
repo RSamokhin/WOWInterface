@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
-	Revision: $Id: BeanCounterUpdate.lua 5563 2015-06-26 10:15:37Z brykrys $
+	Version: 7.1.5675 (TasmanianThylacine)
+	Revision: $Id: BeanCounterUpdate.lua 5652 2016-08-08 08:10:24Z ccox $
 	URL: http://auctioneeraddon.com/
 
 	BeanCounterUpdate - Upgrades the Beancounter Database to latest version
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/BeanCounter/BeanCounterUpdate.lua $","$Rev: 5563 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/7.1/BeanCounter/BeanCounterUpdate.lua $","$Rev: 5652 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local libName = "BeanCounter"
 local libType = "Util"
@@ -119,6 +119,7 @@ function private.startPlayerUpgrade(server, player, playerData)
 	 		performedUpdate = true
 	 	end
 	end
+	
 	--[[Make sure to refrence the new version location for all new updates after _3_00]]
 	local version = 999999
 	if BeanCounterDBSettings and BeanCounterDBSettings[server] and BeanCounterDBSettings[server][player] then
@@ -135,6 +136,10 @@ function private.startPlayerUpgrade(server, player, playerData)
 	end
 	if version < 3.03 then
  		private.update._3_03(server, player) --Removes the "profile.Default" table
+ 		performedUpdate = true
+	end
+	if version < 3.04 then
+ 		private.update._3_04(server, player) --Clear old tables due to itemString changes
  		performedUpdate = true
 	end
 	
@@ -211,6 +216,7 @@ local function convert(DB , text)
 	end
 	return text
 end
+
 function private.update._2_07(server, player)
 	for DB, data in pairs(BeanCounterDB[server][player]) do
 		if  DB == "failedBids" or DB == "failedAuctions" or DB == "completedAuctions" or DB == "completedBidsBuyouts"  then
@@ -236,6 +242,7 @@ function private.update._2_08(server, player)
 --just let 2.09 do it. 
 	BeanCounterDB[server][player]["version"] = 2.08
 end
+
 --Storing the data using a colon caused issues with schematics so store using a ;  instead.
 --Easiest to just regenerate the ItemID array
 function private.update._2_09(server, player)
@@ -279,6 +286,7 @@ local function migrateNeutralData(server, player, key, itemID, itemString, value
 		BeanCounterDB[server][player][key][itemID]={[itemString] = {value}}
 	end
 end
+
 --adds in databases used for neutral AH trx handling, migrates neutral AH data over to these DB
 function private.update._2_11(server, player)
 	BeanCounterDB[server][player]["completedAuctionsNeutral"] = {}
@@ -307,6 +315,7 @@ function private.update._2_11(server, player)
 
 	BeanCounterDB[server][player]["version"] = 2.11
 end
+
 --correct nil holes in the transaction tables indexes
 function private.update._2_12(server, player)
 	for DB, data in pairs(BeanCounterDB[server][player]) do
@@ -325,6 +334,7 @@ function private.update._2_12(server, player)
 
 	BeanCounterDB[server][player]["version"] = 2.12
 end
+
 --Moves settings, name array into dedicated saved variables. leaving only transaction data in BeanCounterDB
 function private.update._3_00(server, player)
 	--move settings table, run once
@@ -388,6 +398,7 @@ function private.update._3_02(server, player)
 	BeanCounterDB[server][player]["vendorbuy"] = {}	
 	BeanCounterDBSettings[server][player].version = 3.02
 end
+
 --new configuration settings/parser rewrite. Removes the "profile.Default" table, removes "maintenance" table
 function private.update._3_03(server, player)
 	if BeanCounterDBSettings["profile.Default"] then
@@ -401,3 +412,26 @@ function private.update._3_03(server, player)
 		BeanCounterDBSettings[server][player].version = 3.03
 	end	
 end
+
+-- nothing pre WoW 7.0 will match due to itemstring changes
+function private.update._3_04(server, player)
+
+	-- Nuclear option, because we can't update item strings and still match in 7.0
+	BeanCounterDB[server][player]["completedAuctions"] = {}
+	BeanCounterDB[server][player]["completedAuctionsNeutral"] = {}
+	BeanCounterDB[server][player]["completedBidsBuyouts"] = {}
+	BeanCounterDB[server][player]["completedBidsBuyoutsNeutral"] = {}
+	BeanCounterDB[server][player]["failedAuctions"] = {}
+	BeanCounterDB[server][player]["failedAuctionsNeutral"] = {}
+	BeanCounterDB[server][player]["failedBids"] = {}
+	BeanCounterDB[server][player]["failedBidsNeutral"] = {}
+	BeanCounterDB[server][player]["postedAuctions"] = {}
+	BeanCounterDB[server][player]["postedBids"] = {}
+	BeanCounterDB[server][player]["vendorbuy"] = {}
+	BeanCounterDB[server][player]["vendorsell"] = {}
+	
+	if BeanCounterDBSettings and BeanCounterDBSettings[server] and BeanCounterDBSettings[server][player] then
+		BeanCounterDBSettings[server][player].version = 3.04
+	end
+end
+

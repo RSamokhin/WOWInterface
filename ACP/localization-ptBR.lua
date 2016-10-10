@@ -62,7 +62,7 @@ if (GetLocale() == "ptBR") then
 	["Reload your User Interface?"] = "Recarregar sua Interface de Usuario?",
 	["Remove from current selection"] = "Remover da seleção atual",
 	Rename = "Renomear",
-	-- ["Resurse-ToolTip"] = "",
+	["Resurse-ToolTip"] = "Ao ativar um addon, tente habilitar qualquer dependência.",
 	Save = "Salvar",
 	["Save the current addon list to [%s]?"] = "Salvar a lista atual de addons para [%s]?",
 	["Set "] = "Conjunto",

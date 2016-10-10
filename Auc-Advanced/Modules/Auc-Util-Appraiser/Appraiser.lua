@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
-	Revision: $Id: Appraiser.lua 5462 2014-06-19 11:01:56Z brykrys $
+	Version: 7.1.5675 (TasmanianThylacine)
+	Revision: $Id: Appraiser.lua 5665 2016-09-01 16:11:08Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -32,8 +32,9 @@
 if not AucAdvanced then return end
 
 local libType, libName = "Util", "Appraiser"
-local lib,parent,private = AucAdvanced.NewModule(libType, libName)
+local lib = AucAdvanced.NewModule(libType, libName, nil, true) -- no Private table
 if not lib then return end
+local private = {}
 local aucPrint,decode,_,_,replicate,_,get,set,default,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
 
 -- reduce global lookups
@@ -41,8 +42,7 @@ local wipe, tinsert = wipe, tinsert
 local floor, ceil, max = floor, ceil, max
 local tonumber = tonumber
 local AucAdvanced = AucAdvanced
-local GetFaction = AucAdvanced.GetFaction
-local SplitServerKey = AucAdvanced.SplitServerKey
+local Resources = AucAdvanced.Resources
 local GetMarketValue = AucAdvanced.API.GetMarketValue
 local GetAlgorithmValue = AucAdvanced.API.GetAlgorithmValue
 local GetBestMatch = AucAdvanced.API.GetBestMatch
@@ -67,28 +67,31 @@ function lib.Processors.config(callbackType, ...)
 	private.SetupConfigGui(...)
 end
 
-function lib.Processors.configchanged(callbackType, ...)
-	local change, value = ... --get the reason if its a scrollframe color change re-render the window
+function lib.Processors.configchanged(callbackType, fullsetting, value, subsetting, module, base)
 	if private.frame then
-		private.frame.salebox.config = true
+		-- Appraiser pricing may be affected by changes in other modules, e.g. Stat module price calculation options
+		-- As we cannot practically predict which changes will affect Appraiser price, we update pricing for every change
+		-- ### todo: reduce amount of work in this event further: check if frame shown; move to OnUpdate handler; refine these functions; other?
+		private.frame.salebox.config = true -- ### not used?
 		--	private.frame.SetPriceFromModel()
 		private.frame.UpdatePricing()
 		private.frame.UpdateDisplay()
-		--	private.frame.salebox.config = nil
-		if change == "util.appraiser.color" or change == "util.appraiser.colordirection" then
-			private.frame.UpdateImage()
-		end
-		--show/hide the appraiser tab on the AH
-		if change == "util.appraiser.displayauctiontab" then
-			if value then
-				AucAdvanced.AddTab(private.frame.ScanTab, private.frame)
-			else
-				AucAdvanced.RemoveTab(private.frame.ScanTab, private.frame)
+		--	private.frame.salebox.config = nil -- ### not used?
+	end
+	local isprofile = base == "profile"
+	if isprofile or module == "appraiser" then
+		if private.frame then
+			if isprofile or fullsetting == "util.appraiser.color" or fullsetting == "util.appraiser.colordirection" then
+				private.frame.UpdateImage()
+			end
+			--show/hide the appraiser tab on the AH
+			if isprofile or fullsetting == "util.appraiser.displayauctiontab" then
+				private.frame.ScanTab:SetDisplay()
 			end
 		end
-	end
-	if change:sub(1, 20) == "util.appraiser.round" then
-		private.updateRoundExample()
+		if isprofile or fullsetting:sub(1, 20) == "util.appraiser.round" then
+			private.updateRoundExample()
+		end
 	end
 	-- clear cache for any changes, as we can't always predict what will change our cached values
 	wipe(tooltipcache)
@@ -195,14 +198,12 @@ function lib.ProcessTooltip(tooltip, hyperlink, serverKey, quantity, decoded, ad
 end
 
 function lib.GetPrice(link, serverKey)
+	local newBuy, newBid, seen, curModelText, MatchString, stack, number, duration
 	local sig = GetSigFromLink(link)
 	if not sig then
        	return 0, 0, false, 0, "Unknown", "", 0, 0, 0
 	end
-	if not serverKey then
-		serverKey = GetFaction()
-	end
-	local newBuy, newBid, seen, curModelText, MatchString, stack, number, duration
+	if not serverKey then serverKey = Resources.ServerKey end
 
 	if pricecache then
 		local cacheSig = serverKey..sig
@@ -394,8 +395,7 @@ function private.GetPriceCore(sig, link, serverKey, match)
 			local subtract = get("util.appraiser.bid.subtract") or 0
 			local deposit = 0
 			if get("util.appraiser.bid.deposit") then
-				local _, faction = SplitServerKey(serverKey)
-				local dep = GetDepositCost(link, duration, faction, stack)
+				local dep = GetDepositCost(link, duration, nil, stack)
 				if dep and stack then
 					deposit = dep / stack
 				end
@@ -467,4 +467,8 @@ function lib.GetOwnAuctionDetails()
 end
 Stubby.RegisterEventHook("AUCTION_OWNED_LIST_UPDATE", "Auc-Util-Appraiser", lib.GetOwnAuctionDetails)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Util-Appraiser/Appraiser.lua $", "$Rev: 5462 $")
+-- Pass the private table to other files; each file reads and then deletes its own entry, and will not load if the entry is missing.
+lib.Private_AprFrame = private
+lib.Private_AprSettings = private
+
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-Appraiser/Appraiser.lua $", "$Rev: 5665 $")

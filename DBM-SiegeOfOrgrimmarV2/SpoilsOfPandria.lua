@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(870, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 10 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 92 $"):sub(12, -3))
 mod:SetCreatureID(73720, 71512)
 mod:SetEncounterID(1594)
 mod:DisableESCombatDetection()
@@ -14,12 +14,10 @@ mod:RegisterCombat("combat")
 mod:RegisterKill("yell", L.Victory)
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 145996 145288 145461 142934 142539 145286 144922 144923 146222 146180 145489 142947 146815",
-	"SPELL_CAST_SUCCESS 142694 142947 145712 146253 145230 145786 145812",
+	"SPELL_CAST_START 145996 145288 142934 142539 145286 146222 146180 145489 142947 146815",
+	"SPELL_CAST_SUCCESS 142947 145712 146253 145230 145786 145812",
 	"SPELL_AURA_APPLIED 145987 145692 145998",
 	"SPELL_AURA_REMOVED 145987 145692",
-	"SPELL_DAMAGE 145716 145748 146257",
-	"SPELL_MISSED 145716 145748 146257",
 	"UNIT_DIED",
 	"RAID_BOSS_WHISPER",
 	"UPDATE_WORLD_STATES"
@@ -38,21 +36,10 @@ local warnSetToBlow				= mod:NewTargetAnnounce(145987, 4)--145996 is cast ID
 --Stout Crate of Goods
 ----Mogu
 local warnForbiddenMagic		= mod:NewTargetAnnounce(145230, 2)
-local warnMatterScramble		= mod:NewSpellAnnounce(145288, 3)
-local warnCrimsonRecon			= mod:NewSpellAnnounce(142947, 4, nil, mod:IsTank())
-local warnEnergize				= mod:NewSpellAnnounce(145461, 3)--May be script spellid that doesn't show in combat log
-local warnTorment				= mod:NewSpellAnnounce(142934, 3, nil, mod:IsHealer())
+local warnTorment				= mod:NewSpellAnnounce(142934, 3, nil, "Healer")
 ----Mantid
-local warnMantidSwarm			= mod:NewSpellAnnounce(142539, 3, nil, mod:IsTank())
-local warnResidue				= mod:NewCastAnnounce(145786, 4, nil, nil, mod:IsMagicDispeller())
-local warnRageoftheEmpress		= mod:NewCastAnnounce(145812, 4, nil, nil, mod:IsMagicDispeller())
 local warnWindStorm				= mod:NewSpellAnnounce(145286, 3)
-local warnEnrage				= mod:NewTargetAnnounce(145692, 3, nil, mod:IsTank() or mod:CanRemoveEnrage())--Do not have timer for this yet, add not alive long enough.
---Lightweight Crate of Goods
-----Mogu
-local warnHardenFlesh			= mod:NewSpellAnnounce(144922, 2, nil, false)
-local warnEarthenShard			= mod:NewSpellAnnounce(144923, 2, nil, false)
-local warnSparkofLife			= mod:NewSpellAnnounce(142694, 3, nil, false)
+local warnEnrage				= mod:NewTargetAnnounce(145692, 3, nil, "Tank|RemoveEnrage")--Do not have timer for this yet, add not alive long enough.
 --Crate of Pandaren Relics
 local warnBreathofFire			= mod:NewSpellAnnounce(146222, 3)--Do not have timer for this yet, add not alive long enough.
 local warnGustingCraneKick		= mod:NewSpellAnnounce(146180, 3)
@@ -63,19 +50,16 @@ local specWarnSetToBlowYou		= mod:NewSpecialWarningYou(145987)
 local specWarnSetToBlow			= mod:NewSpecialWarningPreWarn(145996, nil, 4, nil, 3)
 --Stout Crate of Goods
 ----Mogu
-local specWarnForbiddenMagic	= mod:NewSpecialWarningInterrupt(145230, mod:IsMelee())
+local specWarnForbiddenMagic	= mod:NewSpecialWarningInterrupt(145230, "HasInterrupt")
 local specWarnMatterScramble	= mod:NewSpecialWarningSpell(145288, nil, nil, nil, 2)
-local specWarnCrimsonRecon		= mod:NewSpecialWarningMove(142947, mod:IsTank(), nil, nil, 3)
+local specWarnCrimsonRecon		= mod:NewSpecialWarningMove(142947, "Tank", nil, nil, 3)
 local specWarnTorment			= mod:NewSpecialWarningSpell(142934, false)
 ----Mantid
-local specWarnMantidSwarm		= mod:NewSpecialWarningSpell(142539, mod:IsTank())
-local specWarnResidue			= mod:NewSpecialWarningSpell(145786, mod:IsMagicDispeller())
-local specWarnRageoftheEmpress	= mod:NewSpecialWarningSpell(145812, mod:IsMagicDispeller())
-local specWarnEnrage			= mod:NewSpecialWarningDispel(145692, mod:CanRemoveEnrage())--Question is, do we want to dispel it? might make this off by default since kiting it may be more desired than dispeling it
+local specWarnMantidSwarm		= mod:NewSpecialWarningSpell(142539, "Tank")
+local specWarnResidue			= mod:NewSpecialWarningSpell(145786, "MagicDispeller")
+local specWarnRageoftheEmpress	= mod:NewSpecialWarningSpell(145812, "MagicDispeller")
+local specWarnEnrage			= mod:NewSpecialWarningDispel(145692, "RemoveEnrage")--Question is, do we want to dispel it? might make this off by default since kiting it may be more desired than dispeling it
 --Lightweight Crate of Goods
-----Mogu
-local specWarnHardenFlesh		= mod:NewSpecialWarningInterrupt(144922, false)
-local specWarnEarthenShard		= mod:NewSpecialWarningInterrupt(144923, false)
 ----Mantid
 local specWarnBlazingCharge		= mod:NewSpecialWarningMove(145716)
 local specWarnBubblingAmber		= mod:NewSpecialWarningMove(145748)
@@ -86,22 +70,20 @@ local specWarnGustingCraneKick	= mod:NewSpecialWarningSpell(146180, nil, nil, ni
 local timerCombatStarts			= mod:NewCombatTimer(18)
 --Massive Crate of Goods
 local timerReturnToStoneCD		= mod:NewNextTimer(12, 145489)
-local timerSetToBlowCD			= mod:NewNextTimer(9.6, 145996)
+local timerSetToBlowCD			= mod:NewNextTimer(9.6, 145996, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 local timerSetToBlow			= mod:NewBuffFadesTimer(30, 145996)
 --Stout Crate of Goods
-local timerMatterScramble		= mod:NewCastTimer(7, 145288, nil, not mod:IsTank())
-local timerMatterScrambleCD		= mod:NewCDTimer(18, 145288)--18-22 sec variation. most of time it's 20 exactly, unsure what causes the +-2 variations
-local timerCrimsonReconCD		= mod:NewNextTimer(15, 142947)
-local timerMantidSwarmCD		= mod:NewCDTimer(35, 142539)
-local timerResidueCD			= mod:NewCDTimer(18, 145786, nil, mod:IsMagicDispeller())
+local timerMatterScramble		= mod:NewCastTimer(7, 145288, nil, "-Tank")
+local timerMatterScrambleCD		= mod:NewCDTimer(18, 145288, nil, nil, nil, 5)--18-22 sec variation. most of time it's 20 exactly, unsure what causes the +-2 variations
+local timerCrimsonReconCD		= mod:NewNextTimer(15, 142947, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerMantidSwarmCD		= mod:NewCDTimer(35, 142539, nil, nil, nil, 1)
+local timerResidueCD			= mod:NewCDTimer(18, 145786, nil, "MagicDispeller", nil, 5)
 local timerWindstormCD			= mod:NewCDTimer(34, 145286, nil, false)--Spammy but might be useful to some, if they aren't releasing a ton of these at once.
-local timerRageoftheEmpressCD	= mod:NewCDTimer(18, 145812, nil, mod:IsMagicDispeller())
+local timerRageoftheEmpressCD	= mod:NewCDTimer(18, 145812, nil, "MagicDispeller", nil, 5)
 --Lightweight Crate of Goods
 ----Most of these timers are included simply because of how accurate they are. Predictable next timers. However, MANY of these adds up at once.
 ----They are off by default and a user elected choice to possibly pick one specific timer they are in charge of dispeling/interrupting or whatever
 local timerEnrage				= mod:NewTargetTimer(10, 145692)
-local timerHardenFleshCD		= mod:NewNextTimer(8, 144922, nil, false)
-local timerEarthenShardCD		= mod:NewNextTimer(10, 144923, nil, false)
 local timerBlazingChargeCD		= mod:NewNextTimer(12, 145712, nil, false)
 --Crate of Pandaren Relics
 local timerGustingCraneKickCD	= mod:NewCDTimer(18, 146180)
@@ -156,6 +138,12 @@ function mod:OnCombatStart(delay)
 		DBM.InfoFrame:SetHeader(L.name)
 		DBM.InfoFrame:Show(2, "enemypower", 2, ALTERNATE_POWER_INDEX)
 	end
+	if not self:IsTrivial(100) then
+		self:RegisterShortTermEvents(
+			"SPELL_DAMAGE 145716 145748 146257",
+			"SPELL_MISSED 145716 145748 146257"
+		)
+	end
 end
 
 function mod:OnCombatEnd()
@@ -173,36 +161,18 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 145996 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
 		timerSetToBlowCD:Start(args.sourceGUID)
 	elseif spellId == 145288 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
-		warnMatterScramble:Show()
 		specWarnMatterScramble:Show()
 		timerMatterScramble:Start(args.sourceGUID)
 		timerMatterScrambleCD:Start(args.sourceGUID)
-	elseif spellId == 145461 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
-		warnEnergize:Show()
 	elseif spellId == 142934 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
 		warnTorment:Show()
 		specWarnTorment:Show()
 	elseif spellId == 142539 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
-		warnMantidSwarm:Show()
 		specWarnMantidSwarm:Show()
 		timerMantidSwarmCD:Start(args.sourceGUID)
 	elseif spellId == 145286 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) and self:AntiSpam(5, args.sourceGUID) then
 		warnWindStorm:Show()
 		timerWindstormCD:Start(args.sourceGUID)
-	elseif spellId == 144922 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
-		local source = args.sourceName
-		warnHardenFlesh:Show()
-		timerHardenFleshCD:Start(args.sourceGUID)
-		if source == UnitName("target") or source == UnitName("focus") then 
-			specWarnHardenFlesh:Show(source)
-		end
-	elseif spellId == 144923 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
-		local source = args.sourceName
-		warnEarthenShard:Show()
-		timerEarthenShardCD:Start(args.sourceGUID)
-		if source == UnitName("target") or source == UnitName("focus") then 
-			specWarnEarthenShard:Show(source)
-		end
 	elseif spellId == 146222 and self:CheckTankDistance(args.sourceGUID) then--Relics can be either side, must use CheckTank Distance
 		warnBreathofFire:Show()
 	elseif spellId == 146180 and self:CheckTankDistance(args.sourceGUID) then--Also a Relic
@@ -213,7 +183,6 @@ function mod:SPELL_CAST_START(args)
 		warnReturnToStone:Show()
 		timerReturnToStoneCD:Start(args.sourceGUID)
 	elseif spellId == 142947 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then--Pre warn more or less
-		warnCrimsonRecon:Show()
 		specWarnCrimsonRecon:Show()
 	elseif spellId == 146815 and self:AntiSpam(2, 4)  then--Will do more work on this later, not enough time before raid, but i have an idea for it
 		warnSuperNova:Show()
@@ -223,9 +192,7 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 142694 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
-		warnSparkofLife:Show()
-	elseif spellId == 142947 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
+	if spellId == 142947 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
 		timerCrimsonReconCD:Start(args.sourceGUID)
 	elseif spellId == 145712 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
 		timerBlazingChargeCD:Start(args.sourceGUID)
@@ -233,16 +200,16 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerPathOfBlossomsCD:Start(args.sourceGUID)
 	elseif spellId == 145230 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
 		local source = args.sourceName
-		warnForbiddenMagic:Show(args.destName)
-		if source == UnitName("target") or source == UnitName("focus") then 
+		if self:AntiSpam(5, args.destName) then
+			warnForbiddenMagic:CombinedShow(1, args.destName)
+		end
+		if (source == UnitName("target") or source == UnitName("focus")) and self:AntiSpam(3, 6) then 
 			specWarnForbiddenMagic:Show(source)
 		end
 	elseif spellId == 145786 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
-		warnResidue:Show()
 		timerResidueCD:Start(args.sourceGUID)
 		specWarnResidue:Show()
 	elseif spellId == 145812 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
-		warnRageoftheEmpress:Show()
 		specWarnRageoftheEmpress:Show()
 		timerRageoftheEmpressCD:Start(args.sourceGUID)
 	end
@@ -306,9 +273,6 @@ function mod:UNIT_DIED(args)
 	elseif cid == 71405 then--Ka'thik Wind Wielder
 		timerWindstormCD:Cancel(args.destGUID)
 		timerRageoftheEmpressCD:Cancel(args.destGUID)
-	elseif cid == 71380 then--Animated Stone Mogu
-		timerHardenFleshCD:Cancel(args.destGUID)
-		timerEarthenShardCD:Cancel(args.destGUID)
 	elseif cid == 71385 then--Ka'thik Bombardier
 		timerBlazingChargeCD:Cancel(args.destGUID)
 	elseif cid == 72810 then--Wise Mistweaver Spirit
@@ -335,7 +299,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 end
 
 function mod:UPDATE_WORLD_STATES()
-	local text = select(4, GetWorldStateUIInfo(6))
+	local text = select(4, GetWorldStateUIInfo(1))
 	local time = tonumber(string.match(text or "", "%d+"))
 	if not time then return end
 	if time > worldTimer then

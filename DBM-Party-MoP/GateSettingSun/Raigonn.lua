@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(649, "DBM-Party-MoP", 4, 303)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(56877)
 mod:SetEncounterID(1419)
 mod:SetZone()
@@ -21,13 +21,13 @@ local warnFixate				= mod:NewTargetAnnounce(111723, 4)
 local warnStomp					= mod:NewCountAnnounce(111728, 3)
 
 local specWarnScreechingSwarm	= mod:NewSpecialWarningDispel(111600, false)--Can be spam if adds not die.
-local specWarnBrokenCarapace	= mod:NewSpecialWarningSpell(107146, mod:IsDps())
+local specWarnBrokenCarapace	= mod:NewSpecialWarningSpell(107146, "Dps")
 
 local timerHeadbuttCD			= mod:NewNextTimer(33, 111668)
 local timerScreechingSwarm		= mod:NewTargetTimer(10, 111600)
 local timerFixate				= mod:NewTargetTimer(15, 111723)
-local timerFixateCD				= mod:NewNextTimer(20.5, 111723)
-local timerStompCD				= mod:NewNextCountTimer(20.5, 111728)
+local timerFixateCD				= mod:NewNextTimer(20.5, 111723, nil, nil, nil, 3)
+local timerStompCD				= mod:NewNextCountTimer(20.5, 111728, nil, nil, nil, 2)
 
 local stompCount = 0
 

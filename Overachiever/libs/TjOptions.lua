@@ -10,7 +10,7 @@
 --  See TjOptions.txt for documentation.
 --
 
-local THIS_VERSION = 0.44
+local THIS_VERSION = 0.45
 
 if (not TjOptions or TjOptions.Version < THIS_VERSION) then
   TjOptions = TjOptions or {};
@@ -378,7 +378,7 @@ if (not TjOptions or TjOptions.Version < THIS_VERSION) then
 
       -- Create scrollbar background:
       local scrollbarBG = _G[scrollname.."ScrollBar"]:CreateTexture("$parentBackground", "BACKGROUND")
-      scrollbarBG:SetTexture(0.025, 0.025, 0.025, 0.5)
+      scrollbarBG:SetColorTexture(0.025, 0.025, 0.025, 0.5)
       scrollbarBG:SetAllPoints()
 
       local scrollchild = CreateFrame("Frame", nil, scrollframe)

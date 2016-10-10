@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
-	Revision: $Id: SearchMain.lua 5548 2015-03-17 19:25:22Z brykrys $
+	Version: 7.1.5675 (TasmanianThylacine)
+	Revision: $Id: SearchMain.lua 5657 2016-08-09 22:12:08Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This Addon provides a Search tab on the AH interface, which allows
@@ -78,19 +78,15 @@ local flagScanFinished = false
 local flagRescan
 
 -- Faction Resources
--- Commonly used values which change depending whether you are at home or neutral Auctionhouse
--- Modules should expect these to always contain valid values; nil tests should not be required
--- Actually handled by CoreResources, but we copy them into our own table for backward compatibility
+-- Commonly used values which may change during the session (though most of them are no longer subject to change after initialization)
+-- Actually handled by CoreResources - modules should probably convert to using CoreResources directly
+-- Initialized by the "gameactive" Processor message - values should not be accessed before then
 resources.Realm = Const.PlayerRealm -- will not change during session
 function private.UpdateFactionResources()
 	resources.Faction = coreResources.CurrentFaction
 	resources.faction = resources.Faction:lower() -- lowercase (deprecated - no longer needed by GetDepositCost)
-	resources.serverKey = coreResources.ServerKeyCurrent
+	resources.serverKey = coreResources.ServerKey
 	resources.CutAdjust = coreResources.AHCutAdjust -- multiply price by .CutAdjust to subtract the AH brokerage fees
-	if private.isSearching then
-		-- if we're part way through a search, cancel it as we don't want to do the rest of the search with a different serverKey
-		private.SearchCancel = true
-	end
 	lib.NotifyCallbacks("resources", "faction", resources.serverKey)
 end
 
@@ -152,7 +148,7 @@ do -- limit scope of locals
 
 	local function EnchantrixFunc(model, link, serverKey)
 		-- GetReagentPrice does not handle serverKey, and it does not return a seen count
-		if serverKey and serverKey ~= coreResources.ServerKeyCurrent then return end
+		if serverKey and serverKey ~= coreResources.ServerKeyCurrent and serverKey ~= coreResources.ServerKey then return end
 		local extra, mkt, five, _
 		_, extra = Enchantrix.Util.GetPricingModel()
 		_, _, mkt, five = Enchantrix.Util.GetReagentPrice(link, extra)
@@ -204,63 +200,55 @@ else
 		end)
 	end
 end
---The rescan method is a button that is displayed only if the searcher implements a rescan function. The searcher then passes any itemlinks it wants refrreshed data on
---Will accept either full search details or a link (item or battlepet)
-function lib.RescanAuctionHouse(name, minUseLevel, maxUseLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex)
-	if not name or type(name) ~= "string" then return end
-	-- we should either have a plain name or a link: a link will contain eaxctly 5 '|' characters
-	-- a plain text name should not contain any
-	local _, hasBar, link, _, _, has5Bar, has6Bar = strsplit("|", name)
-	if hasBar then -- contains at least 1 '|'
-		if has6Bar or not has5Bar then -- check there are exactly 5 '|'
-			return
-		end
-		local hyperlink = name
-		name = nil
-		local lType, id, _, quality = strsplit(":", link)
-		-- note: lType should have a leading 'H'
-		if lType == "Hitem" then
-			local na, _, qu, _, ulvl, itype, isub = GetItemInfo(hyperlink)
-			if na then
-				-- override function parameters with values for this link
-				name = na
-				minUseLevel = ulvl
-				maxUseLevel = ulvl
-				invTypeIndex = nil
-				classIndex = Const.CLASSESREV[itype]
-				if classIndex then
-					subclassIndex = Const.SUBCLASSESREV[itype][isub]
-				else
-					subclassIndex = nil
-				end
-				isUsable = nil
-				qualityIndex = qu
+--The rescan method is a button that is displayed only if the searcher implements a rescan function. The searcher then passes any itemlinks it wants refreshed data on
+--Will accept either full search details or a hyperlink (item or battlepet)
+function lib.RescanAuctionHouse(searchName, minUseLevel, maxUseLevel, isUsable, searchQuality, exactMatch, filterData) -- ### Legion : may need refining
+	if type(searchName) ~= "string" or searchName == "" then
+		searchName = nil -- nil invalid name - we could still search on other params
+	end
+	if searchName then
+		-- we should either have a plain searchName or a link: a link will contain eaxctly 5 '|' characters
+		-- a plain text searchName should not contain any '|' characters
+		local _, hasBar, itemString, _, _, has5Bar, has6Bar = strsplit("|", searchName)
+		if hasBar then -- contains at least 1 '|'
+			if has6Bar or not has5Bar then -- check there are exactly 5 '|'
+				return
 			end
-		elseif lType == "Hbattlepet" then
-			id = tonumber(id)
-			if id then
-				local na, _, ty = C_PetJournal.GetPetInfoBySpeciesID(id)
-				if na then
-					local _, _, _, _, ulvl, itype = GetItemInfo(82800) -- Pet Cage
-					name = na
+			local hyperlink = searchName -- save the full hyperlink
+			-- override any provided function parameters with values for this link
+			searchName, minUseLevel, maxUseLevel, isUsable, searchQuality, exactMatch, filterData = nil, nil, nil, nil, nil, nil, nil
+			local lType, itemID, _, petQuality = strsplit(":", itemString)
+			itemID = tonumber(itemID)
+			if not itemID then return end -- check there is a valid itemID in this link
+			-- note: lType should have a leading 'H'
+			if lType == "Hitem" then
+				local iname, _, qual, _, ulvl, _, _, _, _, _, _, classID, subClassID = GetItemInfo(hyperlink)
+				if not iname then return end
+				searchName = iname
+				if ulvl and ulvl > 0 then
 					minUseLevel = ulvl
 					maxUseLevel = ulvl
-					invTypeIndex = nil
-					classIndex = Const.CLASSESREV[itype]
-					subclassIndex = ty
-					isUsable = nil
-					qualityIndex = tonumber(quality)
 				end
+				if qual and qual > 0 then searchQuality = qual end
+				filterData = AucAdvanced.Scan.QueryFilterFromID(classID, subClassID)
+			elseif lType == "Hbattlepet" then
+				local iname, _, petType = C_PetJournal.GetPetInfoBySpeciesID(itemID)
+				if not iname then return end
+				searchName = iname
+				petQuality = tonumber(petQuality)
+				if petQuality and petQuality > 0 then searchQuality = petQuality end
+				filterData = AucAdvanced.Scan.QueryFilterFromID(LE_ITEM_CLASS_BATTLEPET, Const.AC_PetType2SubClassID[petType])
 			end
+			exactMatch = #searchName < 60 -- use exact match, except for very long names
 		end
 	end
 
-	if name then
+	if searchName or filterData then
 		if AucAdvanced.Scan.IsScanning() or AucAdvanced.Scan.IsPaused() then
-			AucAdvanced.Scan.StartPushedScan(name, minUseLevel, maxUseLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex)
+			AucAdvanced.Scan.StartPushedScan(searchName, minUseLevel, maxUseLevel, isUsable, searchQuality, exactMatch, filterData)
 		else
 			AucAdvanced.Scan.PushScan()
-			AucAdvanced.Scan.StartScan(name, minUseLevel, maxUseLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex)
+			AucAdvanced.Scan.StartScan(searchName, minUseLevel, maxUseLevel, isUsable, searchQuality, nil, exactMatch, filterData)
 		end
 	end
 end
@@ -268,9 +256,6 @@ function lib.OnLoad(addon)
 	-- Notify that SearchUI is fully loaded
 	resources.isSearchUILoaded = true
 	lib.NotifyCallbacks("onload", addon)
-
-	-- Initialize
-	private.UpdateFactionResources()
 end
 
 lib.Processors = {}
@@ -289,7 +274,7 @@ function lib.Processors.auctionopen(callbackType, ...)
 	lib.NotifyCallbacks("auctionopen")
 end
 
-lib.Processors.serverkey = private.UpdateFactionResources
+lib.Processors.gameactive = private.UpdateFactionResources
 lib.Processors.factionselect = private.UpdateFactionResources
 
 function lib.Processors.auctionui(callbackType, ...)
@@ -438,7 +423,7 @@ local function isGlobalSetting(setting)
 	return
 end
 
-local function setter(setting, value)
+local function setter(setting, value, silent)
 	initData()
 
 	local db = currentSettings
@@ -452,7 +437,7 @@ local function setter(setting, value)
 
 	if (isGlobalSetting(setting)) then
 		AucAdvancedData.UtilSearchUiData.Global[setting] = value
-		return
+		return -- ### todo: this is bypassing processor messages and callbacks ###
 	end
 
 	-- for defaults, just remove the value and it'll fall through
@@ -476,8 +461,11 @@ local function setter(setting, value)
 	hasUnsaved = true
 	lib.UpdateSave()
 
-	AucAdvanced.SendProcessorMessage("configchanged", setting, value, setting, "searchui")
-	lib.NotifyCallbacks('config', 'changed', setting, value)
+	-- 'silent' flag inhibits notifications - only to be used for obsolete settings (see also equivalent CoreSettings function)
+	if not silent then
+		AucAdvanced.SendProcessorMessage("configchanged", setting, value, setting, "searchui", "util")
+		lib.NotifyCallbacks('config', 'changed', setting, value)
+	end
 end
 
 function lib.SetSetting(...)
@@ -528,7 +516,6 @@ end
 function lib.Show()
 	lib.MakeGuiConfig()
 	gui:Show()
-	private.UpdateFactionResources()
 end
 
 function lib.Hide()
@@ -1095,6 +1082,7 @@ function private.CreateAuctionFrames()
 	frame.backing:SetPoint("BOTTOMRIGHT", frame.money, "TOPLEFT", 145, 50)
 	frame.backing:SetBackdrop({ bgFile="Interface\\AddOns\\Auc-Advanced\\Textures\\BlackBack", edgeFile="Interface\\AddOns\\Auc-Advanced\\Textures\\WhiteCornerBorder", tile=1, tileSize=8, edgeSize=8, insets={left=3, right=3, top=3, bottom=3} })
 	frame.backing:SetBackdropColor(0,0,0, 0.60)
+	frame.backing:SetFrameLevel(frame:GetFrameLevel())
 
 	frame.scanslabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	frame.scanslabel:SetPoint("TOPLEFT", frame, "TOPLEFT", 72, -19)
@@ -1428,6 +1416,8 @@ function private.MakeGuiConfig()
 		elseif (callback == "OnClickCell") then
 			lib.OnClickSheet(button, row, column)
 		elseif (callback == "ColumnSort") then
+			-- ### todo: calling SetSetting can be very expensive (as it triggers a cascade of other calls), try to do it only when acutally needed?
+			-- ### however, looks like ColumnSort is the only way to detect when sort column or direction has changed
 			lib.SetSetting("columnsortcurDir", curDir)
 			lib.SetSetting("columnsortcurSort", column)
 		elseif (callback == "OnMouseDownCell") then
@@ -1454,12 +1444,12 @@ function private.MakeGuiConfig()
 				gui.Rescan:SetScript("OnClick", function()
 									if flagRescan then
 										flagRescan = nil
-										CooldownFrame_SetTimer(private.gui.Rescan.frame, GetTime(), 0, 0)
+										CooldownFrame_Set(gui.Rescan.frame, 0, 0, false) -- ### Legion change check
 										private.gui.Search:Enable()
 										lib.PerformSearch()
 									else
 										searcher.Rescan()
-										CooldownFrame_SetTimer(gui.Rescan.frame, GetTime(), 2, 1)
+										CooldownFrame_Set(gui.Rescan.frame, GetTime(), 2, true)
 										private.gui.Search:Disable()
 										flagRescan = GetTime()
 									end
@@ -2193,13 +2183,13 @@ function private.OnUpdate(self, elapsed)
 	if flagRescan and private.gui and private.gui.Rescan.frame:IsShown() then
 		--if scan still in progress, keep the button churnin'
 		if flagRescan + 2.5 < GetTime() then
-			CooldownFrame_SetTimer(private.gui.Rescan.frame, GetTime(), 2, 1)
+			CooldownFrame_Set(private.gui.Rescan.frame, GetTime(), 2, true)
 			flagRescan = GetTime()
 		end
 		--are we finished scanning
 		if private.gui.AuctionFrame and private.gui.AuctionFrame.scanscount.last == 0 then
 			flagRescan = nil
-			CooldownFrame_SetTimer(private.gui.Rescan.frame, GetTime(), 0, 0)
+			CooldownFrame_Set(private.gui.Rescan.frame, 0, 0, false)
 			private.gui.Search:Enable()
 			lib.PerformSearch()
 		end
@@ -2209,4 +2199,4 @@ end
 private.updater = CreateFrame("Frame", nil, UIParent)
 private.updater:SetScript("OnUpdate", private.OnUpdate)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5548 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5657 $")

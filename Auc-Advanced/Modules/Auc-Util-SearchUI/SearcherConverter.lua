@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Converter
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
-	Revision: $Id: SearcherConverter.lua 5498 2014-10-18 13:24:18Z brykrys $
+	Version: 7.1.5675 (TasmanianThylacine)
+	Revision: $Id: SearcherConverter.lua 5606 2016-06-13 16:33:33Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -309,7 +309,7 @@ function lib.Search (item)
 	end
 	if get("converter.adjust.deposit") then
 		-- note: GetDepositCost can handle numerical itemIDs instead of links
-		local amount = GetDepositCost(newID, get("converter.adjust.deplength"), resources.Faction, count)
+		local amount = GetDepositCost(newID, get("converter.adjust.deplength"), nil, count)
 		if amount then
 			market = market - amount * get("converter.adjust.listings")
 		end
@@ -324,4 +324,4 @@ function lib.Search (item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Util-SearchUI/SearcherConverter.lua $", "$Rev: 5498 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-SearchUI/SearcherConverter.lua $", "$Rev: 5606 $")

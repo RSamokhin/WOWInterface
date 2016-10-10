@@ -1,16 +1,16 @@
 ## Title: Stubby |cff224477(lib)
 ## Notes: Allows AddOns to load automatically, and provides event handling support.
 ##
-## Interface: 60200
+## Interface: 70000
 ## OptionalDeps: !nLog, DebugLib
 ## SavedVariables: StubbyConfig
 ##
-## Version: 5.21f.5579 (SanctimoniousSwamprat)
-## Revision: $Id: Stubby.toc 391 2015-06-26 23:45:02Z dinesh $
+## Version: 7.1.5675 (TasmanianThylacine)
+## Revision: $Id: Stubby.toc 408 2016-08-07 22:26:52Z ccox $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Libraries
 ## X-Category: Library
-## X-Max-Interface: 60200
+## X-Max-Interface: 70000
 ## X-URL: http://zip.norganna.org/libs/Stubby/
 ## X-Feedback: http://forums.norganna.org
 ##

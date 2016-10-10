@@ -169,8 +169,8 @@ Tutorial:Register('Journal', {
 		point = 'BOTTOM', relPoint = 'TOP',
 		shineRight = 6, shineLeft = -6,
 		shineTop = -20, shineBottom = -2,
-		anchor = CompanionsMicroButton,
-		shine = CompanionsMicroButton,
+		anchor = CollectionsMicroButton,
+		shine = CollectionsMicroButton,
 		y = 10
 	},
 	{
@@ -221,8 +221,8 @@ Tutorial:Register('Journal', {
 			self[i].shine = _G[ADDON .. 'TrackToggle']
 			self[i].anchor = CollectionsJournal
 		elseif i == 4 then
-			self[i].shine = CollectionsJournalTab4
-			self[i].anchor = CollectionsJournalTab4
+			self[i].shine = PetTrackerTamerJournal.Tab
+			self[i].anchor = PetTrackerTamerJournal.Tab
 		elseif i == 5 then
 			self[i].anchor = CollectionsJournal
 		elseif i == 6 then

@@ -1,7 +1,7 @@
 --[[
 	Slidebar AddOn for World of Warcraft (tm)
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
-	Revision: $Id: SlideMain.lua 393 2015-07-17 09:50:46Z brykrys $
+	Version: 7.1.5675 (TasmanianThylacine)
+	Revision: $Id: SlideMain.lua 406 2016-07-31 13:26:09Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 
 	License:
@@ -32,7 +32,7 @@ local LIBRARY_VERSION_MINOR = 13
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/SlideBar/SlideMain.lua $","$Rev: 393 $","6.0.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/SlideBar/SlideMain.lua $","$Rev: 406 $","6.0.DEV.", 'auctioneer', 'libs')
 
 -- Autoconvert existing nSideBar instances to SlideBar
 if LibStub.libs.nSideBar then
@@ -383,7 +383,7 @@ else
 	frame:RegisterEvent("ADDON_LOADED")
 
 	frame.Tab = frame:CreateTexture()
-	frame.Tab:SetTexture(0.98, 0.78, 0)
+	frame.Tab:SetColorTexture(0.98, 0.78, 0)
 	frame.buttons = {}
 
 	SLASH_NSIDEBAR1 = "/sbar"

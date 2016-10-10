@@ -78,26 +78,37 @@
 	<Scripts><OnClick>PSFea_tact()</OnClick></Scripts>
 	</Button>
 
+<Button name="$parent_ButtonG12" inherits="UIPanelButtonGrayTemplate" text="nrallbuttonmaint">
+	<Size x="150" y="21"/><Anchors><Anchor point="TOP"><Offset x="0" y="-95"/></Anchor></Anchors>
+	<Scripts><OnClick>PSFea_listach()</OnClick></Scripts>
+	</Button>
+<Button name="$parent_ButtonG13" inherits="UIPanelButtonGrayTemplate" text="nrallbuttontak">
+	<Size x="150" y="21"/><Anchors><Anchor point="TOP"><Offset x="0" y="-70"/></Anchor></Anchors>
+	<Scripts><OnClick>PSFea_tact()</OnClick></Scripts>
+	</Button>
 
 
-<Button name="$parent_Button5" inherits="UIPanelButtonTemplate" text="psealeftmenupanda">
+
+<Button name="$parent_Button5" inherits="UIPanelButtonTemplate" text="psealeftmenulegion">
 	<Size x="150" y="21"/><Anchors><Anchor point="TOP"><Offset x="0" y="-215"/></Anchor></Anchors>
-	<Scripts><OnClick>phra_button()</OnClick></Scripts>
+	<Scripts><OnClick>legionhra_button()</OnClick></Scripts>
 	</Button>
-	<Button name="$parent_Button5" inherits="UIPanelButtonTemplate" text="psealeftmenupanda3">
+	<Button name="$parent_Button6" inherits="UIPanelButtonTemplate" text="psealeftmenulegion2">
 	<Size x="150" y="21"/><Anchors><Anchor point="TOP"><Offset x="0" y="-240"/></Anchor></Anchors>
-	<Scripts><OnClick>pzra_button()</OnClick></Scripts>
-	</Button>
-<Button name="$parent_Button4" inherits="UIPanelButtonTemplate" text="psealeftmenupanda2">
-	<Size x="150" y="21"/><Anchors><Anchor point="TOP"><Offset x="0" y="-265"/></Anchor></Anchors>
-	<Scripts><OnClick>prra_button()</OnClick></Scripts>
+	<Scripts><OnClick>legionrra_button()</OnClick></Scripts>
 	</Button>
 
+	
+	
+	
 <Button name="$parent_Buttonwotlk" inherits="UIPanelButtonTemplate" text="pseaoldmodules">
 	<Size x="150" y="21"/><Anchors><Anchor point="TOP"><Offset x="0" y="-315"/></Anchor></Anchors>
 	<Scripts><OnClick>wotlkold_button()</OnClick></Scripts>
 	</Button>
-
+<Button name="$parent_ButtonwotlkG" inherits="UIPanelButtonGrayTemplate" text="pseaoldmodules">
+	<Size x="150" y="21"/><Anchors><Anchor point="TOP"><Offset x="0" y="-315"/></Anchor></Anchors>
+	<Scripts><OnClick>wotlkold_button()</OnClick></Scripts>
+	</Button>
 
 <Button name="$parent_ButtonPS" inherits="UIPanelButtonTemplate" text="PhoenixStyle">
 	<Size x="150" y="21"/><Anchors><Anchor point="BOTTOM"><Offset x="0" y="20"/></Anchor></Anchors>
@@ -156,6 +167,29 @@
 <Button name="$parent_Button8" inherits="UIPanelButtonTemplate" text="psealeftmenucata2">
 	<Size x="150" y="21"/><Anchors><Anchor point="TOPLEFT"><Offset x="180" y="-55"/></Anchor></Anchors>
 	<Scripts><OnClick>crra_button()</OnClick></Scripts>
+	</Button>
+
+<Button name="$parent_Button5" inherits="UIPanelButtonTemplate" text="psealeftmenupanda">
+	<Size x="150" y="21"/><Anchors><Anchor point="TOPLEFT"><Offset x="330" y="-30"/></Anchor></Anchors>
+	<Scripts><OnClick>phra_button()</OnClick></Scripts>
+	</Button>
+	<Button name="$parent_Button5" inherits="UIPanelButtonTemplate" text="psealeftmenupanda3">
+	<Size x="150" y="21"/><Anchors><Anchor point="TOPLEFT"><Offset x="330" y="-55"/></Anchor></Anchors>
+	<Scripts><OnClick>pzra_button()</OnClick></Scripts>
+	</Button>
+<Button name="$parent_Button4" inherits="UIPanelButtonTemplate" text="psealeftmenupanda2">
+	<Size x="150" y="21"/><Anchors><Anchor point="TOPLEFT"><Offset x="330" y="-80"/></Anchor></Anchors>
+	<Scripts><OnClick>prra_button()</OnClick></Scripts>
+	</Button>
+	
+	
+	<Button name="$parent_Button5" inherits="UIPanelButtonTemplate" text="psealeftmenuwod">
+	<Size x="150" y="21"/><Anchors><Anchor point="TOPLEFT"><Offset x="480" y="-30"/></Anchor></Anchors>
+	<Scripts><OnClick>wodhra_button()</OnClick></Scripts>
+	</Button>
+	<Button name="$parent_Button6" inherits="UIPanelButtonTemplate" text="psealeftmenuwod2">
+	<Size x="150" y="21"/><Anchors><Anchor point="TOPLEFT"><Offset x="480" y="-55"/></Anchor></Anchors>
+	<Scripts><OnClick>wodrra_button()</OnClick></Scripts>
 	</Button>
 
 </frames>
@@ -587,7 +621,7 @@
 		</Button>
 <Button name="$parent_Button11" inherits="UIPanelButtonTemplate" text="rallbutton3">
 	<Size x="180" y="30"/><Anchors><Anchor point="TOPLEFT"><Offset x="25" y="-55"/></Anchor></Anchors>
-	<Scripts><OnClick>icll_button2()</OnClick></Scripts>
+	<Scripts><OnClick>icll_buttonnew2()</OnClick></Scripts>
 	</Button>
 <Button name="$parent_Buttontact" inherits="UIPanelButtonTemplate" text="ralluilooktactic1">
 	<Size x="170" y="30"/><Anchors><Anchor point="TOPLEFT"><Offset x="567" y="-217"/></Anchor></Anchors>

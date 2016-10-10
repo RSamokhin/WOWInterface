@@ -1,9 +1,47 @@
-Garrison Mission Manager, v39
+Garrison Mission Manager, v49
 
 * http://www.curse.com/addons/wow/garrison-mission-manager
 * http://www.wowinterface.com/downloads/info23375-GarrisonMissionManager.html
 
 == Change log ==
+2016-10-01 v49
+ * Hook Class Hall mission list with code previously available for garrison, adding there all previously available features: best team button directly in list, mission expiration time and ilevel display.
+
+2016-10-01 v48
+ * Mostly internal changes: lots of garrison code is adapted to be shared with Class Hall. Next version will activate mission list buttons/expiration timers and rest of features previously available in garrison.
+ * Mission page display is now shared with garrison too: mission level will now display only level or only ilevel as appropriate, just like it worked in garrison.
+ * Artifact Power rewards now have amount of AP shown directly on item icons in mission list. This requires [[https://www.curse.com/addons/wow/libttscan-1|LibTTScan-1.0]] to work.
+
+2016-09-21 v47
+ * Party for missions without bonus loot will be optimized to have as little "extra" success over 100% as possible.
+
+2016-09-16 v46
+ * Always send at least one champion on Class Hall missions.
+ * Support and optimize for teams that don't fill all slots on Class Hall missions in case you don't have enough free followers or if it would be simply a waste to send more than necessary.
+ * Internal clean-up and preparations for troop count and unnecessary overmax (yeah, that's how Blizzard calls it) optimization.
+
+2016-09-08 v45
+ * Consider salvage yard level only when calculating party for WoD followers - fixes long standing "misfeature" of showing salvage crates in shipyard and any possible future problems with Class Hall.
+ * Reliably detect max level followers in party calculation.
+ * Right-clicking minimap button AFTER GMM was loaded (i.e. after you've seen mission table or already opened landing page at least once) will show WoD garrison lading page even if you have Class Hall.
+
+2016-09-05 v44
+ * Only calculate parties on mission page, fixes error on Combat Ally page.
+
+2016-09-04 v43
+ * Update/fix ignoring followers in WoD garrison and updating their list after that to use new API.
+
+2016-09-02 v42
+ * Handle cases when API returns nothing, not even empty list for followers - it seems this happens when you skip WoD garrison/shipyard and go directly to Legion.
+
+2016-08-31 v41
+ * Class Hall support: buttons on individual mission's page.
+ * Show loot items in shipyard on small attachment to button on naval map.
+
+2016-08-02 v40
+ * Update to Legion API changes; cleanup some old compatibility stuff.
+ (Known minor UI problem: shipyard mission buttons are sticking through debriefing screen.)
+
 2015-11-13 v39
  * Show fleet summary in chat on accessing ship building NPC. [[http://legacy.curseforge.com/media/images/86/641/GMM_FleetSummary.png|(screenshot)]]
 
@@ -12,7 +50,7 @@ Garrison Mission Manager, v39
  * Expose /run GMM_Click("StartShipyardMission").
 
 2015-07-15 v37
- * Follower upgrade items' buttons/summary. [[http://www.curseforge.com/media/images/84/465/GMM_FollowerUpgrades1.png|(screenshot)]]
+ * Follower upgrade items' buttons/summary. [[http://legacy.curseforge.com/thumbman/images/84/465/600x184/GMM_FollowerUpgrades1.png.-m1.png|(screenshot)]]
 
 2015-07-08 v36
  * Treat legendary ship mission status as non-XP reward, allowing full epic teams to be deployed even if you still have ships to level up.

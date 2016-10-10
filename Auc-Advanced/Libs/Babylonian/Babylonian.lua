@@ -1,6 +1,6 @@
 --[[
 	Babylonian - A sub-addon that manages the locales for other addons.
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
+	Version: 7.1.5675 (TasmanianThylacine)
 	Revision: $Id: Babylonian.lua 332 2012-09-02 22:14:59Z Esamynn $
 	URL: http://auctioneeraddon.com/dl/
 

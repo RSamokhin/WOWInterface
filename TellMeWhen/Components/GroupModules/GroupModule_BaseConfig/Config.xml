@@ -1,0 +1,133 @@
+﻿<Ui>
+
+	<Frame name="TellMeWhen_GM_Rename" inherits="TellMeWhen_OptionsModuleContainer" virtual="true">
+		<!-- <Size y="50"/> -->
+		<Frames>
+			<EditBox parentKey="Name" inherits="TellMeWhen_InputBoxTemplate" >
+				<Size y="15"/>
+				<Anchors>
+					<Anchor point="TOP" y="-5"/>
+					<Anchor point="LEFT" x="9" />
+					<Anchor point="RIGHT" x="-9" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>						
+						TMW:CInit(self)
+
+						self:SetTexts(TMW.L["UIPANEL_GROUPNAME"], nil)
+						self:SetSetting("Name")
+						
+						self:CScriptAdd("ModifyValueForSave", function(self, value)
+							return strtrim(value)
+						end)
+
+					</OnLoad>
+
+					<OnSizeChanged>
+						self:GetParent():AdjustHeight()
+					</OnSizeChanged>
+				</Scripts>
+			</EditBox>
+		</Frames>
+		<Scripts>
+			<OnLoad>		
+				TMW:CInit(self)
+				
+				self:SetTitle(TMW.L["UIPANEL_GROUPNAME"])
+			</OnLoad>
+		</Scripts>
+	</Frame>
+
+
+	<Frame name="TellMeWhen_GM_Delete" inherits="TellMeWhen_OptionsModuleContainer" virtual="true">
+		<Size y="29"/>
+		<Frames>
+
+			<Button parentKey="Delete" inherits="TellMeWhen_ButtonTemplate">
+				<Size y="15"/>
+				<Anchors>
+					<Anchor point="TOP" y="-7"/>
+					<Anchor point="LEFT" x="25" />
+					<Anchor point="RIGHT" x="-25" />
+				</Anchors>
+				
+				<NormalFont style="GameFontNormalSmall"/>
+				<HighlightFont style="GameFontRedSmall"/>
+
+				<Scripts>
+					<OnLoad>
+						self:SetText(TMW.L["UIPANEL_DELGROUP"])
+					</OnLoad>
+					<OnClick>
+						local group = TMW.CI.group
+
+						if TMW:Group_HasIconData(group) then
+							TMW.IE:ShowConfirmation(
+								TMW.L["CONFIRM_DELGROUP"],
+								TMW.L["CONFIRM_DELETE_GENERIC_DESC"]:format(group:GetGroupName()),
+								function()
+									TMW:Group_Delete(group)
+								end
+							)
+						else
+							TMW:Group_Delete(group)
+						end
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				TMW:CInit(self)
+				
+				self:SetTitle(DELETE)
+			</OnLoad>
+		</Scripts>
+	</Frame>
+
+	<Frame name="TellMeWhen_GM_Dims" inherits="TellMeWhen_OptionsModuleContainer" virtual="true">
+		<Size y="34"/>
+		<Frames>
+			<Slider parentKey="Rows" inherits="TellMeWhen_SliderTemplate">
+				<Anchors>
+					<Anchor point="LEFT" x="10" />
+					<Anchor point="RIGHT" relativePoint="CENTER" x="-10" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						TMW:CInit(self)
+
+						self:SetTexts(TMW.L["UIPANEL_ROWS"], TMW.L["UIPANEL_TOOLTIP_ROWS"])
+						self:SetSetting("Rows")
+						self:SetMinMaxValues(1, TELLMEWHEN_MAXROWS)
+						self:SetValueStep(1)
+					</OnLoad>
+				</Scripts>
+			</Slider>
+			<Slider parentKey="Columns" inherits="TellMeWhen_SliderTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="CENTER" x="10" />
+					<Anchor point="RIGHT" X="-10"/>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						TMW:CInit(self)
+
+						self:SetTexts(TMW.L["UIPANEL_COLUMNS"], TMW.L["UIPANEL_TOOLTIP_COLUMNS"])
+						self:SetSetting("Columns")
+						self:SetMinMaxValues(1, TELLMEWHEN_MAXROWS)
+						self:SetValueStep(1)
+					</OnLoad>
+				</Scripts>
+			</Slider>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				TMW:CInit(self)
+				
+				self:SetTitle(TMW.L["UIPANEL_DIMENSIONS"])
+			</OnLoad>
+		</Scripts>
+	</Frame>
+ 
+</Ui>

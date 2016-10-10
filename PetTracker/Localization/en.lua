@@ -31,11 +31,11 @@ L.PromptForfeitTip = 'If enabled, you will be prompted to forfeit a battle when 
 L.UnlockActions = 'Unlock Enemy Actions'
 L.UnlockActionsTip = 'If enabled, the enemy actions bar can be dragged to anywhere on the screen.'
 L.UpgradeAlert = 'Wild upgrades have appeared!'
-L.TotalTamers = 'Total Tamers'
+L.TotalTamers = 'Total Rivals'
 L.Victory = 'Victory'
 L.ZoneTracker = 'Zone Tracker'
 
-for i = 1, 10 do
+for i = 1, C_PetJournal.GetNumPetSources() do
 	L['Source' .. i] = _G['BATTLE_PET_SOURCE_' .. i] -- do not translate. Automatic for most locales
 end
 

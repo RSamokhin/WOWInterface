@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
-	Revision: $Id: CoreManifest.lua 5557 2015-05-13 13:56:40Z brykrys $
+	Version: 7.1.5675 (TasmanianThylacine)
+	Revision: $Id: CoreManifest.lua 5634 2016-08-02 19:54:00Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -51,13 +51,43 @@
 AucAdvanced = {Modules = {Filter={}, Match={}, Stat={}, Util={}}, Data = {}}
 local lib = AucAdvanced
 
-local DEV_VERSION = "5.22.DEV"
-local MINIMUM_TOC = 60100
-local MINIMUM_CLIENT = "6.1.2"
+-- Manifest Constants
+local DEV_VERSION = "7.0.DEV"
+local MINIMUM_TOC = 70000
+local MINIMUM_CLIENT = "7.0.3"
 -- MINIMUM_BUILD is optional, and should only be used where TOC is not sufficient; otherwise it should be commented out
-local MINIMUM_BUILD = 19802
+-- local MINIMUM_BUILD = 00000
 
-lib.Version="5.21f.5579";
+
+-- Core File checking system: used to detect critical files that fail to load (i.e. due to lua errors while loading) - including this file!
+-- Place AucAdvanced.CoreFileCheckIn(filename) at the start of the file, after checking for AucAdvanced, but before any checks for ABORTLOAD
+-- Place AucAdvanced.CoreFileCheckOut(filename) at the very end of the file, preferably the last line of code
+-- CoreMain will call CoreFileCheckOut() with no filename to finalize the check-in/out process, just before "gameactive"
+local pendingCoreFile
+lib.CoreFileCheckIn = function(filename)
+	if pendingCoreFile then
+		if not lib.ABORTLOAD then
+			lib.ABORTLOAD = "Core file failed to load correctly: "..pendingCoreFile
+		end
+	end
+	pendingCoreFile = filename
+end
+lib.CoreFileCheckOut = function(filename)
+	if pendingCoreFile ~= filename then -- something went wrong
+		if not lib.ABORTLOAD then
+			lib.ABORTLOAD = "Core file failed to load correctly: "..(pendingCoreFile or filename or "Unknown")
+		end
+	end
+	pendingCoreFile = nil
+	if not filename then -- final check by CoreMain, functions not needed after this
+		lib.CoreFileCheckIn = nil
+		lib.CoreFileCheckOut = nil
+	end
+end
+lib.CoreFileCheckIn("CoreManifest") -- check CoreManifest in as early as possible
+
+-- Version checking
+lib.Version="7.1.5675";
 if lib.Version:byte(1) == 60 then -- 60 = '<'
 	lib.Version = DEV_VERSION
 end
@@ -69,8 +99,6 @@ lib.Revision = revision
 
 -- Single instance of a 'no operation' function
 lib.NOPFUNCTION = function() end
-
--- Test for load failure conditions in priority order
 
 -- Check TOC version meets minimum requirements
 local _,build,_,tocVersion = GetBuildInfo()
@@ -125,7 +153,6 @@ lib.Libraries = {
 	LibDataBroker = LibDataBroker,
 }
 
-
 -- Auctioneer's revision information functions
 
 local versionPrefix = lib.MajorVersion.."."..lib.MinorVersion.."."..lib.RelVersion.."."
@@ -135,7 +162,7 @@ lib.distribution = {--[[<%revisions%>]]} --Currently unused, needs a change in t
 
 if LibRevision then
 	function lib.RegisterRevision(path, revision)
-		if (not path and revision) then return end
+		if not (path and revision) then return end
 
 		local detail, file, rev = LibRevision:Set(path, revision, versionPrefix, "auctioneer", "libs")
 		if file then
@@ -253,4 +280,5 @@ function lib.ValidateInstall()
 end
 
 
-lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Advanced/CoreManifest.lua $", "$Rev: 5557 $")
+lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Advanced/CoreManifest.lua $", "$Rev: 5634 $")
+lib.CoreFileCheckOut("CoreManifest")

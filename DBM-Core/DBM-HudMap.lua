@@ -69,6 +69,15 @@ local textureLookup = {
 	rune2		= [[SPELLS\AURARUNE9.BLP]],
 	rune3		= [[SPELLS\AURARUNE_A.BLP]],
 	rune4		= [[SPELLS\AURARUNE_B.BLP]],
+	odunblue	= [[Interface\Icons\Boss_OdunRunes_Blue.blp]],--Blue fishies
+	odungreen	= [[Interface\Icons\Boss_OdunRunes_Green.blp]],--Green cube
+	odunorange	= [[Interface\Icons\Boss_OdunRunes_Orange.blp]],--Orange N
+	odunpurple	= [[Interface\Icons\Boss_OdunRunes_Purple.blp]],--Purple K
+	odunyellow	= [[Interface\Icons\Boss_OdunRunes_Yellow.blp]],--Yellow H
+	astrored	= [[Interface\Icons\icon_7fx_nightborn_astromancer_red.blp]],--Wolf
+	astroyellow	= [[Interface\Icons\icon_7fx_nightborn_astromancer_yellow.blp]],--Crab
+	astroblue	= [[Interface\Icons\icon_7fx_nightborn_astromancer_blue.blp]],--Dragon
+	astrogreen	= [[Interface\Icons\icon_7fx_nightborn_astromancer_green.blp]],--Hunter
 	paw			= [[SPELLS\Agility_128.blp]],
 	cyanstar	= [[SPELLS\CYANSTARFLASH.BLP]],
 	summon		= [[SPELLS\DarkSummon.blp]],
@@ -91,6 +100,15 @@ local texBlending = {
 	rune2		= "ADD",
 	rune3		= "ADD",
 	rune4		= "ADD",
+	odunblue	= "ADD",
+	odungreen	= "ADD",
+	odunorange	= "ADD",
+	odunpurple	= "ADD",
+	odunyellow	= "ADD",
+	astrored	= "ADD",
+	astroyellow	= "ADD",
+	astroblue	= "ADD",
+	astrogreen	= "ADD",
 	paw			= "ADD",
 	reticle		= "ADD",
 	cyanstar	= "ADD",
@@ -271,7 +289,7 @@ function mod:OnInitialize()
 end
 
 function mod:Enable()
-	if DBM.Options.DontShowHudMap2 or self.HUDEnabled then return end
+	if DBM.Options.DontShowHudMap2 or self.HUDEnabled or DBM:HasMapRestrictions() then return end
 	DBM:Debug("HudMap Activating", 2)
 	self.currentMap = select(8, GetInstanceInfo())
 	mainFrame:Show()

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
-	Revision: $Id: DataBonusIDs.lua 5557 2015-05-13 13:56:40Z brykrys $
+	Version: 7.1.5675 (TasmanianThylacine)
+	Revision: $Id: DataBonusIDs.lua 5642 2016-08-06 10:56:39Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -65,6 +65,8 @@ data.BonusTierList = {
 	545, -- Epic upgrade
 	566, -- Heroic
 	567, -- Mythic
+	1798, -- Heroic 705
+	1799, -- Mythic 720
 }
 
 data.BonusCraftedStageList = {
@@ -100,4 +102,4 @@ data.BonusTertiaryStatList = {
 	43, -- Indestructible
 }
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Advanced/DataBonusIDs.lua $", "$Rev: 5557 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Advanced/DataBonusIDs.lua $", "$Rev: 5642 $")

@@ -15,6 +15,9 @@ OVERACHIEVER_ACHID = {
 	DrownYourSorrows = 5754,	-- "Drown Your Sorrows"
 	PandarenCuisine = 7329,		-- "Pandaren Cuisine"
 	PandarenDelicacies = 7330,	-- "Pandaren Delicacies"
+	DraenorCuisine = 9502,		-- "Draenor Cuisine"
+	BrewfestDiet = 1185,		-- "The Brewfest Diet"
+	DarkmoonFaireFeast = 6026,		-- "Fairegoer's Feast"
 
 	RightAsRain = 5779,		-- "You'll Feel Right as Rain"
 
@@ -29,7 +32,9 @@ OVERACHIEVER_ACHID = {
 	GourmetNorthrend = 1779,	-- "The Northrend Gourmet" (last part)
 	GourmetCataclysm = 5473,	-- "The Cataclysmic Gourmet" (last part)
 	GourmetPandaren = 7327,		-- "The Pandaren Gourmet" (last part)
-	--GourmetWinter = 1688,		-- "The Winter Veil Gourmet"
+	--GourmetWinter = 1688,		-- "The Winter Veil Gourmet" -- requires proper season; waiting on season detection feature?
+	GourmetDraenor = 9501,		-- "The Draenor Gourmet"
+	LegionMenu = 10762,			-- "The Legion Menu"
 
 	MediumRare = 1311,		-- "Medium Rare"
 	BloodyRare = 1312,		-- "Bloody Rare"
@@ -56,9 +61,6 @@ OVERACHIEVER_ACHID = {
 -- Look up the achievement ID of the given zone's exploration achievement, whatever the localization.
 -- Using zone names alone isn't reliable because the achievement names don't always use the zone's name as given by
 -- functions like GetRealZoneText() with some localizations.
-
-local LBZ = LibStub("LibBabble-SubZone-3.0");
-LBZ = LBZ:GetReverseLookupTable()
 
 OVERACHIEVER_EXPLOREZONEID = {
 -- Kalimdor:
@@ -127,9 +129,9 @@ OVERACHIEVER_EXPLOREZONEID = {
 -- Outland:
 	["Blade's Edge Mountains"] = 865,
 	["Hellfire Peninsula"] = 862,
-	--["Nagrand"] = 866, -- PROBLEM: Name conflict. Two zones with same name now. New/adjusted system needed.
+	["Nagrand (Outland)"] = 866, -- RENAMED ZONE
 	["Netherstorm"] = 843,
-	["Shadowmoon Valley"] = 864,
+	["Shadowmoon Valley (Outland)"] = 864, -- RENAMED ZONE
 	["Terokkar Forest"] = 867,
 	["Zangarmarsh"] = 863,
 -- Northrend:
@@ -154,36 +156,117 @@ OVERACHIEVER_EXPLOREZONEID = {
 	["Vale of Eternal Blossoms"] = 6979,
 -- Draenor
 	["Frostfire Ridge"] = 8937,
-	["Shadowmoon Valley"] = 8938,
+	["Shadowmoon Valley (Draenor)"] = 8938,
 	["Gorgrond"] = 8939,
 	["Talador"] = 8940,
 	["Spires of Arak"] = 8941,
-	["Nagrand"] = 8942,
+	["Nagrand (Draenor)"] = 8942,
 	["Tanaan Jungle"] = 10260,
+-- Legion
+	["Azsuna"] = 10665,
+	["Val'sharah"] = 10666,
+	["Highmountain"] = 10667,
+	["Stormheim"] = 10668,
+	["Suramar"] = 10669,
 };
 -- "Explore Cataclysm": 4868
 
+
+local LBZ = LibStub("LibBabble-SubZone-3.0");
+LBZ = LBZ:GetReverseLookupTable()
+
 function Overachiever.ExploreZoneIDLookup(zoneName)
   local z = LBZ[zoneName] or zoneName
-  return OVERACHIEVER_EXPLOREZONEID[z];
+  z = Overachiever.GetZoneKey(z)
+  return OVERACHIEVER_EXPLOREZONEID[z]
 end
 
 
--- !! These categories no longer exist!! :
+--[[ These categories no longer exist!:
 OVERACHIEVER_CATEGORY_HEROIC = {
 	[14921] = true, -- Lich King Dungeon
 	[14923] = true, -- Lich King 25-Player Raid
 };
--- !! These categories no longer exist!! :
 OVERACHIEVER_CATEGORY_25 = {
 	[14923] = true,			-- Lich King 25-Player Raid
 	[14962] = true,			-- Secrets of Ulduar 25-Player Raid
 	[15002] = true,			-- Call of the Crusade 25-Player Raid
 	[15042] = true,			-- Fall of the Lich King 25-Player Raid
 };
+--]]
 
 OVERACHIEVER_HEROIC_CRITERIA = {
-	[1658] =			-- "Champions of the Frozen Wastes"
+	[1658] =			-- "Champion of the Frozen Wastes"
+		{ [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true,		  
+		  [12] = true, [13] = true, [14] = true, [15] = true },
+--[[ this data seems wrong. was this achievement changed at some point or has it always been wrong?
 		{ [4] = true, [5] = true, [6] = true, [7] = true, [8] = true, [9] = true, [10] = true, [11] = true, [12] = true,
 		  [13] = true, [14] = true, [15] = true },
+--]]
 };
+
+
+
+-- ZONE RENAMES AND LOOKUP BY MAP ID (helps handle issues where a zone name is used multiple times)
+-- To find a zone's map ID, open the map to it and use: /dump GetCurrentMapAreaID()
+Overachiever.ZONE_RENAME = {
+--[[
+	["Zone's real name"] = {
+		[one of the map IDs] = "The key we're using for this zone",
+	},
+--]]
+	["Dalaran"] = {
+		[504] = "Dalaran (Northrend)",
+		[1014] = "Dalaran (Broken Isles)",
+	},
+	["Shadowmoon Valley"] = {
+		[473] = "Shadowmoon Valley (Outland)",
+		[947] = "Shadowmoon Valley (Draenor)",
+	}
+	,
+	["Nagrand"] = {
+		[477] = "Nagrand (Outland)",
+		[950] = "Nagrand (Draenor)",
+	},
+}
+-- If adding to this, don't forget to add to ZONE_RENAME_REV in Overachiever_Tabs\Suggestions.lua as well.
+
+local ZONE_RENAME = Overachiever.ZONE_RENAME
+
+
+function Overachiever.GetZoneKey(zoneName) -- zoneName here is expected to be in English
+  if (ZONE_RENAME[zoneName]) then
+    local mapID = Overachiever.GetCurrentMapID()
+    if (mapID and ZONE_RENAME[zoneName][mapID]) then
+      --Overachiever.chatprint(zoneName .. " got renamed to " .. ZONE_RENAME[zoneName][mapID])
+      return ZONE_RENAME[zoneName][mapID]
+    end
+  end
+  return zoneName
+end
+
+function Overachiever.GetCurrentMapID()
+  local prevContinent
+  local prevMap, isContinent = GetCurrentMapAreaID()
+  local prevLevel = GetCurrentMapDungeonLevel()
+  if (not prevMap or prevMap < 0 or isContinent) then
+    prevContinent = GetCurrentMapContinent()
+  end
+
+  SetMapToCurrentZone()
+  local id = GetCurrentMapAreaID()
+
+  if (prevContinent) then
+    SetMapZoom(prevContinent)
+  else
+    local level = GetCurrentMapDungeonLevel()
+    if (prevMap and (prevMap ~= id or (prevLevel ~= level and prevLevel == 0))) then
+      SetMapByID(prevMap)
+    end
+    if (prevLevel and prevLevel > 0) then
+      SetDungeonMapLevel(prevLevel)
+    end
+  end
+  return id
+end
+

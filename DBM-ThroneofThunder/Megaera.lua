@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(821, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
 mod:SetCreatureID(68065, 70235, 70247)--Frozen 70235, Venomous 70247 (only 2 heads that ever start in front, so no need to look for combat with arcane or fire for combat detection)
 mod:SetEncounterID(1578)
 mod:SetMainBossID(68065)
@@ -32,15 +32,12 @@ mod:RegisterEventsInCombat(
 --25N no ice heads killed
 --http://worldoflogs.com/reports/t4bwnbajfwm9gsbv/xe/?s=2435&e=2856&x=spell+%3D+%22Icy+Touch%22+or+%28spellid+%3D+139850+or+spell+%3D+%22Rampage%22%29+and+targetname+%3D+%22Omegal%22+or+%28spellid+%3D+139822+or+spellid+%3D+139866%29+and+fulltype+%3D+SPELL_CAST_SUCCESS
 
-local warnRampage				= mod:NewCountAnnounce(139458, 3)
-local warnRampageFaded			= mod:NewFadesAnnounce(139458, 2)
-local warnArcticFreeze			= mod:NewStackAnnounce(139843, 3, nil, mod:IsTank() or mod:IsHealer())
-local warnIgniteFlesh			= mod:NewStackAnnounce(137731, 3, nil, mod:IsTank() or mod:IsHealer())
-local warnRotArmor				= mod:NewStackAnnounce(139840, 3, nil, mod:IsTank() or mod:IsHealer())
-local warnArcaneDiffusion		= mod:NewStackAnnounce(139993, 3, nil, mod:IsTank() or mod:IsHealer())--Heroic
+local warnArcticFreeze			= mod:NewStackAnnounce(139843, 3, nil, "Tank|Healer")
+local warnIgniteFlesh			= mod:NewStackAnnounce(137731, 3, nil, "Tank|Healer")
+local warnRotArmor				= mod:NewStackAnnounce(139840, 3, nil, "Tank|Healer")
+local warnArcaneDiffusion		= mod:NewStackAnnounce(139993, 3, nil, "Tank|Healer")--Heroic
 local warnCinders				= mod:NewTargetAnnounce(139822, 4)
 local warnTorrentofIce			= mod:NewTargetAnnounce(139889, 4)
-local warnNetherTear			= mod:NewSpellAnnounce(140138, 3)--Heroic
 
 local specWarnRampage			= mod:NewSpecialWarningCount(139458, nil, nil, nil, 2)
 local specWarnRampageFaded		= mod:NewSpecialWarningFades(139458)--Spread back out quickly (plus for tanks to get back to heads and face them correctly)
@@ -48,30 +45,27 @@ local specWarnArcticFreeze		= mod:NewSpecialWarningStack(139843, nil, 2)
 local specWarnIgniteFlesh		= mod:NewSpecialWarningStack(137731, nil, 2)
 local specWarnRotArmor			= mod:NewSpecialWarningStack(139840, nil, 2)
 local specWarnArcaneDiffusion	= mod:NewSpecialWarningStack(139993, nil, 2)
-local specWarnCinders			= mod:NewSpecialWarningYou(139822)
+local specWarnCinders			= mod:NewSpecialWarningYou(139822, nil, nil, 2, 4)
 local specWarnCindersMove		= mod:NewSpecialWarningMove(139836)--Fire left on ground after the fact
 local yellCinders				= mod:NewYell(139822)
-local specWarnTorrentofIceYou	= mod:NewSpecialWarningRun(139857)
+local specWarnTorrentofIceYou	= mod:NewSpecialWarningRun(139857, nil, nil, 2, 4)
 local yellTorrentofIce			= mod:NewYell(139857)
 local specWarnTorrentofIceNear	= mod:NewSpecialWarningClose(139889)
 local specWarnTorrentofIce		= mod:NewSpecialWarningMove(139909)--Ice left on ground by the beam
-local specWarnNetherTear		= mod:NewSpecialWarningSwitch("ej7816", mod:IsDps())
+local specWarnNetherTear		= mod:NewSpecialWarningSwitch("ej7816", "Dps")
 
-local timerRampage				= mod:NewBuffActiveTimer(21, 139458)
-mod:AddBoolOption("timerBreaths", mod:IsTank() or mod:IsHealer(), "timer")--Better to have one option for breaths than 4
+local timerRampage				= mod:NewBuffActiveTimer(21, 139458, nil, nil, nil, 6)
+mod:AddBoolOption("timerBreaths", "Tank|Healer", "timer")--Better to have one option for breaths than 4
 local timerArcticFreezeCD		= mod:NewCDTimer(16, 139843, nil, nil, false)--We keep timers for artic and freeze for engage, since the breaths might be out of sync until after first rampage
 local timerRotArmorCD			= mod:NewCDTimer(16, 139840, nil, nil, false)--^
-local timerBreathsCD			= mod:NewTimer(16, "timerBreathsCD", 137731, nil, false)--Rest of breaths after first rampage consolidated into one timer instead of 2
+local timerBreathsCD			= mod:NewTimer(16, "timerBreathsCD", 137731, nil, false, 5)--Rest of breaths after first rampage consolidated into one timer instead of 2
 
 --TODO, maybe monitor length since last cast and if it's 28 instead of 25, make next timer also 28 for remainder of that head phase (then return to 25 after rampage unless we detect another 28)
 --TODO, Verify timers on normal. WoL bugs out and combines GUIDs making it hard to determine actual CDs in my logs.
---local timerCinderCD				= mod:NewCDTimer(25, 139822, nil, not mod:IsTank())--The cd is either 25 or 28 (either or apparently, no in between). it can even swap between the two in SAME pull
+--local timerCinderCD				= mod:NewCDTimer(25, 139822, nil, "-Tank"))--The cd is either 25 or 28 (either or apparently, no in between). it can even swap between the two in SAME pull
 local timerTorrentofIce			= mod:NewBuffFadesTimer(11, 139866)
---local timerTorrentofIceCD		= mod:NewCDTimer(25, 139866, nil, not mod:IsTank())--Same as bove, either 25 or 28
+--local timerTorrentofIceCD		= mod:NewCDTimer(25, 139866, nil, "-Tank")--Same as bove, either 25 or 28
 --local timerNetherTearCD			= mod:NewCDTimer(25, 140138)--Heroic. Also either 25 or 28. On by default since these require more pre planning than fire and ice.
-
-local soundCinders				= mod:NewSound(139822)
-local soundTorrentofIce			= mod:NewSound(139889)
 
 mod:AddBoolOption("SetIconOnCinders", true)
 mod:AddBoolOption("SetIconOnTorrentofIce", true)
@@ -213,7 +207,6 @@ function mod:RAID_BOSS_WHISPER(msg)
 	if msg:find("spell:139866") and self:AntiSpam(5, 1) then
 		specWarnTorrentofIceYou:Show()
 		yellTorrentofIce:Yell()
-		soundTorrentofIce:Play()
 	end
 end
 
@@ -221,7 +214,6 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 140138 then
-		warnNetherTear:Show()
 		specWarnNetherTear:Show()
 --		timerNetherTearCD:Start(args.sourceGUID)
 	elseif spellId == 139866 then
@@ -290,7 +282,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnCinders:Show()
 			yellCinders:Yell()
-			soundCinders:Play()
 		end
 		if self.Options.SetIconOnCinders then
 			self:SetIcon(args.destName, cinderIcon)
@@ -328,7 +319,6 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 	if msg:find("spell:139458") then
 		rampageCount = rampageCount + 1
-		warnRampage:Show(rampageCount)
 		specWarnRampage:Show(rampageCount)
 		timerArcticFreezeCD:Cancel()
 		timerRotArmorCD:Cancel()
@@ -346,7 +336,6 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 		DBM:PlayCountSound(rampageCast)
 	elseif msg == L.rampageEnds or msg:find(L.rampageEnds) then
 		arcaneRecent = false
-		warnRampageFaded:Show()
 		specWarnRampageFaded:Show()
 		if self.Options.timerBreaths then
 			timerBreathsCD:Start(10)

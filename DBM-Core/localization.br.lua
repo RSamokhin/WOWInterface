@@ -1,7 +1,7 @@
 ﻿-- Last update by GlitterStorm @ Azralon on Feb,28th,2015
 if GetLocale() ~= "ptBR" then return end
 
-DBM_CORE_NEED_SUPPORT				= "Are you good with programming or languages? If yes, the DBM team needs your help to keep DBM the best boss mod for WoW. Join the team by visiting |HDBM:localizersneeded|h|cff3588ffhere|r"
+DBM_CORE_NEED_LOCALS				= "Are you good with programming or languages? If yes, the DBM team needs your help to keep DBM the best boss mod for WoW. Join the team by visiting |HDBM:localizersneeded|h|cff3588ffhere|r"
 DBM_HOW_TO_USE_MOD					= "Bem vindo ao DBM. Digite /dbm help para obter uma lista dos comandos disponíveis. Para acessar as opções, digite /dbm no seu chat para começar a configuração. Carregue zonas específicas manualmente para configurar opções específicas de cada chefe para o seu gosto pessoal. O DBM tenta fazer isso automaticamente para você, observando sua spec na primeira vez que é executado. De qualquer forma, você pode querer habilitar outras opções."
 
 DBM_FORUMS_MESSAGE					= "Achou um bug, tradução ruim ou temporizadores de chefes incorretos? Acha que alguma mod de chefe precisa de aviso adicional, temporizador ou recurso especial? me mande por correio se for de Azralon @ GlitterStorm ou \nVisit the new Deadly Boss Mods discussion, bug report and feature request forums at |HDBM:forums|h|cff3588ffhttp://www.deadlybossmods.com|r (you can click the link to copy the URL)"
@@ -122,8 +122,8 @@ DBM_CORE_WHISPER_SCENARIO_END_WIPE			= "%s não foi completado %s"
 DBM_CORE_WHISPER_SCENARIO_END_WIPE_STATS	= "%s não foi completado %s. Eles tem um total de %d vitórias parciais nesta dificuldade."
 
 DBM_CORE_VERSIONCHECK_HEADER		= "Deadly Boss Mods - Versões"
-DBM_CORE_VERSIONCHECK_ENTRY			= "%s: %s (r%d)"
-DBM_CORE_VERSIONCHECK_ENTRY_TWO		= "%s: %s (r%d) & %s (r%d)"--Two Boss mods
+DBM_CORE_VERSIONCHECK_ENTRY			= "%s: %s (%s)"
+DBM_CORE_VERSIONCHECK_ENTRY_TWO		= "%s: %s (%s) & %s (%s)"--Two Boss mods
 DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s: DBM não instalado"
 DBM_CORE_VERSIONCHECK_FOOTER		= "Encontrados %d jogadores com DBM & %d jogadores com Bigwigs"
 DBM_CORE_VERSIONCHECK_OUTDATED		= "Os seguintes %d jogadores estão com versões desatualizadas de boss mods: %s"
@@ -321,7 +321,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.run		= "%s - corra para longe"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast		= "%s - pare de lançar"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack		= "%s (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch	= "%s - mude de alvo"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= "%s - mude de alvo (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= "%s - mude de alvo (%%s)"
 
 
 DBM_CORE_AUTO_ICONS_OPTION_TEXT		= "Colocar ícones nos alvos de $spell:%s"

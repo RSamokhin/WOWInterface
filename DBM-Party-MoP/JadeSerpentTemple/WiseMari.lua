@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(672, "DBM-Party-MoP", 1, 313)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(56448)
 mod:SetEncounterID(1418)
 mod:SetZone()
@@ -22,12 +22,12 @@ mod:RegisterEventsInCombat(
 local warnBubbleBurst			= mod:NewCastAnnounce(106612, 3, nil)
 local warnAddsLeft				= mod:NewAddsLeftAnnounce("ej5616", 2, 106526)
 
-local specWarnLivingWater		= mod:NewSpecialWarningSwitch("ej5616", not mod:IsHealer())
+local specWarnLivingWater		= mod:NewSpecialWarningSwitch("ej5616", "-Healer")
 local specWarnCorruptingWaters	= mod:NewSpecialWarningMove(115167)
 local specWarnShaResidue		= mod:NewSpecialWarningMove(106653)
 
 local timerLivingWater			= mod:NewCastTimer(5.5, 106526)
-local timerLivingWaterCD		= mod:NewCDTimer(13, 106526)
+local timerLivingWaterCD		= mod:NewCDTimer(13, 106526, nil, nil, nil, 1)
 local timerWashAway				= mod:NewNextTimer(8, 106334)
 
 mod:AddBoolOption("SetIconOnAdds", false)

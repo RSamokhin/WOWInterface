@@ -1,5 +1,5 @@
 
-Overachiever v0.84
+Overachiever v0.95
 ==============================
 
 Author: Tuhljin
@@ -63,7 +63,7 @@ SLASH COMMANDS:
 
 - NEW: /achsilent, /achs
 
-  These commands silently search for the first matching achievement and display it, useful if you don't want text
+  These commands silently search for the first matching achievement and display it. Useful if you don't want text
   added to the chat log.
 
   Example A: /achs gold
@@ -106,6 +106,57 @@ Change log
 ==========
 
 The change log lists changes of particular note to users, not every change made.
+
+v0.95
+- New option: Add tooltip in achievement UI giving your character's progress on quantity-based achievements which were earned on your account but not with the current character.
+- Tabs module: The new Related tab has been implemented, allowing you to better see a specified base achievement's related achievements. Ctrl+shift+click on an achievement in the UI or on an achievement link to specify the achievement and open the tab. ("Related" achievements are those that are in the same series as the base, are one of the criteria of the base or of another in its series, or have as one of their own criteria either the base or an achievement in its series).
+- Suggestions Tab:
+-- New option: Display graphical notices next to the achievement frame indicating today's holiday events. Click a notice to get related suggestions.
+-- Added suggestions for these holidays/events: Brewfest, Darkmoon Faire, Hallow's End, Day of the Dead, Pilgrim's Bounty, Feast of Winter Veil (alias Winter Veil). Ties in to the notice feature mentioned above or you can see them manually by entering the holiday name into the Suggestions tab.
+- Watch Tab: Fixed an issue where, when naming a new list, hitting Enter ignored whether the name was valid.
+- Slash command /oa now opens to the main options panel. However, the sub-panels list is expanded so you can easily get to Reminder Tooltips options.
+- Fixed some visual elements of the options panel and Tabs module (missing background colors, etc.).
+
+v0.94
+- "Draenor Cuisine" (new): Added to the consumed item tracking system.
+- "Brewfest Diet" (new): Added options to display a reminder tooltip for Brewfest food you need to eat.
+- "Fairegoer's Feast" (new): Added options to display a reminder tooltip for Darkmoon Faire food you need to eat.
+- The "Recently spotted objective" feature now works with items you need to consume.
+- Trade module: "The Draenor Gourmet" and "The Legion Menu" are now considered when determining if you need to cook a recipe.
+- Stopped a crash that could occur if you attempt to open to an achievement that is really a statistic.
+- Fixed an issue where your progress was being added to achievement tooltips when doing so was redundant.
+- The "Creature killed?" option for general Kill Creature Achievements now defaults to being enabled. (Your setting won't change if you are upgrading from a previous version of the addon.)
+- Suggestions Tab:
+-- Can now tell the different "Shadowmoon Valley" and "Nagrand" zones apart.
+-- Added several new suggestions for the Darkmoon Faire.
+-- Moved "Weed Whacker" suggestion to The Everbloom, where it belongs.
+-- Added other suggestions for The Everbloom so "Weed Whacker" doesn't feel lonely.
+-- Added suggestions for the player garrison.
+-- Added additional suggestions for some other Draenor zones.
+
+v0.93
+- Fix an issue where the tooltip disappears when it shouldn't. (When this was depends on user's other addons.)
+
+v0.92
+- New options: Can now react to the Achievement Progress toast by tracking the achievement, linking the achievement and showing the completed criteria in the chat log, and/or adding the achievement to the Suggestions tab as a "Recent Reminder".
+- Added a "Recently spotted objective" tooltip for certain types of achievements in the achievement UI when they are on the Recent Reminders list. The tooltip indicates what was seen that triggered the reminder. (E.g., it would show the name of the mob that you need to kill or the player you need to blast with your Turkey Shooter.) Helpful when you briefly run the mouse over something that triggers the reminder sound (if you turned that on!) but you don't know what it was.
+- Fixed reminder tooltips not showing for achievements that identified the mob by ID (non-critter "need to kill" achievements).
+- Fixed reminder tooltips for world objects disappearing after a short while due to the default tooltip resetting its text periodically.
+- Fixed reminder tooltips for world objects sometimes not showing if the tooltip previously showed mob data.
+- Attempt to fix compatibility issue with other addons resulting in an error that appears when the achievement frame is opened.
+- Fixed reminder tooltips for certain fishing nodes not showing. (Note that, like several other features, this is localization-dependent. If it doesn't work with a non-English locale, you can help fix this by contributing on CurseForge. The relevant phrase key in this case is "ACH_FISHSCHOOL_FORMAT". If you see a node I missed in English, let me know.)
+
+v0.91
+- Suggestions Tab:
+-- Added numerous suggestions for Legion zones, dungeons, and raids.
+-- Added "Mythic" to instance difficulty override dropdown.
+-- Now considers the different "Dalaran" zones individually (so suggestions for Dalaran in Northrend don't show in other Dalaran zones).
+
+v0.90
+- Updated for WoW patch 7.0.x. Updated TOC and fixed several errors. (Haven't added new suggestions yet.)
+- Fixed problem where reminder sounds didn't play.
+- Added some new reminder sounds (from existing sound effects).
+- "The Stockade" zone (instance) was renamed at some point to "Stormwind Stockade". Updated the related suggestion so it once again shows when in that zone.
 
 v0.84
 - Workaround for a WoW bug where the API gives the wrong count of achievements in a category. This should fix debug

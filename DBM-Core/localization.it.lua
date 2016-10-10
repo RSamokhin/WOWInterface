@@ -1,5 +1,5 @@
 if GetLocale() ~= "itIT" then return end
-DBM_CORE_NEED_SUPPORT				= "Sei bravo come programmatore? Se si, il team di DBM ha bisogno del tuo aiuto per mantenere DBM il miglior Boss Mod per WoW. Entra nel nostro gruppo visitando |HDBM:localizersneeded|h|cff3588ffhere|r"
+DBM_CORE_NEED_LOCALS				= "Sei bravo come programmatore? Se si, il team di DBM ha bisogno del tuo aiuto per mantenere DBM il miglior Boss Mod per WoW. Entra nel nostro gruppo visitando |HDBM:localizersneeded|h|cff3588ffhere|r"
 DBM_HOW_TO_USE_MOD					= "Benvenuto in DBM. Scrivi /dbm help per avere una lista dei comandi supportati. Per accedere alle opzioni scrivi in chat /dbm. Carica le zone specifiche per configurare manualmente ogni settaggio di ogni boss. DBM prova a farlo per te controllando la tua specializzazione alla prima esecuzione, ma alcuni potrebbero volere alcune opzioni attivate."
 
 DBM_CORE_LOAD_MOD_ERROR				= "Errore nel caricamento del Boss Mod per %s: %s"
@@ -43,7 +43,8 @@ DBM_CORE_WHISPER_COMBAT_END_WIPE_AT			= "%s e' stato ucciso da %s a %s"
 DBM_CORE_WHISPER_COMBAT_END_WIPE_STATS_AT	= "%s e' stato ucciso da %s a %s. Ha %d sconfitte in questa difficolta'."
 
 DBM_CORE_VERSIONCHECK_HEADER		= "Deadly Boss Mods - Versione"
-DBM_CORE_VERSIONCHECK_ENTRY			= "%s: %s (r%d)"
+DBM_CORE_VERSIONCHECK_ENTRY			= "%s: %s (%s)"
+DBM_CORE_VERSIONCHECK_ENTRY_TWO		= "%s: %s (%s) & %s (%s)"--Two Boss mods
 DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s: DBM non installato"
 DBM_CORE_VERSIONCHECK_FOOTER		= "%d giocatori hanno Deadly Boss Mods"
 DBM_CORE_YOUR_VERSION_OUTDATED      = "La tua versione di Deadly Boss Mods e' obsoleta. Visita www.deadlybossmods.com per scaricare l'ultima versione."
@@ -209,7 +210,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.run		= "%s - Corri Via!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast		= "%s - Smetti di Attaccare!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack		= "%s (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch	= "%s - Cambia Bersaglio"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= "%s - Cambia Bersaglio (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= "%s - Cambia Bersaglio (%%s)"
 
 
 DBM_CORE_AUTO_ICONS_OPTION_TEXT			= "Imposta Icone sui bersagli di $spell:%s"

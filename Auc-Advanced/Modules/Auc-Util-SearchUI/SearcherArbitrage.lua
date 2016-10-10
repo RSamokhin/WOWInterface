@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer - Search UI - Searcher Arbitrage
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
-	Revision: $Id: SearcherArbitrage.lua 5498 2014-10-18 13:24:18Z brykrys $
+	Version: 7.1.5675 (TasmanianThylacine)
+	Revision: $Id: SearcherArbitrage.lua 5606 2016-06-13 16:33:33Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -28,6 +28,12 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 --]]
+
+-- Connected Realms: inhibit Arbitrage until we decide what to do with it [ASER-324], [ADV-693]
+do
+	return
+end
+
 -- Create a new instance of our lib with our parent
 if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewSearcher("Arbitrage")
@@ -282,7 +288,7 @@ function lib.Search(item)
 		market = market * private.searchAdjust
 	end
 	if get("arbitrage.adjust.deposit") then
-		local amount = GetDepositCost(link, get("arbitrage.adjust.deplength"), private.searchFaction, count)
+		local amount = GetDepositCost(link, get("arbitrage.adjust.deplength"), nil, count)
 		if amount then
 			market = market - amount * get("arbitrage.adjust.listings")
 		end
@@ -297,4 +303,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Util-SearchUI/SearcherArbitrage.lua $", "$Rev: 5498 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-SearchUI/SearcherArbitrage.lua $", "$Rev: 5606 $")

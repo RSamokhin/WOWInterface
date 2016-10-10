@@ -37,7 +37,6 @@ local pairs, next, type = pairs, next, type
 local CreateFrame = CreateFrame
 local GetCurrentMapContinent, GetCurrentMapZone = GetCurrentMapContinent, GetCurrentMapZone
 local GetCurrentMapDungeonLevel = GetCurrentMapDungeonLevel
-local GetRealZoneText = GetRealZoneText
 local WorldMapButton, Minimap = WorldMapButton, Minimap
 
 
@@ -230,6 +229,7 @@ local continentMapFile = {
 	["Vashjir"]               = {[0] = 613, 614, 615, 610}, -- Vashjir isn't an actual continent, but the map treats it like one, so hardcode its 3 zones (+ continent map)
 	["Pandaria"]              = HBD.continentZoneMap[6],
 	["Draenor"]               = HBD.continentZoneMap[7],
+	["BrokenIsles"]           = HBD.continentZoneMap[8],
 }
 
 -- Public function to get a list of zones in a continent

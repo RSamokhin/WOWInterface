@@ -20,7 +20,7 @@ local Journal, Tamer = Addon.Journal, Addon.Tamer
 local MapFrame, BlipParent = WorldMapDetailFrame, WorldMapButton
 local FilterButton = WorldMapFrame.UIElementsFrame.TrackingOptionsButton.Button
 
-local Map = Addon:NewModule('WorldMap', PetTrackerMapFilter)
+local Map = Addon:NewModule('WorldMap', CreateFrame('EditBox', 'PetTrackerMapFilter', WorldMapFrame,'SearchBoxTemplate'))
 local Tooltip = Addon.MapTip(WorldMapFrame)
 
 local L = Addon.Locals
@@ -32,48 +32,10 @@ local SUGGESTIONS = {
 }
 
 
---[[ Dropdown ]]--
-
-do
-	local function BlizzLine(drop, value, cvar, text, tip, visible)
-		if visible then
-			drop:AddLine {
-				text = text, value = value,
-				tooltipTitle = tip,
-				checked = GetCVarBool(cvar),
-				func = WorldMapTrackingOptionsDropDown_OnClick,
-				keepShownOnClick = 1,
-				isNotRadio = 1
-			}
-		end
-	end
-
-	local function CustomLine(drop, arg, text)
-		drop:AddLine {
-			text = text,
-			func = function() Map:Toggle(arg) end,
-			checked = Map:Active(arg),
-			keepShownOnClick = 1,
-			isNotRadio = 1
-		}
-	end
-
-	FilterButton:SetScript('OnClick', function(button)
-		SushiDropFrame:Toggle('TOPRIGHT', button:GetParent(), 'BOTTOM', 10, -15, true, function(drop)
-			BlizzLine(drop, 'quests', 'questPOI', SHOW_QUEST_OBJECTIVES_ON_MAP_TEXT, OPTION_TOOLTIP_SHOW_QUEST_OBJECTIVES_ON_MAP, 1)
-			BlizzLine(drop, 'bosses', 'showBosses', SHOW_BOSSES_ON_MAP_TEXT, OPTION_TOOLTIP_SHOW_BOSSES_ON_MAP, WorldMapFrame.hasBosses)
-			BlizzLine(drop, 'digsites', 'digSites', ARCHAEOLOGY_SHOW_DIG_SITES, OPTION_TOOLTIP_SHOW_DIG_SITES_ON_MAP, select(3, GetProfessions()))
-			BlizzLine(drop, 'tamers', 'showTamers', SHOW_BATTLE_PET_TAMERS_ON_MAP_TEXT, OPTION_TOOLTIP_SHOW_BATTLE_PET_TAMERS_ON_MAP, CanTrackBattlePets())
-			CustomLine(drop, 'Species', L.ShowPets)
-			CustomLine(drop, 'Stables', L.ShowStables)
-		end)
-	end)
-end
-
-
 --[[ Events ]]--
 
 function Map:Startup()
+	self:SetSize(128, 20)
 	self:SetText(Addon.Sets.MapFilter or '')
 	self:SetPoint('RIGHT', FilterButton, 'LEFT', 0, 1)
 	self:SetFrameLevel(FilterButton:GetFrameLevel() - 1)
@@ -82,21 +44,14 @@ function Map:Startup()
 
 	self:RegisterEvent('ZONE_CHANGED_NEW_AREA')
 	self:SetScript('OnEvent', SetMapToCurrentZone)
+	self:SetScript('OnMouseDown', self.ShowSuggestions)
+	self:SetScript('OnEditFocusLost', self.FocusLost)
 	self:SetScript('OnTextChanged', self.FilterChanged)
 	self:SetScript('OnShow', self.TrackingChanged)
 	self:SetScript('OnUpdate', self.UpdateTip)
 	self:SetScript('OnHide', self.HideTip)
 
-	for i, text in ipairs(SUGGESTIONS) do
-		local button = CreateFrame('Button', '$parentButton'..i, self.Suggestions, 'PetTrackerSuggestionButton')
-		button:SetPoint('TOPLEFT', 18, -16*i + 7)
-		button:SetText(text)
-
-		if i == 1 then
-			button:SetDisabledFontObject(GameFontNormalSmallLeft)
-			button:Disable()
-		end
-	end
+	FilterButton:SetScript('OnClick', self.ShowTrackingTypes)
 end
 
 function Map:TrackingChanged()
@@ -110,6 +65,11 @@ function Map:FilterChanged()
 	Addon.Sets.MapFilter = self:GetText()
 	self.Instructions:SetShown(self:GetText() == '')
 	self:TrackingChanged()
+end
+
+function Map:FocusLost()
+	SearchBoxTemplate_OnEditFocusLost(self)
+	CloseDropDownMenus()
 end
 
 
@@ -252,6 +212,63 @@ end
 
 function Map:HideTip()
 	Tooltip:Hide()
+end
+
+
+--[[ Dropdowns ]]--
+
+function Map:ShowSuggestions()
+	SushiDropFrame:Display('TOP', self, 'BOTTOM', 0, -15, function(drop)
+		for i, text in ipairs(SUGGESTIONS) do
+			drop:AddLine {
+				text = text,
+				isTitle = i == 1,
+				keepShownOnClick = 1,
+				notCheckable = 1,
+				func = function()
+					self:SetText(text)
+					self:ClearFocus()
+				end
+			}
+		end
+	end)
+end
+
+function Map:ShowTrackingTypes()
+	SushiDropFrame:Toggle('TOPRIGHT', self, 'BOTTOM', 10, -15, true, function(drop)
+		local function BlizzLine(value, cvar, text, visible)
+			if visible then
+				drop:AddLine {
+					text = text, value = value,
+					checked = GetCVarBool(cvar),
+					func = WorldMapTrackingOptionsDropDown_OnClick,
+					keepShownOnClick = 1,
+					isNotRadio = 1
+				}
+			end
+		end
+
+		local function CustomLine(arg, text)
+			drop:AddLine {
+				text = text,
+				func = function() Map:Toggle(arg) end,
+				checked = Map:Active(arg),
+				keepShownOnClick = 1,
+				isNotRadio = 1
+			}
+		end
+
+		BlizzLine('quests', 'questPOI', SHOW_QUEST_OBJECTIVES_ON_MAP_TEXT, 1)
+
+		local prof1, prof2, arch, fish, cook, firstAid = GetProfessions()
+		BlizzLine('digsites', 'digSites', ARCHAEOLOGY_SHOW_DIG_SITES, arch)
+		BlizzLine('primaryProfessionsFilter', 'primaryProfessionsFilter', SHOW_PRIMARY_PROFESSION_ON_MAP_TEXT, prof1 or prof2)
+		BlizzLine('secondaryProfessionsFilter', 'secondaryProfessionsFilter', SHOW_SECONDARY_PROFESSION_ON_MAP_TEXT, fish or cook or firstAid)
+
+		CustomLine('Species', PETS)
+		BlizzLine('tamers', 'showTamers', SHOW_PET_BATTLES_ON_MAP_TEXT, CanTrackBattlePets())
+		CustomLine('Stables', STABLES)
+	end)
 end
 
 

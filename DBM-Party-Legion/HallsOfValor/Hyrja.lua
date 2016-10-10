@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1486, "DBM-Party-Legion", 4, 721)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14928 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15186 $"):sub(12, -3))
 mod:SetCreatureID(95833)
 mod:SetEncounterID(1806)
 mod:SetZone()
@@ -12,13 +12,14 @@ mod:SetWipeTime(120)
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 192048 192133 192132",
 	"SPELL_AURA_REMOVED 192048",
-	"SPELL_CAST_START 192158 192018 192307 200901",
+	"SPELL_CAST_START 192158 192018 192307 200901 192288",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 --Notes: Saw no timer consistency since they are all over the place based on where boss is dragged.
 --TODO: maybe figure out how dragging boss around affects timers. Might be worth the work for a 5 man boss though.
 --["192044-Expel Light"] = "pull:79.7, 26.6, 30.3, 24.3, 30.3",
+--Maybe add a searing light interrupt helper if it matters enough on mythic+
 local warnExpelLight				= mod:NewTargetAnnounce(192048, 3)
 local warnPhase2					= mod:NewPhaseAnnounce(2, 2)
 
@@ -27,17 +28,20 @@ local specWarnSanctify				= mod:NewSpecialWarningDodge(192158, nil, nil, nil, 2,
 local specWarnEyeofStorm			= mod:NewSpecialWarningMoveTo(200901, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(200901), nil, 2, 2)
 local specWarnExpelLight			= mod:NewSpecialWarningMoveAway(192048, nil, nil, nil, 2, 2)
 local yellExpelLight				= mod:NewYell(192048)
+local specWarnSearingLight			= mod:NewSpecialWarningInterrupt(192288, "HasInterrupt", nil, nil, 1, 2)
 
-local timerShieldOfLightCD			= mod:NewCDTimer(30, 192018, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--30-34
-local timerSpecialCD				= mod:NewNextTimer(30, 200736, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)--Shared timer by eye of storm and Sanctify
+local timerShieldOfLightCD			= mod:NewCDTimer(28, 192018, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--28-34
+local timerSpecialCD				= mod:NewNextTimer(30, 200736, nil, nil, nil, 2, 200901, DBM_CORE_DEADLY_ICON)--Shared timer by eye of storm and Sanctify
 --local timerExpelLightCD			= mod:NewCDTimer(24, 192048, nil, nil, nil, 3)--More review 24-30
 
 local countdownSpecial				= mod:NewCountdown(30, 200736)
+local countdownShieldOfLight		= mod:NewCountdown("Alt28", 192018, "Tank")
 
 local voiceEyeofStorm				= mod:NewVoice(200901)--findshelter
 local voiceShieldOfLight			= mod:NewVoice(192018, "Tank")--defensive
 local voiceSanctify					= mod:NewVoice(192158)--watchorb
 local voiceExpelLight				= mod:NewVoice(192048)--runout
+local voiceSearingLight				= mod:NewVoice(192288, "HasInterrupt")--kickcast
 local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
 
 mod:AddRangeFrameOption(8, 153396)
@@ -92,6 +96,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnShieldOfLight:Show()
 		voiceShieldOfLight:Play("defensive")
 		timerShieldOfLightCD:Start()
+		countdownShieldOfLight:Start()
 	elseif spellId == 200901 then
 		specWarnEyeofStorm:Show(eyeShortName)
 		voiceEyeofStorm:Play("findshelter")
@@ -100,17 +105,21 @@ function mod:SPELL_CAST_START(args)
 			countdownSpecial:Cancel()
 			countdownSpecial:Start()
 		end
+	elseif spellId == 192288 and self:CheckInterruptFilter(args.sourceGUID) then
+		specWarnSearingLight:Show(args.sourceName)
+		voiceSearingLight:Play("kickcast")
 	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local _, _, _, _, spellId = strsplit("-", spellGUID)
+	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
 	if spellId == 192130 then
 		self.vb.phase = 2
 		warnPhase2:Show()
 		voicePhaseChange:Play("ptwo")
+		timerSpecialCD:Start(8.5)
+		countdownSpecial:Start(8.5)
 		timerShieldOfLightCD:Start(24)
-		timerSpecialCD:Start(39)
-		countdownSpecial:Start(39)
+		countdownShieldOfLight:Start(24)
 	end
 end

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
-	Revision: $Id: CorePost.lua 5559 2015-05-14 18:24:03Z brykrys $
+	Version: 7.1.5675 (TasmanianThylacine)
+	Revision: $Id: CorePost.lua 5670 2016-09-03 11:59:41Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -45,6 +45,7 @@
 	The function AucAdvanced.API.GetSigFromLink(link) may be used to construct a valid sig
 ]]
 if not AucAdvanced then return end
+AucAdvanced.CoreFileCheckIn("CorePost")
 local coremodule, internal = AucAdvanced.GetCoreModule("CorePost")
 -- internal is a shared space only accessible to code that can call GetCoreModule,
 -- which is only the .lua files in Auc-Advanced.  Basically, we have an internal use only area.
@@ -1387,4 +1388,5 @@ private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Advanced/CorePost.lua $", "$Rev: 5559 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Advanced/CorePost.lua $", "$Rev: 5670 $")
+AucAdvanced.CoreFileCheckOut("CorePost")

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(686, "DBM-Party-MoP", 3, 312)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
 mod:SetCreatureID(56884)
 mod:SetEncounterID(1306)
 mod:SetZone()
@@ -21,10 +21,10 @@ local warnRisingHate		= mod:NewCastAnnounce(107356, 4, 5)
 
 local specWarnGrippingHatred= mod:NewSpecialWarningSwitch("ej5817")
 local specWarnHazeofHate	= mod:NewSpecialWarningYou(107087)
-local specWarnRisingHate	= mod:NewSpecialWarningInterrupt(107356, not mod:IsHealer())
+local specWarnRisingHate	= mod:NewSpecialWarningInterrupt(107356, "-Healer")
 
 local timerRingofMalice		= mod:NewBuffActiveTimer(15, 131521)
-local timerGrippingHartedCD	= mod:NewNextTimer(45.5, 115002)
+local timerGrippingHatredCD	= mod:NewNextTimer(45.5, 115002, nil, nil, nil, 1)
 
 mod:AddBoolOption("InfoFrame", true)
 
@@ -62,7 +62,7 @@ function mod:SPELL_CAST_START(args)
 	if args.spellId == 115002 and self:AntiSpam(5, 2) then
 		warnGrippingHatred:Show()
 		specWarnGrippingHatred:Show()
-		timerGrippingHartedCD:Start()
+		timerGrippingHatredCD:Start()
 	end
 end
 

@@ -56,6 +56,16 @@ L= DBM:GetModLocalization(1656)
 L= DBM:GetModLocalization(1657)
 
 -----------------------
+--Darkheart Thicket Trash
+-----------------------
+L = DBM:GetModLocalization("DHTTrash")
+
+L:SetGeneralLocalization({
+	name =	"Darkheart Thicket Trash"
+})
+
+
+-----------------------
 -- <<<Eye of Azshara>>> --
 -----------------------
 -----------------------
@@ -67,6 +77,11 @@ L= DBM:GetModLocalization(1480)
 -- Lady Hatecoil --
 -----------------------
 L= DBM:GetModLocalization(1490)
+
+L:SetWarningLocalization({
+	specWarnStaticNova			= "Static Nova - move to land",
+	specWarnFocusedLightning	= "Focused Lightning - move to water"
+})
 
 -----------------------
 -- King Deepbeard --
@@ -82,6 +97,15 @@ L= DBM:GetModLocalization(1479)
 -- Wrath of Azshara --
 -----------------------
 L= DBM:GetModLocalization(1492)
+
+-----------------------
+--Eye of Azshara Trash
+-----------------------
+L = DBM:GetModLocalization("EoATrash")
+
+L:SetGeneralLocalization({
+	name =	"Eye of Azshara Trash"
+})
 
 -----------------------
 -- <<<Halls of Valor>>> --
@@ -110,6 +134,10 @@ L= DBM:GetModLocalization(1488)
 -- Odyn --
 -----------------------
 L= DBM:GetModLocalization(1489)
+
+L:SetMiscLocalization({
+	tempestModeMessage		=	"Not tempest sequence: %s. Rechecking in 8 seconds."
+})
 
 -----------------------
 --Halls of Valor Trash
@@ -142,6 +170,15 @@ L= DBM:GetModLocalization(1673)
 -- Dargrul the Underking --
 -----------------------
 L= DBM:GetModLocalization(1687)
+
+-----------------------
+--Neltharion's Lair Trash
+-----------------------
+L = DBM:GetModLocalization("NLTrash")
+
+L:SetGeneralLocalization({
+	name =	"Neltharion's Lair Trash"
+})
 
 -----------------------
 -- <<<The Arcway>>> --
@@ -290,6 +327,27 @@ L:SetGeneralLocalization({
 	name =	"Assault Violet Hold Trash"
 })
 
+L:SetWarningLocalization({
+	WarningPortalSoon	= "New portal soon",
+	WarningPortalNow	= "Portal #%d",
+	WarningBossNow		= "Boss incoming"
+})
+
+L:SetTimerLocalization({
+	TimerPortal			= "Portal CD"
+})
+
+L:SetOptionLocalization({
+	WarningPortalNow		= "Show warning for new portal",
+	WarningPortalSoon		= "Show pre-warning for new portal",
+	WarningBossNow			= "Show warning for boss incoming",
+	TimerPortal				= "Show timer for next portal (after Boss)"
+})
+
+L:SetMiscLocalization({
+	Malgath		=	"Lord Malgath"
+})
+
 -----------------------
 -- <<<Vault of the Wardens>>> --
 -----------------------
@@ -317,3 +375,74 @@ L= DBM:GetModLocalization(1469)
 -- Cordana --
 -----------------------
 L= DBM:GetModLocalization(1470)
+
+-----------------------
+--Vault of Wardens Trash
+-----------------------
+L = DBM:GetModLocalization("VoWTrash")
+
+L:SetGeneralLocalization({
+	name =	"Vault of Wardens Trash"
+})
+
+-----------------------
+-- <<<Return To Karazhan>>> --
+-----------------------
+-----------------------
+-- Maiden of Virtue --
+-----------------------
+L= DBM:GetModLocalization(1825)
+
+-----------------------
+-- Opera Hall: Wikket  --
+-----------------------
+L= DBM:GetModLocalization(1820)
+
+-----------------------
+-- Opera Hall: Westfall Story --
+-----------------------
+L= DBM:GetModLocalization(1826)
+
+-----------------------
+-- Opera Hall: Beautiful Beast  --
+-----------------------
+L= DBM:GetModLocalization(1827)
+
+-----------------------
+-- Attumen the Huntsman --
+-----------------------
+L= DBM:GetModLocalization(1835)
+
+-----------------------
+-- Moroes --
+-----------------------
+L= DBM:GetModLocalization(1837)
+
+-----------------------
+-- The Curator --
+-----------------------
+L= DBM:GetModLocalization(1836)
+
+-----------------------
+-- Shade of Medivh --
+-----------------------
+L= DBM:GetModLocalization(1817)
+
+-----------------------
+-- Mana Devourer --
+-----------------------
+L= DBM:GetModLocalization(1818)
+
+-----------------------
+-- Viz'aduum the Watcher --
+-----------------------
+L= DBM:GetModLocalization(1838)
+
+-----------------------
+--Return To Karazhan Trash
+-----------------------
+L = DBM:GetModLocalization("RTKTrash")
+
+L:SetGeneralLocalization({
+	name =	"Return To Karazhan Trash"
+})

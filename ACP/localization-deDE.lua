@@ -70,7 +70,7 @@ if (GetLocale() == "deDE") then
 	Sets = "Sets",
 	Status = "Status",
 	["*** Unknown Addon <%s> Required ***"] = "*** Unbekanntes Addon <%s> benötigt ***",
-	["Use SHIFT to override the current enabling of dependancies behaviour."] = "Benutze SHIFT um die momentane Einstellung des Abhängigkeitsverhaltens zu überschreiben",
+	["Use SHIFT to override the current enabling of dependancies behaviour."] = "Benutze SHIFT, um die momentane Einstellung des Abhängigkeitsverhaltens zu überschreiben",
 	Version = "Version",
 	["when performing a reloadui."] = "wenn ein Reloadui ausgeführt wird.",
 }

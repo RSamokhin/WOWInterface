@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("UBRSTrash", "DBM-Party-WoD", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13843 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15094 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -22,14 +22,14 @@ local specWarnDebilitatingRay			= mod:NewSpecialWarningInterrupt(155505, "-Heale
 local specWarnSummonBlackIronDread		= mod:NewSpecialWarningInterrupt(169088, "-Healer")
 local specWarnSummonBlackIronVet		= mod:NewSpecialWarningInterrupt(169151, "-Healer")
 local specWarnVeilofShadow				= mod:NewSpecialWarningInterrupt(155586, "-Healer")--Challenge mode only(little spammy for mage)
-local specWarnVeilofShadowDispel		= mod:NewSpecialWarningDispel(155586, "RemoveCurse")
+local specWarnVeilofShadowDispel		= mod:NewSpecialWarningDispel(155586, "RemoveCurse", nil, 2)
 local specWarnShadowBoltVolley			= mod:NewSpecialWarningInterrupt(155588, "-Healer")
 local specWarnSmash						= mod:NewSpecialWarningDodge(155572, "Tank")
 local specWarnFranticMauling			= mod:NewSpecialWarningDodge(154039, "Tank")
 local specWarnEruption					= mod:NewSpecialWarningDodge(155037, "Tank")
 
-local timerSmashCD						= mod:NewCDTimer(13, 155572)
-local timerEruptionCD					= mod:NewCDTimer(10, 155037, nil, false)--10-15 sec variation. May be distracting or spammy since two of them
+local timerSmashCD						= mod:NewCDTimer(13, 155572, nil, nil, nil, 3)
+local timerEruptionCD					= mod:NewCDTimer(10, 155037, nil, false, nil, 3)--10-15 sec variation. May be distracting or spammy since two of them
 
 mod:RemoveOption("HealthFrame")
 

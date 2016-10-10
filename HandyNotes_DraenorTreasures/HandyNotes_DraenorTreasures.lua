@@ -25,14 +25,8 @@ DraenorTreasures.nodes = { }
 local nodes = DraenorTreasures.nodes
 local isTomTomloaded = false
 local isDBMloaded = false
+local isHN_LRTloaded = false
 
-if (IsAddOnLoaded("TomTom")) then 
-    isTomTomloaded = true
-end
-
-if (IsAddOnLoaded("DBM-Core")) then 
-    isDBMloaded = true
-end
 
 nodes["ShadowmoonValleyDR"] = {
     [54924501]={ "35581", "Alchemist's Satchel", "Herbs", "", "default", "treasure_smv","109124"},
@@ -126,6 +120,8 @@ nodes["ShadowmoonValleyDR"] = {
     [41907570]={ "99999901", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
     [48706990]={ "99999901", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
     [43207100]={ "99999901", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
+    [46607000]={ "99999901", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
+    [50307130]={ "99999901", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
 }
 
 nodes["FrostfireRidge"] = {
@@ -206,22 +202,23 @@ nodes["FrostfireRidge"] = {
     [58001840]={ "99999902", "Gorok", "", "", "skull_orange", "mount_go", "116674"},
     [15804900]={ "99999903", "Nok-Karosh", "", "Location is approximate", "skull_yellow", "mount_no", "116794"},
     [51001990]={ "99999904", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
-    [52301830]={ "99999904", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
-    [53001700]={ "99999904", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
+    [52501780]={ "99999904", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
+    [53801730]={ "99999904", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
+    [47702750]={ "99999904", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
 }
 
 nodes["BladespireFortress"] = {
-    [26613949]={ "35370", "Doorogs Secret Stash", "Gold + Trash Item", "Second floor of Bladespire Citadel, outside", "default", "treasure_ffr_bsf","113189"},
-    [26403642]={ "35367", "Gorr'thogg's Personal Reserve", "Alcoholic Beverages", "Top floor of Bladespire Citadel, next to the throne", "default", "treasure_ffr_bsf","118108"},
-    [26603520]={ "35347", "Ogre Booty", "Garrison Resources", "Second floor of Bladespire Citadel", "default", "treasure_ffr_bsf","824"},
-    [28293440]={ "35368", "Ogre Booty", "Gold", "First floor of Bladespire Citadel; have to climb some crates to reach the chest", "default", "treasure_ffr_bsf",""},
-    [27783917]={ "35369", "Ogre Booty", "Gold", "First floor of Bladespire Citadel; have to climb some crates to reach the chest", "default", "treasure_ffr_bsf",""},
-    [27603382]={ "35371", "Ogre Booty", "Gold", "Second floor of Bladespire Citadel; have to climb some crates to reach the chest", "default", "treasure_ffr_bsf",""},
-    [27173763]={ "35373", "Ogre Booty", "Gold", "Second floor of Bladespire Citadel; have to climb some crates to reach the chest", "default", "treasure_ffr_bsf",""},
-    [28093409]={ "35567", "Ogre Booty", "Garrison Resources", "Second floor of Bladespire Citadel", "default", "treasure_ffr_bsf","824"},
-    [30723869]={ "35568", "Ogre Booty", "Garrison Resources", "Second floor of Bladespire Citadel", "default", "treasure_ffr_bsf","824"},
-    [30083927]={ "35569", "Ogre Booty", "Garrison Resources", "Second floor of Bladespire Citadel", "default", "treasure_ffr_bsf","824"},
-    [27283876]={ "35570", "Ogre Booty", "Gold", "First floor of Bladespire Citadel", "default", "treasure_ffr_bsf",""},
+    [37106980]={ "35370", "Doorogs Secret Stash", "Gold + Trash Item", "Second floor of Bladespire Citadel, outside", "default", "treasure_ffr_bsf","113189"},
+    [31406670]={ "35367", "Gorr'thogg's Personal Reserve", "Alcoholic Beverages", "Top floor of Bladespire Citadel, next to the throne", "default", "treasure_ffr_bsf","118108"},
+    [36402880]={ "35347", "Ogre Booty", "Garrison Resources", "Second floor of Bladespire Citadel", "default", "treasure_ffr_bsf","824"},
+    [53102790]={ "35368", "Ogre Booty", "Gold", "First floor of Bladespire Citadel; have to climb some crates to reach the chest", "default", "treasure_ffr_bsf",""},
+    [49106790]={ "35369", "Ogre Booty", "Gold", "First floor of Bladespire Citadel; have to climb some crates to reach the chest", "default", "treasure_ffr_bsf",""},
+    [46201560]={ "35371", "Ogre Booty", "Gold", "Second floor of Bladespire Citadel", "default", "treasure_ffr_bsf",""},
+    [52605200]={ "35373", "Ogre Booty", "Gold", "Second floor of Bladespire Citadel; have to climb some crates to reach the chest", "default", "treasure_ffr_bsf",""},
+    [51301790]={ "35567", "Ogre Booty", "Garrison Resources", "Second floor of Bladespire Citadel", "default", "treasure_ffr_bsf","824"},
+    [76806220]={ "35568", "Ogre Booty", "Garrison Resources", "Second floor of Bladespire Citadel", "default", "treasure_ffr_bsf","824"},
+    [70506780]={ "35569", "Ogre Booty", "Garrison Resources", "Second floor of Bladespire Citadel", "default", "treasure_ffr_bsf","824"},
+    [44706450]={ "35570", "Ogre Booty", "Gold", "First floor of Bladespire Citadel", "default", "treasure_ffr_bsf",""},
 }
 
 nodes["Gorgrond"] = {
@@ -295,6 +292,7 @@ nodes["Gorgrond"] = {
     [56004000]={ "99999906", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
     [51603880]={ "99999906", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
     [54004500]={ "99999906", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
+    [43403440]={ "99999906", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
 }
 
 nodes["Talador"] = {
@@ -386,6 +384,9 @@ nodes["Talador"] = {
     [55608060]={ "99999907", "Silthide", "", "", "skull_orange", "mount_si", "116767"},
     [47004800]={ "99999908", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
     [39705540]={ "99999908", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
+    [52002600]={ "99999908", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
+    [46205260]={ "99999908", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
+    [51904120]={ "99999908", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
 }
 
 nodes["SpiresOfArak"] = {
@@ -477,6 +478,8 @@ nodes["SpiresOfArak"] = {
     [72903090]={ "37359", "Voidreaver Urnae", "i620 Agility 1H Axe", "!!! Level 100 !!!", "skull_blue", "rare_h_soa","119392"},
     [47002000]={ "99999909", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
     [50400610]={ "99999909", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
+    [36551820]={ "99999909", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
+    [60801120]={ "99999909", "Void Talon", "Random Portal Spawn", "", "skull_purple", "mount_vt", "121815"},
 }
 
 nodes["NagrandDraenor"] = {
@@ -733,7 +736,7 @@ nodes["TanaanJungle"] = {
     [83504380]={ "40105", "Drakum", "Toy", "", "skull_green", "rare_h_tj","108631"},
     [80405680]={ "40106", "Gondar", "Toy", "", "skull_green", "rare_h_tj","108633"},
     [40705630]={ "40107", "Fel Overseer Mudlump", "Dismounting item", "", "skull_green", "rare_h_tj","129295"},
-    [15406340]={ "39288", "Terrorfist", "Mounts + Oil", "His spawn will be announced by Frogan: A massive gronnling is heading for Rangari Refuge! We are going to require some assistance!", "skull_red", "mount_tj",""},
+    [13505900]={ "39288", "Terrorfist", "Mounts + Oil", "His spawn will be announced by Frogan: A massive gronnling is heading for Rangari Refuge! We are going to require some assistance!", "skull_red", "mount_tj",""},
     [23204040]={ "39287", "Deathtalon", "Mounts + Oil", "His spawn will be announced by Shadow Lord Iskar: Behind the veil, all you find is death!", "skull_red", "mount_tj",""},
     [32407400]={ "39290", "Vengeance", "Mounts + Oil", "His spawn will be announced by Tyrant Velhari: Insects deserve to be crushed!", "skull_red", "mount_tj",""},
     [47005260]={ "39289", "Doomroller", "Mounts + Oil", "His spawn will be announced by Siegemaster Mar'tak: Hah-ha! Trample their corpses!", "skull_red", "mount_tj",""},
@@ -776,6 +779,50 @@ nodes["garrisonffhorde_tier2"] = {
 
 nodes["garrisonffhorde_tier3"] = {
     [74505620]={ "34937", "Lady Sena's Other Materials Stash", "Garrison Resources", "", "default", "treasure_ffr","824"},
+}
+
+nodes["MardumtheShatteredAbyss"] = {
+	[34857020]={ "39970", "Small Treasure Chest", "", "", "default", "treasure_dh", "129210"},
+	[45017785]={ "39971", "Small Treasure Chest", "Reusable Flask", "", "default", "treasure_dh", "129192"},
+	[41763761]={ "40759", "Small Treasure Chest", "", "", "default", "treasure_dh", "129196"},
+	[51135079]={ "40743", "Small Treasure Chest", "", "", "default", "treasure_dh", "129210"},
+	[76243899]={ "40338", "Small Treasure Chest", "", "cave entrance at 77.0 to 41.4", "default", "treasure_dh", "129210"},
+	[82075043]={ "40820", "Small Treasure Chest", "", "", "default", "treasure_dh", "129196"},
+	[78755047]={ "40274", "Small Treasure Chest", "", "", "default", "treasure_dh", "129210"},
+	[73494892]={ "39975", "Small Treasure Chest", "", "", "default", "treasure_dh", "129195"},
+	[42194916]={ "40223", "Small Treasure Chest", "", "", "default", "treasure_dh", "129210"},
+	[23065389]={ "40797", "Small Treasure Chest", "", "cave entrance at 23.6 to 54.2", "default", "treasure_dh", "129210"},
+	[66922767]={ "39974", "Small Treasure Chest", "", "", "default", "treasure_dh", "129210"},
+	[74285453]={ "39977", "Small Treasure Chest", "", "cave entrance at 70.7 to 54.0", "default", "treasure_dh", "129210"},
+	[69704240]={ "39976", "Small Treasure Chest", "", "", "default", "treasure_dh", "129210"},
+	
+	[68852759]={ "40234", "General Volroth", "", "", "skull_grey", "rare_dh", "128947"},
+	[81034124]={ "40233", "Overseer Brutarg", "", "", "skull_grey", "rare_dh", "133580"},
+	[74475731]={ "40232", "King Voras", "", "", "skull_grey", "rare_dh", "128944"},
+}
+
+nodes["CrypticHollow"] = {
+	[48761530]={ "39972", "Small Treasure Chest", "", "", "default", "treasure_dh", "129196"},
+	[54855845]={ "39973", "Small Treasure Chest", "", "", "default", "treasure_dh", "128946"},
+}
+
+nodes["SoulEngine"] = {
+	[50304964]={ "40772", "Small Treasure Chest", "", "", "default", "treasure_dh", "129210"},
+	[51235740]={ "40231", "Count Nefarious", "", "", "skull_grey", "rare_dh", "128948"},
+}
+
+nodes["VaultOfTheWardensDH"] = {
+	[58693475]={ "40909", "Small Treasure Chest", "", "First Stage", "default", "treasure_dh", "129210"},
+	[47325464]={ "38690", "Small Treasure Chest", "", "First Stage", "default", "treasure_dh", "129210"},
+	[32104817]={ "40911", "Small Treasure Chest", "", "Second Stage", "default", "treasure_dh", "129196"},
+	[41506361]={ "40914", "Small Treasure Chest", "", "Second Stage", "default", "treasure_dh", "129196"},
+	[56994013]={ "40913", "Small Treasure Chest", "", "Second Stage", "default", "treasure_dh", "129210"},
+	[41413287]={ "40912", "Small Treasure Chest", "", "Second Stage", "default", "treasure_dh", "129210"},
+	[24421005]={ "40915", "Small Treasure Chest", "", "Third Stage", "default", "treasure_dh", "129210"},
+	[23268157]={ "40916", "Small Treasure Chest", "", "Third Stage", "default", "treasure_dh", "129210"},
+	
+	[68743628]={ "40301", "Wrath-Lord Lekos", "", "", "skull_grey", "rare_dh", "128958"},
+	[49543284]={ "40251", "Kethrazor", "", "", "skull_grey", "rare_dh", "128945"},
 }
 
 if (PlayerFaction == "Alliance") then
@@ -896,14 +943,14 @@ local function generateMenu(button, level)
         info.isTitle = nil
         info.notCheckable = nil
         info.text = "Remove this Object from the Map"
-        info.func = DisableTreasure
+        info.func = DTDisableTreasure
         info.arg1 = clickedMapFile
         info.arg2 = clickedCoord
         UIDropDownMenu_AddButton(info, level)
         
         if isTomTomloaded == true then
             info.text = "Add this location to TomTom waypoints"
-            info.func = addtoTomTom
+            info.func = DTaddtoTomTom
             info.arg1 = clickedMapFile
             info.arg2 = clickedCoord
             UIDropDownMenu_AddButton(info, level)
@@ -911,13 +958,13 @@ local function generateMenu(button, level)
 
         if isDBMloaded == true then
             info.text = "Add this treasure as DBM Arrow"
-            info.func = AddDBMArrow
+            info.func = DTAddDBMArrow
             info.arg1 = clickedMapFile
             info.arg2 = clickedCoord
             UIDropDownMenu_AddButton(info, level)
             
             info.text = "Hide DBM Arrow"
-            info.func = HideDBMArrow
+            info.func = DTHideDBMArrow
             UIDropDownMenu_AddButton(info, level)
         end
 
@@ -929,7 +976,7 @@ local function generateMenu(button, level)
         UIDropDownMenu_AddButton(info, level)
 
         info.text = "Restore Removed Objects"
-        info.func = ResetDB
+        info.func = DTResetDB
         info.arg1 = nil
         info.arg2 = nil
         info.notCheckable = 1
@@ -1116,6 +1163,14 @@ local options = {
                             name = "Sparring Arena",
                             desc = "Treasures for the Sparring Arena Outpost",
                             order = 25,
+						},
+						overrideGG = {
+                            type = "toggle",
+                            arg = "gorgrond_override",
+                            name = "Force Lumber Mill/Sparring Arena",
+                            desc = "Always show Lumber Mill/Sparring Arena treasures depending on the selection to the left and not by questID. This selection will require an interface reload to take effect.",
+							width = "full",
+                            order = 26,
                         },  
                         groupTD = {
                             type = "header",
@@ -1247,7 +1302,7 @@ local options = {
                         },
                         rareATJ = {
                             type = "toggle",
-                            arg = "rare_a_tj",
+                            arg = "rare_a_tj_new",
                             name = "Rares still needed for the [Jungle Stalker] achievement",
                             desc = "This has priority over the option [Always show already looted Rares]",
                             width = "full",
@@ -1322,6 +1377,28 @@ local options = {
                             desc = "Portal found in multiple zones",
                             order = 79,
                         },
+						groupDH = {
+                            type = "header",
+                            name = "Demon Hunter",
+                            desc = "Demon Hunter only zones",
+                            order = 80,
+                        },    
+                        treasureDH = {
+                            type = "toggle",
+                            arg = "treasure_dh",
+                            name = "Treasures",
+                            desc = "Treasures that give various items",
+                            width = "normal",
+                            order = 81,
+                        },
+                        rareDH = {
+                            type = "toggle",
+                            arg = "rare_dh",
+                            name = "Rares",
+                            desc = "Rare spawns",
+                            width = "normal",
+                            order = 82,
+                        },  
                     },
                 },
                 alwaysshowrares = {
@@ -1379,6 +1456,7 @@ function DraenorTreasures:OnInitialize()
             treasure_soa_a = true,
             treasure_td = true,
             treasure_tj = true,
+			treasure_dh = true,
             rare_smv = true,
             rare_ffr = true,
             rare_gg = true,
@@ -1394,7 +1472,8 @@ function DraenorTreasures:OnInitialize()
             rare_h_tj = true,
             rare_s_gg = true,
             rare_s_ng = true,
-            rare_a_tj = true,
+            rare_a_tj_new = false,
+			rare_dh = true,
             mount_tj = true,
             mount_pr = true,
             mount_go = true,
@@ -1404,6 +1483,7 @@ function DraenorTreasures:OnInitialize()
             mount_na = true,
             mount_lu = true,
             mount_vt = true,
+			gorgrond_override = false,
             world_bosses = true,
             show_loot = true,
             show_notes = true,
@@ -1418,6 +1498,8 @@ function DraenorTreasures:WorldEnter()
     self:UnregisterEvent("PLAYER_ENTERING_WORLD")
     self:ScheduleTimer("QuestCheck", 5)
     self:ScheduleTimer("RegisterWithHandyNotes", 8)
+	self:ScheduleTimer("LoadCheck",6)
+	--self:ScheduleTimer("LoginMessage", 10)
 end
 
 function DraenorTreasures:QuestCheck()
@@ -1430,9 +1512,9 @@ function DraenorTreasures:QuestCheck()
             nodes["SpiresOfArak"][55602200]={ "36400", "Elixir of Shadow Sight 5", "Elixir of Shadow Sight", "Elixir can be used at Shrine of Terrok for 1 of 6 i585 Weapons (see Gift of Anzu) Object will be removed as soon as you loot all Gifts of Anzu", "default", "treasure_soa","115463"}
             nodes["SpiresOfArak"][53108450]={ "36401", "Elixir of Shadow Sight 6", "Elixir of Shadow Sight", "Elixir can be used at Shrine of Terrok for 1 of 6 i585 Weapons (see Gift of Anzu) Object will be removed as soon as you loot all Gifts of Anzu", "default", "treasure_soa","115463"}
         end
-        if (IsQuestFlaggedCompleted(36249) or IsQuestFlaggedCompleted(36250)) then
+        if (IsQuestFlaggedCompleted(36249) or IsQuestFlaggedCompleted(36250) or DraenorTreasures.db.profile.gorgrond_override == true) then
             --Gorgrond Lumber Mill is active if either of these Quest IDs are true
-            nodes["Gorgrond"][49074846]={ "950000", "Aged Stone Container", "", "QuestID is missing, will stay active until manually disabled", "default", "treasure_gg_l","824"}
+            nodes["Gorgrond"][49074846]={ "35952", "Aged Stone Container", "", "QuestID is missing, will stay active until manually disabled", "default", "treasure_gg_l","824"}
             nodes["Gorgrond"][42345477]={ "36003", "Aged Stone Container", "", "", "default", "treasure_gg_l","824"}
             nodes["Gorgrond"][47514363]={ "36717", "Aged Stone Container", "", "", "default", "treasure_gg_l","824"}
             nodes["Gorgrond"][53354679]={ "35701", "Ancient Titan Chest", "", "", "default", "treasure_gg_l","824"}
@@ -1458,7 +1540,7 @@ function DraenorTreasures:QuestCheck()
             nodes["Gorgrond"][53007906]={ "36713", "Unknown Petrified Egg", "", "", "default", "treasure_gg_l","824"}
             nodes["Gorgrond"][47245180]={ "36718", "Unknown Petrified Egg", "", "", "default", "treasure_gg_l","824"}
         end
-        if (IsQuestFlaggedCompleted(36251) or IsQuestFlaggedCompleted(36252)) then
+        if (IsQuestFlaggedCompleted(36251) or IsQuestFlaggedCompleted(36252) or DraenorTreasures.db.profile.gorgrond_override == true) then
             --Gorgrond Sparring Arena is active if either of these Quest IDs are true
             nodes["Gorgrond"][45634931]={ "36722", "Aged Stone Container", "", "", "default", "treasure_gg_b","824"}
             nodes["Gorgrond"][43224574]={ "36723", "Aged Stone Container", "", "", "default", "treasure_gg_b","824"}
@@ -1498,7 +1580,7 @@ function DraenorTreasures:RegisterWithHandyNotes()
 
             while state do
                 if (value[1] and self.db.profile[value[6]] and not DraenorTreasures:HasBeenLooted(value)) and (value[6] == "rare_h_tj") then
-                    if (self.db.profile.TanaanHundredAchievement) then
+                    if (self.db.profile.rare_a_tj_new) then
                         if ((value[8] ~= nil) and (value[8] ~= "")) then
                             local _, _, completed, _, _, _, _, _, _, _, _ = GetAchievementCriteriaInfoByID(10070, value[8])
 
@@ -1570,14 +1652,14 @@ function DraenorTreasures:Refresh()
     self:SendMessage("HandyNotes_NotifyUpdate", "DraenorTreasures")
 end
 
-function ResetDB()
+function DTResetDB()
     table.wipe(DraenorTreasures.db.char)
     DraenorTreasures:Refresh()
 end
 
 function DraenorTreasures:HasBeenLooted(value)
-    if (self.db.profile.alwaysshowtreasures and (string.find(value[6], "Treasures") ~= nil)) then return false end
-    if (self.db.profile.alwaysshowrares and (string.find(value[6], "Treasures") == nil)) then return false end
+    if (self.db.profile.alwaysshowtreasures and (string.find(value[6], "treasure") ~= nil)) then return false end
+    if (self.db.profile.alwaysshowrares and (string.find(value[6], "treasure") == nil)) then return false end
     if (DraenorTreasures.db.char[value[1]] and self.db.profile.save) then return true end
     if (IsQuestFlaggedCompleted(value[1])) then
         return true
@@ -1586,7 +1668,7 @@ function DraenorTreasures:HasBeenLooted(value)
     return false
 end
 
-function DisableTreasure(button, mapFile, coord)
+function DTDisableTreasure(button, mapFile, coord)
     if (nodes[mapFile][coord][1] ~= nil) then
         DraenorTreasures.db.char[nodes[mapFile][coord][1]] = true;
     end
@@ -1594,7 +1676,31 @@ function DisableTreasure(button, mapFile, coord)
     DraenorTreasures:Refresh()
 end
 
-function addtoTomTom(button, mapFile, coord)
+function DraenorTreasures:LoadCheck()
+	if (IsAddOnLoaded("TomTom")) then 
+		isTomTomloaded = true
+	end
+
+	if (IsAddOnLoaded("DBM-Core")) then 
+		isDBMloaded = true
+	end
+
+	if (IsAddOnLoaded("HandyNotes_LegionRaresTreasures")) then 
+		isHN_LRTloaded = true
+	end
+
+	if isDBMloaded == true then
+		local ArrowDesc = DBMArrow:CreateFontString(nil, "OVERLAY", "GameTooltipText")
+		ArrowDesc:SetWidth(400)
+		ArrowDesc:SetHeight(100)
+		ArrowDesc:SetPoint("CENTER", DBMArrow, "CENTER", 0, -35)
+		ArrowDesc:SetTextColor(1, 1, 1, 1)
+		ArrowDesc:SetJustifyH("CENTER")
+		DBMArrow.Desc = ArrowDesc
+	end
+end
+
+function DTaddtoTomTom(button, mapFile, coord)
     if isTomTomloaded == true then
         local mapId = HandyNotes:GetMapFiletoMapID(mapFile)
         local x, y = HandyNotes:getXY(coord)
@@ -1622,17 +1728,7 @@ function addtoTomTom(button, mapFile, coord)
     end
 end
 
-if isDBMloaded == true then
-    local ArrowDesc = DBMArrow:CreateFontString(nil, "OVERLAY", "GameTooltipText")
-    ArrowDesc:SetWidth(400)
-    ArrowDesc:SetHeight(100)
-    ArrowDesc:SetPoint("CENTER", DBMArrow, "CENTER", 0, -35)
-    ArrowDesc:SetTextColor(1, 1, 1, 1)
-    ArrowDesc:SetJustifyH("CENTER")
-    DBMArrow.Desc = ArrowDesc
-end
-
-function AddDBMArrow(button, mapFile, coord)
+function DTAddDBMArrow(button, mapFile, coord)
     if isDBMloaded == true then
         local mapId = HandyNotes:GetMapFiletoMapID(mapFile)
         local x, y = HandyNotes:getXY(coord)
@@ -1650,18 +1746,25 @@ function AddDBMArrow(button, mapFile, coord)
         if (nodes[mapFile][coord][4] ~= "") and (DraenorTreasures.db.profile.show_notes == true) then
             desc = desc.."\nNotes: " .. nodes[mapFile][coord][4]
         end
-
-        if not DBMArrow.Desc:IsShown() then
-            DBMArrow.Desc:Show()
-        end
+		if not DBMArrow.Desc:IsShown() then
+			DBMArrow.Desc:Show()
+		end
 
         x = x*100
         y = y*100
-        DBMArrow.Desc:SetText(desc)
-        DBM.Arrow:ShowRunTo(x, y, nil, nil, true)
+		DBMArrow.Desc:SetText(desc)
+		DBM.Arrow:ShowRunTo(x, y, nil, nil, true)
     end
 end
 
-function HideDBMArrow()
+function DTHideDBMArrow()
     DBM.Arrow:Hide(true)
+end
+
+function DraenorTreasures:LoginMessage()
+	if isHN_LRTloaded == false then
+	print("|cff00E5EE<|cffFFC125HN:DraenorTreasures|cff00E5EE>|cff00ff00In preparation for the legion release the treasures and rares for the |cffA330C9Demon Hunter|cff00ff00 starting experience have been temporarily added to this addon.")
+	--print("|cff00ff00These together with all the treasures and rares in the new legion zones can be found in the new addon |cffff0000Handynotes_LegionRares&Treasures |cff00ff00available through Curse.com")
+	--print("|cff00ccffhttp://www.curse.com/addons/wow/handynotes_legionrarestreasures")
+	end 
 end

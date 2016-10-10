@@ -2,11 +2,18 @@ local _, T = ...
 if T.Mark ~= 50 then return end
 local L, EV, G, api = T.L, T.Evie, T.Garrison, {}
 
+local function HookOnShow(self, OnShow)
+	self:HookScript("OnShow", OnShow)
+	if self:IsVisible() then OnShow(self) end
+end
+
 local MISSION_PAGE_FRAME = GarrisonMissionFrame.MissionTab.MissionPage
 local SHIP_MISSION_PAGE = GarrisonShipyardFrame.MissionTab.MissionPage
 local RefreshActiveMissionsView, activeMissionsHandle
 local RefreshAvailMissionsView, availMissionsHandle
 local interestMissionsHandle
+
+local Interest_RewardMap = {}
 
 local function SetMissionsFrameTab(id)
 	local mainFrame = GarrisonMissionFrame
@@ -85,8 +92,8 @@ local function OpenToMission(mi, f1, f2, f3, isResume)
 	FRAME.MissionTab.MissionList:Hide()
 	PAGE:Show()
 	FRAME:ShowMission(mi)
-	FRAME.followerCounters = C_Garrison.GetBuffedFollowersForMission(mi.missionID)
-	FRAME.followerTraits = C_Garrison.GetFollowersTraitsForMission(mi.missionID)
+	FRAME.followerCounters = C_Garrison.GetBuffedFollowersForMission(mi.missionID, false)
+	FRAME.followerTraits = C_Garrison.GetFollowersTraitsForMission(mi.missionID, false)
 	
 	FRAME:ClearParty()
 	if C_Garrison.GetNumFollowersOnMission(mi.missionID) > 0 then
@@ -118,7 +125,7 @@ local function OpenToMission(mi, f1, f2, f3, isResume)
 		PAGE.Stage.MissionEnvIcon.Anim:Stop()
 	end
 	FRAME:UpdateMissionParty(PAGE.Followers)
-	GarrisonFollowerList_UpdateFollowers(FRAME.FollowerList)
+	FRAME.FollowerList:UpdateFollowers()
 	for i=1,6 do
 		s1, s2, s3, s4, s5, s6 = s2, s3, s4, s5, s6, s1 and StopSound(s1)
 	end
@@ -134,6 +141,7 @@ local function FollowerTooltip_SetFollower(owner, info, skipDescriptions)
 		C_Garrison.GetFollowerXP(id),
 		C_Garrison.GetFollowerLevelXP(id),
 		C_Garrison.GetFollowerItemLevelAverage(id),
+		0,
 		C_Garrison.GetFollowerAbilityAtIndex(id, 1),
 		C_Garrison.GetFollowerAbilityAtIndex(id, 2),
 		C_Garrison.GetFollowerAbilityAtIndex(id, 3),
@@ -142,8 +150,7 @@ local function FollowerTooltip_SetFollower(owner, info, skipDescriptions)
 		C_Garrison.GetFollowerTraitAtIndex(id, 2),
 		C_Garrison.GetFollowerTraitAtIndex(id, 3),
 		C_Garrison.GetFollowerTraitAtIndex(id, 4),
-		skipDescriptions
-	)
+		skipDescriptions)
 end
 local function FormatCountdown(sec)
 	if sec >= 3600 then
@@ -192,24 +199,24 @@ MISSION_PAGE_FRAME.StartMissionButton:SetScript("OnClick", function()
 end)
 
 do -- CreateLoader(parent, W, G, H)
-	local N, c = 9, "16FF1F1DEDFC9C04F6128CFEE8FF08FD3016FE9B17FF8DD2706F6E"
+	local fin, N, c = setmetatable({}, {__mode="k"}), 9, "16FF1F1DEDFC9C04F6128CFEE8FF08FD3016FE9B17FF8DD2706F6E"
 	local function Loader_OnUpdate(self)
 		if self.job then
-			local t1, tlim, ok, _, i, x = debugprofilestop(), self.tlim
+			local t1, tlim, ok, er, i, x = debugprofilestop(), self.tlim
 			repeat
 				if coroutine.status(self.job) ~= "suspended" then
 					break
 				end
-				ok, _, i, x = coroutine.resume(self.job)
+				ok, er, i, x = coroutine.resume(self.job)
 				local tdiff, stop = debugprofilestop()-t1
-				t1, tlim, stop = t1+tdiff, tlim-tdiff, tlim < 1.5*tdiff
+				t1, tlim, stop = t1+tdiff, tlim-tdiff, tlim < 2*tdiff
 			until not (i and x) or stop
-			if not ok then
-				if i then
-					securecall(error, i)
+			if not (fin[self.job] or ok) then
+				if ok ~= nil then
+					securecall(error, "CO: " .. tostring(er) .. "\n" .. debugstack(self.job))
 				end
 				for i=1,#self do
-					self[i]:SetTexture(1, 0.1, 0)
+					self[i]:SetColorTexture(1, 0.1, 0)
 				end
 				return
 			elseif i and x then
@@ -217,18 +224,23 @@ do -- CreateLoader(parent, W, G, H)
 				if pg ~= self.pg then
 					for i=math.max(1, self.pg or 1), pg do
 						local si = self[i]
-						si:SetTexture(si.r or 0, si.g or 0, si.b or 0)
+						si:SetColorTexture(si.r or 0, si.g or 0, si.b or 0)
 					end
 					for i=pg+1, self.pg or 9 do
-						self[i]:SetTexture(0,0,0, 0.25)
+						self[i]:SetColorTexture(0,0,0, 0.25)
 					end
 					self.pg = pg
 				end
 				self.nf = (self.nf or 0) + 1
 				return
 			else
+				for i=math.max(1, self.pg or 1), 9 do
+					local si = self[i]
+					si:SetColorTexture(si.r or 0, si.g or 0, si.b or 0)
+				end
+				fin[self.job or 1] = 1
 				if self.OnFinish then
-					securecall(self.OnFinish, self.nf or 0)
+					securecall(self.OnFinish, self, self.nf or 0)
 				end
 				self.nf, self.job = 0
 				if self.animHide then
@@ -252,15 +264,15 @@ do -- CreateLoader(parent, W, G, H)
 	end
 	function api.CreateLoader(parent, W, G, H, tlim, animHide)
 		local WG, loader = W + G, CreateFrame("Frame", nil, parent)
-		loader.tlim = tlim or 20
+		loader.tlim = tlim or 14
 		loader:SetSize(WG*N-G, H)
 		loader:Hide()
 		for i=1,N do
-			local tex = loader:CreateTexture()
+			local tex = loader:CreateTexture(nil, "OVERLAY", nil, -8+i)
 			tex:SetSize(W, H)
 			local r,g,b = c:match("(%x%x)(%x%x)(%x%x)", 6*i-5)
 			tex.r, tex.g, tex.b = tonumber(r or 64,16)/255, tonumber(g or 64,16)/255, tonumber(b or 64,16)/255
-			tex:SetTexture(tex.r, tex.g, tex.b)
+			tex:SetColorTexture(0,0,0, 0.25)
 			tex:SetPoint("LEFT", WG*(i-1), 0)
 			loader[i] = tex
 		end
@@ -285,8 +297,10 @@ end
 
 local missionList = CreateFrame("Frame", "MasterPlanMissionList", GarrisonMissionFrameMissions) do
 	missionList:SetAllPoints()
+	missionList:Hide()
 	local hidden = CreateFrame("Frame", nil, missionList) do
 		hidden:Hide()
+		hidden.Tab1, hidden.Tab2 = GarrisonMissionFrameMissionsTab1, GarrisonMissionFrameMissionsTab2
 		missionList:SetScript("OnShow", function()
 			GarrisonMissionFrameMissionsTab1:SetParent(hidden)
 			GarrisonMissionFrameMissionsTab2:SetParent(hidden)
@@ -434,7 +448,7 @@ local hoverFocus = CreateFrame("Frame") do
 		end
 	end
 end
-local easyDrop = CreateFrame("Frame", "MasterPlanDropDown", nil, "UIDropDownMenuTemplate") do
+local easyDrop = CreateFrame("Frame", "MPDropDown", nil, "UIDropDownMenuTemplate") do
 	api.easyDrop = easyDrop
 	function easyDrop:IsOpen(owner)
 		return self.owner == owner and UIDROPDOWNMENU_OPEN_MENU == self and DropDownList1:IsShown()
@@ -546,13 +560,13 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 				s:SetObeyStepOnDrag(true)
 				t = s:CreateTexture(nil, "BACKGROUND")
 				t:SetHeight(10)
-				t:SetTexture(0, 1, 0)
+				t:SetColorTexture(0, 1, 0)
 				t:SetAlpha(0.25)
 				t:SetPoint("LEFT", 3, 0)
 				t:SetPoint("RIGHT", tt, "CENTER", 0, 0)
 				t = s:CreateTexture(nil, "BACKGROUND")
 				t:SetHeight(10)
-				t:SetTexture(1, 0, 0)
+				t:SetColorTexture(1, 0, 0)
 				t:SetAlpha(0.25)
 				t:SetPoint("RIGHT", -3, 0)
 				t:SetPoint("LEFT", tt, "CENTER", 0, 0)
@@ -619,7 +633,7 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 		lf:SetPoint("CENTER", GarrisonMissionFrameMissions, "CENTER")
 		local t = lf:CreateTexture(nil, "BACKGROUND", nil, -1)
 		t:SetAllPoints(GarrisonMissionFrameMissions)
-		t:SetTexture(0,0,0)
+		t:SetColorTexture(0,0,0)
 		t:SetAlpha(0.35)
 		local w1, h1 = lf:GetSize()
 		local w2, h2 = GarrisonMissionFrameMissions:GetSize()
@@ -702,7 +716,7 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 		local function close(self)
 			lootFrame:Hide()
 			GarrisonMissionFrame.MissionComplete.completeMissions = C_Garrison.GetCompleteMissions(1)
-			GarrisonMissionList_UpdateMissions() -- TODO
+			GarrisonMissionFrame:UpdateMissions()
 			RefreshActiveMissionsView(self == lootFrame.Dismiss)
 		end
 		t = CreateFrame("Button", "MPLootSummaryDone", lootFrame, "UIPanelButtonTemplate")
@@ -727,14 +741,6 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 		lf.noBagSlots = t
 		lf:Hide()
 		lf:SetScript("OnShow", function(self)
-			self.noBagSlots:Show()
-			for i = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
-				local freeSlots, bagFamily = GetContainerNumFreeSlots(i)
-				if bagFamily == 0 and freeSlots > 0 then
-					self.noBagSlots:Hide()
-					break
-				end
-			end
 			if self.onShowSound then
 				PlaySound(self.onShowSound)
 				self.onShowSound = nil
@@ -767,7 +773,13 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 				end
 			end
 			function SetFollower(btn, info, award, oldQuality)
-				GarrisonMissionFrame_SetFollowerPortrait(btn, info, false)
+				if not info then return end
+				local color = ITEM_QUALITY_COLORS[info.quality]
+				btn.PortraitRingQuality:SetVertexColor(color.r, color.g, color.b)
+				btn.LevelBorder:SetVertexColor(color.r, color.g, color.b)
+				btn.Level:SetText(info.level);
+				local pico = info.portraitIconID or 0
+				btn.Portrait:SetTexture(pico ~= 0 and pico or "Interface\\Garrison\\Portraits\\FollowerPortrait_NoPortrait")
 				if info.levelXP > info.xp and award > 0 then
 					local baseXP = info.xp - math.min(info.xp, award)
 					btn.xpProgressTex:SetWidth(math.max(0.01,46*baseXP/info.levelXP))
@@ -836,7 +848,6 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 				b.LevelUpAnim = b:CreateAnimationGroup()
 				b.LevelUpAnim:SetLooping("REPEAT")
 				b.LevelUpAnim:SetScript("OnStop", LevelPulse_OnStop)
-				b.LevelUpAnim:SetIgnoreFramerateThrottle(true)
 				local t = b.LevelUpAnim:CreateAnimation("Alpha")
 				t:SetEndDelay(1.25)
 				t:SetDuration(1.5) t:SetFromAlpha(0) t:SetToAlpha(1)
@@ -913,14 +924,20 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 			end})
 		end
 	end
-	function activeUI:SetCompletionRewards(rewards, followers, numMissions)
+	lootContainer.nothing = lootContainer:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+	lootContainer.nothing:SetPoint("CENTER")
+	lootContainer.nothing:SetText(L"No loot received.")
+	function activeUI:SetCompletionRewards(rewards, followers, numMissions, overflowLoot)
+		lootFrame.noBagSlots:SetShown(overflowLoot)
 		lootFrame.numMissions:SetFormattedText(GARRISON_NUM_COMPLETED_MISSIONS, numMissions or 1)
 		lootFrame.onShowSound = rewards and next(rewards) and "UI_Garrison_CommandTable_ChestUnlock_Gold_Success" or "UI_Garrison_CommandTable_ChestUnlock"
 		
 		local fi, fn = G.GetFollowerInfo(), 1
 		for k,v in pairs(followers) do
-			SetFollower(lootContainer.followers[fn], fi[k], v.xpAward, v.oqual)
-			fn = fn + 1
+			if v.xpAward and v.xpAward > 0 then
+				SetFollower(lootContainer.followers[fn], fi[k], v.xpAward, v.oqual)
+				fn = fn + 1
+			end
 		end
 		for i=fn, #lootContainer.followers do
 			lootContainer.followers[i]:Hide()
@@ -967,6 +984,7 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 			lootContainer.count = numTotal
 		end
 		
+		lootContainer.nothing:SetShown(ni == 1 and fn == 1)
 		lootFrame:Show()
 	end
 end
@@ -1089,7 +1107,7 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 		self.notebook:SetShown(GetItemCount(self.notebook.itemID) > 0)
 	end)
 	local roamingParty = CreateFrame("Frame", nil, availUI) do
-		roamingParty:SetPoint("BOTTOMRIGHT", availUI, "BOTTOM", 94, -2)
+		roamingParty:SetPoint("BOTTOMRIGHT", availUI, "BOTTOM", 106, -2)
 		local slots = {}
 		function roamingParty:GetFollowers()
 			local a, b, c
@@ -1118,7 +1136,7 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 					end
 				end
 				if f then
-					slots[i].portrait:SetToFileData(fi.portraitIconID)
+					slots[i].portrait:SetTexture(fi.portraitIconID)
 					slots[i].portrait:SetVertexColor(1, 1, 1)
 				else
 					slots[i].portrait:SetTexture("Interface\\Garrison\\Portraits\\FollowerPortrait_NoPortrait")
@@ -1252,7 +1270,7 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 		b:Hide()
 		b:SetScript("OnLeave", dismissTooltip)
 		b:SetScript("OnEnter", function(self)
-			if G.GetNumPendingMissionStarts() > 0 or not G.HasReadyTentativeParties(1) then return end
+			if G.GetNumPendingMissionStarts() > 0 or G.GetTentativePartyCount(1) == 0 then return end
 			GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
 			GameTooltip:SetText(L"Start Missions")
 			if C_Garrison.IsAboveFollowerSoftCap(1) then
@@ -1296,15 +1314,15 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 			if G.GetNumPendingMissionStarts() > 0 then
 				G.AbortMissionQueue()
 				RefreshAvailMissionsView()
-			elseif button == "RightButton" or not G.HasReadyTentativeParties(1) then
-				G.DissolveAllTentativeParties()
+			elseif button == "RightButton" or G.GetTentativePartyCount(1) == 0 then
+				G.DissolveAllTentativeParties(1)
 				PlaySound("UChatScrollButton")
 			elseif not C_Garrison.IsAboveFollowerSoftCap(1) then
-				G.SuppressFollowerEvents()
+				G.SuppressFollowerEvents(1)
 				for mid, p1, p2, p3 in G.GetReadyTentativeParties(1) do
 					G.StartMissionQueue(mid, p1, p2, p3)
 				end
-				G.ReleaseFollowerEvents()
+				G.ReleaseFollowerEvents(1)
 				PlaySound("UI_Garrison_CommandTable_MissionStart")
 			end
 		end)
@@ -1314,15 +1332,14 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 			local function sync()
 				synced = true
 				local np = G.GetNumPendingMissionStarts()
-				b:SetShown(np > 0 or next(T.tentativeState) ~= nil)
+				local nr, nt = G.GetTentativePartyCount(1)
+				b:SetShown(np > 0 or nt > 0)
 				if b:IsShown() then
 					local text
 					if np > 0 then
 						text = L("%d |4party:parties; remaining..."):format(np)
-					elseif G.HasReadyTentativeParties(1) then
-						text = L"Send Tentative Parties"
 					else
-						text = L"Clear Tentative Parties"
+						text = nr > 0 and L"Send Tentative Parties" or L"Clear Tentative Parties"
 					end
 					b:SetText(text)
 					if GameTooltip:IsOwned(b) then
@@ -1366,13 +1383,14 @@ local interestUI = CreateFrame("Frame", nil, missionList) do
 	interestUI:Hide()
 	interestUI.loader = api.CreateLoader(interestUI, 20, 30, 20)
 	interestUI.loader:SetPoint("CENTER", GarrisonMissionFrameMissions)
-	function interestUI.loader.OnFinish(nf)
+	function interestUI.loader:OnFinish(nf)
 		if nf > 2 then
 			missionList.FadeIn:Play()
 		end
 	end
 	local ctl = CreateFrame("Frame") do
-		ctl:SetSize(56, 22)
+		ctl:SetSize(83, 22)
+		ctl:Hide()
 		interestUI.excludeInactive = CreateFrame("CheckButton", nil, ctl) do
 			local b = interestUI.excludeInactive
 			b:SetSize(20, 20)
@@ -1383,7 +1401,7 @@ local interestUI = CreateFrame("Frame", nil, missionList) do
 			b:SetCheckedTexture("Interface\\PetBattles\\DeadPetIcon")
 			local nt = b:GetNormalTexture()
 			nt:SetTexCoord(4/32,28/32, 4/32,28/32)
-			nt:SetVertexColor(0.8, 0.8, 0.7)
+			nt:SetVertexColor(0.84, 0.76, 0.56)
 			local ct = b:GetCheckedTexture()
 			ct:SetBlendMode("BLEND")
 			ct:ClearAllPoints()
@@ -1408,10 +1426,41 @@ local interestUI = CreateFrame("Frame", nil, missionList) do
 			end)
 			b:SetScript("OnLeave", dismissTooltip)
 		end
+		interestUI.stackMode = CreateFrame("Button", nil, ctl) do
+			local b = interestUI.stackMode
+			b:SetSize(20, 20)
+			b:SetPoint("LEFT", 30, 0)
+			b:SetScript("OnClick", function(self)
+				T.config.interestStack = bit.bxor(1, T.config.interestStack)
+				interestMissionsHandle:Show(not interestUI.excludeInactive:GetChecked())
+				if GameTooltip:IsOwned(self) then
+					self:GetScript("OnEnter")(self)
+				end
+				self:GetScript("OnShow")(self)
+			end)
+			b:SetScript("OnShow", function(self)
+				local tex = T.config.interestStack % 2 > 0 and "Interface/Minimap/TRACKING/Auctioneer" or "Interface/Minimap/TRACKING/Banker"
+				self:SetNormalTexture(tex)
+				self:GetNormalTexture():SetVertexColor(0.85, 0.85, 0.85, 0.90)
+				self:SetHighlightTexture(tex)
+				self:GetHighlightTexture():SetBlendMode("ADD")
+				self:GetHighlightTexture():SetAlpha(0.25)
+			end)
+			b:SetScript("OnEnter", function(self)
+				GameTooltip:SetOwner(self, "ANCHOR_NONE")
+				GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT", -51, -4)
+				local isStacking = T.config.interestStack % 2 > 0
+				GameTooltip:AddLine(isStacking and L"Prioritizing expected reward" or L"Prioritizing success chance")
+				GameTooltip:AddLine(L"When a mission's reward can be increased by follower traits, groups can prioritize either the expected reward or mission success chance.", 1,1,1, 1)
+				GameTooltip:Show()
+				easyDrop:Close()
+			end)
+			b:SetScript("OnLeave", dismissTooltip)
+		end
 		interestUI.interestSet = CreateFrame("Button", nil, ctl) do
 			local b = interestUI.interestSet
 			b:SetSize(20, 20)
-			b:SetPoint("LEFT", 30, 0)
+			b:SetPoint("LEFT", 57, 0)
 			b:SetNormalTexture("Interface\\Minimap\\ObjectIcons")
 			b:SetHighlightTexture("Interface\\Minimap\\ObjectIcons")
 			local nt = b:GetNormalTexture()
@@ -1432,6 +1481,10 @@ local interestUI = CreateFrame("Frame", nil, missionList) do
 				{arg1=0, text="|TInterface\\Icons\\INV_Misc_Coin_02:16:16:0:0:64:64:4:60:4:60|t " .. BONUS_ROLL_REWARD_MONEY},
 				{arg1=128315},
 				{arg1=128430},
+				{arg1=127748},
+				{arg1=128313},
+				{arg1=128316},
+				{arg1=128312},
 				{arg1=115280, text="|TInterface\\Minimap\\ObjectIcons:16:16:0:0:256:256:194:222:130:158|t |cffff8000" .. ITEM_QUALITY5_DESC},
 			}
 			local function toggleInterestBit(_, key)
@@ -1442,8 +1495,18 @@ local interestUI = CreateFrame("Frame", nil, missionList) do
 				local b, m = T.InterestMask[self.arg1], T.config.interestMask
 				return (m % 2^b) < 2^(b-1)
 			end
+			local function ShowInterestFilterTip(self, arg1)
+				if type(arg1) ~= "number" or arg1 < 1 then return end
+				GameTooltip:SetOwner(self, "ANCHOR_NONE")
+				GameTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", 16, 8)
+				if arg1 < 2e3 then
+					GameTooltip:SetCurrencyByID(arg1)
+				else
+					GameTooltip:SetItemByID(Interest_RewardMap[arg1] or arg1)
+				end
+			end
 			for i=2,#m do
-				m[i].func, m[i].checked, m[i].isNotRadio, m[i].keepShownOnClick = toggleInterestBit, checkInterestBit, true, true
+				m[i].func, m[i].checked, m[i].isNotRadio, m[i].keepShownOnClick, m[i].tooltipOnButton = toggleInterestBit, checkInterestBit, true, true, ShowInterestFilterTip
 			end
 			b:SetScript("OnClick", function(self)
 				if m[#m].arg1 == 115280 and T.config.legendStep >= 2 then
@@ -1461,7 +1524,7 @@ local interestUI = CreateFrame("Frame", nil, missionList) do
 						mi.text, mi.placeholder = "|T" .. (ico or "Interaface\\Icons\\INV_Misc_QuestionMark") .. ":16:16:0:0:64:64:4:60:4:60|t " .. (name or ("#" .. key)), not name or nil
 					end
 				end
-				easyDrop:Toggle(self, m, "TOPLEFT", self, "BOTTOMLEFT", -24, -3)
+				easyDrop:Toggle(self, m, "TOPLEFT", self, "BOTTOMLEFT", -78, -3)
 			end)
 			b:SetScript("OnEnter", function(self)
 				easyDrop:DelayOpenClick(self)
@@ -1522,7 +1585,7 @@ do -- tabs
 		PanelTemplates_TabResize(availTab, 10)
 		PanelTemplates_TabResize(interestTab, 10)
 	end
-	hooksecurefunc("GarrisonMissionList_SetTab", function(self)
+	hooksecurefunc("GarrisonMissionListTab_SetTab", function(self)
 		if missionList:IsShown() and self then
 			PanelTemplates_SetTab(GarrisonMissionFrame, self:GetID() == 2 and 3 or 1)
 		end
@@ -1563,7 +1626,8 @@ do -- tabs
 		end
 	end)
 	T.UpdateMissionTabs = updateMissionTabs
-	hooksecurefunc("GarrisonMissionList_UpdateMissions", updateMissionTabs)
+	hooksecurefunc(GarrisonMissionFrame, "UpdateMissions", updateMissionTabs)
+	GarrisonMissionFrame:HookScript("OnShow", updateMissionTabs)
 	hooksecurefunc("PanelTemplates_UpdateTabs", function(frame)
 		if frame == GarrisonMissionFrame then
 			updateMissionTabs()
@@ -1579,7 +1643,7 @@ do -- tabs
 		end
 		PanelTemplates_SetTab(GarrisonMissionFrame, 3)
 		if not missionList:IsShown() then
-			GarrisonMissionList_SetTab(GarrisonMissionFrameMissionsTab2)
+			GarrisonMissionListTab_SetTab(GarrisonMissionFrameMissionsTab2)
 		end
 		GarrisonMissionFrame:CheckCompleteMissions()
 	end)
@@ -1587,7 +1651,7 @@ do -- tabs
 		PlaySound("UI_Garrison_Nav_Tabs")
 		SetMissionsFrameTab(1)
 		if not missionList:IsShown() then
-			GarrisonMissionList_SetTab(GarrisonMissionFrameMissionsTab1)
+			GarrisonMissionListTab_SetTab(GarrisonMissionFrameMissionsTab1)
 		end
 	end)
 	interestTab:SetScript("OnClick", function()
@@ -1599,7 +1663,7 @@ do -- tabs
 		PanelTemplates_SetTab(GarrisonMissionFrame, 4)
 		api:SetMissionsUI(4)
 	end)
-	hooksecurefunc("GarrisonMissionList_SetTab", updateMissionTabs)
+	hooksecurefunc("GarrisonMissionListTab_SetTab", updateMissionTabs)
 	function EV:GARRISON_MISSION_FINISHED()
 		if GarrisonMissionFrame:IsVisible() and GarrisonMissionFrame.selectedTab ~= 3 then
 			updateMissionTabs()
@@ -1654,7 +1718,7 @@ local GetActiveMissions, StartCompleteAll, CompleteMission, ClearCompletionState
 		if (state == "DONE" or state == "ABORT") and activeUI.completionState == "RUNNING" then
 			activeUI.completionState = state == "DONE" and "DONE" or nil
 			if next(rew) or next(fol) then
-				activeUI:SetCompletionRewards(rew, fol, #stack)
+				activeUI:SetCompletionRewards(rew, fol, #stack, not not substate)
 			elseif state == "DONE" then
 				activeUI.CompleteAll.ShowingHelp = true
 				HelpPlate_TooltipHide()
@@ -1724,10 +1788,10 @@ local core do
 				bar:GetThumbTexture():SetTexCoord(0.20, 0.80, 0.125, 0.875)
 				bar:SetMinMaxValues(0, 100)
 				bar:SetValue(0)
-				local bg = bar:CreateTexture("BACKGROUND")
+				local bg = bar:CreateTexture(nil, "BACKGROUND")
 				bg:SetPoint("TOPLEFT", 0, 16)
 				bg:SetPoint("BOTTOMRIGHT", 0, -14)
-				bg:SetTexture(0,0,0)
+				bg:SetColorTexture(0,0,0)
 				bg:SetAlpha(0.85)
 				local top = bar:CreateTexture(nil, "ARTWORK")
 				top:SetSize(24, 48)
@@ -1764,6 +1828,7 @@ local core do
 					up:SetEnabled(v > 0)
 					down:SetEnabled(v < x)
 				end)
+				sf.Bar, bar.Up, bar.Down = bar, up, down
 			end
 			sc = CreateFrame("Frame", nil, sf) do
 				sc:SetSize(w-2, h+10)
@@ -1867,6 +1932,9 @@ local core do
 		function core:IsShown()
 			return sf:IsShown()
 		end
+		function core:IsVisible()
+			return sf:IsVisible()
+		end
 		function core:IsOwned(propsHandle)
 			return int.props == propsHandle
 		end
@@ -1875,7 +1943,7 @@ local core do
 		end
 		return core, sf
 	end
-	core = api.createScrollList(missionList, 882)
+	core, missionList.List = api.createScrollList(missionList, 882)
 end
 do -- CreateMissionButton
 	local CreateRewards do
@@ -1883,19 +1951,16 @@ do -- CreateMissionButton
 			if self.itemID then
 				GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
 				G.SetItemTooltip(GameTooltip, self.itemID)
-				GameTooltip:Show()
 			elseif self.tooltipTitle and self.tooltipText then
 				GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
 				GameTooltip:AddLine(self.tooltipTitle)
 				GameTooltip:AddLine(self.tooltipText, 1,1,1,1)
-				GameTooltip:Show()
 				if self.tooltipTitle == GARRISON_REWARD_MONEY then
 					G.SetCurrencyTraitTip(GameTooltip, 0, self.followerType)
 				end
 			elseif self.currencyID then
 				GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
 				GameTooltip:SetCurrencyByID(self.currencyID)
-				GameTooltip:Show()
 				G.SetCurrencyTraitTip(GameTooltip, self.currencyID, self.followerType)
 			elseif self.bonusAbilityID and self.bonusInfo then
 				GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
@@ -1903,14 +1968,26 @@ do -- CreateMissionButton
 				GameTooltip:AddLine(self.bonusInfo.description, 1,1,1,1)
 				GameTooltip:AddLine(" ")
 				GameTooltip:AddLine(GARRISON_BONUS_EFFECT_TIME_ACTIVE:format(SecondsToTime(self.bonusInfo.duration)))
-				GameTooltip:Show()
+			else
+				return
 			end
 			if self:GetParent():IsEnabled() then
 				self:GetParent():LockHighlight()
 			end
+			if self.canIgnore then
+				local prompt = self.isIgnored and L"Unignore" or "Ignore"
+				GameTooltip:AddLine("|n|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:14:12:0:-1:512:512:10:70:330:410|t " .. prompt, 0.5, 0.8, 1)
+			end
+			GameTooltip:Show()
 		end
-		local function Reward_OnClick(self)
-			if IsModifiedClick("CHATLINK") then
+		local function Reward_OnClick(self, button)
+			if self.canIgnore and button == "RightButton" then
+				local wasIgnored = self.isIgnored
+				MasterPlan:SetRewardIgnore(self.canIgnore, not wasIgnored or nil, IsAltKeyDown())
+				if wasIgnored and MasterPlan:IsRewardIgnored(self.canIgnore) then
+					MasterPlan:SetRewardIgnore(self.canIgnore, false, IsAltKeyDown())
+				end
+			elseif IsModifiedClick("CHATLINK") then
 				local qt, text, _ = self.quantity:GetText()
 				if self.itemID then
 					_, text = GetItemInfo(self.itemID)
@@ -1932,6 +2009,7 @@ do -- CreateMissionButton
 			local r = CreateFrame("Button", nil, parent)
 			r:SetSize(h, h)
 			r:SetPoint("RIGHT", -12, 0)
+			r:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 			local t = r:CreateTexture(nil, "BACKGROUND")
 			t:SetAtlas("GarrMission_RewardsShadow")
 			t:SetPoint("CENTER")
@@ -2074,7 +2152,7 @@ do -- CreateMissionButton
 		t:SetScript("OnShow", RaiseVeil)
 		t, b.veil = t:CreateTexture(nil, "OVERLAY", nil, -1), t
 		t:SetAllPoints(b)
-		t:SetTexture(1,1,1)
+		t:SetColorTexture(1,1,1)
 		t:SetGradient("VERTICAL", 0.8, 0.8, 0.8, 0.6, 0.6, 0.6)
 		t:SetBlendMode("MOD")
 		
@@ -2225,6 +2303,8 @@ local GroupButtonBase = {} do
 			text = ("%d |TInterface\\Garrison\\GarrisonCurrencyIcons:0:0:0:0:128:128:12:52:12:52|t"):format(ec)
 		elseif ec > 0 and et == 1101 then
 			text = ("%d|TInterface\\Garrison\\GarrisonCurrencyIcons:0:0:0:2:128:128:70:104:68:104|t"):format(ec)
+		elseif ec > 0 and et == 823 then
+			text = ec .. " |T" .. select(3,GetCurrencyInfo(et)) .. ":0:0:0:1:64:64:4:60:4:60|t"
 		elseif ec >= 1e4 and et == 0 and G.HasSignificantRewards(mi) == "gold" then
 			text = GetMoneyString(ec - ec % 1e4)
 		else
@@ -2388,7 +2468,7 @@ do -- activeMissionsHandle
 			col, state = "|cffff2020", L"Failed"
 		elseif d.skipped then
 			col, state = "|cffb0ff20", L"Skipped"
-		elseif d.succeeded or d.state >= 0 then
+		elseif d.succeeded or d.completed or (d.state and d.state >= 0) then
 			col, state = "|cff20ff20", L"Success"
 		else
 			col, state = "|cffffea10", L"Ready"
@@ -2413,7 +2493,7 @@ do -- activeMissionsHandle
 				fi, w = fin[d.followers[i]], self.followers[nf]
 				if fi and w then
 					w.followerID, nf = fi.followerID, nf + 1
-					w.portrait:SetToFileData(fi.portraitIconID)
+					w.portrait:SetTexture(fi.portraitIconID)
 					local ct = (fi.level < 100 or fi.quality < 4) and ITEM_QUALITY_COLORS[fi.quality]
 					if ct then
 						w.glow:SetVertexColor(ct.r, ct.g, ct.b)
@@ -2647,23 +2727,23 @@ do -- availMissionsHandle
 		end
 		self.followers:SetText(fol)
 
-		local nr = 1
+		local nr, isIgnored = 1, d.ord0 == -1
 		if type(d.rewards) == "table" then
 			for k,v in pairs(d.rewards) do
 				local icon, quant, r = v.icon, v.quantity ~= 1 and v.quantity
 				r, nr = self.rewards[nr], nr + 1
-				r.itemID, r.tooltipTitle, r.tooltipText, r.currencyID = v.itemID, v.title, v.tooltip, v.currencyID
+				r.itemID, r.tooltipTitle, r.tooltipText, r.currencyID, r.isIgnored, r.canIgnore = v.itemID, v.title, v.tooltip, v.currencyID, isIgnored
 				r.border:Hide()
 				if v.followerXP then
-					quant = v.followerXP
+					quant, r.canIgnore = v.followerXP, d.level == 100 and "f:xp10" or d.level < 95 and "f:xp90" or "f:xp95"
 				elseif v.currencyID == 0 then
 					quant = floor(v.quantity/10000)
-					r.tooltipText = GetMoneyString(v.quantity)
-				elseif v.currencyID == GARRISON_CURRENCY then
-					quant = v.quantity
+					r.tooltipText, r.canIgnore = GetMoneyString(v.quantity), "c:0"
+				elseif v.currencyID then
+					r.canIgnore = "c:" .. v.currencyID
 				elseif v.itemID then
 					local _, _, q, l, _, _, _, _, _, tex = GetItemInfo(v.itemID)
-					icon, l = tex or GetItemIcon(v.itemID), T.CrateLevels[v.itemID] or l
+					r.canIgnore, icon, l = "i:" .. v.itemID, tex or GetItemIcon(v.itemID), T.CrateLevels[v.itemID] or l
 					if v.quantity == 1 and q and l and l > 500 then
 						quant = ITEM_QUALITY_COLORS[q].hex .. l
 						if G.IsLevelAppropriateToken(v.itemID) then
@@ -2673,8 +2753,19 @@ do -- availMissionsHandle
 						end
 					end
 				end
+				if r.canIgnore and not isIgnored and MasterPlan:IsRewardIgnored(r.canIgnore) then
+					r.isIgnored = true
+				end
 				r.quantity:SetText(quant or "")
 				r.icon:SetTexture(icon or "Interface/Icons/Temp")
+				r.icon:SetDesaturated(r.isIgnored)
+				if r.isIgnored then
+					r.icon:SetVertexColor(0.8,0.4,0.4)
+				elseif isIgnored then
+					r.icon:SetVertexColor(0.8,0.6,0.6)
+				else
+					r.icon:SetVertexColor(1,1,1)
+				end
 				r:Show()
 			end
 		end
@@ -2715,14 +2806,11 @@ do -- availMissionsHandle
 			b:Show()
 		end
 		
-		self.veil:SetShown(d.reqCheckFailed)
+		self.veil:SetShown(d.ord0 == -3)
 	end
 	local GetAvailableMissions do
 		local roamingParty = api.roamingParty
 		local function cmp(a,b)
-			if a.reqCheckFailed ~= b.reqCheckFailed then
-				return b.reqCheckFailed
-			end
 			local ac, bc = a.ord0, b.ord0
 			if ac == bc then
 				ac, bc = a.ord, b.ord
@@ -2759,15 +2847,15 @@ do -- availMissionsHandle
 			local _, resq = GetCurrencyInfo(824)
 			cw[824] = resq < 3e3 and 10 or (resq < 7e3 and 6 or 3)
 			local _, oilq = GetCurrencyInfo(1101)
-			cw[1101] = oilq < 1e3 and 11 or 2
-			cw[823], cw[0], cw.minor = 4, 5, 1
+			cw[1101] = C_Garrison.HasShipyard() and (oilq < 1e3 and 11 or 2) or 1
+			cw[823], cw[0], cw.minor = 4, 5, 1.5
 			
 			for i=1, #missions do
 				local mi, g = missions[i]
 				local mid, sr = mi.missionID, G.HasSignificantRewards(mi)
 				local sg = groupCache[mid]
 				mi.groups, g = sg, sg[1] and not G.GetMissionGroupDeparture(sg[1], mi) and sg[1] or eg
-				mi.ord0, mi.ord1 = 0, (cw[g[9]] or cw[sr] or (sr and 8) or 0) * 1e16 + g[1]*g[3]*1e3 + (sr and g[1] or 0)
+				mi.ord1 = (cw[g[9]] or cw[sr] or (sr and 8) or 0) * 1e16 + g[1]*g[3]*1e3 + (sr and g[1] or 0)
 				
 				if order == "duration" then
 					mi.ord = -mi.durationSeconds
@@ -2787,15 +2875,19 @@ do -- availMissionsHandle
 				end
 				local tc = G.HasTentativeParty(mid)
 				if tc == mi.numFollowers then
-					mi.ord0, mi.reqCheckFailed = -1, false
+					mi.ord0 = -2
+				elseif checkReq and mi.numFollowers > (nf + tc) or (mi.cost > nr) then
+					mi.ord0 = -3
+				elseif MasterPlan:IsMissionIgnored(mi) then
+					mi.ord0 = -1
 				else
-					mi.reqCheckFailed = checkReq and mi.numFollowers > (nf + tc) or (mi.cost > nr)
+					mi.ord0 = 0
 				end
 			end
 			table.sort(missions, cmp)
 		end
 		function GetAvailableMissions()
-			local missions, droppedMissionCost = G.GetAvailableMissions()
+			local missions, droppedMissionCost = G.GetAvailableMissions(1)
 			securecall(sortMissions, missions, GetAvailableResources(1, droppedMissionCost, missions))
 			local job = securecall(G.GetSuggestedMissionUpgradeGroups, missions, roamingParty:GetFollowers())
 			availUI.loader.job = job
@@ -2860,7 +2952,7 @@ do -- availMissionsHandle
 		end
 	end
 	function EV:MP_SETTINGS_CHANGED(s)
-		if s == "availableMissionSort" or s == "timeHorizon" then
+		if s == "availableMissionSort" or s == "timeHorizon" or s == "missionIgnore" then
 			availMissionsHandle:Refresh(true)
 		end
 	end
@@ -2871,7 +2963,7 @@ do -- availMissionsHandle
 	end
 end
 do -- interestMissionsHandle
-	local usefulTraits, mappedRewards = setmetatable({}, T.AlwaysTraits), {}
+	local usefulTraits, mappedRewards = setmetatable({}, T.AlwaysTraits), Interest_RewardMap
 	local function Threat_OnEnter(self)
 		GameTooltip:SetOwner(self, "ANCHOR_TOP")
 		G.SetThreatTooltip(GameTooltip, self.id, nil, self.missionLevel)
@@ -2939,7 +3031,7 @@ do -- interestMissionsHandle
 			local me, s, best, fi = info.followerID, data.s, data.best, G.GetFollowerInfo()
 			for i=1,#GarrisonFollowerTooltip.Abilities do
 				local b = GarrisonFollowerTooltip.Abilities[i]
-				local tid, prefix = b:IsShown() and G.GetMechanicInfo((b.CounterIcon:GetTexture():lower():gsub("%.blp$", ""))), false
+				local tid, prefix = b:IsShown() and G.GetMechanicInfo(tostring(b.CounterIcon:GetTexture())), false
 				if tid then
 					for j=#s,6,-1 do
 						if s[j] == tid then
@@ -2957,8 +3049,10 @@ do -- interestMissionsHandle
 					usefulTraits[k] = 1
 				end
 			end
+			local ts = T.TraitStack[s[4]]
 			usefulTraits[best.ttrait or 0] = 1
-			usefulTraits[T.TraitStack[s[4]] or 0] = 1
+			usefulTraits[ts or 0] = 1
+			usefulTraits[ts == 79 and 256 or 0] = 1
 			usefulTraits[232] = best.dtrait
 			for i=1,data.s[2] do
 				local fi = fi[best[i]]
@@ -3012,6 +3106,7 @@ do -- interestMissionsHandle
 		t, b.altBG = b:CreateFontString(nil, "ARTWORK", "GameFontNormal"), t
 		t:SetPoint("TOP", b.level, "BOTTOM", 0, -1)
 		t:SetAlpha(0.8)
+		t:SetTextColor(0.83, 0.66, 0.45)
 		t, b.fc = b:CreateFontString(nil, "ARTWORK", "GameFontNormalHuge"), t
 		t, b.chance = b:CreateFontString(nil, "ARTWORK", "GameFontNormal"), t
 		t:SetPoint("TOP", b.chance, "BOTTOM", 0, -1)
@@ -3041,7 +3136,6 @@ do -- interestMissionsHandle
 	local unusedFollowers = CreateFrame("Button") do
 		unusedFollowers:SetSize(880, 38)
 		local c, t = {}, unusedFollowers:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-		t:SetText(L"Redundant followers:")
 		t:SetPoint("BOTTOM", unusedFollowers, "TOP", 0, 4)
 		unusedFollowers.ufollowers, unusedFollowers.label = c, t
 		for i=1,21 do
@@ -3052,6 +3146,7 @@ do -- interestMissionsHandle
 		end
 	end
 	local function SetUnusedFollowers(self, d)
+		local isRed = d.lType == "redundant"
 		self.veil:Hide()
 		self.altBG:Show()
 		for i=1,#self.rewards do
@@ -3069,15 +3164,16 @@ do -- interestMissionsHandle
 		self.seen:SetText("")
 		self.chance:SetText("")
 		self.fstack:SetText("")
-		self.mtype:SetTexture(0,0,0,0)
+		self.mtype:SetColorTexture(0,0,0,0)
 		unusedFollowers:SetParent(self)
 		unusedFollowers:SetPoint("BOTTOM")
+		unusedFollowers.label:SetText(isRed and L"Redundant followers:" or L"Inactive followers:")
 		local finfo, uf = G.GetFollowerInfo(), unusedFollowers.ufollowers
 		for i=1,#d do
 			local fb, fi = uf[i], finfo[d[i]]
 			if fb and fi then
 				fb.followerID = fi.followerID
-				fb.portrait:SetToFileData(fi.portraitIconID or 0)
+				fb.portrait:SetTexture(fi.portraitIconID or 0)
 				fb:Show()
 			end
 		end
@@ -3101,7 +3197,7 @@ do -- interestMissionsHandle
 		self.level:SetText(s[1])
 		self.title:SetText(mname ~= "" and mname or (L"Future Mission #%d"):format(d[1]))
 		self.loc:SetAtlas(T.MissionLocationBanners[d[2]] .. "-List")
-		self.fc:SetText(("|TInterface\\FriendsFrame\\UI-Toast-FriendOnlineIcon:11:11:3:0:32:32:8:24:8:24:214:170:115|t"):rep(s[2]))
+		self.fc:SetText(best and best.variants and ("|TInterface\\FriendsFrame\\UI-Toast-ChatInviteIcon:12:12:0:0:32:32:6:28:4:26:214:170:115|t: " .. best.variants) or ("|TInterface\\FriendsFrame\\UI-Toast-FriendOnlineIcon:11:11:3:0:32:32:8:24:8:24:214:170:115|t"):rep(s[2]))
 		self.veil:SetShown(d.redundantIgnored)
 
 		local mc, isAvailable, lastAppeared = T.MissionCoalescing[s[4]]
@@ -3138,24 +3234,28 @@ do -- interestMissionsHandle
 			local mlvl = blvl and blvl % 1e3 or d[2]
 			blvl = blvl and (blvl - mlvl) / 1e3
 			local fb, fi, usedGlow = self.followers[i], finfo[best[i]]
-			fb.followerID, fb.targetLevel = best[i], (mentor < mlvl or fi.garrFollowerID == T.MENTOR_FOLLOWER) and mlvl or 0
-			fb.portrait:SetToFileData(fi and fi.portraitIconID or 0)
-			fb.glow:Hide()
-			if fi.status == GARRISON_FOLLOWER_INACTIVE then
-				fb.portrait:SetVertexColor(0.2, 0.2, 1)
-			elseif fb.targetLevel > (mlvl > 100 and fi.iLevel or fi.level) then
-				fb.portrait:SetVertexColor(1, 0.6, 0.6)
-				fb.glow:Show()
-				fb.glow:SetVertexColor(1,0,0)
-				usedGlow = true
+			if not fi then
+				fb:Hide()
 			else
-				fb.portrait:SetVertexColor(1,1,1)
+				fb.followerID, fb.targetLevel = best[i], (mentor < mlvl or fi.garrFollowerID == T.MENTOR_FOLLOWER) and mlvl or 0
+				fb.portrait:SetTexture(fi and fi.portraitIconID or 0)
+				fb.glow:Hide()
+				if fi.status == GARRISON_FOLLOWER_INACTIVE then
+					fb.portrait:SetVertexColor(0.2, 0.2, 1)
+				elseif fb.targetLevel > (mlvl > 100 and fi.iLevel or fi.level) then
+					fb.portrait:SetVertexColor(1, 0.6, 0.6)
+					fb.glow:Show()
+					fb.glow:SetVertexColor(1,0,0)
+					usedGlow = true
+				else
+					fb.portrait:SetVertexColor(1,1,1)
+				end
+				if not usedGlow and muf % 2^i >= 2^(i-1) then
+					fb.glow:Show()
+					fb.glow:SetVertexColor(1, 0.8, 0)
+				end
+				fb:Show()
 			end
-			if not usedGlow and muf % 2^i >= 2^(i-1) then
-				fb.glow:Show()
-				fb.glow:SetVertexColor(1, 0.8, 0)
-			end
-			fb:Show()
 		end
 		for i=nf+1, #self.followers do
 			self.followers[i]:Hide()
@@ -3168,8 +3268,9 @@ do -- interestMissionsHandle
 		end
 		if best and best[4] and nf > 0 then
 			local nf = T.UniqueTraits[T.TraitStack[s[4]]] or nf
+			local ms = nf * (T.MaxTraitStack[s[4]] or 1)
 			self.chance:SetPoint("RIGHT", -70, 6)
-			self.fstack:SetText(best[4] .. "/" .. nf .. " |T" .. C_Garrison.GetFollowerAbilityIcon(T.TraitStack[s[4]]) .. ":0:0:0:0:64:64:4:60:4:60|t")
+			self.fstack:SetText(best[4] .. "/" .. ms .. " |T" .. C_Garrison.GetFollowerAbilityIcon(T.TraitStack[s[4]]) .. ":0:0:0:0:64:64:4:60:4:60|t")
 			local r, g, b = 0.1, 1, 0.1
 			if best[4] < nf then r, g, b = 1, 0.55, 0 end
 			self.fstack:SetTextColor(r,g,b)
@@ -3211,40 +3312,37 @@ do -- interestMissionsHandle
 			return ac
 		end
 		function updateRedundantFollowers(missions)
-			local mask, mt = T.config.interestMask, T.InterestMask
-			if missions.imask == mask then
-				return
-			end
-			
 			local finfo = G.GetFollowerInfo()
-			local uf, ua, hasUE, hasInactive = {}, unusedEntry.unused, missions[1] == unusedEntry
+			local uf, ua, hasInactive = {}, unusedEntry.unused
+			wipe(ua)
+			
 			for k, v in pairs(finfo) do
 				if v.status ~= GARRISON_FOLLOWER_INACTIVE and v.status ~= GARRISON_FOLLOWER_WORKING and not T.config.ignore[k] and v.followerTypeID == 1 then
 					uf[k] = true
 				end
 			end
-			for i=hasUE and 2 or 1,#missions do
+			for i=1,#missions do
 				local mi = missions[i]
-				local mb, b = mt[mi[5] or mi.s[4]] or 0, mi.best
-				local keep =  b and (mask % 2^mb < 2^(mb-1))
+				local b, keep = mi.best, G.IsInterestedInMoI(mi)
 				mi.redundantIgnored, mi.ord = not keep, mi.ord or i
-				if keep then
+				if b and keep then
 					local muf = b and b.used
 					for j=1, mi.s[2] do
-						if muf % (2^j) >= 2^(j-1) then
+						if finfo[b[j]].status == GARRISON_FOLLOWER_INACTIVE then
+							if not hasInactive then
+								wipe(uf)
+							end
+							hasInactive, uf[b[j]] = true, 1
+						elseif not hasInactive and muf % (2^j) >= 2^(j-1) then
 							uf[b[j] or 0] = nil
 						end
-						hasInactive = hasInactive or (finfo[b[j]].status == GARRISON_FOLLOWER_INACTIVE)
 					end
 				end
 			end
 			table.sort(missions, mcmp)
 			
-			wipe(ua)
-			if not hasInactive then
-				for k in pairs(uf) do
-					ua[#ua + 1] = k
-				end
+			for k in pairs(uf) do
+				ua[#ua + 1] = k
 			end
 			
 			if #ua > 0 then
@@ -3256,80 +3354,56 @@ do -- interestMissionsHandle
 					end
 					return ac < bc
 				end)
-				if not hasUE then
-					table.insert(missions, 1, unusedEntry)
-				end
-			elseif hasUE then
-				table.remove(missions, 1)
+				ua.lType = hasInactive and "inactive" or "redundant"
+				table.insert(missions, 1, unusedEntry)
 			end
 		end
 	end
-	local updateInterestMissions do
-		local drop = {}
-		function updateInterestMissions()
-			local ts, ls, mp, ni = T.TraitStack, T.config.legendStep, T.InterestPool, 1
-			local c2, c3 = ls > 0 or IsQuestFlaggedCompleted(35998), ls > 1 or IsQuestFlaggedCompleted(36013)
-			T.config.legendStep, drop[115280], drop[115510] = c3 and 2 or c2 and 1 or nil, c2, c3
-			drop[35] = not (C_Garrison.GetOwnedBuildingInfoAbbrev(25) == 36 or C_Garrison.GetOwnedBuildingInfoAbbrev(22) == 36)
-		
-			for i=1,#mp do
-				local m = mp[i]
-				if not (drop[m[4]] or drop[m.s[4]]) then
-					missions[ni], ni = m, ni + 1
-				end
-			end
-			for i=ni,#missions do
-				missions[i] = nil
-			end
-		
-			for k,r in pairs(T.MissionRewardSets) do
-				for i=1,#r do
-					local c, r = 0, r[i]
-					for i=3,r[2] > 0 and #r or 0 do
-						c = c + (tonumber(GetStatistic(r[i]) or 0) or 0)
-					end
-					if c >= r[2] then
-						mappedRewards[k], r[2], ts[k] = r[1], 0, ts[k] or r.ts
-						break
-					end
+	local function updateDisplayFromInfo(info)
+		wipe(missions) do
+			local ni = 1
+			for i, m, b in G.MoIMissions(1, info) do
+				if not m.drop then
+					missions[ni], ni, m.best = m, ni + 1, b
 				end
 			end
 		end
-	end
-	local function loadAndRefresh(id, includeInactive)
-		interestMissionsHandle.ident = nil
-		core:SetData(emptyTable, interestMissionsHandle)
-		updateInterestMissions()
-		G.UpdateGroupEstimates(missions, includeInactive, coroutine.yield)
-		missions.imask = nil
+		local ts = T.TraitStack
+		for k,r in pairs(T.MissionRewardSets) do
+			for i=1,#r do
+				local c, r = 0, r[i]
+				for i=3,r[2] > 0 and #r or 0 do
+					c = c + (tonumber(GetStatistic(r[i]) or 0) or 0)
+				end
+				if c >= r[2] then
+					mappedRewards[k], r[2], ts[k] = r[1], 0, ts[k] or r.ts
+					break
+				end
+			end
+		end
 		updateRedundantFollowers(missions)
-		interestMissionsHandle.ident = id
-		coroutine.yield(2, 100,100)
-		if core:IsOwned(interestMissionsHandle) then
-			core:SetData(missions, interestMissionsHandle)
-		end
+		return missions
 	end
 	function interestMissionsHandle:Show(includeInactive)
-		local id = G.GetFollowerIdentity(includeInactive, false)
 		interestUI.excludeInactive:SetChecked(not includeInactive)
-		if id ~= interestMissionsHandle.ident then
-			local job = coroutine.create(loadAndRefresh)
-			interestUI.loader.job = job, coroutine.resume(job, id, includeInactive)
+		local info, job = G.GetBestGroupInfo(1, includeInactive, true)
+		if not info then
+			core:SetData(emptyTable, interestMissionsHandle)
+			interestUI.loader.job = job
 			interestUI.loader:Show()
 			return
-		elseif not core:IsOwned(interestMissionsHandle) then
-			updateRedundantFollowers(missions)
-			core:SetData(missions, interestMissionsHandle)
 		else
-			updateRedundantFollowers(missions)
-			core:Refresh()
+			interestUI.loader:Hide()
+		end
+		core:SetData(updateDisplayFromInfo(info), interestMissionsHandle)
+	end
+	function EV:MP_MOI_GROUPS_READY()
+		if core:IsOwned(interestMissionsHandle) and core:IsShown() then
+			interestMissionsHandle:Show(not interestUI.excludeInactive:GetChecked())
 		end
 	end
 	function EV:MP_RELEASE_CACHES()
-		interestMissionsHandle.ident = nil
-		for i=1,#missions do
-			missions[i].best = nil
-		end
+		missions, interestMissionsHandle.ident = {}
 	end
 end
 do -- Ships
@@ -3337,12 +3411,18 @@ do -- Ships
 		local f = CreateFrame("FRAME", nil, parent)
 		f:SetAllPoints()
 		for i=1,2 do
-			local t = f:CreateTexture()
-			t:SetSize(22-6*i, 22-6*i)
+			local t = f:CreateTexture(nil, "ARWORK", nil, i)
+			t:SetSize(22-5*i, 22-5*i)
 			t:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMaskSmall")
 			t:SetPoint("CENTER", f, "TOPRIGHT", -12, -12)
 			f[i == 1 and "outer" or "inner"] = t
 		end
+		local t = f:CreateTexture(nil, "ARWORK", nil, 3)
+		t:SetSize(12, 5)
+		t:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMaskSmall")
+		t:SetTexCoord(0, 1, 7/12, 1)
+		t:SetPoint("BOTTOM", f.inner, "BOTTOM")
+		f.innerLow = t
 		f.outer:SetVertexColor(0.2, 0.2, 0.2)
 		f.inner:SetVertexColor(0, 1, 0)
 		
@@ -3410,6 +3490,22 @@ do -- Ships
 			end
 		end)
 	end
+	local function getGroupColor(s)
+		local c = T.config
+		if not s then
+			return 0.4, 0.4, 0.4
+		elseif s == 100 then
+			return 0.2, 0.7, 1
+		elseif c.ship4 > s then
+			return 0.6, 0, 0
+		elseif c.ship3 > s then
+			return 1, 0.4, 0
+		elseif c.ship2 > s then
+			return 1, 0.9, 0
+		elseif c.ship1 > s then
+			return 0.2, 1, 0.2
+		end
+	end
 	local function UpdateShipMissionMap()
 		local self = GarrisonShipyardFrame.MissionTab.MissionList
 		local sg = G.GetSuggestedGroupsForAllMissions(2)
@@ -3423,25 +3519,19 @@ do -- Ships
 				fg = fg and not G.GetMissionGroupDeparture(fg, mission) and fg
 				lg = lg and lg ~= fg and G.GetMissionGroupDeparture(lg, mission) and lg
 
-				local s, c, nt, r, g, b = fg and fg[1], T.config, G.HasTentativeParty(mission.missionID), 0.2, 0.7, 1
+				local nt, r, g, b, r2, g2, b2 = G.HasTentativeParty(mission.missionID)
 				if nt == mission.numFollowers then
 					r,g,b = 1, 0.2, 0.6
 				elseif nt > 0 then
 					r,g,b = 0.6, 0.2, 1
 				elseif (mission.cost or 0) > oil then
 					r,g,b = 1/4, 1/4, 1/4
-				elseif not s then
-					r,g,b = 0.4, 0.4, 0.4
-				elseif c.ship4 > s then
-					r,g,b = 0.6, 0, 0
-				elseif c.ship3 > s then
-					r,g,b = 1, 0.4, 0
-				elseif c.ship2 > s then
-					r,g,b = 1, 0.9, 0
-				elseif c.ship1 > s then
-					r,g,b = 0.2, 1, 0.2
+				else
+					r,g,b = getGroupColor(fg and fg[1])
+					r2, g2, b2 = getGroupColor(lg and lg[1] or fg and fg[1])
 				end
 				ui.inner:SetVertexColor(r,g,b)
+				ui.innerLow:SetVertexColor(r2 or r, g2 or g, b2 or b)
 				ui:Show()
 			elseif frame.MPUI then
 				frame.MPUI:Hide()
@@ -3464,7 +3554,7 @@ do -- Ships
 			end
 		end
 		hooksecurefunc("GarrisonShipyardMap_UpdateMissions", enqueueUpdate)
-		GarrisonShipyardFrame.MissionTab.MissionList:HookScript("OnShow", enqueueUpdate)
+		HookOnShow(GarrisonShipyardFrame.MissionTab.MissionList, enqueueUpdate)
 	end
 	local CreateGroupButton do
 		local function ShipGroupButton_OnEnter(self)
@@ -3536,7 +3626,7 @@ do -- RefreshActiveMissionsView
 	end
 end
 function EV:GET_ITEM_INFO_RECEIVED()
-	if core:IsShown() then
+	if core:IsVisible() then
 		core:Refresh()
 	end
 end
@@ -3580,7 +3670,7 @@ do -- periodic comleted missions check
 			isTimerRunning = false
 		end
 	end
-	GarrisonMissionFrame:HookScript("OnShow", function()
+	HookOnShow(GarrisonMissionFrame, function()
 		if not isTimerRunning then
 			timer()
 		end
@@ -3609,3 +3699,16 @@ function api:SetMissionsUI(tab)
 	EV("MP_SHOW_MISSION_TAB", tab)
 end
 T.MissionsUI = api
+
+function EV:ADDON_LOADED(a)
+	if a ~= "MasterPlan" then return end
+	missionList:Show()
+	if GarrisonMissionFrameMissions.CompleteDialog:IsShown() then
+		GarrisonMissionFrameMissions.CompleteDialog:Hide()
+	end
+	if GarrisonMissionFrame:IsShown() then
+		T.UpdateMissionTabs()
+		GarrisonMissionFrame:CheckCompleteMissions(true)
+	end
+	return "remove"
+end

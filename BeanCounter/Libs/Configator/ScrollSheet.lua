@@ -1,7 +1,7 @@
 --[[
 	ScrollSheet
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
-	Revision: $Id: ScrollSheet.lua 382 2015-03-08 17:49:25Z brykrys $
+	Version: 7.1.5675 (TasmanianThylacine)
+	Revision: $Id: ScrollSheet.lua 406 2016-07-31 13:26:09Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 
 	License:
@@ -30,7 +30,7 @@ local LIBRARY_VERSION_MINOR = 22
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/ScrollSheet.lua $","$Rev: 382 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/ScrollSheet.lua $","$Rev: 406 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local GSC_GOLD="ffd100"
 local GSC_SILVER="e6e6e6"
@@ -674,14 +674,14 @@ function lib:Create(frame, layout, onEnter, onLeave, onClick, onResize, onSelect
 		local colorTex = content:CreateTexture()
 		colorTex:SetPoint("TOPLEFT", row[1], "TOPLEFT", 0,0)
 		colorTex:SetPoint("BOTTOMRIGHT", row[#layout], "BOTTOMRIGHT", 0, 1)
-		colorTex:SetTexture(1, 1, 1)
+		colorTex:SetColorTexture(1, 1, 1)
 		row.colorTex = colorTex
 		--create a highlight texture for row selection, replaces the per cell highlight system
 		local highlight = content:CreateTexture()
 		highlight:SetPoint("TOPLEFT", row[1], "TOPLEFT", 0,0)
 		highlight:SetPoint("BOTTOMRIGHT", row[#layout], "BOTTOMRIGHT", 0, 1)
 		highlight:SetAlpha(0)
-		highlight:SetTexture(.8, .6, 0)
+		highlight:SetColorTexture(.8, .6, 0)
 		row.highlight = highlight
 
 		rows[rowNum] = row

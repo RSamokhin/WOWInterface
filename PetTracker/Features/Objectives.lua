@@ -35,8 +35,8 @@ end
 function Objectives:Startup()
 	local header = CreateFrame('Button', nil, self, 'ObjectiveTrackerHeaderTemplate')
 	header:SetScript('OnClick', self.ToggleOptions)
-	header.Text:SetText(Addon.Locals.BattlePets)
 	header:SetPoint('TOPLEFT')
+	header.Text:SetText(PETS)
 	header:Show()
 
 	self.Anchor:SetPoint('TOPLEFT', header, 'BOTTOMLEFT', -4, -10)
@@ -75,17 +75,7 @@ end
 --[[ API ]]--
 
 function Objectives:GetUsedHeight()
-	local height = 0
-
-	for i, mod in pairs(ObjectiveTrackerFrame.MODULES or {}) do -- can't trust blizzard value
-		if mod.lastBlock then
-			local top, bottom = mod.Header:GetTop(), mod.lastBlock:GetBottom()
-			if top and bottom then
-				height = height + top - bottom + 15
-			end
-		end
-	end
-
+	local height = DEFAULT_OBJECTIVE_TRACKER_MODULE.BlocksFrame.contentsHeight + 15
 	for i = 1, self.Index-1 do
 		height = height + OBJECTIVE_TRACKER_ADDONS[i]
 	end

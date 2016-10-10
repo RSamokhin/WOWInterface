@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreTimeLeft
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
+	Version: 7.1.5675 (TasmanianThylacine)
 	Revision: $Id: FilterTimeLeft.lua 5368 2012-09-29 09:50:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -110,4 +110,4 @@ function lib.PostFilter(item, searcher, buyorbid)
 	return false
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Util-SearchUI/FilterTimeLeft.lua $", "$Rev: 5368 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-SearchUI/FilterTimeLeft.lua $", "$Rev: 5368 $")

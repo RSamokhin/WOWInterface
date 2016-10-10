@@ -1,6 +1,6 @@
 ﻿if GetLocale() ~= "ruRU" then return end
 
-DBM_CORE_NEED_SUPPORT				= "Вы - программист или хороший переводчик? Нам нужна ваша помощь в локализации DBM на другие языки! Если вы можете помочь, посетите наш форум |HDBM:localizersneeded|h|cff3588ffнажав здесь|r"
+DBM_CORE_NEED_LOCALS				= "Вы - программист или хороший переводчик? Нам нужна ваша помощь в локализации DBM на другие языки! Если вы можете помочь, посетите наш форум |HDBM:localizersneeded|h|cff3588ffнажав здесь|r"
 DBM_CORE_NEED_LOGS					= "DBM needs Transcriptor (http://www.wowace.com/addons/transcriptor/) logs of these test fights to make best mods possible. If you want to help, log these fights with transcriptor and post them to our forums. Only interested in 7.0 raid & dungeon logs."
 DBM_HOW_TO_USE_MOD					= "Добро пожаловать в DBM. Для доступа к настройкам наберите /dbm в чате. При желании, загрузите определенные зоны вручную для изменений специфических настроек для каждого босса. DBM пытается подстраиваться под вас на основе вашей специализации на момент первого запуска, но некоторые могут захотеть включить дополнительные опции."
 
@@ -17,7 +17,7 @@ DBM_CORE_BAD_LOAD					= "DBM не удалось полностью загруз
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s не может быть загружен потому что ваш DBM-Core не соответствует требованиям. Требуется обновленная версия."
 
 --DBM_CORE_WHATS_NEW				= "Новое в этой версии: настройки для встроенных в таймеры иконок и пользовательские настройки цвета индикатора."
-DBM_CORE_WHATS_NEW_LINK				= "Новое в этой версии: настройки для встроенных в таймеры иконок и пользовательские настройки цвета индикатора. Вы можете узнать больше о новых возможностях |HDBM:forumsnews|h|cff3588ffнажав здесь|r"
+--DBM_CORE_WHATS_NEW_LINK				= "Новое в этой версии: настройки для встроенных в таймеры иконок и пользовательские настройки цвета индикатора. Вы можете узнать больше о новых возможностях |HDBM:forumsnews|h|cff3588ffнажав здесь|r"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM отключил динамическое окно проверки дистанции на этом боссе, т.к. нет точной информации о необходимом количестве игроков в одном скоплении для рейда вашего размера."
 DBM_CORE_DYNAMIC_ADD_COUNT			= "DBM отключил предупреждения о появлении помощников на этом боссе, т.к. нет точной информации о количестве помощников, которые появляются в рейде вашего размера."
@@ -137,8 +137,8 @@ DBM_CORE_WHISPER_SCENARIO_END_WIPE			= "%s не завершил %s"
 DBM_CORE_WHISPER_SCENARIO_END_WIPE_STATS	= "%s не завершил %s. Общее количество незавершенных у них - %d."
 
 DBM_CORE_VERSIONCHECK_HEADER		= "Boss Mod - Версии"
-DBM_CORE_VERSIONCHECK_ENTRY			= "%s: %s (r%d)"--One Boss mod
-DBM_CORE_VERSIONCHECK_ENTRY_TWO		= "%s: %s (r%d) и %s (r%d)"--Two Boss mods
+DBM_CORE_VERSIONCHECK_ENTRY			= "%s: %s (%s)"
+DBM_CORE_VERSIONCHECK_ENTRY_TWO		= "%s: %s (%s) & %s (%s)"--Two Boss mods
 DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s: Boss Mod не установлен"
 DBM_CORE_VERSIONCHECK_FOOTER		= "Найдено %d |4игрок:игрока:игроков; с DBM и %d |4игрок:игрока:игроков; с Bigwigs"
 DBM_CORE_VERSIONCHECK_OUTDATED		= "Следующие %d игрок(и) имеют устаревшую версию: %s"
@@ -146,8 +146,6 @@ DBM_CORE_YOUR_VERSION_OUTDATED      = "Ваша версия Deadly Boss Mods у
 DBM_CORE_VOICE_PACK_OUTDATED		= "В вашем голосовом пакете DBM отсутствуют звуки, поддерживаемые этой версией DBM. Фильтр звуков спец-предупреждений был отключен. Пожалуйста скачайте обновленную версию голосового пакета или свяжитесь с автором для обновления, которое содержит отсутствующие звуковые файлы."
 DBM_CORE_VOICE_MISSING				= "Выбранный вами голосовой пакет DBM не найден. Ваш выбор был сброшен на 'None'. Если это ошибка, убедитесь что ваш голосовой пакет правильно установлен и включен в модификациях."
 DBM_CORE_VOICE_COUNT_MISSING		= "Countdown voice %d is set to a voice pack that could not be found. It has be reset to default settings."
---DBM_BIG_WIGS
---DBM_BIG_WIGS_ALPHA
 
 DBM_CORE_UPDATEREMINDER_HEADER			= "Ваша версия Deadly Boss Mods устарела.\n Версия %s (r%d) доступна для загрузки здесь:"
 DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "Ваша альфа версия Deadly Boss Mods устарела.\n Вы по крайней мере %d тестовых версий позади. Пользователям DBM рекомендуется использовать последнюю альфа или последнюю стабильную версию. Устаревшие альфы могут привести к плохой или неполной функциональности."
@@ -162,7 +160,6 @@ DBM_CORE_VEM							= "ПРЕДУПРЕЖДЕНИЕ: Вы используете 
 DBM_CORE_3RDPROFILES					= "ПРЕДУПРЕЖДЕНИЕ: DBM-Profiles не совместим с этой версией DBM. Он должен быть удален прежде чем DBM сможет продолжить, чтобы избежать конфликтов."
 DBM_CORE_UPDATE_REQUIRES_RELAUNCH		= "ПРЕДУПРЕЖДЕНИЕ: Это обновление DBM не будет работать корректно если вы не перезапустите игровой клиент. Это обновление содержит новые файлы или изменения в .toc файле, которые не могут быть загружены через ReloadUI. Вы можете столкнуться со сломанной функциональностью или ошибками если продолжите без перезапуска клиента."
 DBM_CORE_OUT_OF_DATE_NAG				= "Ваша версия Deadly Boss Mods устарела и Вы выбрали опцию игнорировать всплывающее уведомление. Рекомендуется обновиться, чтобы не было отсутствующих важных предупреждений или таймеров, или крика от Вас, на который рассчитывает остальной рейд."
-DBM_CORE_DISABLED_REMINDER				= "НАПОМИНАНИЕ: Deadly Boss Mods загружен, но отключен в настройках. Чтобы включить, пропишите /dbm в чате и отметьте 'Включить DBM' в 'Настройки/Общие параметры'"
 
 DBM_CORE_MOVABLE_BAR				= "Перетащите!"
 
@@ -316,7 +313,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect 			= "%s на |3-5(>%%s<) - прекрат
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.count 			= "%s! (%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack 			= "На вас %%d стаков от %s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch 			= "%s - переключитесь"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount 		= "%s - переключитесь (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount 		= "%s - переключитесь (%%s)"
 
 -- Auto-generated Special Warning Localizations
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell 			= "Спец-предупреждение для $spell:%s"

@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - AH-WindowControl
-	Version: 5.21f.5579 (SanctimoniousSwamprat)
+	Version: 7.1.5675 (TasmanianThylacine)
 	Revision: $Id: Auc-Util-AHWindowControl.lua 5575 2015-10-20 15:22:40Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -305,4 +305,4 @@ function private.AdjustProtection()
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21f/Auc-Util-AHWindowControl/Auc-Util-AHWindowControl.lua $", "$Rev: 5575 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-AHWindowControl/Auc-Util-AHWindowControl.lua $", "$Rev: 5575 $")

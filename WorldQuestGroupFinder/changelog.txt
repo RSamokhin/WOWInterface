@@ -1,0 +1,105 @@
+0.10.6 (27/09/2016)
+- World quest area entered dialog now shows while dead
+- Group search timeout is now 20 seconds
+- World bosses shoud now be doable in raid
+- Translations fixes
+
+0.10.5 (27/09/2016)
+- Fixed typos
+
+0.10.4 (27/09/2016)
+- Back from vacation! :)
+- The group creation loop bug should be fixed.
+
+0.10.3 (20/09/2016)
+- Fixed the sometimes occuring group creation failures on non-english game clients (caused by special characters; was occuring often on russian clients)
+- World quest ending process is now correctly triggered when the world quest was started by the group leader
+
+0.10.2 (20/09/2016)
+- Trade world quests added to the blacklist
+- "World quest completed" message added in 0.10.1 will no longer appear when debug is disabled, sorry!
+
+0.10.1 (19/09/2016)
+- It is now possible to use WQGF in the Eye of Azshara
+- All of the WQs that can be accomplished in a raid group should now be flagged as such in the addon
+
+0.10 (18/09/2016)
+- Added a new option to automatically accept group invites
+- The world quest frame's size now adjust when new objectives are added
+- Possible fix for LUA error that sometimes occurs when applying to multiple groups at the same time
+- More quests can now be done in a raid group
+- Raid mode group warning was broken and is back
+
+0.9.2 (17/09/2016) 
+- Added a list of world quests that are completable in raid mode. These will no longer be restricted to party mode and 5 players. The list will be filled over time when I test the WQs in raid mode. If you know some WQs that work in raid mode let me know their IDs!
+- Added an option to remove the init message at login
+
+0.9.1 (16/09/2016) 
+- Reverted previous change for elite quests. Looks like some of them aren't eligible for raid groups.
+- Group leader won't broadcast that the group is no longer doing the current world quest anymore when he completes it.
+- Added Portuguese translation by Lobeom. Thanks!
+
+0.9 (16/09/2016) 
+- Removed party mode restriction for elite world quests
+- Fixed LUA error when joining a WQ group after applying to multiple groups with auto-invite
+- Location names are now localized in the client's language
+- Added WQGF version in the description of created groups
+
+0.8 (16/09/2016)
+- Fixed a critical bug that was causing players from servers with spaces in the name to spam other players using the addon
+- Fixed a bug that could cause too many players to be auto-invited into the group and thus converting the party into a raid
+- The creation success of a new group finder entry is now checked, avoiding a rare bug that caused the addon to believe the player was currently grouped for a world quest even though the entry creation failed
+- The parameters labels have been updated to make them more understandable
+- Various small bug fixes
+
+0.7.1 (15/09/2016)
+- Clicking on a world quest with shift key down will no longer trigger the addon
+- Fixed the broken dialogs, sorry!
+
+0.7 (15/09/2016)
+- Added a custom auto-invite function which will automatically invite group applicants, prioritizing WQGF users. It will stop auto inviting when the group is full (and won't ask to switch to raid mode). Also, it should reduce the amount of realm hoppers encountered as the group is not listed as an "auto-invitation group". 
+	- "Auto-invite everyone" is now enabled by default
+	- It is still possible to choose use the default WoW auto-invite function in the addon's options. Choosing this will override the custom auto-invite function.
+- WQGF will now try to switch the group back to party mode if for whatever reason it is in raid mode.
+- Group applications will now be canceled after 45 seconds if no answer is given. WQGF will then try to find another group or will create your own.
+- WQGF will no longer apply for a group if you previously cancelled your apply or declined an invitation to join it
+- The "find group" dialog that appears when entering a world quest's area area will now disappear when leaving the area
+- Fixed the "find group" dialog appearing for blacklisted quests
+
+
+0.6 (15/09/2016)
+- WQGF won't try to find/create a group anymore when queued for a dungeon, raid or battleground
+- Added a world quest blacklist for WQs that don't require groups (like "Withered Army Training"). Will need to fill it over time :)
+- Profession world quests are now excluded
+- Fixed bug when changing current WQ while still currently doing another
+
+0.5.1 (14/09/2016)
+- Fixed an issue with default parameter values
+- All parameters are now account wide. As a result of this, your current parameters will be reset.
+
+0.5 (14/09/2016)
+- Added a new option (which is enabled by default) to automatically invite other WQGF users in your world quest groups
+- Users will now apply to existing groups with the roles they have selected in the dungeon finder tool window. If no role is selected, all available roles will be selected (as it was previously done)
+- Removed a leftover debug print from the code, sorry!
+
+0.4 (13/09/2016)
+- The current world quest is now always tracked and surrounded by a frame, indicating that it is the current quest being done by the group
+- Added internal party addon communication. If the leader of the group has the addon, every other user in the group will get notified when he starts doing a new world quest and will automatically start tracking it (if eligible)
+- Current world quest in now saved, so the addon won't lose track of it after reloading or reconnecting
+- It is not possible anymore to search/create a group if not the current group leader
+- It is now possible to find/create a group by right clicking on a quest in the objective tracker as the option has been added to the contextual menu. 
+- Various text issues have been fixed
+
+0.3 (13/09/2016)
+- WQGF will now ask the player if he wants to find a group when entering a new world quest zone. It is also possible to enable automatic group finding when entering a world quest zone. This is configurable in the addon's settings.
+- It is no longer possible to find/create groups for pet battle and dungeon world quests.
+
+0.2 (12/09/2016)
+- Fixed variable name typo
+- Bug fixes
+
+0.1.1 (12/09/2016)
+- Fixed French translation
+
+0.1 (12/09/2016)
+- First public version

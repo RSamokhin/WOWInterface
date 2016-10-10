@@ -82,6 +82,7 @@ local function getProgressString(q, t, qs)
     return q.."/"..t;
   end
 end
+Overachiever.GetCriteriaProgressString = getProgressString
 
 local function AppendProgressToTooltip(tooltip, id, GUID)
   local text = (PlayerGUID == GUID) and L.PROGRESS or L.YOURPROGRESS;
@@ -151,7 +152,7 @@ function Overachiever.ExamineAchievementTip(tooltip, link)
        Overachiever_Settings.Tooltip_ShowProgress_Other or Overachiever_Settings.Tooltip_ShowID) ) then
     local _, _, id = strfind(link, "achievement:(.+):")
     if (id) then
-      PlayerGUID = PlayerGUID or strsub(UnitGUID("player"), 3)
+      PlayerGUID = PlayerGUID or UnitGUID("player")
       local GUID
       id, GUID = strsplit(":", id);
       if (Overachiever.DEBUG_NoPlayerGUID) then  GUID = "NotMe";  end
