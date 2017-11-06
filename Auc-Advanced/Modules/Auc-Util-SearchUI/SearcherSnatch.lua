@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Snatch
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: SearcherSnatch.lua 5636 2016-08-02 20:17:12Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: SearcherSnatch.lua 5710 2017-02-21 13:12:26Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -406,7 +406,13 @@ function private.OnEnterSnatch(button, row, index)
 		if link then
 			GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
 			if link:match("|Hitem:%d") then
-				GameTooltip:SetHyperlink(link)
+				-- Some old-style links may be saved, which can cause problems for other Addons
+				-- As a workaround we shall pass them through GetItemInfo to 'fix' them
+				-- todo: fix saved copies of all links
+				local _, fixedlink = GetItemInfo(link)
+				if fixedlink then
+					GameTooltip:SetHyperlink(fixedlink)
+				end
 			elseif link:match("|Hbattlepet:%d") then
 				local _, speciesID, level, breedQuality, maxHealth, power, speed, battlePetID = strsplit(":", link)
 				-- BattlePetToolTip_Show gets the anchor point from GameTooltip
@@ -475,8 +481,8 @@ function lib.Search(item)
 	end
 	return false, "Not in snatch list"
 end
---Rescan is an optional method a searcher can implement that allows it to queue a rescan of teh ah
---Just pass any itemlinks you want rescaned
+--Rescan is an optional method a searcher can implement that allows it to queue a rescan of the AH
+--Just pass any itemlinks you want rescanned
 function lib.Rescan()
 	for itemsig, iteminfo in pairs(private.snatchList) do
 		local link = iteminfo.link
@@ -486,7 +492,7 @@ function lib.Rescan()
 	end
 end
 
---[[Snatch GUI functinality code]]
+--[[Snatch GUI functionality code]]
 function lib.AddSnatch(itemlink, price, percent, count)
 	local itemsig = GetSnatchSig(itemlink)
 	if not itemsig then return end
@@ -620,4 +626,4 @@ function private.refreshDisplay()
 	frame.pctBox.help:SetText(format("Buy as percent of %s value", get("snatch.price.model") or "market") )
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-SearchUI/SearcherSnatch.lua $", "$Rev: 5636 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Util-SearchUI/SearcherSnatch.lua $", "$Rev: 5710 $")

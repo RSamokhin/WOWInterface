@@ -3,6 +3,99 @@ if not TMW then return end
 TMW.CHANGELOG_LASTVER="6.2.6"
 
 TMW.CHANGELOG = [==[
+===v8.4.2===
+* Version bump & additional fixes for patch 7.3.0.
+
+===v8.4.1===
+* Compatibility updates for patch 7.3.0.
+* The Guardian icon type (Warlock) now has sort settings.
+* Added Light's Hammer tracking to the totem/Consecration icon type.
+* Added Soul Shard fragment tracking to conditions & Resource Display icons.
+* Increased Astral Power condition cap to 130.
+* Added newer drums to the BurstHaste equivalency.
+
+====Bug Fixes====
+* Fixed dropdown scaling issues.
+
+===v8.4.0===
+* Compatibility updates for patch 7.2.5.
+
+===v8.3.3===
+====Bug Fixes====
+* Fixed the Equipment set equipped condtion.
+
+===v8.3.2===
+* Version bump for Patch 7.2.
+
+===v8.3.1===
+* Added a Spell Activation Overlay condition.
+
+====Bug Fixes====
+* Lua conditions should once again properly resolve members defined in TMW.CNDT.Env.
+
+===v8.3.0===
+* New setting for Reactive Ability icons: Require activation border. 
+** For all you prot warriors who like your Revenge procs.
+* New Condition: Spell Cost.
+* Updated the class spell list
+* Demon Hunter resource condition slider limits are now flexible.
+
+===v8.2.6===
+====Bug Fixes====
+* Increased Combo Points condition max to 10.
+* Guardian icons should now detect deaths from Implosion.
+* Fixed duration sorting on buff/debuff icons.
+
+===v8.2.5===
+* Updates for patch 7.1.5, including:
+** Fixed role detection bug caused by GetSpecializationInfo losing a parameter.
+** Fixed invalid equivalency spell warnings from breaking all equivalencies.
+** Removed some invalid spells from equivalencies.
+
+===v8.2.4===
+* Changed behavior of the On Combat Event notification trigger slightly to avoid occasional undesired timing issues (Ticket 1352).
+* Added conditions for Monks to check their stagger under the Resources condition category.
+
+====Bug Fixes====
+* Fixed BigWigs conditions for the latest BigWigs update.
+
+===v8.2.3===
+* Improved behavior of exporting to other players.
+
+===v8.2.2===
+* Packaging latest version of LibDogTag-Unit-3.0.
+
+===v8.2.1===
+* You can now change bar textures on a per-group basis.
+* Added some missing currency definitions.
+
+====Bug Fixes====
+* Fixed updating of class-specific resource conditions for non-player units.
+* On Start and On Finish notification triggers should no longer spaz out and trigger excessively.
+* Meta icons should now always use the correct unit when evaluating the DogTags used in their text displays.
+* Fixed meta icon rearranging.
+* Fixed tooltip number conditions for locales that use commas as their decimal separator.
+
+===v8.2.0===
+* New Icon Type: Guardians. Currently only implemented for Warlocks to track their Wild Imps/Dreadstalkers/etc.
+* Support for Patch 7.1.
+
+* New DogTag: MaxDuration
+* Controlled icons can now be selected as a target of Meta icons and Icon Shown conditions.
+* Cooldown sweeps that are displaying charges during a GCD when the GCD is allowed will now show the GCD.
+* You can now flip the origin of progress bars to the right side of the icon.
+* New Notification Triggers: On Charge Gained and On Charge Spent
+
+====Bug Fixes====
+* Fixed an issue that would cause unintentional renaming of text layouts. 
+* Fixed an issue with text colors after a chat link in Raid Warning (Fake) text notification handlers.
+* Fixed an issue with timer/status bars briefly showing their old value when they are first shown.
+* Fixed a few bugs relating to improper handling of the icon type name of some variants of the totem icon type.
+* Fixed an issue with Condition-triggered animations not being able to stop for non-icon-based animations.
+* Fel Rush and Infernal Strike should now work with the Last Ability Used condition.
+* On Show/On Hide notification triggers should now work on controlled icons.
+* All-Unit Buffs/Debuffs icons should now work correctly for infinite duration effects. They're also a bit better now at cleaning up things that expired.
+
 ===v8.1.2===
 * Restored the old Buff/Debuff duration percentage conditions, since they still have applications for variable-duration effects like Rogue DoTs.
 

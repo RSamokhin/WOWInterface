@@ -1,7 +1,7 @@
 ﻿--[[
 	DebugLib - An embedded library which works as a higher layer for nLog,
 	by providing easier usage of debugging features.
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: DebugLib.lua 337 2012-09-10 19:58:45Z Esamynn $
 	URL: http://auctioneeraddon.com/dl/
 

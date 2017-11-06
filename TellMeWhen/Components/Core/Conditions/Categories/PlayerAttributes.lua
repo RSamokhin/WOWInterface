@@ -1,4 +1,4 @@
-﻿-- --------------------
+-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -22,9 +22,6 @@ local Env = CNDT.Env
 local strlowerCache = TMW.strlowerCache
 
 local _, pclass = UnitClass("Player")
-
-local clientVersion = select(4, GetBuildInfo())
-local wow_502 = clientVersion >= 50200
 
 local IsInInstance, GetInstanceDifficulty, GetNumShapeshiftForms, GetShapeshiftFormInfo = 
 	  IsInInstance, GetInstanceDifficulty, GetNumShapeshiftForms, GetShapeshiftFormInfo
@@ -175,53 +172,6 @@ ConditionCategory:RegisterCondition(6,	 "STANCE", {
 			ConditionObject:GenerateNormalEventString("UPDATE_SHAPESHIFT_FORM")
 	end,
 	hidden = not FirstStances[pclass],
-})
-
-
-ConditionCategory:RegisterCondition(6.2, "LASTCAST", {
-	text = L["CONDITIONPANEL_LASTCAST"],
-	bool = true,
-	nooperator = true,
-	unit = PLAYER,
-	texttable = {
-		[0] = L["CONDITIONPANEL_LASTCAST_ISSPELL"],
-		[1] = L["CONDITIONPANEL_LASTCAST_ISNTSPELL"],
-	},
-	icon = "Interface\\Icons\\Temp",
-	tcoords = CNDT.COMMON.standardtcoords,
-	name = function(editbox)
-		editbox:SetTexts(L["SPELLTOCHECK"], L["CNDT_ONLYFIRST"])
-	end,
-	useSUG = true,
-	funcstr = function(c)
-		local module = CNDT:GetModule("LASTCAST", true)
-		if not module then
-			module = CNDT:NewModule("LASTCAST", "AceEvent-3.0")
-
-			local pGUID = UnitGUID("player")
-			assert(pGUID, "pGUID was null when func string was generated!")
-
-			module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED",
-			function(_, _, e, _, sourceGuid, _, _, _, _, _, _, _, spellID, spellName)
-				if e == "SPELL_CAST_SUCCESS" and sourceGuid == pGUID then
-					Env.LastPlayerCastName = strlower(spellName)
-					Env.LastPlayerCastID = spellID
-				end
-			end)
-		end
-
-		if c.Level == 1 then
-			return [[LastPlayerCastName ~= LOWER(c.NameFirst) and LastPlayerCastID ~= c.NameFirst]] 
-		end
-		return [[LastPlayerCastName == LOWER(c.NameFirst) or LastPlayerCastID == c.NameFirst]] 
-	end,
-	events = function(ConditionObject, c)
-		local pGUID = UnitGUID("player")
-		assert(pGUID, "pGUID was null when event string was generated!")
-		return
-			ConditionObject:GetUnitChangedEventString(CNDT:GetUnit("player")),
-			ConditionObject:GenerateNormalEventString("COMBAT_LOG_EVENT_UNFILTERED", nil, "SPELL_CAST_SUCCESS", nil, pGUID)
-	end,
 })
 
 ConditionCategory:RegisterSpacer(6.5)
@@ -400,9 +350,10 @@ ConditionCategory:RegisterCondition(18,	 "BLIZZEQUIPSET", {
 	icon = "Interface\\Icons\\inv_box_04",
 	tcoords = CNDT.COMMON.standardtcoords,
 	Env = {
-		GetEquipmentSetInfoByName = GetEquipmentSetInfoByName,
+		GetEquipmentSetID = C_EquipmentSet.GetEquipmentSetID,
+		GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo,
 	},
-	funcstr = [[BOOLCHECK( select(3, GetEquipmentSetInfoByName(c.NameRaw)) )]],
+	funcstr = [[GetEquipmentSetID(c.NameRaw) and BOOLCHECK( select(4, GetEquipmentSetInfo(GetEquipmentSetID(c.NameRaw))) )]],
 	events = function(ConditionObject, c)
 		return
 			--ConditionObject:GenerateNormalEventString("EQUIPMENT_SWAP_FINISHED") -- this doesn't fire late enough to get updated returns from GetEquipmentSetInfoByName

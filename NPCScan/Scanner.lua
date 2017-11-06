@@ -76,6 +76,7 @@ do
 		data.unitClassification = data.unitClassification or "rare"
 
 		NPCScan:Pour(_G.ERR_ZONE_EXPLORED:format(("%s %s"):format(data.npcName, _G.PARENS_TEMPLATE:format(data.sourceText))), 0, 1, 0)
+		NPCScan:DispatchSensoryCues()
 		NPCScan:SendMessage("NPCScan_DetectedNPC", data)
 
 		-- TODO: Make the Overlays object listen for the NPCScan_DetectedNPC message and run its own methods
@@ -85,13 +86,21 @@ do
 end
 
 local function ProcessUnit(unitToken, sourceText)
-	if _G.UnitIsUnit("player", unitToken) or _G.UnitIsDeadOrGhost(unitToken) then
+	if _G.UnitIsUnit("player", unitToken) then
 		return
 	end
 
 	local npcID = private.UnitTokenToCreatureID(unitToken)
+
 	if npcID then
+		local unitIsDead = _G.UnitIsDead(unitToken)
+
+		if private.db.profile.detection.ignoreDeadNPCs and unitIsDead then
+			return
+		end
+
 		local detectionData = {
+			isDead = unitIsDead,
 			npcID = npcID,
 			npcName = _G.UnitName(unitToken),
 			sourceText = sourceText,
@@ -317,14 +326,16 @@ do
 	end
 
 	local function ProcessVignette(vignetteName, sourceText)
-		if private.VignetteNPCs[vignetteName] then
-			ProcessVignetteNameDetection(vignetteName, sourceText)
-			return true
-		end
-
 		local questID = private.QuestIDFromName[vignetteName]
 		if questID then
 			ProcessQuestDetection(questID, sourceText)
+			return true
+		elseif sourceText == _G.WORLD_MAP then
+			return false
+		end
+
+		if private.VignetteNPCs[vignetteName] then
+			ProcessVignetteNameDetection(vignetteName, sourceText)
 			return true
 		end
 
@@ -351,7 +362,7 @@ do
 
 	function NPCScan:WORLD_MAP_UPDATE()
 		for landmarkIndex = 1, _G.GetNumMapLandmarks() do
-			local landmarkType, landmarkName = _G.GetMapLandmarkInfo(landmarkIndex)
+			local landmarkType, landmarkName = C_WorldMap.GetMapLandmarkInfo(landmarkIndex)
 
 			ProcessVignette(landmarkName, _G.WORLD_MAP)
 		end

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: CoreBuy.lua 5667 2016-09-03 11:29:50Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: CoreBuy.lua 5685 2016-10-31 17:11:06Z Prowell $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -369,6 +369,9 @@ function private.PushSearch()
 		private.QueueRemove(1)
 		return
 	end
+	
+	local isScanning, isGetAll = AucAdvanced.Scan.IsScanning()
+	if (isScanning and isGetAll) then return end -- we must wait on getall, and PushScan failure is too noisy for something fired every frame
 
 	AucAdvanced.Scan.PushScan()
 	if AucAdvanced.Scan.IsScanning() then return end -- check that PushScan succeeded
@@ -825,5 +828,5 @@ private.Prompt.DragBottom:SetHighlightTexture("Interface\\FriendsFrame\\UI-Frien
 private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Advanced/CoreBuy.lua $", "$Rev: 5667 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Advanced/CoreBuy.lua $", "$Rev: 5685 $")
 AucAdvanced.CoreFileCheckOut("CoreBuy")

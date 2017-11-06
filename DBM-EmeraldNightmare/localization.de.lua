@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "deDE" then return end
+if GetLocale() ~= "deDE" then return end
 local L
 
 ---------------
@@ -24,15 +24,25 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(1738)
 
 L:SetOptionLocalization({
+	SetIconOnlyOnce2	= "Setze Zeichen nur einmal pro Alptraumsekretscan, deaktiviere danach den Scanner bis mindestens ein Sekret explodiert (experimentell)",
 	InfoFrameBehavior	= "Auswahl der Information im Infofenster während des Kampfes",
 	Fixates				= "Zeige Spieler, die von Fixieren betroffen sind",
 	Adds				= "Zeige Zähler für alle Add-Arten"
+})
+
+L:SetMiscLocalization({
+	AddSpawnNotice		= "Bei Übertreffen der Gegenstandsanforderung dieses Kampfes erscheinen die Adds automatisch entsprechend schneller. In diesem Fall sind die Timer für das Erscheinen der Adds mit Vorsicht zu genießen."
 })
 
 ---------------------------
 -- Elerethe Renferal --
 ---------------------------
 L= DBM:GetModLocalization(1744)
+
+L:SetWarningLocalization({
+	warnWebOfPain		= ">%s< ist verbunden mit >%s<",
+	specWarnWebofPain	= "Du bist verbunden mit >%s<"
+})
 
 ---------------------------
 -- Ursoc --
@@ -58,13 +68,18 @@ L= DBM:GetModLocalization(1704)
 L= DBM:GetModLocalization(1750)
 
 L:SetMiscLocalization({
-	BrambleMessage		= "Hinweis: DBM kann nicht erkennen, wer tatsächlich von Stachelschwarm FIXIERT wird. Es wird stattdessen angezeigt, bei welchem Ziel er anfänglich ERSCHEINT. Der Boss wählt einen Spieler und wirft den Schwarm auf ihn. Danach wählt der Schwarm ein ANDERES Ziel, welches Mods nicht erkennen können."
+	BrambleYell			= "Gestrüpp NAHE " .. UnitName("player") .. "!",
+	BrambleMessage		= "Hinweis: DBM kann nicht erkennen, wer tatsächlich von Alptraumgestrüpp FIXIERT wird. Es wird stattdessen angezeigt, bei welchem Ziel es anfänglich ERSCHEINT. Der Boss wählt einen Spieler und wirft das Gestrüpp auf ihn. Danach wählt das Gestrüpp ein ANDERES Ziel, welches Mods nicht erkennen können."
 })
 
 ------------------
 -- Xavius --
 ------------------
 L= DBM:GetModLocalization(1726)
+
+L:SetOptionLocalization({
+	InfoFrameFilterDream	= "Keine Anzeige von Spielern im Infofenster, die von $spell:206005 betroffen sind"
+})
 
 -------------
 --  Trash  --

@@ -15,6 +15,7 @@ Overachiever.DefaultSettings = {
   UI_HolidayNotice = true;
   UI_HolidayNotice_SuggestionsTabOnly = false;
   Tracker_AutoTimer = true;
+  Tracker_AutoTimer_BG = true;
   Explore_AutoTrack = false;
   --Explore_AutoTrack_Completed = false;
   CritterTip_loved = true;
@@ -22,6 +23,7 @@ Overachiever.DefaultSettings = {
   WellReadTip_read = true;
   AnglerTip_fished = true;
   SchoolTip_fished = true;
+  DraenorAnglerTip_fished = true;
   Item_consumed = true;
   Item_consumed_whencomplete = false;
   Item_satisfied = true;
@@ -40,14 +42,27 @@ Overachiever.DefaultSettings = {
   Tradeskill_ShowCompletedAch_Cooking = false;
   SoundAchIncomplete = 0;
   SoundAchIncomplete_AnglerCheckPole = true;
+  SoundAchIncomplete_KillCheckCombat = true;
   ProgressToast_AutoTrack = false;
   ProgressToast_ChatLog = true;
   ProgressToast_Suggest = true;
+  ToastCalendar_holiday = true;
+  ToastCalendar_microholiday = false;
+  ToastCalendar_bonusevent = false;
+  ToastCalendar_dungeonevent = false;
+  ToastCalendar_pvpbrawl = false;
+  ToastCalendar_misc = false;
+  ToastCalendar_noautofade = false;
+  ToastCalendar_onlyclickfade = false;
   Version = THIS_VERSION;
 };
 
 local function SoundSelected(self, key, val, clicked)
   if (clicked) then  PlaySoundFile( self:Fetch() );  end
+end
+
+local function updateEnabled()
+  Overachiever_Options_ToastCalendar_onlyclickfade:SetEnabled( Overachiever_Options_ToastCalendar_noautofade:GetChecked() )
 end
 
 function Overachiever.CreateOptions(THIS_TITLE, BuildCriteriaLookupTab_check, AutoTrackCheck_Explore, CheckDraggable_AchFrame)
@@ -63,6 +78,7 @@ function Overachiever.CreateOptions(THIS_TITLE, BuildCriteriaLookupTab_check, Au
 	
 	{ type = "labelwrap", text = L.OPT_LABEL_TRACKING, topBuffer = 4 },
 	{ variable = "Tracker_AutoTimer", text = L.OPT_AUTOTRACKTIMED, tooltip = L.OPT_AUTOTRACKTIMED_TIP },
+	{ variable = "Tracker_AutoTimer_BG", text = L.OPT_AUTOTRACKTIMED_BG, tooltip = L.OPT_AUTOTRACKTIMED_TIP_BG },
 	{ variable = "Explore_AutoTrack", text = L.OPT_AUTOTRACKEXPLORE,
 	  tooltip = L.OPT_AUTOTRACKEXPLORE_TIP, OnChange = AutoTrackCheck_Explore },
 	--{ variable = "Explore_AutoTrack_Completed", text = L.OPT_AUTOTRACKEXPLORE_COMPLETED,
@@ -84,6 +100,18 @@ function Overachiever.CreateOptions(THIS_TITLE, BuildCriteriaLookupTab_check, Au
 	{ variable = "Draggable_AchFrame", xOffset = 0, text = L.OPT_DRAGGABLE, OnChange = CheckDraggable_AchFrame },
 	{ variable = "DragSave_AchFrame", text = L.OPT_DRAGSAVE, xOffset = 15, OnChange = CheckDraggable_AchFrame },
 
+	{ type = "labelwrap", text = L.OPT_LABEL_STARTTOAST, topBuffer = 4, xOffset = 0 },
+	{ variable = "ToastCalendar_holiday", text = L.OPT_STARTTOAST_HOLIDAY, tooltip = L.OPT_STARTTOAST_HOLIDAY_TIP },
+	{ variable = "ToastCalendar_microholiday", text = L.OPT_STARTTOAST_MICROHOLIDAY, tooltip = L.OPT_STARTTOAST_MICROHOLIDAY_TIP, column = 2 },
+	{ variable = "ToastCalendar_bonusevent", text = L.OPT_STARTTOAST_BONUS, tooltip = L.OPT_STARTTOAST_BONUS_TIP },
+	{ variable = "ToastCalendar_dungeonevent", text = L.OPT_STARTTOAST_DUNGEON, tooltip = L.OPT_STARTTOAST_DUNGEON_TIP, column = 2 },
+	{ variable = "ToastCalendar_pvpbrawl", text = L.OPT_STARTTOAST_PVPBRAWL, tooltip = L.OPT_STARTTOAST_PVPBRAWL_TIP },
+	{ variable = "ToastCalendar_misc", text = L.OPT_STARTTOAST_MISC, tooltip = L.OPT_STARTTOAST_MISC_TIP, tooltip2 = L.OPT_STARTTOAST_MISC_TIP2, column = 2 },
+	{ variable = "ToastCalendar_noautofade", text = L.OPT_STARTTOAST_TIMEFADE, tooltip = L.OPT_STARTTOAST_TIMEFADE_TIP, OnChange = updateEnabled,
+	  name = "Overachiever_Options_ToastCalendar_noautofade" },
+	{ variable = "ToastCalendar_onlyclickfade", xOffset = 15, text = L.OPT_STARTTOAST_ONLYCLICKFADE, tooltip = L.OPT_STARTTOAST_ONLYCLICKFADE_TIP,
+	  name = "Overachiever_Options_ToastCalendar_onlyclickfade" },
+
 	{ type = "labelwrap", text = L.OPT_LABEL_TRADESKILLUI, topBuffer = 4, xOffset = 0 },
 	{ variable = "Tradeskill_ShowCompletedAch_Cooking", text = L.OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING, tooltip = L.OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING_TIP },
 
@@ -92,6 +120,8 @@ function Overachiever.CreateOptions(THIS_TITLE, BuildCriteriaLookupTab_check, Au
 	  xOffset = 0, topBuffer = 10, OnChange = SoundSelected },
 	{ variable = "SoundAchIncomplete_AnglerCheckPole", text = L.OPT_SELECTSOUND_ANGLERCHECKPOLE,
 	  tooltip = L.OPT_SELECTSOUND_ANGLERCHECKPOLE_TIP, xOffset = 15 },
+	{ variable = "SoundAchIncomplete_KillCheckCombat", text = L.OPT_SELECTSOUND_CHECKCOMBAT,
+	  tooltip = L.OPT_SELECTSOUND_CHECKCOMBAT_TIP, xOffset = 15 },
   }
 
   local items_reminders = {
@@ -109,7 +139,10 @@ function Overachiever.CreateOptions(THIS_TITLE, BuildCriteriaLookupTab_check, Au
 	{ variable = "WellReadTip_read", text = L.OPT_WELLREADTIPS, tooltip = L.OPT_WELLREADTIPS_TIP, xOffset = 28 },
 
 	{ type = "Oa_AchLabel", text = L.OPT_LABEL_ACHFOUR, topBuffer = 4, id1 = IDs.Scavenger, id2 = IDs.OutlandAngler, id3 = IDs.NorthrendAngler, id4 = IDs.PandarianAngler, xOffset = 0 },
-	{ variable = "AnglerTip_fished", text = L.OPT_ANGLERTIPS, tooltip = L.OPT_ANGLERTIPS_TIP, xOffset = 28 },
+	{ variable = "AnglerTip_fished", text = L.OPT_ANGLERTIPS, tooltip = L.OPT_ANGLERTIPS_TIP_ALWAYS, xOffset = 28 },
+
+	{ type = "Oa_AchLabel", text = L.OPT_LABEL_DRAENORANGLER, topBuffer = 4, id1 = IDs.DraenorAngler, xOffset = 0 },
+	{ variable = "DraenorAnglerTip_fished", text = L.OPT_ANGLERTIPS, tooltip = L.OPT_ANGLERTIPS_TIP_ALWAYS, xOffset = 28 },
 
 	{ type = "Oa_AchLabel", text = L.OPT_LABEL_ACHTWO, topBuffer = 4, id1 = IDs.Limnologist, id2 = IDs.Oceanographer, xOffset = 0 },
 	{ variable = "SchoolTip_fished", text = L.OPT_ANGLERTIPS, tooltip = L.OPT_ANGLERTIPS_TIP, xOffset = 28 },
@@ -158,7 +191,8 @@ function Overachiever.CreateOptions(THIS_TITLE, BuildCriteriaLookupTab_check, Au
 	scrolling = true,
 	items = items_general,
 	variables = "Overachiever_Settings",
-	defaults = Overachiever.DefaultSettings
+	defaults = Overachiever.DefaultSettings,
+	OnShow = updateEnabled
   });
 
   local reminderspanel = TjOptions.CreatePanel(L.OPTPANEL_REMINDERTOOLTIPS, THIS_TITLE, {
@@ -301,8 +335,7 @@ do
     return true, iconBL, handletip, xOffset + 4, yOffset - 6, btmBuffer + lbl_yOffset
   end
 
-  TjOptions.RegisterItemType("Oa_AchLabel", tonumber(THIS_VERSION) or 0, "labelwrap",
-    { create_prehook = CreateAchLabel_pre, create_posthook = CreateAchLabel_post })
+  TjOptions.RegisterItemType("Oa_AchLabel", 1, "labelwrap", { create_prehook = CreateAchLabel_pre, create_posthook = CreateAchLabel_post })
 end
 
 

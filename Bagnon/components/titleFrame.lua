@@ -28,7 +28,7 @@ function TitleFrame:New(title, parent)
 	b:SetScript('OnClick', b.OnClick)
 	b.title = title
 
-	b:RegisterMessage(b:GetFrameID() .. '_PLAYER_CHANGED', 'Update')
+	b:RegisterFrameMessage('PLAYER_CHANGED', 'Update')
 	b:Update()
 
 	return b
@@ -38,18 +38,21 @@ end
 --[[ Interaction ]]--
 
 function TitleFrame:OnMouseDown()
-	if self:IsFrameMovable() or IsAltKeyDown() then
-		self:GetParent():StartMoving()
+	local parent = self:GetParent()
+	if not parent.profile.managed and (not Addon.sets.locked or IsAltKeyDown()) then
+		parent:StartMoving()
 	end
 end
 
 function TitleFrame:OnMouseUp()
-	self:GetParent():StopMovingOrSizing()
-	self:GetParent():SavePosition()
+	local parent = self:GetParent()
+	parent:StopMovingOrSizing()
+	parent:RecomputePosition()
 end
 
 function TitleFrame:OnDoubleClick()
-	self:GetParent().searchFrame:SetShown(true)
+	Addon.canSearch = true
+	Addon:SendMessage('SEARCH_TOGGLED', self:GetFrameID())
 end
 
 function TitleFrame:OnClick(button)

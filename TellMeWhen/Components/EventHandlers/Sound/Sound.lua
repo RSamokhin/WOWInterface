@@ -1,4 +1,4 @@
-﻿-- --------------------
+-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -98,7 +98,7 @@ function Sound:HandleEvent(icon, eventSettings)
 	
 	if Sound then
 		if tonumber(Sound) then
-			PlaySoundKitID(Sound)
+			(PlaySoundKitID or PlaySound)(Sound) -- PlaySoundKitID is gone in 7.3
 		else
 			PlaySoundFile(Sound, TMW.db.profile.SoundChannel)
 		end

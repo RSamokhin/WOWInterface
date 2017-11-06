@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreItemPrice
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: FilterItemPrice.lua 5556 2015-04-15 11:20:29Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: FilterItemPrice.lua 5706 2017-02-10 12:29:06Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -41,37 +41,38 @@ local GetSigFromLink = AucAdvanced.API.GetSigFromLink
 -- Set our defaults
 default("ignoreitemprice.enable", true)
 
--- local constants
-local SHEET_RETRY_THROTTLE = 1
-
 local ignorelist = {}
 local tempignorelist = {}
 
+local linkcache = {}
 function private.UpdateSheet(retryOnly)
 	local missing
+	if not private.ignorelistGUI then return end
 	if retryOnly then
-		if not private.sheetThrottle or GetTime() < private.sheetThrottle then
+		-- Retry if we need to fill in missing entries. Don't update if sheet not visible
+		if not private.needsRefresh or not private.ignorelistGUI:IsVisible() then
 			return
 		end
+	else
+		-- Sheet has (probably) changed
+		wipe(linkcache)
 	end
 	local sheetdata = {}
-	for item, cost in pairs(ignorelist) do
-		local link = AucAdvanced.API.GetLinkFromSig(item)
+	for sig, cost in pairs(ignorelist) do
+		local link = linkcache[sig]
 		if not link then
-			link = item
-			missing = true
+			link = AucAdvanced.API.GetLinkFromSig(sig)
+			if link then
+				linkcache[sig] = link
+			else
+				link = sig
+				missing = true
+			end
 		end
 		tinsert(sheetdata, {link, cost})
 	end
-	if private.ignorelistGUI and private.ignorelistGUI.sheet then
-		private.ignorelistGUI.sheet:SetData(sheetdata)
-	end
-	if missing then
-		-- private.sheetThrottle serves double duty as a flag that we need to redo the sheet, and a throttle/timer to prevent us retrying it too soon
-		private.sheetThrottle = GetTime() + SHEET_RETRY_THROTTLE
-	else
-		private.sheetThrottle = nil
-	end
+	private.ignorelistGUI.sheet:SetData(sheetdata)
+	private.needsRefresh = missing
 end
 
 function private.OnEnterSheet(button, row, index)
@@ -87,9 +88,10 @@ function private.OnEnterSheet(button, row, index)
 				-- BattlePetToolTip_Show gets the anchor point from GameTooltip
 				BattlePetToolTip_Show(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed), string.gsub(string.gsub(link, "^(.*)%[", ""), "%](.*)$", ""))
 				return
+			else
+				private.UpdateSheet(true)
 			end
 		end
-		private.UpdateSheet(true) -- if no link, try updating the table to fix it
 	end
 end
 
@@ -114,6 +116,8 @@ function lib.Processor(msg, ...)
 			end
 			private.UpdateSheet()
 		end
+	elseif msg == "iteminfoupdate" then
+		private.UpdateSheet(true)
 	end
 end
 
@@ -197,9 +201,10 @@ function private.MakeGuiConfig(gui)
 		end
 	end
 
-	private.ignorelistGUI = CreateFrame("Frame", nil, gui.tabs[id][3])
-	private.ignorelistGUI:SetPoint("BOTTOMRIGHT", gui.tabs[id][3], "TOPRIGHT", -50, -295)
-	private.ignorelistGUI:SetPoint("TOPLEFT", gui.tabs[id][3], "TOPRIGHT", -350, -20)
+	local content = gui.tabs[id].content
+	private.ignorelistGUI = CreateFrame("Frame", nil, content)
+	private.ignorelistGUI:SetPoint("BOTTOMRIGHT", content, "TOPRIGHT", -50, -295)
+	private.ignorelistGUI:SetPoint("TOPLEFT", content, "TOPRIGHT", -350, -20)
 	private.ignorelistGUI:SetBackdrop({
 		bgFile = "Interface/Tooltips/ChatBubble-Background",
 		edgeFile = "Interface/Tooltips/ChatBubble-BackDrop",
@@ -241,7 +246,6 @@ function lib.Filter(item, searcher)
 			or (searcher and (not get("ignoreitemprice.filter."..searcher))) then
 		return
 	end
-	if not item[Const.PRICE] then DevTools_Dump(item) end
 	local price = item[Const.PRICE]
 	local count = item[Const.COUNT] or 1
 	price = floor(price/count)
@@ -288,4 +292,4 @@ function lib.PostFilter(item, searcher, buyorbid)
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-SearchUI/FilterItemPrice.lua $", "$Rev: 5556 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Util-SearchUI/FilterItemPrice.lua $", "$Rev: 5706 $")

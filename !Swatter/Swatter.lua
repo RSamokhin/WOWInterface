@@ -1,7 +1,7 @@
 --[[
 	Swatter - An AddOn debugging aid for World of Warcraft.
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: Swatter.lua 378 2014-12-12 15:18:11Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: Swatter.lua 424 2016-11-26 17:06:54Z brykrys $
 	URL: http://auctioneeraddon.com/dl/Swatter/
 	Copyright (C) 2006 Norganna
 
@@ -45,7 +45,7 @@ Swatter = {
 	HISTORY_SIZE = 100,
 }
 
-Swatter.Version="7.1.5675"
+Swatter.Version="7.5.5724"
 if (Swatter.Version == "<%".."version%>") then
 	Swatter.Version = "6.0.DEV"
 end
@@ -79,7 +79,7 @@ hooksecurefunc("SetAddOnDetail", addOnDetail)
 
 -- End SetAddOnDetail function hook.
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/!Swatter/Swatter.lua $","$Rev: 378 $","6.0.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/!Swatter/Swatter.lua $","$Rev: 424 $","6.0.DEV.", 'auctioneer', 'libs')
 
 local function toggle()
 	if Swatter.Error:IsVisible() then
@@ -240,6 +240,7 @@ end
 
 -- Wrappers around OnError to control which parameters get passed through
 local origHandler = geterrorhandler()
+-- We shall set this as the error handler in the *last line* of the file
 local function OnErrorHandler(msg)
 	if not SwatterData.enabled then
 		return origHandler(msg) -- tailcall here, to remove this stub from the stack
@@ -255,7 +256,6 @@ local function OnErrorHandler(msg)
 		OnError(msg)
 	end
 end
-seterrorhandler(OnErrorHandler)
 function Swatter.OnError(msg, frame, stack)
 	OnError(msg, frame, stack)
 end
@@ -582,6 +582,7 @@ Swatter.Error:SetBackdropColor(0,0,0, 1)
 Swatter.Error:SetScript("OnShow", Swatter.ErrorShow)
 Swatter.Error:SetMovable(true)
 Swatter.Error:SetClampedToScreen(true)
+Swatter.Error:SetToplevel(true)
 Swatter.Error.RealShow = Swatter.Error.Show
 Swatter.Error.RealHide = Swatter.Error.Hide
 function Swatter.Error:Show(...)
@@ -636,16 +637,19 @@ Swatter.Error.Done = CreateFrame("Button", "", Swatter.Error, "OptionsButtonTemp
 Swatter.Error.Done:SetText("Close")
 Swatter.Error.Done:SetPoint("BOTTOMRIGHT", Swatter.Error, "BOTTOMRIGHT", -10, 10)
 Swatter.Error.Done:SetScript("OnClick", Swatter.ErrorDone)
+Swatter.Error.Done:SetFrameLevel(5)
 
 Swatter.Error.Next = CreateFrame("Button", "", Swatter.Error, "OptionsButtonTemplate")
 Swatter.Error.Next:SetText("Next >")
 Swatter.Error.Next:SetPoint("BOTTOMRIGHT", Swatter.Error.Done, "BOTTOMLEFT", -5, 0)
 Swatter.Error.Next:SetScript("OnClick", Swatter.ErrorNext)
+Swatter.Error.Next:SetFrameLevel(5)
 
 Swatter.Error.Prev = CreateFrame("Button", "", Swatter.Error, "OptionsButtonTemplate")
 Swatter.Error.Prev:SetText("< Prev")
 Swatter.Error.Prev:SetPoint("BOTTOMRIGHT", Swatter.Error.Next, "BOTTOMLEFT", -5, 0)
 Swatter.Error.Prev:SetScript("OnClick", Swatter.ErrorPrev)
+Swatter.Error.Prev:SetFrameLevel(5)
 
 Swatter.Error.Mesg = Swatter.Error:CreateFontString("", "OVERLAY", "GameFontNormalSmall")
 Swatter.Error.Mesg:SetJustifyH("LEFT")
@@ -751,3 +755,7 @@ SlashCmdList["SWATTER"] = function(msg)
 		chat("Swatter errors have been cleared")
 	end
 end
+
+-- Set Swatter as the error handler. Do this as the last thing in the file, in case the file itself generates errors
+seterrorhandler(OnErrorHandler)
+

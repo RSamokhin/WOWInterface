@@ -364,6 +364,8 @@ hooksecurefunc("GarrisonFollowerPage_SetItem", function(self)
 	self.ItemWeapon:Hide()
 	self.ItemArmor:Hide()
 	self.ItemAverageLevel:Hide()
+	self.ItemWeapon.itemID = nil
+	self.ItemArmor.itemID = nil
 end)
 local CreateClassSpecButton, ClassSpecButton_Set do
 	local tipLoader = T.MissionsUI.CreateLoader(GameTooltip, 16, 4, 9)
@@ -448,6 +450,9 @@ function EV:FXUI_GARRISON_FOLLOWER_LIST_SHOW_FOLLOWER(tab, followerID)
 			elseif T.LockTraits[et[abid] or abid] or T.LockTraits[abid] then
 				button.Name:SetText([[|TInterface\PetBattles\PetBattle-LockIcon:11:10:-2:1:32:32:4:28:2:30:220:220:160|t]]..C_Garrison.GetFollowerAbilityName(abid))
 				button.IconButton.ValidSpellHighlight:SetVertexColor(1,1,1)
+			elseif isFree == "soft" then
+				button.Name:SetText([[|TInterface\PetBattles\PetBattle-LockIcon:11:10:-2:1:32:32:4:28:2:30:120:240:160|t]]..C_Garrison.GetFollowerAbilityName(abid))
+				button.IconButton.ValidSpellHighlight:SetVertexColor(1,1,1)
 			else
 				button.Name:SetText([[|TInterface\Buttons\UI-RefreshButton:10:10:-2:2:16:16:16:0:16:0:120:255:0|t]]..C_Garrison.GetFollowerAbilityName(abid))
 				button.IconButton.ValidSpellHighlight:SetVertexColor(1,1,0)
@@ -503,7 +508,7 @@ local SpecAffinityFrame = CreateFrame("Frame") do
 			GameTooltip:SetOwner(self, "ANCHOR_NONE")
 			GameTooltip:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT")
 			local used = false
-			for i, mi, b in G.MoIMissions(1, groups) do
+			for _, mi, b in G.MoIMissions(1, groups) do
 				local mid = mi[1]
 				local idx = b and (b[1] == fid and 1 or b[2] == fid and 2 or b[3] == fid and 3)
 				if idx and b.used and G.IsInterestedInMoI(mi) and b.used % (2^idx) >= 2^(idx-1) then
@@ -1105,9 +1110,12 @@ do -- Weapon/Armor upgrades and rerolls
 			reroll:SetScript("OnShow", function(self) self:RegisterEvent("BAG_UPDATE_DELAYED") end)
 			reroll:SetScript("OnHide", function(self) self.wasHidden = true; self:UnregisterEvent("BAG_UPDATE_DELAYED") end)
 			reroll:SetScript("OnEvent", function(self) gear:Sync() self:Sync(true) end)
-			local function TargetFollower()
+			local function TargetFollower(self)
 				if SpellCanTargetGarrisonFollower() then
-					GarrisonFollower_DisplayUpgradeConfirmation(items.followerID)
+					GarrisonFollower_AttemptUpgrade(items.followerID)
+				end
+				if GameTooltip:IsOwned(self) then
+					GameTooltip:Hide()
 				end
 			end
 			local buttons = {}
@@ -1151,6 +1159,8 @@ do -- Weapon/Armor upgrades and rerolls
 			items:Hide()
 			reroll:Hide()
 			return
+		else
+			reroll:Show()
 		end
 		if C_Garrison.GetFollowerLevel(id) < 100 then
 			gear:Hide()
@@ -1324,17 +1334,17 @@ do -- Equipment
 			pf:Hide()
 		end
 	end
-	local function hookEquipment(self)
+	local function hookEquipment(self, _info)
 		local l = self.AbilitiesFrame.EquipmentSlotsLabel
 		if l == nil or self.equipmentPool == nil then return end
 		for a in self.equipmentPool:EnumerateActive() do
 			local _mp, af, _ap, ax, ay = a:GetPoint(1)
 			if af == l then
-				local p, s = a:GetParent(), a:GetScale()
-				local pl, pt = p and p:GetLeft(), p and p:GetTop()
+				local p, s = a:GetParent(), a:GetScale() or 1
+				local pl, aw, pt = p and p:GetLeft(), af and af:GetWidth(), p and p:GetTop()
 				local ll, lb = l:GetLeft(), l:GetBottom()
-				if pl and pt and ll and lb then
-					a:SetPoint("TOPLEFT", ((ll-pl))/s+ax, (lb-pt)/s+ay)
+				if pl and aw and pt and ll and lb then
+					a:SetPoint("TOPLEFT", ((ll-pl+aw/2))/s+ax, (lb-pt)/s+ay)
 				else
 					C_Timer.After(0, function() hookEquipment(self) end)
 				end

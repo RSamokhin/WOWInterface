@@ -1,4 +1,4 @@
-﻿-- --------------------
+-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -39,7 +39,7 @@ local STATE_UNUSABLE_NOMANA  = TMW.CONST.STATE.DEFAULT_NOMANA
 -- AUTOMATICALLY GENERATED: UsesAttributes
 Type:UsesAttributes("state")
 Type:UsesAttributes("spell")
-Type:UsesAttributes("charges, maxCharges")
+Type:UsesAttributes("charges, maxCharges, chargeStart, chargeDur")
 Type:UsesAttributes("start, duration")
 Type:UsesAttributes("stack, stackText")
 Type:UsesAttributes("texture")
@@ -54,6 +54,9 @@ Type:SetModuleAllowance("IconModule_PowerBar_Overlay", true)
 Type:RegisterIconDefaults{
 	-- Cause an ability to be treated as reactive if there is an activation border on it on the action bars.
 	UseActvtnOverlay		= false,
+
+	-- Cause an ability to be treated as reactive ONLY IF there is an activation border on it on the action bars.
+	OnlyActvtnOverlay		= false,
 
 	-- Cause the avility to be considered unusable of it is on cooldown.
 	CooldownCheck			= false,
@@ -91,6 +94,13 @@ Type:RegisterConfigPanel_ConstructorFunc(150, "TellMeWhen_ReactiveSettings", fun
 			check:SetSetting("UseActvtnOverlay")
 		end,
 		function(check)
+			check:SetTexts(L["ICONMENU_ONLYACTIVATIONOVERLAY"], L["ICONMENU_ONLYACTIVATIONOVERLAY_DESC"])
+			check:SetSetting("OnlyActvtnOverlay")
+			check:CScriptAdd("ReloadRequested", function()
+				check:SetEnabled(TMW.CI.ics.UseActvtnOverlay)
+			end)
+		end,
+		function(check)
 			check:SetTexts(L["ICONMENU_IGNORENOMANA"], L["ICONMENU_IGNORENOMANA_DESC"])
 			check:SetSetting("IgnoreNomana")
 		end,
@@ -125,7 +135,7 @@ end)
 local function Reactive_OnEvent(icon, event, arg1)
 	-- If icon.UseActvtnOverlay == true, treat the icon as usable if the spell has an activation overlay glow.
 	if icon.Spells.First == arg1 or strlowerCache[GetSpellInfo(arg1)] == icon.Spells.FirstString then
-		icon.forceUsable = event == "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW"
+		icon.activationOverlayActive = event == "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW"
 		icon.NextUpdateTime = 0
 	end
 end
@@ -133,11 +143,13 @@ end
 local function Reactive_OnUpdate(icon, time)
 
 	-- Upvalue things that will be referenced a lot in our loops.
-	local NameArray, NameStringArray, RangeCheck, ManaCheck, CooldownCheck, IgnoreRunes, forceUsable, IgnoreNomana =
-	 icon.Spells.Array, icon.Spells.StringArray, icon.RangeCheck, icon.ManaCheck, icon.CooldownCheck, icon.IgnoreRunes, icon.forceUsable, icon.IgnoreNomana
+	local NameArray, NameStringArray, RangeCheck, ManaCheck, CooldownCheck, IgnoreRunes, IgnoreNomana, UseActvtnOverlay, OnlyActvtnOverlay =
+	 icon.Spells.Array, icon.Spells.StringArray, icon.RangeCheck, icon.ManaCheck, icon.CooldownCheck, icon.IgnoreRunes, icon.IgnoreNomana, icon.UseActvtnOverlay, icon.OnlyActvtnOverlay
+
+	local activationOverlayActive = icon.activationOverlayActive
 
 	-- These variables will hold all the attributes that we pass to SetInfo().
-	local inrange, nomana, start, duration, CD, usable, charges, maxCharges, stack, start_charge, duration_charge
+	local inrange, nomana, start, duration, CD, usable, charges, maxCharges, chargeStart, chargeDur, stack, start_charge, duration_charge
 
 	local numChecked = 1
 	local runeCD = IgnoreRunes and GetRuneCooldownDuration()
@@ -147,20 +159,10 @@ local function Reactive_OnUpdate(icon, time)
 		local iName = NameArray[i]
 		numChecked = i
 		
-		charges, maxCharges, start_charge, duration_charge = GetSpellCharges(iName)
-		if charges then
-			if charges < maxCharges then
-				-- If the ability has charges and isn't at max charges, 
-				-- the timer on the icon should be the time until the next charge is gained.
-				start, duration = start_charge, duration_charge
-			else
-				start, duration = GetSpellCooldown(iName)
-			end
-			stack = charges
-		else
-			start, duration = GetSpellCooldown(iName)
-			stack = GetSpellCount(iName)
-		end
+
+		start, duration = GetSpellCooldown(iName)
+		charges, maxCharges, chargeStart, chargeDur = GetSpellCharges(iName)
+		stack = charges or GetSpellCount(iName)
 		
 		if duration then
 			inrange, CD = true, nil
@@ -195,13 +197,17 @@ local function Reactive_OnUpdate(icon, time)
 				CD = not (duration == 0 or OnGCD(duration))
 			end
 
-			usable = forceUsable or usable
+			if UseActvtnOverlay and OnlyActvtnOverlay then
+				usable = activationOverlayActive
+			else
+				usable = activationOverlayActive or usable
+			end
 			if usable and not CD and not nomana and inrange then --usable
-				icon:SetInfo("state; texture; start, duration; charges, maxCharges; stack, stackText; spell",
+				icon:SetInfo("state; texture; start, duration; charges, maxCharges, chargeStart, chargeDur; stack, stackText; spell",
 					STATE_USABLE,
 					GetSpellTexture(iName),
 					start, duration,
-					charges, maxCharges,
+					charges, maxCharges, chargeStart, chargeDur,
 					stack, stack,
 					iName		
 				)
@@ -215,19 +221,11 @@ local function Reactive_OnUpdate(icon, time)
 	-- otherwise reuse the values obtained above since they are just for the first one
 	local NameFirst = icon.Spells.First
 	if numChecked > 1 then
-		charges, maxCharges, start_charge, duration_charge = GetSpellCharges(NameFirst)
-		if charges then
-			if charges < maxCharges then
-				start, duration = start_charge, duration_charge
-			else
-				start, duration = GetSpellCooldown(NameFirst)
-			end
-			stack = charges
-		else
-			start, duration = GetSpellCooldown(NameFirst)
-			stack = GetSpellCount(NameFirst)
-		end
-		
+
+		start, duration = GetSpellCooldown(NameFirst)
+		charges, maxCharges, chargeStart, chargeDur = GetSpellCharges(NameFirst)
+		stack = charges or GetSpellCount(NameFirst)
+
 		if IgnoreRunes and duration == runeCD then
 			start, duration = 0, 0
 		end
@@ -247,11 +245,11 @@ local function Reactive_OnUpdate(icon, time)
 	end
 	
 	if duration then
-		icon:SetInfo("state; texture; start, duration; charges, maxCharges; stack, stackText; spell",
+		icon:SetInfo("state; texture; start, duration; charges, maxCharges, chargeStart, chargeDur; stack, stackText; spell",
 			not inrange and STATE_UNUSABLE_NORANGE or nomana and STATE_DEFAULT_NOMANA or STATE_UNUSABLE,
 			icon.FirstTexture,
 			start, duration,
-			charges, maxCharges,
+			charges, maxCharges, chargeStart, chargeDur,
 			stack, stack,
 			NameFirst
 		)

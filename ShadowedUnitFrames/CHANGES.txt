@@ -1,0 +1,12 @@
+tag d9ef0479ad8e33ffa7f5ee4301743a9806c66a85 v4.1.20
+Author:	Hendrik Leppkes <h.leppkes@gmail.com>
+Date:	Wed Aug 30 08:41:39 2017 +0200
+
+Tag as v4.1.20
+
+commit 68b403c9f70a1e3529fbc50d5490e7f0642ef028
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Tue Aug 29 23:27:35 2017 +0200
+
+    Update TOC for 7.3
+

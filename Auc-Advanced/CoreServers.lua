@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: CoreServers.lua 5670 2016-09-03 11:59:41Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: CoreServers.lua 5693 2016-12-22 23:00:47Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -35,10 +35,10 @@
 --[[
 	Maintain a database of known servers and serverKeys
 
-	Realm names can be in a compact form, with all spaces stripped out.
+	Realm names can be in a compact form, with all spaces and dashes stripped out.
 	This is the format provided by GetAutoCompleteRealms, which we use for detecting connected realms
 
-	Standard Realm names can easily be converted to compact form by gsub(" ", "")
+	Standard Realm names can easily be converted to compact form by gsub("[ %-]", "") -- note the space character after the first square bracket
 	Maintain a lookup table to allow Compact form to be converted to Standard form
 
 	Saved variable: AucAdvancedServers
@@ -46,6 +46,7 @@
 		ExpandedNames {CompactName = ExpandedName}, entries only exist where ExpandedName is different from CompactName
 		KnownRealms {CompactName = serverKey}
 		KnownServerKeys {serverKey = timestamp}, records time of last login to each serverKey
+		ConvertedServerKeys {oldServerKey = {infotable}} -- info about any serverKey changes, mainly for debug
 
 	Connected Realms will be represented by a serverKey of format '#'..CompactRealmName
 	where CompactRealmName is one of the realms from the connected realm set, typically the one first logged into
@@ -109,7 +110,19 @@ local function GetModuleServerKeys()
 end
 
 -- helper function: called if we are on a connected realm and it is not recorded, or is recorded incorrectly
-local function ResolveConnectedRealms(sessionKey, sessionConnected, moduleKeys)
+local function ResolveConnectedRealms(sessionKey, sessionConnected, moduleKeys, oldCompactName)
+
+	-- [ADV-719] test
+	if not sessionKey and oldCompactName then
+		local testkey = "#"..oldCompactName
+		if moduleKeys[testkey] then
+			-- we've found some data, but testkey is an invalid serverKey
+			-- fudge sessionKey so the following sections will work on this data
+			sessionKey = testkey
+		end
+	end
+	-- end [ADV-719] test
+
 	if not next(ConnectedRealmTables) then -- empty table, no previous connected realms seen
 		local newServerKey
 
@@ -134,6 +147,7 @@ local function ResolveConnectedRealms(sessionKey, sessionConnected, moduleKeys)
 		end
 		return newServerKey
 	end
+	
 	local lookupRealms, foundKeys = {}, {}
 	for _, realmName in ipairs(sessionConnected) do
 		lookupRealms[realmName] = true
@@ -141,11 +155,12 @@ local function ResolveConnectedRealms(sessionKey, sessionConnected, moduleKeys)
 	for serverKey, connectedTable in pairs(ConnectedRealmTables) do
 		for pos, realmName in ipairs(connectedTable) do
 			if lookupRealms[realmName] then
-				tinsert(foundKeys, serverKey)
+				tinsert(foundKeys, (serverKey:gsub("%-", ""))) -- [ADV-719] ensure found serverKey has '-' chars stripped
 				break
 			end
 		end
 	end
+	
 	if #foundKeys == 0 then
 		-- this connected realm has not been seen before by CoreServers
 		local newServerKey
@@ -158,7 +173,7 @@ local function ResolveConnectedRealms(sessionKey, sessionConnected, moduleKeys)
 				break
 			end
 		end
-
+		
 		if not newServerKey then -- default
 			newServerKey = "#"..CompactRealmName
 		end
@@ -207,6 +222,32 @@ local function ResolveConnectedRealms(sessionKey, sessionConnected, moduleKeys)
 	end
 end
 
+local function FixNonConnectedRealm(sessionKey, moduleKeys)
+	-- [ADV-719] GetAutoCompleteRealms was changed to return {} for non-connected realms,
+	-- causing CoreServers to treat them as connected. We need to revert any changes caused by this
+	local testKey = "#"..FullRealmName:gsub(" ", "") -- construct the 'bad' realm name, as it would have been before [ADV-719]
+	assert(sessionKey ~= testKey) -- ###
+	if KnownServerKeys[testKey] then
+		-- found an entry for the 'bad' serverKey, start deleting or converting bad data
+		KnownServerKeys[testKey] = nil
+		ConnectedRealmTables[testKey] = nil
+		if not moduleKeys[sessionKey] then
+			-- only convert stat data if the correct key is not present
+			-- todo: should probably check/convert this on a per module basis
+			SendServerKeyChange(testKey, sessionKey)
+		end
+		if not AucAdvancedServers.ConvertedServerKeys then
+			AucAdvancedServers.ConvertedServerKeys = {}
+		end
+		AucAdvancedServers.ConvertedServerKeys[testKey] = {
+			old = testKey,
+			new = sessionKey,
+			timestamp = time(),
+			reason = "NonConnectedFix",
+		}
+	end
+end
+
 internal.Servers = {
 	Activate = function()
 		internal.Servers.Activate = nil -- no longer needed after activation
@@ -215,17 +256,32 @@ internal.Servers = {
 			ExpandedNames[CompactRealmName] = FullRealmName
 			AucAdvancedServers.ExpandedNames = ExpandedNames -- attach to save structure, if not already attached
 		end
-		local sessionConnected = GetAutoCompleteRealms() or false
+		local sessionConnected = GetAutoCompleteRealms()
+		if not sessionConnected or not next(sessionConnected) then -- GetAutoCompleteRealms returns non-connected realms as {}; previously it returned nil
+			sessionConnected = false
+		end
+
 		local sessionKey = KnownRealms[CompactRealmName] -- may be nil
 		local moduleKeys = GetModuleServerKeys() -- may be empty table
 
 		if not sessionConnected then
-			if not sessionKey then
+			--if not sessionKey then -- ### temporarily we will always run this block to force fix incorrect entries [ADV-719]
 				sessionKey = CompactRealmName
 				KnownRealms[CompactRealmName] = sessionKey
-			end
+			--end
+			-- previously GetAutoCompleteRealms returned nil for non-connected realms, but has recently started returning {} instead
+			-- this caused CoreServers to incorrectly treat non-connected realms as connected [ADV-719]
+			FixNonConnectedRealm(sessionKey, moduleKeys) -- check if we need to correct previous errors
 		else -- handle connected realm
 			local needsCheck = false
+			
+			-- [ADV-719] Previously our compact realm names only removed ' ' chars. We now also remove '-' chars.
+			-- Construct previous cname to see if it has changed
+			local oldCompactName = FullRealmName:gsub(" ", "")
+			if oldCompactName == CompactRealmName then
+				oldCompactName = nil
+			end
+			
 			sort(sessionConnected) -- we need it in the same order every time
 			if not ConnectedRealmTables then
 				ConnectedRealmTables = {}
@@ -236,7 +292,7 @@ internal.Servers = {
 			else
 				-- Check that this exact sessionConnected table is already in ConnectedRealmTables
 				local savedConnectedRealms = ConnectedRealmTables[sessionKey]
-				if not savedConnectedRealms or #savedConnectedRealms ~= sessionConnected then
+				if not savedConnectedRealms or #savedConnectedRealms ~= #sessionConnected then
 					needsCheck = true
 				else
 					for i = 1, #sessionConnected do
@@ -248,8 +304,28 @@ internal.Servers = {
 				end
 			end
 			if needsCheck then
-				sessionKey = ResolveConnectedRealms(sessionKey, sessionConnected, moduleKeys)
+				sessionKey = ResolveConnectedRealms(sessionKey, sessionConnected, moduleKeys, oldCompactName)
 			end
+			
+			if oldCompactName and KnownRealms[oldCompactName] then
+				-- [ADV-719] Remove invalid entries if we used names that contained a '-' char
+				-- ResolveConnectedRealms should have taken care of any data conversion
+				KnownRealms[oldCompactName] = nil
+				local oldServerKey = "#"..oldCompactName
+				KnownServerKeys[oldServerKey] = nil
+				ConnectedRealmTables[oldServerKey] = nil
+
+				if not AucAdvancedServers.ConvertedServerKeys then
+					AucAdvancedServers.ConvertedServerKeys = {}
+				end
+				AucAdvancedServers.ConvertedServerKeys[oldServerKey] = {
+					old = oldServerKey,
+					new = sessionKey,
+					timestamp = time(),
+					reason = "DashNameFix",
+				}
+			end
+
 		end
 
 		KnownServerKeys[sessionKey] = time() -- record login time
@@ -321,7 +397,7 @@ local function ResolveServerKey(testKey)
 	if serverKey then -- cached
 		return serverKey
 	end
-	local compactKey = testKey:gsub(" ", "")
+	local compactKey = testKey:gsub("[ %-]", "")
 	serverKey = cacheKnown[compactKey]
 	if serverKey then -- testKey is expanded version of a known compact name
 		cacheKnown[testKey] = serverKey
@@ -335,6 +411,23 @@ local function ResolveServerKey(testKey)
 			return serverKey
 		end
 	end
+
+	-- temporary code for old compact keys, having spaces removed but not dashes - pre-[ADV-719] -- ### to be removed
+	compactKey = testKey:gsub(" ", "")
+	serverKey = cacheKnown[compactKey]
+	if serverKey then
+		cacheKnown[testKey] = serverKey
+		return serverKey
+	end
+	if compactKey:byte(1) == 35 then -- '#'
+		local trimKey2 = compactKey:sub(2)
+		serverKey = cacheKnown[trimKey2]
+		if serverKey then
+			cacheKnown[testKey] = serverKey
+			return serverKey
+		end
+	end
+
 
 	-- check for old-style serverKey
 	local realm, faction = strmatch(compactKey, "^(.+)%-(%u%l+)$")
@@ -475,5 +568,5 @@ AucAdvanced.GetServerKeyText = GetServerKeyText
 AucAdvanced.SplitServerKey = SplitServerKey
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Advanced/CoreServers.lua $", "$Rev: 5670 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Advanced/CoreServers.lua $", "$Rev: 5693 $")
 AucAdvanced.CoreFileCheckOut("CoreServers")

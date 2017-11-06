@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Price Level Utility module
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: Undercut.lua 5585 2016-03-22 20:37:49Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -292,4 +292,4 @@ function private.SetupConfigGui(gui)
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Match-Undercut/Undercut.lua $", "$Rev: 5585 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Match-Undercut/Undercut.lua $", "$Rev: 5585 $")

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - AutoMagic Utility module
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: Auc-Util-AutoMagic.lua 5587 2016-04-07 16:01:45Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: Auc-Util-AutoMagic.lua 5686 2016-10-31 17:13:27Z Prowell $
 	URL: http://auctioneeraddon.com/
 
 	AutoMagic is an Auctioneer module which automates mundane tasks for you.
@@ -212,7 +212,9 @@ function lib.merchantShow()
 	private.eventframe:RegisterEvent("BAG_UPDATE")
 	if (get("util.automagic.autovendor")) then
 		--first lib.vendorAction call will sell all grays, bypassing promopt. Run lib.vendorAction to add anything remaining to the prompt window
-		if (get("util.automagic.autosellgreynoprompt")) then
+		if (get("util.automagic.autosellgreynoprompt") or get("util.automagic.autoselllistnoprompt") 
+				or (get("util.automagic.vendorunusablebop") and get("util.automagic.autosellbopnoprompt"))
+				or (get("util.automagic.autosellreason") and get("util.automagic.autosellreasonnoprompt"))) then
 			lib.vendorAction(true)
 		end
 		lib.vendorAction()
@@ -704,4 +706,4 @@ function lib.ClientItemCacheRefresh(link)
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-AutoMagic/Auc-Util-AutoMagic.lua $", "$Rev: 5587 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Util-AutoMagic/Auc-Util-AutoMagic.lua $", "$Rev: 5686 $")

@@ -1,4 +1,4 @@
-﻿-- --------------------
+-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -1097,9 +1097,6 @@ end
 
 do -- ordered pairs
 
-	local tables = {}
-	local unused = {}
-
 	local sortByValues, compareFunc, reverse
 
 	-- An alternative comparison function that can handle mismatched types.
@@ -1145,21 +1142,16 @@ do -- ordered pairs
 		--return compare(a, b)
 	end
 
-	local function orderedNext(orderedIndex, state)
-		local t = tables[orderedIndex]
-		
-		if state == nil then
-			local key = orderedIndex[1]
-			return key, t[key]
-		end
+	local iterIndexes = {}
+	local tables = {}
+	local unused = {}
 
-		local key
-		for i = 1, #orderedIndex do
-			if orderedIndex[i] == state then
-				key = orderedIndex[i+1]
-				break
-			end
-		end
+	local function orderedNext(orderedIndex)
+		local t = tables[orderedIndex]
+
+		local i = iterIndexes[orderedIndex]
+		local key = orderedIndex[i]
+		iterIndexes[orderedIndex] = i + 1
 
 		if key then
 			return key, t[key]
@@ -1167,6 +1159,7 @@ do -- ordered pairs
 
 		unused[#unused+1] = wipe(orderedIndex)
 		tables[orderedIndex] = nil
+		iterIndexes[orderedIndex] = nil
 		return
 	end
 
@@ -1212,6 +1205,7 @@ do -- ordered pairs
 
 		sort(orderedIndex, sorter)
 		tables[orderedIndex] = t
+		iterIndexes[orderedIndex] = 1
 
 		return orderedNext, orderedIndex
 	end
@@ -1354,6 +1348,7 @@ animator.OnUpdate = function()
 	for f in pairs(animator.frames) do
 		if TMW.time - f.__animateHeight_startTime > f.__animateHeight_duration then
 			animator.frames[f] = nil
+			f:SetClipsChildren(f.__animateHeight_wasClipping)
 			f:SetHeight(f.__animateHeight_end)
 		else
 			local pct = (TMW.time - f.__animateHeight_startTime)/f.__animateHeight_duration
@@ -1373,7 +1368,8 @@ function TMW:AnimateHeightChange(f, endHeight, duration)
 	f.__animateHeight_delta = f.__animateHeight_end - f.__animateHeight_start
 	f.__animateHeight_startTime = TMW.time
 	f.__animateHeight_duration = duration
-
+	f.__animateHeight_wasClipping = f:DoesClipChildren()
+	f:SetClipsChildren(true)
 	animator.frames[f] = true
 
 	animator:SetScript("OnUpdate", animator.OnUpdate)
@@ -1454,7 +1450,7 @@ function TMW.GetCurrentSpecializationRole()
 		return nil
 	end
 
-	local _, _, _, _, _, role = GetSpecializationInfo(currentSpec)
+	local _, _, _, _, role = GetSpecializationInfo(currentSpec)
 	return role
 end
 
@@ -1571,4 +1567,14 @@ function TMW:DetectImportedLua(table)
 	end
 
 	return results
+end
+
+
+function TMW:ClickSound()
+	 -- SOUNDKIT is patch 7.3 compat
+	if SOUNDKIT then
+		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
+	else
+		PlaySound("igMainMenuOptionCheckBoxOn")
+	end
 end

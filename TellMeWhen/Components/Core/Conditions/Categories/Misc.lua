@@ -1,4 +1,4 @@
-﻿-- --------------------
+-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -301,6 +301,31 @@ ConditionCategory:RegisterCondition(30,	 "MACRO", {
 	-- events = absolutely no events
 })
 
+
+
+local Functions = {}
+
+local function GetCompiledFunction(luaCode)
+	local key
+	if Functions[luaCode] then
+		key = tostring(Functions[luaCode]):gsub("function: ", "LF_")
+		return Functions[luaCode], key
+	end
+	
+	local func, err = loadstring("return " .. luaCode)
+	if err then
+		func, err = loadstring(luaCode)
+	end
+	
+	if func then
+		setfenv(func, TMW.CNDT.Env)
+		key = tostring(func):gsub("function: ", "LF_")
+		Functions[luaCode] = func
+		Env[key] = func
+	end
+	
+	return func, key, err
+end
 ConditionCategory:RegisterCondition(31,	 "LUA", {
 	text = L["LUACONDITION"],
 	tooltip = L["LUACONDITION_DESC"],
@@ -308,10 +333,6 @@ ConditionCategory:RegisterCondition(31,	 "LUA", {
 	max = 1,
 	nooperator = true,
 	noslide = true,
-	name = function(editbox)
-		editbox:SetTexts(L["LUACONDITION"], L["LUACONDITION_DESC"])
-		editbox:SetLabel(L["CODETOEXE"])
-	end,
 	unit = false,
 	icon = "Interface\\Icons\\INV_Misc_Gear_01",
 	tcoords = CNDT.COMMON.standardtcoords,
@@ -330,8 +351,10 @@ ConditionCategory:RegisterCondition(31,	 "LUA", {
 				error("Attempted use of thisobj in conditions that don't support it.")
 			end
 		end
+
+		local func, key, err = GetCompiledFunction(lua)
 		
-		return lua ~= "" and lua or "true"
+		return func and key .. "()" or format("error(%q)", err)
 	end,
 })
 

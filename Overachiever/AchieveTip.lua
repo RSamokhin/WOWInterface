@@ -164,9 +164,11 @@ function Overachiever.ExamineAchievementTip(tooltip, link)
              (PlayerGUID ~= GUID and Overachiever_Settings.Tooltip_ShowProgress_Other) ) then
           if (PlayerGUID ~= GUID and select(4,GetAchievementInfo(id))) then
           -- Link from someone else to an achievement you completed:
+		    --[[ As of WoW 7.2, the tooltip should already say you completed the achievement.
             local _, _, _, _, m, d, y = GetAchievementInfo(id)
             addline_format(tooltip, L.YOURPROGRESS, L.COMPLETEDATE:format(d, m, y))
-            progresscompleted = true
+			progresscompleted = true
+			--]]
           else
             local inserted
             local numcrit = GetAchievementNumCriteria(id)

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Realtime module
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: SearchRealTime.lua 5623 2016-07-30 10:18:27Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: SearchRealTime.lua 5721 2017-08-01 19:10:45Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This Auctioneer module allows the user to search the current Browse tab
@@ -338,6 +338,20 @@ function lib.ScanPage()
 	wipe(private.searchertable)
 end
 
+
+-- Conversion table for PlaySound change -- HYBRID73
+local lookupSound
+if SOUNDKIT then
+	lookupSound = {
+		["LEVELUP"] = 888, -- not in SOUNDKIT
+		["AuctionWindowOpen"] = SOUNDKIT.AUCTION_WINDOW_OPEN,
+		["AuctionWindowClose"] = SOUNDKIT.AUCTION_WINDOW_CLOSE,
+		["RaidWarning"] = SOUNDKIT.RAID_WARNING,
+	}
+else
+	lookupSound = {}
+end
+
 --private.alert()
 --alerts the user that a deal has been found,
 --both by opening the searchUI panel and playing a sound
@@ -361,7 +375,7 @@ function private.alert(link, cost, reason)
 		if SoundPath == "DoorBell" then
 			PlaySoundFile(embedpath.."Auc-Util-SearchUI\\DoorBell.mp3")
 		else
-			PlaySound(SoundPath)
+			PlaySound(lookupSound[SoundPath] or SoundPath) -- HYBRID73
 		end
 	end
 end
@@ -534,4 +548,4 @@ function private.HookAH()
 	BrowseRTSButton:SetPoint("TOPRIGHT", AuctionFrameBrowse, "TOPLEFT", 310, -15)
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-SearchUI/SearchRealTime.lua $", "$Rev: 5623 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Util-SearchUI/SearchRealTime.lua $", "$Rev: 5721 $")

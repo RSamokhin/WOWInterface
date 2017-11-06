@@ -1,6 +1,6 @@
 ﻿--[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: EnxMain.lua 5644 2016-08-06 21:39:02Z ccox $
 	URL: http://enchantrix.org/
 
@@ -30,7 +30,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 
 ]]
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Enchantrix/EnxMain.lua $", "$Rev: 5644 $")
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Enchantrix/EnxMain.lua $", "$Rev: 5644 $")
 
 -- Local functions
 local addonLoaded
@@ -41,7 +41,7 @@ local spellTargetItemHook
 local useItemByNameHook
 local onEvent
 
-Enchantrix.Version = "7.1.5675"
+Enchantrix.Version = "7.5.5724"
 if (Enchantrix.Version == "<".."%version%>") then
 	Enchantrix.Version = "4.0.DEV"
 end

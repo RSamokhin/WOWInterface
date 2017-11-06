@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Histogram Statistics module
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: StatHistogram.lua 5633 2016-07-31 14:25:49Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: StatHistogram.lua 5680 2016-10-26 18:48:39Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -530,8 +530,7 @@ function lib.SetWorkingItem(link)
 	if not itemID then return end
 	local texture
 	if linktype == "item" then
-		local _, _, _, _, _, _, _, _, _, t = GetItemInfo(link)
-		texture = t
+		texture = GetItemIcon(link)
 	elseif linktype == "battlepet" then
 		local speciesID = tonumber(strmatch(link, "battlepet:(%d+)"))
 		if speciesID then
@@ -968,4 +967,4 @@ function lib.ChangeServerKey(oldKey, newKey)
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Stat-Histogram/StatHistogram.lua $", "$Rev: 5633 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Stat-Histogram/StatHistogram.lua $", "$Rev: 5680 $")

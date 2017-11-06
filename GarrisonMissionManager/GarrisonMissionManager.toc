@@ -1,11 +1,7 @@
-## Interface: 70000
-## X-Curse-Packaged-Version: v49
-## X-Curse-Project-Name: Garrison Mission Manager
-## X-Curse-Project-ID: garrison-mission-manager
-## X-Curse-Repository-ID: wow/garrison-mission-manager/mainline
+## Interface: 70100
 
 ## Title: Garrison Mission Manager
-## Version: v49
+## Version: v55
 ## Notes: Assists you with selecting best team for Legion's Class Hall and WoD's Garrison/Shipyard missions and other followers management tasks
 ## Author: Oleg "Rowaa[SR13]" Volkov
 
@@ -23,12 +19,9 @@ C_Garrison_cache.lua
 FindBestFollowersForMission.lua
 GarrisonMissionManager.lua
 MissionUI_Shared.lua
+MissionUI_Shared_UpgradeItems.lua
 MissionUI_Garrison.lua
 MissionUI_Shipyard.lua
 MissionUI_OrderHall.lua
-SharedMissionUI.lua
-MissionUI.lua
-ShipyardUI.lua
-OrderHallUI.lua
 GarrisonBuilding.lua
 Broker.lua

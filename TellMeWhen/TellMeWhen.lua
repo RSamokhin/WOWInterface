@@ -1,4 +1,4 @@
-﻿-- ---------------------------------
+-- ---------------------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -15,10 +15,10 @@
 -- ADDON GLOBALS AND LOCALS
 -- ---------------------------------
 
-TELLMEWHEN_VERSION = "8.1.2"
+TELLMEWHEN_VERSION = "8.4.2"
 
 TELLMEWHEN_VERSION_MINOR = ""
-local projectVersion = "8.1.2" -- comes out like "6.2.2-21-g4e91cee"
+local projectVersion = "8.4.2" -- comes out like "6.2.2-21-g4e91cee"
 if projectVersion:find("project%-version") then
 	TELLMEWHEN_VERSION_MINOR = "dev"
 elseif strmatch(projectVersion, "%-%d+%-") then
@@ -26,11 +26,11 @@ elseif strmatch(projectVersion, "%-%d+%-") then
 end
 
 TELLMEWHEN_VERSION_FULL = TELLMEWHEN_VERSION .. " " .. TELLMEWHEN_VERSION_MINOR
-TELLMEWHEN_VERSIONNUMBER = 81209 -- NEVER DECREASE THIS NUMBER (duh?).  IT IS ALSO ONLY INTERNAL (for versioning of)
+TELLMEWHEN_VERSIONNUMBER = 84201 -- NEVER DECREASE THIS NUMBER (duh?).  IT IS ALSO ONLY INTERNAL (for versioning of)
 
-TELLMEWHEN_FORCECHANGELOG = 80039 -- if the user hasn't seen the changelog until at least this version, show it to them.
+TELLMEWHEN_FORCECHANGELOG = 82105 -- if the user hasn't seen the changelog until at least this version, show it to them.
 
-if TELLMEWHEN_VERSIONNUMBER > 82000 or TELLMEWHEN_VERSIONNUMBER < 81000 then
+if TELLMEWHEN_VERSIONNUMBER > 85000 or TELLMEWHEN_VERSIONNUMBER < 84000 then
 	-- safety check because i accidentally made the version number 414069 once
 	return error("TELLMEWHEN: THE VERSION NUMBER IS SCREWED UP OR MAYBE THE SAFETY LIMITS ARE WRONG")
 end
@@ -141,9 +141,6 @@ local LastUpdate = 0
 
 local time = GetTime() TMW.time = time
 
-local clientVersion = select(4, GetBuildInfo())
-local addonVersion = tonumber(GetAddOnMetadata("TellMeWhen", "X-Interface"))
-
 local _, pclass = UnitClass("Player")
 
 
@@ -234,6 +231,7 @@ TMW.Defaults = {
 				},
 				OnlyInCombat	= false,
 				View			= "icon",
+				TextureName		= "",
 				Name			= "",
 				Rows			= 1,
 				Columns			= 4,
@@ -2907,7 +2905,7 @@ function TMW:LockToggle()
 
 	TMW:Fire("TMW_LOCK_TOGGLED", TMW.db.profile.Locked)
 
-	PlaySound("igCharacterInfoTab")
+	PlaySound(SOUNDKIT and SOUNDKIT.IG_CHARACTER_INFO_TAB or "igCharacterInfoTab") -- SOUNDKIT is patch 7.3 compat
 	TMW:Update()
 end
 
@@ -3260,7 +3258,7 @@ function TMW:DoValidityCheck()
 			checker = TMW.GUIDToOwner[checkerIn]
 			if not checker then
 				TMW:Error("Invalid checker was passed to QueueValidityCheck: %q", checkerIn)
-				checkerName = "UNKNOWN" .. (TMW.debug and " " .. checkerIn)
+				checkerName = "UNKNOWN" .. (TMW.debug and " " .. checkerIn or "")
 			end
 		end
 		

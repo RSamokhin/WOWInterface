@@ -1,5 +1,5 @@
 --[[
-Copyright 2012-2015 João Cardoso
+Copyright 2012-2017 João Cardoso
 PetTracker is distributed under the terms of the GNU General Public License (Version 3).
 As a special exception, the copyright holders of this addon do not give permission to
 redistribute and/or modify it.
@@ -33,9 +33,6 @@ function Journal:Startup()
 	self.Count.Number:SetText(#Addon.TamerOrder)
 	self.SearchBox:SetText(Addon.Sets.TamerSearch or '')
 	self.SearchBox:SetScript('OnTextChanged', self.Search)
-	self.CloseButton:SetScript('OnClick', function() CollectionsJournal:Hide() end)
-	self:SetFrameLevel(self:GetFrameLevel() + 100)
-	self:EnableMouse(true)
 
 	self.Tab1.tip = TEAM
 	self.Tab1.Icon:SetTexture('Interface/Icons/ability_hunter_pet_goto')
@@ -273,14 +270,7 @@ end
 
 --[[ Make a Tab ]]--
 
-Journal.Tab = TabAppender_New(CollectionsJournal)
-Journal.Tab:SetText(L.Rivals)
-Journal.Tab.OnClick = function()
-	Journal:Show() 
+Journal.PanelTab = LibStub('SecureTabs-2.0'):Add(CollectionsJournal, Journal, L.Rivals)
+Journal.PanelTab.OnSelect = function()
 	Journal:Startup()
 end
-
-hooksecurefunc('CollectionsJournal_UpdateSelectedTab', function(self)
-	local selected = PanelTemplates_GetSelectedTab(self)
-	Journal:SetShown(selected == Journal.Tab:GetID())
-end)

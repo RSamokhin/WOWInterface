@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - BeanCounter Matcher module
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: MatchBeanCount.lua 5594 2016-04-21 13:26:33Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -36,7 +36,7 @@
 --	AucAdvanced.Print("BeanCounter not loaded")
 --	return
 --end
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/7.1/BeanCounter/MatchBeanCount.lua $","$Rev: 5594 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/7.5/BeanCounter/MatchBeanCount.lua $","$Rev: 5594 $","5.1.DEV.", 'auctioneer', 'libs')
 
 if not AucAdvanced then return end
 

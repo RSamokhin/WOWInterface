@@ -1,5 +1,5 @@
 --[[
-Copyright 2012-2015 João Cardoso
+Copyright 2012-2017 João Cardoso
 PetTracker is distributed under the terms of the GNU General Public License (Version 3).
 As a special exception, the copyright holders of this addon do not give permission to
 redistribute and/or modify it.
@@ -85,8 +85,8 @@ function Tooltip:CreateStroke(i)
 	local stroke = self:CreateTexture()
 	stroke:SetPoint('TOPLEFT', line, 'BOTTOMLEFT', -5, -3)
 	stroke:SetPoint('TOPRIGHT', line, 'BOTTOMRIGHT', 5, -3)
-	stroke:SetTexture(.2, .2, .2)
-	stroke:SetHeight(2)
+	stroke:SetColorTexture(.3, .3, .3)
+	stroke:SetHeight(1)
 	
 	self.Strokes[i] = stroke
 	return stroke

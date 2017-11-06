@@ -1,7 +1,7 @@
-## Interface: 70000
+## Interface: 70200
 ## Title: TomTom
 ## Author: jnwhiteh
-## Version: v70000-1.1.0
+## Version: v70200-1.0.0
 ## License: All Rights Reserved
 ## Notes: Acts as your portable navigation assistant
 ## Notes-frFR: Agit comme un assistant de navigation portable
@@ -10,10 +10,6 @@
 ## Author: Cladhaire
 ## SavedVariables: TomTomDB, TomTomWaypoints, TomTomWaypointsMF
 ## OptionalDeps: HereBeDragons-1.0
-## X-Curse-Packaged-Version: v70000-1.1.0
-## X-Curse-Project-Name: TomTom
-## X-Curse-Project-ID: tomtom
-## X-Curse-Repository-ID: wow/tomtom/mainline
 
 ## X-Localizations: enUS, enGB, deDE, frFR, zhCN, ruRU, zhTW
 ## X-CompatibleLocales: enUS, enGB, deDE, frFR, esES, esMX, zhCN, zhTW, koKR, ruRU

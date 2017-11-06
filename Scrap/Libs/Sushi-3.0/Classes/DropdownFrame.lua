@@ -1,4 +1,4 @@
-local Drop, Version = MakeSushi(7, 'Frame', 'DropdownFrame', nil, nil, SushiGroup)
+local Drop, Version = MakeSushi(9, 'Frame', 'DropdownFrame', nil, nil, SushiGroup)
 if not Drop then
 	return
 elseif not Version then
@@ -24,7 +24,6 @@ function Drop:OnCreate()
 	SushiGroup.OnCreate(self)
 	self:SetOrientation('HORIZONTAL')
 	self:SetResizing('VERTICAL')
-	self:SetClampedToScreen(true)
 
 	self.bg = CreateFrame('Frame', nil, self)
 	self.bg:SetFrameLevel(self:GetFrameLevel())
@@ -37,10 +36,11 @@ function Drop:OnAcquire()
 
 	self.lines = nil
 	self:SetMenu(false)
+	self:SetClampedToScreen(true)
 	self:SetFrameStrata('FULLSCREEN_DIALOG')
 	self:SetCall('UpdateChildren', function()
 		self.width = 0
-		
+
 		local lines = get(self.lines, self)
 		if lines then
 			for i, line in ipairs(lines) do
@@ -54,6 +54,11 @@ function Drop:OnAcquire()
 
 		self:SetWidth(self.width + 52)
 	end)
+end
+
+function Drop:OnRelease()
+	self:SetClampedToScreen(false)
+	SushiCallHandler.OnRelease(self)
 end
 
 
@@ -109,14 +114,14 @@ end
 function Drop:Toggle(...)
 	local n = select('#', ...)
 	local anchor = select(n < 4 and 1 or 2, ...)
-	
+
 	if anchor ~= self.target then
 		self:Display(...)
 	else
 		CloseDropDownMenus()
 	end
 
-	PlaySound('igMainMenuOptionCheckBoxOn')
+	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 end
 
 function Drop:Display(...)

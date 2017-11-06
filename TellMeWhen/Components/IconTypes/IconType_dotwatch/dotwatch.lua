@@ -1,14 +1,10 @@
-﻿-- --------------------
+-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
--- Other contributions by
--- Sweetmms of Blackrock
--- Oozebull of Twisting Nether
--- Oodyboo of Mug'thol
--- Banjankri of Blackrock
--- Predeter of Proudmoore
--- Xenyr of Aszune
+-- Other contributions by:
+--		Sweetmms of Blackrock, Oozebull of Twisting Nether, Oodyboo of Mug'thol,
+--		Banjankri of Blackrock, Predeter of Proudmoore, Xenyr of Aszune
 
 -- Currently maintained by
 -- Cybeloras of Aerie Peak/Detheroc/Mal'Ganis
@@ -74,26 +70,26 @@ Type:RegisterConfigPanel_XMLTemplate(165, "TellMeWhen_IconStates", {
 	[ STATE_ABSENT  ] = { text = "|cFFFF0000" .. L["ICONMENU_ABSENTONALL"],  tooltipText = L["ICONMENU_DOTWATCH_NOFOUND_DESC"],    },
 })
 
-Type:RegisterConfigPanel_ConstructorFunc(10, "TellMeWhen_DotwatchSettings", function(self)
-	self:SetTitle(L["ICONMENU_DOTWATCH_GCREQ"])
+-- Type:RegisterConfigPanel_ConstructorFunc(10, "TellMeWhen_DotwatchSettings", function(self)
+-- 	self:SetTitle(L["ICONMENU_DOTWATCH_GCREQ"])
 
-	self.text = self:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-	self.text:SetWordWrap(true)
-	self.text:SetPoint("TOP", 0, -10)
-	self.text:SetText(L["ICONMENU_DOTWATCH_GCREQ_DESC"])
-	self.text:SetWidth(self:GetWidth() - 15)
-	self:SetHeight(self.text:GetStringHeight() + 20)
+-- 	self.text = self:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+-- 	self.text:SetWordWrap(true)
+-- 	self.text:SetPoint("TOP", 0, -10)
+-- 	self.text:SetText(L["ICONMENU_DOTWATCH_GCREQ_DESC"])
+-- 	self.text:SetWidth(self:GetWidth() - 15)
+-- 	self:SetHeight(self.text:GetStringHeight() + 20)
 
-	self:SetScript("OnSizeChanged", function()
-		self:SetHeight(self.text:GetStringHeight() + 20)
-	end)
+-- 	self:SetScript("OnSizeChanged", function()
+-- 		self:SetHeight(self.text:GetStringHeight() + 20)
+-- 	end)
 
-	self:CScriptAdd("PanelSetup", function()
-		if TMW.CI.icon:IsGroupController() then
-			self:Hide()
-		end
-	end)
-end)
+-- 	self:CScriptAdd("PanelSetup", function()
+-- 		if TMW.CI.icon:IsGroupController() then
+-- 			self:Hide()
+-- 		end
+-- 	end)
+-- end)
 
 -- Holds all dotwatch icons that we need to update.
 -- Since the event handling for this icon type is all done by a single handler that operates on all icons,
@@ -122,38 +118,39 @@ local BaseDurations = {}
 local DurationExtends = {}
 
 
-local AllUnits = TMW:GetUnits(nil, [[
-	player;
-	mouseover;
+local AllUnits
+local function CreateAllUnits()
+	AllUnits = AllUnits or TMW:GetUnits(nil, [[
+		player;
+		mouseover;
 
-	target;
-	targettarget;
-	targettargettarget;
+		target;
+		targettarget;
+		targettargettarget;
 
-	focus;
-	focustarget;
-	focustargettarget;
+		focus;
+		focustarget;
+		focustargettarget;
 
-	pet;
-	pettarget;
-	pettargettarget;
-	
-	nameplate1-30;
+		pet;
+		pettarget;
+		pettargettarget;
+		
+		nameplate1-30;
 
-	arena1-5;
-	arena1-5target;
+		arena1-5;
+		arena1-5target;
 
-	boss1-5;
-	boss1-5target;
+		boss1-5;
+		boss1-5target;
 
-	party1-4;
-	party1-4target;
+		party1-4;
+		party1-4target;
 
-	raid1-40;
-	raid1-40target;]]
-)
-
-
+		raid1-40;
+		raid1-40target;]]
+	)
+end
 
 local function ScanForAura(GUID, spellName, spellID)
 	for i = 1, #AllUnits do
@@ -189,7 +186,8 @@ local function ScanForAura(GUID, spellName, spellID)
 			end
 
 			-- Make sure that this is an application that just happened before returning the duration.
-			if id and abs((GetTime() + duration) - expirationTime) < 0.1 then
+			-- Or, if the duration is 0, then this effect has no duration.
+			if id and (duration == 0 or abs((GetTime() + duration) - expirationTime) < 0.1) then
 				return duration
 			end
 
@@ -224,6 +222,7 @@ local function VerifyAll()
 						auras[spellID] = aura
 						auras[buffName] = spellID
 					end
+					aura.lastSeen = TMW.time
 
 					local verified = aura.verified
 					if 	verified and 
@@ -259,26 +258,67 @@ local function VerifyAll()
 					end
 				end
 			end
+				
+			-- Clean up anything that wasn't just scanned.
+			auras = auras or Auras[GUID]
+			for k, v in next, auras do
+				local aura, spellID
+				if type(v) == "table" then
+					aura, spellID = v, k
+				else
+					aura, spellID = auras[v], v
+					if not aura then
+						-- This is a spell name pointing at an untracked ID. Get rid of it.
+						auras[k] = nil
+					end
+				end
+
+				if aura and aura.lastSeen ~= TMW.time then
+					auras[spellID] = nil
+					local spellName = strlowerCache[aura.spellName]
+					if auras[spellName] == spellID then
+						auras[spellName] = nil
+					end
+
+					for k = 1, #ManualIcons do
+						local icon = ManualIcons[k]
+						local NameHash = icon.Spells.Hash
+						if NameHash and (NameHash[spellID] or NameHash[spellName]) then
+							icon.NextUpdateTime = 0
+						end
+					end
+				end
+			end
 		end
 	end
 end
 
 local function CleanupOldAuras()
 	-- Cleanup function - occasionally get rid of units that aren't active.
+	local removedSomething = false
 	for GUID, auras in pairs(Auras) do
 		if not next(auras) then
 			Auras[GUID] = nil
+			removedSomething = true
 		else
 			local isGood = false
 			for _, aura in pairs(auras) do
-				if type(aura) == "table" and aura:Remaining() > 0 then
+				-- If the unit has an aura that is still active that we've definitely seen within 30 seconds, the unit's still good.
+				-- We need to check the last seen of the unit for weird things like Warlock's Absolute Corruption, which gives it infite duration.
+				if type(aura) == "table" and aura:Remaining() > 0 and (aura.lastSeen > TMW.time - 30) then
 					isGood = true
 					break
 				end
 			end
 			if not isGood then
 				Auras[GUID] = nil
+				removedSomething = true
 			end
+		end
+	end
+	if removedSomething then
+		for k = 1, #ManualIcons do
+			ManualIcons[k].NextUpdateTime = 0
 		end
 	end
 end
@@ -308,6 +348,7 @@ Aura = TMW:NewClass("Aura"){
 		self.spellID = spellID
 		self.spellName = GetSpellInfo(spellID)
 		self.start = TMW.time
+		self.lastSeen = TMW.time
 		local duration = BaseDurations[spellID]
 
 		if not duration then
@@ -359,17 +400,14 @@ Aura = TMW:NewClass("Aura"){
 }
 Aura:MakeInstancesWeak()
 
-local noRefreshDuration = {
-	980,	-- Agony (Warlock)
-	155159,	-- Necrotic Plague
-}
-
 function Type:COMBAT_LOG_EVENT_UNFILTERED(e, _, cleuEvent, _, sourceGUID, _, _, _, destGUID, destName, _, _, spellID, spellName, _, _, stack)
 	if sourceGUID == pGUID 
 	and	(cleuEvent == "SPELL_AURA_APPLIED"
 	or cleuEvent == "SPELL_AURA_APPLIED_DOSE"
 	or cleuEvent == "SPELL_AURA_REMOVED_DOSE"
 	or cleuEvent == "SPELL_AURA_REFRESH"
+	or cleuEvent == "SPELL_PERIODIC_DAMAGE"
+	or cleuEvent == "SPELL_PERIODIC_HEAL"
 	or cleuEvent == "SPELL_AURA_REMOVED")
 	then
 	
@@ -389,15 +427,12 @@ function Type:COMBAT_LOG_EVENT_UNFILTERED(e, _, cleuEvent, _, sourceGUID, _, _, 
 			local actuallyRefresh
 			if cleuEvent ~= "SPELL_AURA_APPLIED" and not aura then
 				-- This is dirty. But it prevents ugly code duplication.
-				-- This handles refreshes of auras that we never saw the initial application of.
+				-- This handles refreshes or ticks of auras that we never saw the initial application of.
 				cleuEvent = "SPELL_AURA_APPLIED"
 				actuallyRefresh = 1
 			end
 
 			if cleuEvent == "SPELL_AURA_APPLIED_DOSE" then
-				if noRefreshDuration[spellID] then
-					aura:Refresh()
-				end
 				aura.stacks = stack
 				aura.verified = false
 			elseif cleuEvent == "SPELL_AURA_REMOVED_DOSE" then
@@ -405,10 +440,13 @@ function Type:COMBAT_LOG_EVENT_UNFILTERED(e, _, cleuEvent, _, sourceGUID, _, _, 
 				aura.verified = false
 			elseif cleuEvent == "SPELL_AURA_REFRESH" then
 				aura:Refresh()
+			elseif cleuEvent == "SPELL_PERIODIC_DAMAGE" or cleuEvent == "SPELL_PERIODIC_HEAL" then
+				-- This aura is still there! Nothing special to do - just fall through and update lastSeen.
 			else -- SPELL_AURA_APPLIED
 				aura = Aura:New(spellID, destGUID, destName, actuallyRefresh)
 				aurasOnGUID[spellID] = aura
 			end
+			aura.lastSeen = TMW.time
 		end
 
 		-- Update any icons that are interested in the aura that we just handled
@@ -426,8 +464,7 @@ function Type:COMBAT_LOG_EVENT_UNFILTERED(e, _, cleuEvent, _, sourceGUID, _, _, 
 		-- Updating all icons when something dies is far easier, and probably faster,
 		-- than trying to figure out what icons the death will affect.
 		for k = 1, #ManualIcons do
-			local icon = ManualIcons[k]
-			icon.NextUpdateTime = 0
+			ManualIcons[k].NextUpdateTime = 0
 		end
 	end
 end
@@ -458,7 +495,7 @@ local function Dotwatch_OnUpdate_Controller(icon, time)
 
 				local remaining = duration - (time - start)
 
-				if remaining > 0 then
+				if remaining > 0 or (start == 0 and duration == 0) then
 					if presentAlpha > 0 and not icon:YieldInfo(true, iName, start, duration, aura.unitName, GUID, aura.stacks) then
 						-- YieldInfo returns true if we need to keep harvesting data. Otherwise, it returns false.
 						return
@@ -508,11 +545,13 @@ function Type:Setup(icon)
 		nil, nil
 	)
 
-
+	CreateAllUnits()
 	Type:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+	TMW:RegisterCallback("TMW_ICON_DISABLE", Type)
+	TMW:RegisterCallback("TMW_ONUPDATE_TIMECONSTRAINED_PRE", Type)
+
 	if not Type.CleanupTimer then
-		Type.CleanupTimer = C_Timer.NewTicker(30, CleanupOldAuras)
-		TMW:RegisterCallback("TMW_ONUPDATE_TIMECONSTRAINED_PRE", VerifyAll)
+		Type.CleanupTimer = C_Timer.NewTicker(10, CleanupOldAuras)
 	end
 
 	icon.FirstTexture = GetSpellTexture(icon.Spells.First)
@@ -520,34 +559,32 @@ function Type:Setup(icon)
 	icon:SetUpdateMethod("manual")
 	ManualIconsManager:UpdateTable_Register(icon)
 		
-
-	if icon:IsGroupController() then
-		icon:SetUpdateFunction(Dotwatch_OnUpdate_Controller)
-	elseif icon.Enabled and icon:IsBeingEdited() and TellMeWhen_DotwatchSettings then
-		-- GLOBALS: TellMeWhen_DotwatchSettings
-		TellMeWhen_DotwatchSettings:Flash(1.5)
-	end
+	icon:SetUpdateFunction(Dotwatch_OnUpdate_Controller)
 
 	icon:Update()
 end
 
-TMW:RegisterCallback("TMW_GLOBAL_UPDATE", function(event, icon)
+function Type:TMW_ONUPDATE_TIMECONSTRAINED_PRE()
+	VerifyAll()
+end
+
+function Type:TMW_ICON_DISABLE(event, icon)
+	ManualIconsManager:UpdateTable_Unregister(icon)
+end
+
+TMW:RegisterCallback("TMW_GLOBAL_UPDATE", function()
 	-- UnitGUID() returns nil at load time, so we need to run this later in order to get pGUID.
 	-- TMW_GLOBAL_UPDATE is good enough.
 	pGUID = UnitGUID("player")
 
 	Type:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-
-	TMW:UnregisterCallback("TMW_ONUPDATE_TIMECONSTRAINED_PRE", VerifyAll)
+	TMW:UnregisterCallback("TMW_ONUPDATE_TIMECONSTRAINED_PRE", Type)
+	
 	if Type.CleanupTimer then
 		Type.CleanupTimer:Cancel()
 		Type.CleanupTimer = nil
 		CleanupOldAuras()
 	end
-end)
-
-TMW:RegisterCallback("TMW_ICON_DISABLE", function(event, icon)
-	ManualIconsManager:UpdateTable_Unregister(icon)
 end)
 
 Type:Register(102)

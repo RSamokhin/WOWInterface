@@ -1,5 +1,5 @@
 --[[
-Copyright 2008-2015 João Cardoso
+Copyright 2008-2017 João Cardoso
 Sushi is distributed under the terms of the GNU General Public License (or the Lesser GPL).
 This file is part of Sushi.
 
@@ -18,7 +18,7 @@ along with Sushi. If not, see <http://www.gnu.org/licenses/>.
 --]]
 
 local Base = SushiButtonBase
-local Check = MakeSushi(2, 'CheckButton', 'CheckButton', nil, 'InterfaceOptionsCheckButtonTemplate', Base)
+local Check = MakeSushi(3, 'CheckButton', 'CheckButton', nil, 'InterfaceOptionsCheckButtonTemplate', Base)
 if not Check then
 	return
 end
@@ -49,11 +49,11 @@ end
 function Check:OnClick ()
 	local checked = self:GetChecked()
 	if checked then
-		PlaySound('igMainMenuOptionCheckBoxOn')
+		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 	else
-		PlaySound('igMainMenuOptionCheckBoxOff')
+		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 	end
-	
+
 	self:FireCall('OnClick', checked)
 	self:FireCall('OnInput', checked)
 	self:FireCall('OnUpdate')

@@ -20,6 +20,9 @@ local print = TMW.print
 local pairs, type, ipairs, bit, select = 
       pairs, type, ipairs, bit, select
 
+local clientVersion = select(4, GetBuildInfo())
+local addonVersion = tonumber(GetAddOnMetadata("TellMeWhen", "X-Interface"))
+
 local _, pclass = UnitClass("Player")
 
 
@@ -160,8 +163,7 @@ TMW.BE = {
 			  -3409, -- Crippling Poison
 			  -3600, -- Earthbind
 			  -5116, -- Concussive Shot
-			  -7302, -- Frost Armor
-			  -7321, -- Chilled
+			 -12544, -- Frost Armor
 			  -7992, -- Slowing Poison
 			  26679, -- Deadly Throw
 			  35346, -- Warp Time
@@ -193,7 +195,6 @@ TMW.BE = {
 			 194279, -- Caltrops
 			 194858, -- Dragonsfire Grenade
 			 195645, -- Wing Clip
-			 196723, -- Dizzying Kicks
 			-196840, -- Frost Shock
 			 198813, -- Vengeful Retreat
 			 201142, -- Frozen Wake (freezing trap break slow from master trapper survival hunter talent)
@@ -264,7 +265,7 @@ TMW.BE = {
 			  36554, -- Shadowstep
 			  54861, -- Nitro Boosts
 			  58875, -- Spirit Walk
-			  65081, -- Body and Soul
+			 -65081, -- Body and Soul
 			  68992, -- Darkflight
 			  85499, -- Speed of Light
 			  87023, -- Cauterize
@@ -284,12 +285,12 @@ TMW.BE = {
 			 199407, -- Light on your feet (mistweaver monk artifact trait)
 			 201233, -- whirling kicks (windwalaker monk pvp talent)
 			 201447, -- Ride the wind (windwalaker monk pvp talent)
-			 204324, -- Instincts of the cheetah (hunter talent)
 			 209754, -- Boarding Party (rogue pvp talent)
 			 210980, -- Focus in the light (holy priest artifact trait)
 			 213177, -- swift as a coursing river (brewmaster artifact trait)
 			 214121, -- Body and Mind (priest talent)
 			 215572, -- Frothing Berserker (warrior talent)
+			 231390, -- Trailblazer (hunter talent)
 			-186257, -- Aspect of the Cheetah
 			-204475, -- Windburst (marks hunter artifact ability)
 		},
@@ -386,6 +387,7 @@ TMW.BE = {
 			    -17, -- Power Word: Shield
 			  77535, -- Blood Shield
 			 116849, -- Life Cocoon
+			 194022 --- Mental Fortitude (Shadow Priest Artifact)
 		},
 		ImmuneToMagicCC = {
 			  33786, -- Cyclone
@@ -405,6 +407,8 @@ TMW.BE = {
 		BurstHaste = {
 			  90355, -- Ancient Hysteria
 			 146555, -- Drums of Rage
+			 178207, -- Drums of Fury
+			 230935, -- Drums of the Mountain
 			   2825, -- Bloodlust
 			  80353, -- Time Warp
 			 160452, -- Netherwinds
@@ -415,34 +419,39 @@ TMW.BE = {
 		Heals = {
 			   2061, -- Flash Heal
 			    596, -- Prayer of Healing
-			    740, -- Tranquility
-			   1064, -- Chain Heal
 			   2060, -- Heal
-			   5185, -- Healing Touch
-			   8004, -- Healing Surge
-			   8936, -- Regrowth
-			  19750, -- Flash of Light
 			  32546, -- Binding Heal
 			  33076, -- Prayer of Mending
-			  48438, -- Wild Growth
 			  64843, -- Divine Hymn
-			  73920, -- Healing Rain
-			  77472, -- Healing Wave
-			  82326, -- Holy Light
-			 114163, -- Eternal Flame
-			 116670, -- Vivify
-			 116694, -- Effuse
 			 120517, -- Halo
-			 124682, -- Enveloping Mist
 			 152118, -- Clarity of Will
 			 186263, -- Shadow Mend
-			 191837, -- Esssence Font
 			 194509, -- Power Word: Radiance
-			 200652, -- Tyr's Deliverance
 			 204065, -- Shadow Covenant
+
+			    740, -- Tranquility
+			   8936, -- Regrowth
+			   5185, -- Healing Touch
+			  48438, -- Wild Growth
+
+			   1064, -- Chain Heal
+			   8004, -- Healing Surge
+			  73920, -- Healing Rain
+			  77472, -- Healing Wave
+			 207778, -- Gift of the Queen
+
+			  19750, -- Flash of Light
+			  82326, -- Holy Light
+			 114163, -- Eternal Flame
+			 200652, -- Tyr's Deliverance
+
+			 116670, -- Vivify
+			 116694, -- Effuse
+			 124682, -- Enveloping Mist
+			 191837, -- Esssence Font
 			 205406, -- Sheilun's Gift
 			 209525, -- Soothing Mist
-			 207778, -- Gift of the Queen
+
 		},
 		PvPSpells = {
 			    339, -- Entangling Roots
@@ -485,7 +494,7 @@ local function ProcessEquivalencies()
 
 	for dispeltype, texture in pairs(TMW.DS) do
 		TMW.EquivFirstIDLookup[dispeltype] = texture
-		TMW.SpellTexturesMetaIndex[strlower(dispeltype)] = icon
+		TMW.SpellTexturesMetaIndex[strlower(dispeltype)] = texture
 	end
 	
 	for category, b in pairs(TMW.BE) do

@@ -1,6 +1,6 @@
 --[[
 Auctioneer - StatSimple
-Version: 7.1.5675 (TasmanianThylacine)
+Version: 7.5.5724 (TasmanianThylacine)
 Revision: $Id: StatSimple.lua 5558 2015-05-13 14:08:02Z brykrys $
 URL: http://auctioneeraddon.com/
 
@@ -916,4 +916,4 @@ function private.WriteItemData(serverKey, storeID, storeProperty)
 	wipe(WriteStore)
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Stat-Simple/StatSimple.lua $", "$Rev: 5558 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Stat-Simple/StatSimple.lua $", "$Rev: 5558 $")

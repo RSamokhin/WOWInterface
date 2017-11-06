@@ -27,6 +27,7 @@
 
 						self:SetTexts(TMW.L["UIPANEL_RELATIVETO"], TMW.L["UIPANEL_RELATIVETO_DESC"])
 						self:SetSetting("relativeTo")
+						TMW.SUG:EnableEditBox(self, "frameName", true)
 
 						self:CScriptAdd("ModifyValueForSave", function(self, value)
 							value = value:trim()
@@ -36,6 +37,15 @@
 								self:SetText("UIParent")
 							elseif value:match("|H") then
 								value = value:match("|H(.-)|h.*|h")
+							else
+								-- Match by the return of GetGroupName(). This allows copy/paste of this value from one group to another.
+								local trimmed = value:trim(" \t[]")
+								for group in TMW:InGroups() do
+									local groupName = group:GetGroupName():gsub("|c........", ""):gsub("|r", "")
+									if groupName == trimmed then
+										value = group:GetGUID()
+									end
+								end
 							end
 
 							return value
@@ -323,7 +333,7 @@
 						self:SetFrameLevel(self:GetFrameLevel()+2)
 					</OnLoad>
 					<OnClick>
-						PlaySound("igMainMenuOptionCheckBoxOn")
+						TMW:ClickSound()
 
 						local group = TMW.CI.group
 						local module = group:GetModuleOrModuleChild("GroupModule_GroupPosition")

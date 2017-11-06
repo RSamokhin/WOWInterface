@@ -1,7 +1,7 @@
 if GetLocale() ~= 'deDE' then return end
 local _, Addon = ...
 local L = Addon.Locals
-	
+
 L.AddWaypoint = 'Wegpunkt hinzuf\195\188gen'
 L.AlertUpgrades = 'Alarm f\195\188r Upgrades'
 L.AlertUpgradesTip = 'Wenn deaktiviert, wird die Upgrades Alarm-Meldung nicht im Kampf gezeigt, aber Upgrades werden immer noch mit einem Symbol gekennzeichnet (|TInterface\\GossipFrame\\AvailableQuestIcon:0:0:-1:-2|t).'
@@ -9,7 +9,6 @@ L.AskForfeit = 'Keine Upgrades verf\195\188gbar. Kampf beenden?'
 L.AvailableBreeds = '\nVerf\195\188gbare Rassen:'
 L.PromptForfeit = 'Aufforderung verwirkt'
 L.PromptForfeitTip = 'Wenn aktiviert, wirst Du aufgefordert, einen Kampf zu verlieren, wenn keine Upgrades verf\195\188gbar sind.'
-L.BattlePets = 'Kampf Haustiere'
 L.Breed = 'Rasse'
 L.BreedExplanation = 'Legt fest, wie gewonnene Statistiken je Level verteilt werden.'
 L.CapturedPets = 'Gefangene Haustiere'

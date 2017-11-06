@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: CoreConst.lua 5635 2016-08-02 20:10:46Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: CoreConst.lua 5693 2016-12-22 23:00:47Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -148,7 +148,7 @@ local lib = {
 }
 AucAdvanced.Const = lib
 
-lib.CompactRealm = lib.PlayerRealm:gsub(" ", "") -- CompactRealm is realm name with spaces removed
+lib.CompactRealm = lib.PlayerRealm:gsub("[ %-]", "") -- CompactRealm is realm name with spaces and dashes removed
 
 -- *** AuctionCategory tables (AC_*) ***
 -- Indexed list of class IDs
@@ -243,5 +243,5 @@ end
 -- ### todo: keep checking this conversion is correct, otherwise will have to hard-code lookup table
 lib.AC_PetType2SubClassID = {GetAuctionItemSubClasses(LE_ITEM_CLASS_BATTLEPET)}
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Advanced/CoreConst.lua $", "$Rev: 5635 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Advanced/CoreConst.lua $", "$Rev: 5693 $")
 AucAdvanced.CoreFileCheckOut("CoreConst")

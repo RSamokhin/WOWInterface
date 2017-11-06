@@ -62,7 +62,7 @@ end
 local list
 
 local function TradeSkillCheck(tradeName, name, getList)
-  local lookup = TradeSkillLookup[tradeName][name]
+  local lookup = TradeSkillLookup[tradeName] and TradeSkillLookup[tradeName][name]
   if (lookup) then
     local anyIncomplete
     if (getList) then  list = list and wipe(list) or {};  end

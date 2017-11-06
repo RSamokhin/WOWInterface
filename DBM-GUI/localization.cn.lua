@@ -1,8 +1,8 @@
-﻿-- Diablohu(diablohudream@gmail.com) 
+-- Diablohu(diablohudream@gmail.com) 
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: Aug 30 2016, 03:25 UTC@15178
+-- Last update: Oct 08 2016, 03:05 UTC@15334
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
@@ -92,7 +92,7 @@ L.Warn_FontType				= "选择字体"
 L.Warn_FontStyle			= "选择样式"
 L.Warn_FontShadow			= "阴影"
 L.Warn_FontSize				= "字体大小: %d"
-L.Warn_Duration				= "警告持续时间: %d 秒"
+L.Warn_Duration				= "警告持续时间: %0.1f 秒"
 L.None						= "无"
 L.Outline					= "描边"
 L.ThickOutline				= "加粗描边"
@@ -180,6 +180,7 @@ L.Area_SpecWarn				= "特殊警报设置"
 L.SpecWarn_ClassColor		= "为特殊警报启用分职业着色"
 L.ShowSWarningsInChat 		= "在聊天窗口中显示特殊警报"
 L.SWarnNameInNote			= "使用自定义注记的特殊警报请选择SW5"
+L.SpecialWarningIcon		= "特殊警报使用技能图标"
 L.SpecWarn_FlashFrame		= "特殊警报时屏幕边缘泛光"
 L.SpecWarn_FlashFrameRepeat	= "重复 %d 次 (如果开启的话)"
 L.SpecWarn_Font				= "特殊警报字体"
@@ -222,7 +223,6 @@ L.CountdownVoice2			= "设置第二倒计时语音"
 L.CountdownVoice3			= "设置第三倒计时语音"
 L.VoicePackChoice			= "设置语音报警的语音包(快躲开！)"
 L.Area_CountdownOptions		= "倒计时选项"
-L.ShowCountdownText			= "为第一倒计时显示大型数字(倒计时数字)"
 L.Area_VoicePackOptions		= "语音包选项(第三方)"
 L.SpecWarn_NoSoundsWVoice	= "当技能存在语音包语音时，屏蔽播放特殊警报声（当心，毁灭）"
 L.SWFNever					= "从不"
@@ -286,13 +286,13 @@ L.HideBossEmoteFrame		= "Boss战斗中隐藏Boss表情框体"
 L.HideWatchFrame			= "在没有成就追踪的情况下，Boss战斗中隐藏任务追踪框体"
 L.HideGarrisonUpdates		= "Boss战斗中隐藏要塞队列完成提示"
 L.HideGuildChallengeUpdates	= "Boss战斗中隐藏工会挑战成功信息"
-L.HideTooltips				= "Boss战斗中隐藏鼠标提示窗体 （tooltips）"
+L.HideQuestTooltips			= "Boss战斗中隐藏鼠标提示窗体(tooltips)中的任务进度"
+L.HideTooltips				= "Boss战斗中完全隐藏鼠标提示窗体(tooltips)"
 L.DisableSFX				= "Boss战斗中关闭音效"
 L.SpamBlockSayYell			= "隐藏聊天窗口中的使用聊天泡泡的警报信息"
 L.DisableCinematics			= "自动跳过游戏内过场动画"
 L.AfterFirst				= "仅第一次播放"
 L.Always					= "总是跳过"
-L.DisableTalkingHead		= "隐藏抬头对话窗"
 L.CombatOnly				= "在任何战斗中隐藏"
 L.RaidCombat				= "只在Boss战斗中隐藏"
 
@@ -312,7 +312,6 @@ L.AutoReplySound			= "当收到DBM可自动回复的信息时播放音效并闪�
 --
 L.TimerGeneral 				= "计时器选项"
 L.SKT_Enabled				= "总是显示最速胜利计时条(覆盖单独BOSS设置)"
-L.CRT_Enabled				= "显示下一次可战复CD"
 L.ShowRespawn				= "Boss战斗未完成时显示Boss刷新计时条"
 L.ShowQueuePop				= "显示随机小队/团队查找器确认计时条"
 --

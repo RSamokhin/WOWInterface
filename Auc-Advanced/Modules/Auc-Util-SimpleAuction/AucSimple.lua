@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Basic Auction Posting
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: AucSimple.lua 5629 2016-07-31 13:17:00Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -280,4 +280,4 @@ function private.SetupConfigGui(gui)
 	gui:AddTip(id, "Displays the old-style \"Scan\" button at the bottom of the browse window.")
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-SimpleAuction/AucSimple.lua $", "$Rev: 5629 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Util-SimpleAuction/AucSimple.lua $", "$Rev: 5629 $")

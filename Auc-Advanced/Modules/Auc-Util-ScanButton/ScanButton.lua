@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Scan Button module
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: ScanButton.lua 5631 2016-07-31 14:14:30Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -537,4 +537,4 @@ function private.AuctionFrameFilters_UpdateClasses()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-ScanButton/ScanButton.lua $", "$Rev: 5631 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Util-ScanButton/ScanButton.lua $", "$Rev: 5631 $")

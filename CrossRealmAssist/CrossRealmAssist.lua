@@ -654,10 +654,12 @@ function addon:CreateLFGUI()
 
 
     lfgui = setupWidget(CreateFrame("Frame","CrossRealmAssistJoinUI",nil,"UIPanelDialogTemplate"), {SetFrameStrata="HIGH",SetWidth=tableWidth+45,SetHeight=shift+95,EnableMouse=true,SetMovable=true,SetScale=scale})
-    lfgui.title:SetText("Click to join group")
+    lfgui.title:SetText("Click to join group");
+    local dragRect = setupWidget(CreateFrame("Frame",nil,lfgui), {EnableMouse=true,RegisterForDrag="LeftButton"}, 0, 6);
+    dragRect:SetAllPoints(lfgui.title)
+    dragRect:SetScript("OnDragStart", function() lfgui:StartMoving() end)
+    dragRect:SetScript("OnDragStop", function() lfgui:StopMovingOrSizing() end)
     lfgui:SetScript("OnUpdate",addon.lfgUpdate)
-    local titlereg = lfgui:CreateTitleRegion()
-    titlereg:SetAllPoints(lfgui.title)
     addon:CreateTabs()
 
     lfgTable = ScrollingTable:CreateST(tableTemplate,itemCount,16,nil,lfgui);

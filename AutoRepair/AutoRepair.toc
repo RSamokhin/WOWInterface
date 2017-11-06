@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70300
 
 ## Title: AutoRepair
 ## Notes: Automaticaly repairs all items when a merchant window is opened

@@ -30,6 +30,13 @@ local function copytab(from, to)
   end
 end
 
+local function tabcontains(tab, element)
+  for k,v in pairs(tab) do
+    if (v == element) then  return true;  end
+  end
+  return false
+end
+
 local function AchSearch(isCustomList, searchList, ...)
   if (not searchList) then
     return Overachiever.SearchForAchievement(nil, categories_sel, ...)
@@ -135,10 +142,10 @@ end
 
 local function FullList_OnClick(self)
   if (self:GetChecked()) then
-    PlaySound("igMainMenuOptionCheckBoxOn");
+    PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
     VARS.SearchFullList = true
   else
-    PlaySound("igMainMenuOptionCheckBoxOff");
+    PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF);
     VARS.SearchFullList = false
   end
 end
@@ -176,7 +183,7 @@ sortdrop:SetPoint("TOPLEFT", panel, "TOPLEFT", -16, -22)
 sortdrop:OnSelect(SortDrop_OnSelect)
 
 local function beginSearch(self)
-  PlaySound("igMainMenuOptionCheckBoxOn")
+  PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
   
   if (OPTION_LoseFocusOnSearch) then
     for i,editbox in ipairs(EditBoxes) do
@@ -192,11 +199,26 @@ local function beginSearch(self)
   end
   local list = VARS.SearchFullList and Overachiever.GetAllAchievements(categories_sel) or nil
   local results = frame.AchList
-  if (reward ~= "") then  -- Rewards first since there are few of these so it may narrow the list fastest
-    list = AchSearch(true, list, 11, reward, nil, true, results) or 0
-  end
-  if (list ~= 0 and name ~= "") then
+  if (list ~= 0 and name ~= "") then  -- Check name first since it may be a numeric ID (which eliminates all other achievements) and it helps make the "OR" logic here simpler (name OR id) since we won't have to consider results-so-far
     list = AchSearch(true, list, 2, name, nil, true, results) or 0
+    local id = tonumber(name)
+	if (not id and name:sub(1, 1) == "#") then  id = tonumber(name:sub(2));  end  -- Get ID from strings like "#123"
+    if (id) then
+      if (GetAchievementInfo(id)) then
+        if (list == 0) then
+          list = { id }
+        elseif (not tabcontains(list, id)) then
+          list[#list+1] = id
+        end
+        if (list ~= results) then
+          wipe(results)
+          copytab(list, results)
+        end
+      end
+    end
+  end
+  if (list ~= 0 and reward ~= "") then  -- Rewards next since there are few of these so it may narrow the list quickly
+    list = AchSearch(true, list, 11, reward, nil, true, results) or 0
   end
   if (list ~= 0 and desc ~= "") then
     list = AchSearch(true, list, 8, desc, nil, true, results) or 0
@@ -295,7 +317,7 @@ end)
 FullListCheckbox:SetScript("OnLeave", GameTooltip_Hide)
 
 local function resetEditBoxes()
-  PlaySound("igMainMenuOptionCheckBoxOff")
+  PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
   for i,editbox in ipairs(EditBoxes) do
     _G[editbox]:SetText("")
   end

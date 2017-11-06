@@ -419,6 +419,12 @@ local function updateChildUnits(...)
 	end
 end
 
+local function createFakeUnitUpdateTimer(frame)
+	if( not frame.updateTimer ) then
+		frame.updateTimer = C_Timer.NewTicker(0.5, function() if( UnitExists(frame.unit) ) then frame:FullUpdate() end end)
+	end
+end
+
 -- Attribute set, something changed
 -- unit = Active unitid
 -- unitID = Just the number from the unitid
@@ -568,13 +574,7 @@ OnAttributeChanged = function(self, name, unit)
 	
 	-- *target units are not real units, thus they do not receive events and must be polled for data
 	elseif( ShadowUF.fakeUnits[self.unitRealType] ) then
-		if( not self.updateTimer ) then
-			self.updateTimer = self:CreateOnUpdate(0.50, function() 
-				if( UnitExists(self.unit) ) then
-					self:FullUpdate()
-				end
-			end)
-		end
+		createFakeUnitUpdateTimer(self)
 		
 		-- Speeds up updating units when their owner changes target, if party1 changes target then party1target is force updated, if target changes target
 		-- then targettarget and targettargettarget are also force updated
@@ -643,28 +643,6 @@ local function initializeUnit(header, frameName)
 	Units:CreateUnit(frame)
 end
 
--- Update helper
-local function SetTimer(self, seconds)
-	self.animation:SetDuration(seconds)
-	self:Play()
-end
-
-local function CreateOnUpdate(self, seconds, callback)
-	local group = self:CreateAnimationGroup()
-	group:SetLooping("REPEAT")
-	group:SetScript("OnLoop", callback)
-
-	local animation = group:CreateAnimation("Animation")
-	animation:SetOrder(1)
-
-	group.animation = animation
-	group.SetTimer = SetTimer
-
-	group:SetTimer(seconds)
-
-	return group
-end
-
 -- Show tooltip
 local function OnEnter(self)
 	if( self.OnEnter ) then
@@ -691,7 +669,7 @@ end
 
 local function ArenaClassToken(self)
 	local specID = GetArenaOpponentSpec(self.unitID)
-	return specID and select(7, GetSpecializationInfoByID(specID))
+	return specID and select(6, GetSpecializationInfoByID(specID))
 end
 
 function Units:CreateUnit(...)
@@ -709,7 +687,6 @@ function Units:CreateUnit(...)
 	frame.DisableRangeAlpha = DisableRangeAlpha
 	frame.UnregisterUpdateFunc = UnregisterUpdateFunc
 	frame.ReregisterUnitEvents = ReregisterUnitEvents
-	frame.CreateOnUpdate = CreateOnUpdate
 	frame.SetBarColor = SetBarColor
 	frame.SetBlockColor = SetBlockColor
 	frame.FullUpdate = FullUpdate

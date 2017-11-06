@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Search UI - Searcher General
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: SearcherGeneral.lua 5656 2016-08-09 22:05:44Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -379,4 +379,4 @@ function private.PriceSearch(buybid, price)
 	end
 	return false
 end
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-SearchUI/SearcherGeneral.lua $", "$Rev: 5656 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Util-SearchUI/SearcherGeneral.lua $", "$Rev: 5656 $")

@@ -24,15 +24,25 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(1738)
 
 L:SetOptionLocalization({
+	SetIconOnlyOnce2	= "為每個軟泥設置團隊圖示直到有一個軟泥爆炸時停用(實驗中)",
 	InfoFrameBehavior	= "在戰鬥中顯示訊息框架",
 	Fixates				= "顯示中了鎖定的玩家",
 	Adds				= "顯示小怪數量和類型"
+})
+
+L:SetMiscLocalization({
+	AddSpawnNotice		= "當玩家裝等輾壓此戰鬥，小怪重生的速度會快一些。所以不可盡信小怪重生的計時器。"
 })
 
 ---------------------------
 -- Elerethe Renferal --
 ---------------------------
 L= DBM:GetModLocalization(1744)
+
+L:SetWarningLocalization({
+	warnWebOfPain		= ">%s<與>%s<連接",--Only this needs localizing
+	specWarnWebofPain	= "你與>%s<連接了",--Only this needs localizing
+})
 
 ---------------------------
 -- Ursoc --

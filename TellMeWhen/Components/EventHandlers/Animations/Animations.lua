@@ -1,4 +1,4 @@
-﻿-- --------------------
+-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -219,6 +219,11 @@ Animations:RegisterEventHandlerDataNonSpecific(10, "SCREENSHAKE", {
 			end
 
 			WorldFrame.TMWShakeAnim:Animations_Start{
+				-- This lets us find the correct proxy for non-icon-based animations.
+				-- Otherwise, the condition object is proxied to the icon but the 
+				-- animation table is proxied to UIParent.TMWFlashAnim.
+				proxyTarget = icon,
+
 				eventSettings = eventSettings,
 				Start = TMW.time,
 				Duration = eventSettings.Duration,
@@ -286,6 +291,11 @@ Animations:RegisterEventHandlerDataNonSpecific(11, "SCREENFLASH", {
 
 		local c = TMW:StringToCachedRGBATable(eventSettings.AnimColor)
 		UIParent.TMWFlashAnim:Animations_Start{
+			-- This lets us find the correct proxy for non-icon-based animations.
+			-- Otherwise, the condition object is proxied to the icon but the 
+			-- animation table is proxied to UIParent.TMWFlashAnim.
+			proxyTarget = icon,
+
 			eventSettings = eventSettings,
 			Start = TMW.time,
 			Duration = Duration,
@@ -803,12 +813,14 @@ end)
 local MapEventSettingsToAnimationTable = {}
 
 
-TMW:RegisterCallback("TMW_ICON_ANIMATION_START", function(_, icon, table)
+TMW:RegisterCallback("TMW_ICON_ANIMATION_START", function(_, self, table)
+	-- self might be an icon, but more generally, it is an AnimatedObject.
+
 	local eventSettings = table.eventSettings
 
 	if eventSettings.Event == "WCSP" then
 		-- Store the event so we can stop it when the conditions fail.
-		MapEventSettingsToAnimationTable[Animations:Proxy(table.eventSettings, icon)] = table
+		MapEventSettingsToAnimationTable[Animations:Proxy(table.eventSettings, table.proxyTarget or self)] = table
 
 		if TMW.Locked then
 			-- Modify the table to play infinitely

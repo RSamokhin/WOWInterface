@@ -1,6 +1,6 @@
 ﻿--[[
 	Auctioneer - Search UI - Searcher Arbitrage
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: SearcherArbitrage.lua 5606 2016-06-13 16:33:33Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -303,4 +303,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-SearchUI/SearcherArbitrage.lua $", "$Rev: 5606 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Util-SearchUI/SearcherArbitrage.lua $", "$Rev: 5606 $")

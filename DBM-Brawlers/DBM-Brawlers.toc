@@ -1,5 +1,5 @@
-﻿## Interface: 70000
-## X-Min-Interface: 60000
+## Interface: 70300
+## X-Min-Interface: 70100
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Brawlers|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Бойцовская гильдия|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0싸움꾼 조합|r
@@ -28,10 +28,6 @@
 ## X-DBM-Mod-Sort: 135
 ## X-DBM-Mod-MapID: 369,1043
 ## X-DBM-Mod-MinCoreRevision: 12473
-## X-Curse-Packaged-Version: 7.0.11
-## X-Curse-Project-Name: Deadly Boss Mods
-## X-Curse-Project-ID: deadly-boss-mods
-## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
 localization.en.lua
 localization.kr.lua
 localization.de.lua
@@ -49,5 +45,6 @@ Rank4.lua
 Rank5.lua
 Rank6.lua
 Rank7.lua
-Rares1.lua
-Rares2.lua
+BrawlChallenges.lua
+BrawlRumble.lua
+BrawlLegacy.lua

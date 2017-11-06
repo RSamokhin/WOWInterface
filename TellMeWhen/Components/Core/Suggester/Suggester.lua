@@ -1,4 +1,4 @@
-﻿-- --------------------
+-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -64,16 +64,12 @@ TMW:RegisterCallback("TMW_CONFIG_ICON_TYPE_CHANGED", function(event, icon)
 end)
 
 function SUG:TMW_SPELLCACHE_STARTED()
-	SUG.SuggestionList.Status:Show()
-	SUG.SuggestionList.Speed:Show()
-	SUG.SuggestionList.Finish:Show()
+	SUG.SuggestionList.Caching:Show()
 end
 TMW:RegisterCallback("TMW_SPELLCACHE_STARTED", SUG)
 
 function SUG:TMW_SPELLCACHE_COMPLETED()
-	SUG.SuggestionList.Speed:Hide()
-	SUG.SuggestionList.Status:Hide()
-	SUG.SuggestionList.Finish:Hide()
+	SUG.SuggestionList.Caching:Hide()
 	
 	if SUG.onCompleteCache and SUG.SuggestionList:IsVisible() then
 		SUG.redoIfSame = 1
@@ -138,7 +134,7 @@ function SUG:SuggestingComplete(doSort)
 			buckets_meta.__mode = nil
 
 			-- Fill the bukkits.
-			sorterBucket(SUGpreTable, buckets)
+			sorterBucket(SUG.CurrentModule, SUGpreTable, buckets)
 
 			-- All this data is in the buckets now, so wipe SUGpreTable
 			-- so we can fill it after we sort the buckets.
@@ -224,6 +220,7 @@ function SUG:SuggestingComplete(doSort)
 		f.insert2 = nil
 		f.tooltipmethod = nil
 		f.tooltiparg = nil
+		f.tooltiptitlewrap = 1
 		f.tooltiptitle = nil
 		f.tooltiptext = nil
 		f.overrideInsertID = nil
@@ -886,7 +883,7 @@ function Module:Table_Get()
 	return SpellCache_Cache
 end
 
-function Module.Sorter_Bucket(suggestions, buckets)
+function Module:Sorter_Bucket(suggestions, buckets)
 	for i = 1, #suggestions do
 		local id = suggestions[i]
 

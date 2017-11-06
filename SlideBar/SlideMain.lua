@@ -1,6 +1,6 @@
 --[[
 	Slidebar AddOn for World of Warcraft (tm)
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: SlideMain.lua 406 2016-07-31 13:26:09Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 

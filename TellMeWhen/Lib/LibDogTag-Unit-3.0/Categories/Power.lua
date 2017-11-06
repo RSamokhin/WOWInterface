@@ -1,5 +1,5 @@
 local MAJOR_VERSION = "LibDogTag-Unit-3.0"
-local MINOR_VERSION = 90000 + (tonumber(("20160722035823"):match("%d+")) or 33333333333333)
+local MINOR_VERSION = 90000 + (tonumber(("2016102991302"):match("%d+")) or 33333333333333)
 
 if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
@@ -13,13 +13,8 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
 
--- Parnic: support for Cataclysm; UNIT_MANA et al changed to UNIT_(MAX)POWER
-local wow_400 = select(4, GetBuildInfo()) >= 40000
 local wow_700 = select(4, GetBuildInfo()) >= 70000
-local mpEvents = "UNIT_MANA#$unit;UNIT_RAGE#$unit;UNIT_FOCUS#$unit;UNIT_ENERGY#$unit;UNIT_RUNIC_POWER#$unit;UNIT_MAXMANA#$unit;UNIT_MAXRAGE#$unit;UNIT_MAXFOCUS#$unit;UNIT_MAXENERGY#$unit;UNIT_MAXRUNIC_POWER#$unit;UNIT_DISPLAYPOWER#$unit"
-if wow_400 then
-	mpEvents = "UNIT_POWER#$unit;UNIT_MAXPOWER#$unit;UNIT_DISPLAYPOWER#$unit"
-end
+local mpEvents = "UNIT_POWER_FREQUENT#$unit;UNIT_MAXPOWER#$unit;UNIT_DISPLAYPOWER#$unit"
 
 DogTag:AddTag("Unit", "MP", {
 	code = UnitPower,
@@ -27,7 +22,7 @@ DogTag:AddTag("Unit", "MP", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
-	events = mpEvents .. ";FastPower#$unit",
+	events = "UNIT_POWER_FREQUENT#$unit;UNIT_DISPLAYPOWER#$unit",
 	doc = L["Return the current mana/rage/energy of unit"],
 	example = ('[MP] => "%d"'):format(UnitPowerMax("player")*.632),
 	category = L["Power"]
@@ -39,7 +34,7 @@ DogTag:AddTag("Unit", "MaxMP", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
-	events = mpEvents,
+	events = "UNIT_MAXPOWER#$unit",
 	doc = L["Return the maximum mana/rage/energy of unit"],
 	example = ('[MaxMP] => "%d"'):format(UnitPowerMax("player")),
 	category = L["Power"]
@@ -84,7 +79,7 @@ DogTag:AddTag("Unit", "Mana", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
-	events = mpEvents .. ";FastPower#$unit",
+	events = "UNIT_POWER_FREQUENT#$unit#MANA",
 	doc = L["Return the current mana of unit, regardless of their current power type"],
 	example = ('[Mana] => "%d"'):format(UnitPowerMax("player", SPELL_POWER_MANA)*.632),
 	category = L["Power"]
@@ -98,7 +93,7 @@ DogTag:AddTag("Unit", "MaxMana", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
-	events = mpEvents,
+	events = "UNIT_MAXPOWER#$unit#MANA",
 	doc = L["Return the maximum mana of unit, regardless of their current power type"],
 	example = ('[MaxMana] => "%d"'):format(UnitPowerMax("player", SPELL_POWER_MANA)),
 	category = L["Power"]
@@ -142,7 +137,7 @@ DogTag:AddTag("Unit", "AltP", {
 		'index', 'number;undef', ALTERNATE_POWER_INDEX
 	},
 	ret = "number",
-	events = mpEvents .. ";FastPower#$unit",
+	events = "UNIT_POWER_FREQUENT#$unit",
 	doc = L["Return the current alternate power of unit"],
 	example = ('[AltP] => "%d"'):format(UnitPowerMax("player",ALTERNATE_POWER_INDEX)*.632),
 	category = L["Power"]
@@ -155,7 +150,7 @@ DogTag:AddTag("Unit", "MaxAltP", {
 		'index', 'number;undef', ALTERNATE_POWER_INDEX
 	},
 	ret = "number",
-	events = mpEvents,
+	events = "UNIT_MAXPOWER#$unit",
 	doc = L["Return the maximum alternate power of unit"],
 	example = ('[MaxAltP] => "%d"'):format(UnitPowerMax("player",ALTERNATE_POWER_INDEX)),
 	category = L["Power"]
@@ -197,7 +192,7 @@ DogTag:AddTag("Unit", "Stagger", {
 		'unit', 'string;undef', 'player',
 	},
 	ret = "number",
-	events = mpEvents .. ";FastPower#$unit",
+	events = "UNIT_ABSORB_AMOUNT_CHANGED#$unit",
 	doc = L["Return the current stagger amount of unit"],
 	example = ('[Stagger] => "%d"'):format(UnitStagger("player")),
 	category = L["Power"]

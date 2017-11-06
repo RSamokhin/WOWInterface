@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "ptBR" then return end
+if GetLocale() ~= "ptBR" then return end
 
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
 
@@ -59,7 +59,6 @@ L.Latency_Text				= "Definir latência máxima de sincronização: %d"
 -- Tab: General Timer Options
 L.TimerGeneral 				= "Opções gerais do temporizador do DBM"
 L.SKT_Enabled				= "Sempre mostrar um temporizador de sua vitória recorde (Sobrepõe a opção do chefe específico)"
-L.CRT_Enabled				= "Mostrar um temporizador para a próxima carga de ressureição em combate(apenas nas dificuldades 6.x)"
 L.ChallengeTimerOptions		= "Colocar opção para temporizador de melhor tempo em modo desafio"
 L.ChallengeTimerPersonal	= "Pessoal"
 L.ChallengeTimerRealm		= "Reino"
@@ -96,7 +95,7 @@ L.Warn_FontType				= "Escolha fonte"
 L.Warn_FontStyle			= "Bandeira de fonte (flags)"
 L.Warn_FontShadow			= "Sombra da fonte"
 L.Warn_FontSize				= "Tamanho da fonte: %d"
-L.Warn_Duration				= "duração do aviso: %d seg"
+L.Warn_Duration				= "duração do aviso: %0.1f seg"
 L.None						= "nada"
 L.Outline					= "Contorno"
 L.ThickOutline				= "Espessura do contorno"
@@ -189,7 +188,6 @@ L.CountdownVoice2			= "Definir voz secundaria para sons de contagem"
 L.CountdownVoice3			= "Definir voz terciária para sons de contagem"
 L.VoicePackChoice			= "Definir pacote de vozes para avisos falados"
 L.Area_CountdownOptions		= "opções de contagens"
-L.ShowCountdownText			= "Exibir texto de contagem durante contagens primarias"
 L.Area_VoicePackOptions		= "Opções de pacotes de vozes (Pacotes de vozes de terceiros)"
 L.SpecWarn_NoSoundsWVoice	= "Filtrar avisos sonoros especiais para avisos que contem avisos falados ..."
 L.SWFNever					= "Nunca"

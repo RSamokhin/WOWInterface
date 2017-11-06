@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "zhTW" then return end
+if GetLocale() ~= "zhTW" then return end
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
 local L = DBM_GUI_Translations
 
@@ -6,7 +6,7 @@ L.MainFrame	= "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "翻譯:"
 L.TranslationBy 			= "Imbav@聖光之願"
-L.Website					= "拜訪討論/支援論壇:|cFF73C2FBwww.deadlybossmods.com|r 請在推特上關注@deadlybossmods或@MysticalOS"
+L.Website					= "在discord上拜訪我們:|cFF73C2FBhttps://discord.gg/DF5mffk|r。請在推特上關注@deadlybossmods或@MysticalOS"
 L.WebsiteButton				= "論壇"
 
 L.OTabBosses	= "首領模組"
@@ -86,7 +86,7 @@ L.Warn_FontType				= "選擇字型"
 L.Warn_FontStyle			= "字型風格"
 L.Warn_FontShadow			= "陰影"
 L.Warn_FontSize				= "字型大小:%d"
-L.Warn_Duration				= "警告持續時間:%d秒"
+L.Warn_Duration				= "警告持續時間:%0.1f秒"
 L.None						= "無"
 L.Outline					= "輪廓"
 L.ThickOutline				= "厚輪廓"
@@ -216,7 +216,6 @@ L.CountdownVoice2			= "設置次要倒數計時語音"
 L.CountdownVoice3			= "設置第三倒數計時語音"
 L.VoicePackChoice			= "設置語音警告的語音包"
 L.Area_CountdownOptions		= "倒數選項"
-L.ShowCountdownText			= "主要語音倒數時顯示倒數文字"
 L.Area_VoicePackOptions		= "語音包選項(協力語音包)"
 L.SpecWarn_NoSoundsWVoice	= "設置何時撥放特別警告音效也使用語音警告..."
 L.SWFNever					= "絕不"
@@ -244,10 +243,12 @@ L.SpamBlockNoSetIcon		= "不設置標記在目標上"
 L.SpamBlockNoRangeFrame		= "不顯示距離框架"
 L.SpamBlockNoInfoFrame		= "不顯示訊息框架"
 L.SpamBlockNoHudMap			= "不要顯示HudMap"
+L.SpamBlockNoNameplate		= "不要顯示名條光環"
 L.SpamBlockNoHealthFrame	= "不顯示血量框架"
 L.SpamBlockNoCountdowns		= "不播放倒數音效"
 L.SpamBlockNoYells			= "不送出大喊至頻道"
 L.SpamBlockNoNoteSync		= "不接受註記分享"
+L.SpamBlockNoReminders		= "不顯示任何登入，推薦或更新訊息(不推薦)"
 
 L.Area_Restore				= "DBM還原選項(DBM是否還原至使用者過去狀態)"
 L.SpamBlockNoIconRestore	= "不在戰鬥結束後記住和還原團隊圖示狀態"
@@ -281,15 +282,15 @@ L.HideBossEmoteFrame		= "首領戰鬥時隱藏團隊首領表情框架"
 L.HideWatchFrame			= "首領戰鬥時隱藏任務目標框架。如果在挑戰模式中，當框架隱藏會在首領戰鬥中建立一個暫時的獎牌計時器。"
 L.HideGarrisonUpdates		= "首領戰鬥時隱藏要塞任務完成提示"
 L.HideGuildChallengeUpdates	= "首領戰鬥時隱藏公會挑戰完成提示"
-L.HideTooltips				= "首領戰鬥時隱藏滑鼠提示"
+L.HideQuestTooltips			= "首領戰鬥時隱藏滑鼠提示的任務物件"
+L.HideTooltips				= "首領戰鬥時完全地隱藏滑鼠提示"
 L.DisableSFX				= "首領戰鬥時禁用音效頻道"
 L.SpamBlockSayYell			= "從聊天頻道隱藏聊天泡泡提示"
 L.DisableCinematics			= "禁用遊戲中的過場動畫"
 L.AfterFirst				= "在每次動畫播放一次之後"
 L.Always					= ALWAYS
-L.DisableTalkingHead		= "停用NPC講話視窗"
-L.CombatOnly				= "在任何戰鬥中停用"
-L.RaidCombat				= "只在首領戰鬥中停用"
+L.CombatOnly				= "在任何戰鬥中禁用"
+L.RaidCombat				= "只在首領戰鬥中禁用"
 
 L.Panel_ExtraFeatures		= "額外功能"
 --
@@ -307,7 +308,6 @@ L.AutoReplySound			= "當接收到DBM自動回覆密語時播放警告聲和閃�
 --
 L.TimerGeneral 				= "計時器選項"
 L.SKT_Enabled				= "顯示目前戰鬥的最佳紀錄勝利計時器"
-L.CRT_Enabled				= "為下一次戰復充能顯示計時器"
 L.ShowRespawn				= "在一個滅團之後顯示首領重生計時器"
 L.ShowQueuePop				= "為佇列(隨機,戰場,其他)接受時間顯示計時器"
 --

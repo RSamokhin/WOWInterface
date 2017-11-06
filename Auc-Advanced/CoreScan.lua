@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: CoreScan.lua 5668 2016-09-03 11:41:19Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: CoreScan.lua 5718 2017-08-01 18:43:08Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -195,8 +195,8 @@ function private.LoadScanData()
 			private.FallbackScanData = reason
 		else
 			private.loadingScanData = "block" -- prevents re-entry to this function during the LoadAddOn call
-			load, reason = LoadAddOn("Auc-ScanData")
-			if load then
+			local loaded, reason = LoadAddOn("Auc-ScanData")
+			if loaded then
 				private.loadingScanData = "loading"
 			elseif reason then
 				private.loadingScanData = "fallback"
@@ -236,6 +236,8 @@ function private.LoadScanData()
 			serverKey = ResolveServerKey(serverKey)
 			if serverKey == Resources.ServerKey then
 				return scandata
+			else
+				return nil, "No Fallback Data"
 			end
 		end
 		-- fallback message
@@ -268,8 +270,11 @@ function private.GetScanData(serverKey)
 		local newfunc = private.LoadScanData()
 		if newfunc then
 			return newfunc(serverKey)
+		else
+			return nil, "Stub Loader Still Loading"
 		end
 	end
+	return nil, "Stub Loader Failed"
 end
 
 -- AucAdvanced.Scan.ClearScanData(serverKey)
@@ -429,7 +434,7 @@ function lib.StartScan(name, minUseLevel, maxUseLevel, isUsable, qualityIndex, G
 
 			AucAdvanced.API.BlockUpdate(true, false)
 			BrowseSearchButton:Hide()
-			lib.ProgressBars("GetAllProgressBar", 0, true, "Auctioneer: Scanning")
+			lib.ProgressBars("GetAllProgressBar", 0, true, "Auctioneer: Scan waiting for Server")
 			private.isGetAll = true -- indicates that certain functions must take special action, and that the above changes need to be undone
 
 			private.LastGetAll = now
@@ -487,7 +492,7 @@ function lib.StartScan(name, minUseLevel, maxUseLevel, isUsable, qualityIndex, G
 end
 
 function lib.IsScanning()
-	return private.isScanning or (private.queueScan ~= nil)
+	return (private.isScanning or private.queueScan ~= nil), private.isGetAll
 end
 
 function lib.IsPaused()
@@ -978,21 +983,20 @@ local Commitfunction = function()
 	if TempcurQuery.isUsable then
 		wasIncomplete = true -- always treat as incomplete
 	end
-	-- ### Legion : filters including inventoryType require a lookup in a hard-coded table in CoreConst
-	-- ### for now, any query where the filterData includes an inventoryType shall be treated as incomplete
-	-- ### until we are certain we've coded the lookup table correctly
-	if TempcurQuery.filterData and not wasIncomplete then
-		for _, filter in ipairs(TempcurQuery.filterData) do
-			if filter.inventoryType then
-				wasIncomplete = true
-				break
-			end
-		end
-	end
 
 	local serverKey = Resources.ServerKey
-	local scandata = private.GetScanData(serverKey)
-	assert(scandata, "Critical error: scandata does not exist for serverKey "..serverKey)
+	local scandata, reason = private.GetScanData(serverKey)
+	if not scandata then
+		-- Critical Error Diagnostics
+		local scandatatext = "Unloaded"
+		local scanmodule = AucAdvanced.Modules.Util.ScanData
+		if scanmodule and scanmodule.GetAddOnInfo then
+			local ready, version = scanmodule.GetAddOnInfo()
+			scandatatext = strjoin(" ", "Loaded", tostringall(ready, version))
+		end
+		error(format("Critical error: scandata does not exist for serverKey %s\nReason = %s\nAuc-ScanData = %s\nFallback = %s , %s",
+			tostringall(serverKey, reason, scandatatext, private.FallbackScanData, private.loadingScanData)))
+	end
 	local now = time()
 	if get("scancommit.progressbar") then
 		lib.ProgressBars("CommitProgressBar", 0, true)
@@ -1010,6 +1014,43 @@ local Commitfunction = function()
 	local dirtyCount, undirtyCount, expiredCount, corruptCount, matchedCount = 0, 0, 0, 0, 0
 	local filterDeleteCount, earlyDeleteCount, expiredDeleteCount, corruptDeleteCount = 0, 0, 0, 0
 
+	local printSummary, scanSize = false, ""
+	scanSize = TempcurQuery.qryinfo.scanSize
+	if scanSize=="Full" then
+		printSummary = get("scandata.summaryonfull");
+	elseif scanSize=="Partial" then
+		printSummary = get("scandata.summaryonpartial")
+	else -- scanSize=="Micro"
+		printSummary = get("scandata.summaryonmicro")
+	end
+	if (wasEndPagesOnly) then
+		scanSize = "TailScan-"..scanSize
+		printSummary = get("scandata.summaryonpartial") -- todo: do we want a separate "summary on end pages only" option?
+	elseif (TempcurQuery.qryinfo.nosummary) then
+		printSummary = false
+		scanSize = "NoSum-"..scanSize
+	end
+
+	local processors = {}
+	local modules = AucAdvanced.GetAllModules("AuctionFilter", "Filter")
+	for pos, engineLib in ipairs(modules) do
+		if (not processors.Filter) then processors.Filter = {} end
+		local x = {}
+		x.Name = engineLib.GetName()
+		x.Func = engineLib.AuctionFilter
+		tinsert(processors.Filter, x)
+	end
+	modules = AucAdvanced.GetAllModules("ScanProcessors")
+	for pos, engineLib in ipairs(modules) do
+		for op, func in pairs(engineLib.ScanProcessors) do
+			if (not processors[op]) then processors[op] = {} end
+			local x = {}
+			x.Name = engineLib.GetName()
+			x.Func = func
+			tinsert(processors[op], x)
+		end
+	end
+
 	do --[[ *** Stage 1 : pre-process the new scan ]]--
 		lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 1")
 		coroutine.yield() -- yield here to allow the bar to display, and help the frame rate a little
@@ -1018,22 +1059,22 @@ local Commitfunction = function()
 		local stage1throttle = get("core.scan.stage1throttle")
 		if stage1throttle >= Const.ALEVEL_HI then
 			breakinterval, timeadjust = 500, 0.1
-			itemcachedelay = 16 -- ### Legion item cache patch
+			itemcachedelay = 5 -- ### Legion item cache patch
 		elseif stage1throttle >= Const.ALEVEL_MED then
 			breakinterval, timeadjust = 2000, 0.4
-			itemcachedelay = 8 -- ### Legion item cache patch
+			itemcachedelay = 4 -- ### Legion item cache patch
 		elseif stage1throttle >= Const.ALEVEL_LOW then
 			breakinterval, timeadjust = 5000, 1
-			itemcachedelay = 4 -- ### Legion item cache patch
+			itemcachedelay = 3 -- ### Legion item cache patch
 		else -- OFF
 			breakinterval, timeadjust = nil, 1
 			itemcachedelay = 2 -- ### Legion item cache patch
 		end
 		local breakcount = 0
 		local doYield = false
-		local doDelay = false -- ### Legion item cache patch
 		local battlepetYield = true
 		local firstfailureYield = true
+		local retries = {}
 		nextPause = debugprofilestop() + processingTime * timeadjust
 		-- Stage 1 First Pass
 		private.InitItemInfoCache()
@@ -1052,34 +1093,65 @@ local Commitfunction = function()
 			end
 			local success, reason, linkType = private.GetAuctionItemFillIn(TempcurScan[pos], true)
 			progresscounter = progresscounter + 1
-			if breakinterval then
-				if linkType == "battlepet" and battlepetYield then
-					-- experimental: yield on finding first battlepet
-					-- first time battlepet API is used, it appears to trigger a small amount of lag
+			if linkType == "battlepet" and battlepetYield then
+				-- experimental: yield on finding first battlepet
+				-- first time battlepet API is used, it appears to trigger a small amount of lag
+				doYield = true
+				battlepetYield = false
+			elseif not success then
+				if firstfailureYield then
+					-- experimental: yield after first failure detected
+					-- todo: fiddle with this, perhaps yielding every X failures, see if it appears to help
 					doYield = true
-					battlepetYield = false
-				elseif not success then
-					if firstfailureYield then
-						-- experimental: yield after first failure detected
-						-- todo: fiddle with this, perhaps yielding every X failures, see if it appears to help
-						doYield = true
-						firstfailureYield = false
-					end
-					if reason == "Retry" then doDelay = true end -- ### Legion item cache patch
+					firstfailureYield = false
+				end
+				if reason == "Retry" then
+					progresscounter = progresscounter - 1 -- undo progress counter for this item ### todo: find a better way?
+					tinsert(retries, pos)
 				end
 			end
 		end
+		local numretries = #retries
 
-		-- ### Legion item cache patch: delay between passes to give server more time to return GetItemInfo data
-		-- must use GetTime to time this pause, as debugprofilestop is unsafe across yields
-		if doDelay then
+		-- Stage 1 Retry passes - only checks entries in 'retries' table
+		local retrypass = 0
+		while numretries > 0 and retrypass < 10 do
 			local nextWait = GetTime() + itemcachedelay -- delay time depends on stage1throttle
 			while GetTime() < nextWait do
 				coroutine.yield()
 			end
-		end -- ###
 
-		-- Stage 1 Second Pass
+			private.InitItemInfoCache()
+			local newretries = {}
+			retrypass = retrypass + 1
+			for i = #retries, 1, -1 do
+				local pos = retries[i]
+				if breakinterval then
+					breakcount = (breakcount + 1) % breakinterval
+					if breakcount == 0 then
+						doYield = true
+					end
+				end
+				if doYield or debugprofilestop() > nextPause then
+					lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 1."..retrypass)
+					coroutine.yield()
+					nextPause = debugprofilestop() + processingTime * timeadjust
+					doYield = false
+				end
+				local success, reason, linkType = private.GetAuctionItemFillIn(TempcurScan[pos], true)
+
+				if not success and reason == "Retry" then
+					tinsert(newretries, pos)
+				else
+					progresscounter = progresscounter + 1
+				end
+
+			end
+			retries = newretries
+			numretries = #retries
+		end
+
+		-- Stage 1 Final Pass
 		breakcount = 0
 		doYield = false
 		private.InitItemInfoCache()
@@ -1099,7 +1171,7 @@ local Commitfunction = function()
 
 			local entryUnusable = false
 			local data = TempcurScan[pos]
-			local success, reason, linkType = private.GetAuctionItemFillIn(data, true)
+			local success, reason, linkType = private.GetAuctionItemFillIn(data)
 			progresscounter = progresscounter + 1
 
 			if not success then
@@ -1139,7 +1211,6 @@ local Commitfunction = function()
 				progresscounter = progresscounter + 5 -- We just wiped the entry from the db, so other steps won't see it.
 			end
 		end
-		private.ResetItemInfoCache() -- free up cache memory
 		local tolerance = 0
 		if scanCount > TOLERANCE_LOWERLIMIT then -- don't use tolerance for tiny scans
 			tolerance = get("core.scan.unresolvedtolerance")
@@ -1151,8 +1222,26 @@ local Commitfunction = function()
 			hadGetError = true
 			wasIncomplete = true
 		end
-
 	end --[[ of Stage 1 ]]--
+
+	-- Send ScanProcessor message "begin"
+	-- This was previously sent before Stage 3, but has been moved to before Stage 2
+	-- (this means matchCount can no longer be included)
+	coroutine.yield()
+	local querySizeInfo = {
+		wasIncomplete = wasIncomplete,
+		wasGetAll = wasGetAll,
+		scanStarted = scanStarted,
+		wasUnrestricted = wasUnrestricted,
+		wasEarlyTerm = wasEarlyTerm,
+		hadGetError = hadGetError,
+		wasEndPagesOnly = wasEndPagesOnly,
+		Query = TempcurCommit.Query,
+		scanCount = scanCount,
+		printSummary = printSummary,
+		FallbackScanData = private.FallbackScanData,
+	}
+	processBeginEndStats(processors, "begin", querySizeInfo, nil)
 
 	--[[ *** Stage 2 : Pre-process image table : Mark all matching auctions as DIRTY, and build a LookUpTable *** ]]--
 	lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 2")
@@ -1212,57 +1301,6 @@ local Commitfunction = function()
 	lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 3")
 	coroutine.yield()
 
-	local processors = {}
-	local modules = AucAdvanced.GetAllModules("AuctionFilter", "Filter")
-	for pos, engineLib in ipairs(modules) do
-		if (not processors.Filter) then processors.Filter = {} end
-		local x = {}
-		x.Name = engineLib.GetName()
-		x.Func = engineLib.AuctionFilter
-		tinsert(processors.Filter, x)
-	end
-	modules = AucAdvanced.GetAllModules("ScanProcessors")
-	for pos, engineLib in ipairs(modules) do
-		for op, func in pairs(engineLib.ScanProcessors) do
-			if (not processors[op]) then processors[op] = {} end
-			local x = {}
-			x.Name = engineLib.GetName()
-			x.Func = func
-			tinsert(processors[op], x)
-		end
-	end
-
-	local printSummary, scanSize = false, ""
-	scanSize = TempcurQuery.qryinfo.scanSize
-	if scanSize=="Full" then
-		printSummary = get("scandata.summaryonfull");
-	elseif scanSize=="Partial" then
-		printSummary = get("scandata.summaryonpartial")
-	else -- scanSize=="Micro"
-		printSummary = get("scandata.summaryonmicro")
-	end
-	if (wasEndPagesOnly) then
-		scanSize = "TailScan-"..scanSize
-		printSummary = get("scandata.summaryonpartial") -- todo: do we want a separate "summary on end pages only" option?
-	elseif (TempcurQuery.qryinfo.nosummary) then
-		printSummary = false
-		scanSize = "NoSum-"..scanSize
-	end
-
-	local querySizeInfo = { }
-	querySizeInfo.wasIncomplete = wasIncomplete
-	querySizeInfo.wasGetAll = wasGetAll
-	querySizeInfo.scanStarted = scanStarted
-	querySizeInfo.wasUnrestricted = wasUnrestricted
-	querySizeInfo.wasEarlyTerm = wasEarlyTerm
-	querySizeInfo.hadGetError = hadGetError
-	querySizeInfo.wasEndPagesOnly = wasEndPagesOnly
-	querySizeInfo.Query = TempcurCommit.Query
-	querySizeInfo.matchCount = dirtyCount
-	querySizeInfo.scanCount = scanCount
-	querySizeInfo.printSummary = printSummary
-	querySizeInfo.FallbackScanData = private.FallbackScanData
-
 	local maskNotDirtyUnseen = bitnot(bitor(Const.FLAG_DIRTY, Const.FLAG_UNSEEN)) -- only calculate mask for clearing these flags once
 	local messageCreate = private.FallbackScanData and "fallbackcreate" or "create"
 
@@ -1276,9 +1314,6 @@ local Commitfunction = function()
 		garbageinterval = 10000
 	end
 
-	processBeginEndStats(processors, "begin", querySizeInfo, nil)
-
-	coroutine.yield()
 	nextPause = debugprofilestop() + processingTime
 	lastTime = time()
 	for index, data in ipairs(TempcurScan) do
@@ -1751,44 +1786,45 @@ end
 
 -- Mechanism to limit repeated calls to GetItemInfo and C_PetJournal.GetPetInfoBySpeciesID during processing
 do
-	local ItemInfoCache, PetInfoCache = {}, {}
-	local ItemTried, PetTried
+	local ItemInfoCache, PetInfoCache, ItemTried, PetTried = {}, {}, {}, {}
 	local lookupPetType2SubClassID = Const.AC_PetType2SubClassID
 	local GetPetInfoBySpeciesID = C_PetJournal.GetPetInfoBySpeciesID
 
 	function private.ResetItemInfoCache()
-		wipe(ItemInfoCache)
-		wipe(PetInfoCache)
-		ItemTried, PetTried = nil, nil
+		ItemInfoCache, PetInfoCache, ItemTried, PetTried = {}, {}, {}, {}
 	end
 	function private.InitItemInfoCache()
-		ItemTried, PetTried = {}, {}
+		wipe(ItemTried)
+		wipe(PetTried)
 	end
-	local function GetItemInfoCache(link, itemID, bonuses, scanthrottle) -- ### Legion : revised, check
-		local cachekey = itemID
-		if bonuses and bonuses ~= "" then cachekey = cachekey .. ":" .. bonuses end
-		local data = ItemInfoCache[cachekey]
-		if data then
-			return data
+	local function GetItemInfoCache(link, itemID, bonuses, scanthrottle)
+		if bonuses and bonuses ~= "" then
+			-- for now we won't try to cache items with bonusIDs
+			local _,_,_,iLevel,uLevel,_,_,_,equipLoc,_,_,classID,subClassID = GetItemInfo(link)
+			return classID, subClassID, Const.EquipEncode[equipLoc], iLevel, uLevel or 0
 		end
-		if scanthrottle and ItemTried and ItemTried[cachekey] then
+		local data = ItemInfoCache[itemID]
+		if data then
+			return unpack(data, 1, 5)
+		end
+		if scanthrottle and ItemTried and ItemTried[itemID] then
 			-- if GetItemInfo previously failed for a link with this cachekey in this processing pass (ItemTried is reset each pass)
 			return
 		end
 		local _,_,_,iLevel,uLevel,_,_,_,equipLoc,_,_,classID,subClassID = GetItemInfo(link)
 		if not classID then
 			if scanthrottle then
-				ItemTried[cachekey] = true
+				ItemTried[itemID] = true
 			end
 			return
 		end
 		-- not all values are used; only store the ones we want
 		data = {classID, subClassID, Const.EquipEncode[equipLoc], iLevel, uLevel or 0}
-		ItemInfoCache[cachekey] = data
-		return data
+		ItemInfoCache[itemID] = data
+		return unpack(data, 1, 5)
 	end
 
-	local function GetPetInfoCache(speciesID, scanthrottle) -- ### Legion : revised, check
+	local function GetPetInfoCache(speciesID, scanthrottle)
 		local subtype = PetInfoCache[speciesID]
 		if not subtype then
 			if scanthrottle and PetTried and PetTried[speciesID] then
@@ -1871,15 +1907,14 @@ do
 				end
 			end
 			if not itemData[Const.CLASSID] then
-				local itemInfo = GetItemInfoCache(itemLink, itemID, itemData[Const.BONUSES], scanthrottle) -- {iType, iSubtype, Const.EquipEncode[equipLoc], iLevel, uLevel}
-				if itemInfo then
-					itemData[Const.CLASSID] = itemInfo[1]
-					itemData[Const.SUBCLASSID] = itemInfo[2]
-					itemData[Const.IEQUIP] = itemInfo[3]
+				local classID, subClassID, equipCode, iLevel, uLevel = GetItemInfoCache(itemLink, itemID, itemData[Const.BONUSES], scanthrottle) -- {iType, iSubtype, Const.EquipEncode[equipLoc], iLevel, uLevel}
+				if classID then
+					itemData[Const.CLASSID] = classID
+					itemData[Const.SUBCLASSID] = subClassID
+					itemData[Const.IEQUIP] = equipCode
 					-- Prefer iLevel and/or uLevel values provided by GetAuctionItemInfo over those from GetItemInfo
-					-- (because we used itemID, it is possible for values from GetItemInfo to be incorrect)
-					itemData[Const.ILEVEL] = itemData[Const.ILEVEL] or itemInfo[4]
-					itemData[Const.ULEVEL] = itemData[Const.ULEVEL] or itemInfo[5]
+					itemData[Const.ILEVEL] = itemData[Const.ILEVEL] or iLevel
+					itemData[Const.ULEVEL] = itemData[Const.ULEVEL] or uLevel
 				end
 			end
 		end
@@ -2100,6 +2135,7 @@ local StorePageFunction = function()
 	end
 
 	if private.isGetAll then
+		lib.ProgressBars("GetAllProgressBar", 0, true, "Auctioneer: Scan Received")
 		--[[
 			pre-store delay before starting to store a getall query to give the client a bit of time to sort itself out
 			we want to call it before GetNumAuctionItems, so we must use private.isGetAll for detection
@@ -2149,6 +2185,7 @@ local StorePageFunction = function()
 	local processingTime = 800 / get("scancommit.targetFPS")
 	local debugprofilestop = debugprofilestop
 	local nextPause = debugprofilestop() + processingTime
+	local fillduringscan = get("core.scan.fillduringscan")
 
 	local breakcount = 10000 -- additional limiter: yield every breakcount auctions scanned
 	local scannerthrottle = get("core.scan.scannerthrottle")
@@ -2175,14 +2212,15 @@ local StorePageFunction = function()
 		remissedCounts[i] = 0
 	end
 
+
 	if not private.breakStorePage and (page > qryinfo.page) then
 		-- First pass
 		local retries = { }
-		private.InitItemInfoCache() -- ### Legion item cache patch
+		private.InitItemInfoCache()
 		for i = 1, numBatchAuctions do
 			if isGetAll then -- only yield for GetAll scans
 				if debugprofilestop() > nextPause or i % breakcount == 0 then
-					lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true)
+					lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true, "Auctioneer: Scanning")
 					coroutine.yield()
 					if private.breakStorePage then
 						break
@@ -2196,7 +2234,9 @@ local StorePageFunction = function()
 			if (itemData) then
 				local isComplete, completeMinusSeller = private.isComplete(itemData)
 				if (isComplete) then
-					private.GetAuctionItemFillIn(itemData, true) -- ### Legion item cache patch
+					if fillduringscan then
+						private.GetAuctionItemFillIn(itemData, true)
+					end
 					tinsert(curScan, itemData)
 					storecount = storecount + 1
 				else
@@ -2229,7 +2269,7 @@ local StorePageFunction = function()
 			needsRetries = false
 			sellerOnly = true
 			tryCount = tryCount + 1
-			private.InitItemInfoCache() -- ### Legion item cache patch
+			private.InitItemInfoCache()
 			-- must use GetTime to time this pause, as debugprofilestop is unsafe across yields
 			local nextWait = GetTime() + 1
 			while GetTime() < nextWait do
@@ -2242,7 +2282,7 @@ local StorePageFunction = function()
 			for pos, i in ipairs(retries) do
 				if isGetAll then
 					if debugprofilestop() > nextPause or pos % breakcount == 0 then
-						lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true)
+						lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true, "Auctioneer: Scanning Retries")
 						coroutine.yield()
 						if private.breakStorePage then break end
 						nextPause = debugprofilestop() + processingTime
@@ -2256,7 +2296,9 @@ local StorePageFunction = function()
 				if (itemData) then
 					local isComplete, completeMinusSeller = private.isComplete(itemData)
 					if (isComplete) then
-						private.GetAuctionItemFillIn(itemData, true) -- ### Legion item cache patch
+						if fillduringscan then
+							private.GetAuctionItemFillIn(itemData, true)
+						end
 						tinsert(curScan, itemData)
 						storecount = storecount + 1
 					else
@@ -2318,7 +2360,7 @@ local StorePageFunction = function()
 		for _, i in ipairs(retries) do
 			if isGetAll then
 				if debugprofilestop() > nextPause then
-					lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true)
+					lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true, "Auctioneer: Scanning Cleanup")
 					coroutine.yield()
 					if private.breakStorePage then break end
 					nextPause = debugprofilestop() + processingTime
@@ -2359,7 +2401,6 @@ local StorePageFunction = function()
 			qryinfo.unresolved = (qryinfo.unresolved or 0) + all_missed + links_missed + link_data_missed + ld_and_names_missed
 		end
 	end
-	--private.ResetItemInfoCache() -- ### Legion item cache patch
 
 	if EventFramesRegistered then
 		for _, frame in pairs(EventFramesRegistered) do
@@ -2524,6 +2565,37 @@ function lib.CreateFilterSig(filterData)
 	end
 	return sig
 end
+function private.CompareFilterData(data1, data2)
+	if data1 == data2 then
+		return true -- same table
+	elseif not data1 then
+		if not data2 then
+			return true -- both nil or false
+		else
+			return false -- one nil, one table
+		end
+	elseif not data2 then
+		return false -- one table, one nil
+	end
+	-- assume both are tables at this point, as we should have pre-checked this
+	local count = #data1
+	if #data2 ~= count then
+		-- different number of entries
+		return false
+	end
+	for index = 1, count do
+		local filter1, filter2 = data1[index], data2[index]
+		-- each should be table containing entries classID [, subClassID [, inventoryType]]
+		if filter1.classID ~= filter2.classID or filter1.subClassID ~= filter2.subClassID then
+			return false
+		end
+		if filter1.subClassID and filter1.inventoryType ~= filter2.inventoryType then
+			-- only check inventoryType if we have subClassID
+			return false
+		end
+	end
+	return true
+end
 
 --[[ AucAdvanced.Scan.QuerySafeName(name)
 	Library function to convert a name to the 'normalized' form used by scan querys
@@ -2552,7 +2624,7 @@ function lib.CreateQuerySig(...)
 	return private.CreateQuerySig(private.QueryScrubParameters(...))
 end
 
-function private.QueryScrubParameters(name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData) -- ### Legion todo: handle filterData
+function private.QueryScrubParameters(name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData)
 	-- Converts the parameters that we will store in our scanQuery table into a consistent format:
 	-- converts each parameter to correct type;
 	-- converts all strings to lowercase;
@@ -2563,16 +2635,6 @@ function private.QueryScrubParameters(name, minLevel, maxLevel, isUsable, qualit
 	if minLevel and minLevel < 1 then minLevel = nil end
 	maxLevel = tonumber(maxLevel)
 	if maxLevel and maxLevel < 1 then maxLevel = nil end
-	-- classIndex = tonumber(classIndex)
-	-- if classIndex and classIndex < 1 then classIndex = nil end
-	-- if classIndex then
-		-- subclassIndex = tonumber(subclassIndex)
-		-- if subclassIndex and subclassIndex < 1 then subclassIndex = nil end
-	-- else
-		-- subclassIndex = nil -- subclassIndex is only valid if we have a classIndex
-	-- end
-	-- invTypeIndex = tonumber(invTypeIndex) or Const.EquipLocToInvIndex[invTypeIndex] -- accepts "INVTYPE_*" strings
-	-- if invTypeIndex and invTypeIndex < 1 then invTypeIndex = nil end
 	if isUsable and isUsable ~= 0 then
 		isUsable = true
 	else
@@ -2586,7 +2648,7 @@ function private.QueryScrubParameters(name, minLevel, maxLevel, isUsable, qualit
 	qualityIndex = tonumber(qualityIndex)
 	if qualityIndex and qualityIndex < 1 then qualityIndex = nil end
 
-	-- ### todo: more filterData checks?
+	-- ### todo: more robust filterData checks?
 	if type(filterData) ~= "table" then filterData = nil end
 
 	return name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData
@@ -2604,7 +2666,7 @@ function private.CreateQuerySig(name, minLevel, maxLevel, isUsable, qualityIndex
 	) -- can use strsplit("#", sig) to extract params
 end
 
-function private.QueryCompareParameters(query, name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData) -- ### Legion todo: handle filterData
+function private.QueryCompareParameters(query, name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData)
 	-- Returns true if the parameters are identical to the values stored in the specified scanQuery table
 	-- Use this function to avoid creating a duplicate scanQuery table
 	-- Parameters must have been scrubbed first
@@ -2612,13 +2674,10 @@ function private.QueryCompareParameters(query, name, minLevel, maxLevel, isUsabl
 	if query.name == name -- note: both already converted to lowercase when scrubbed
 	and query.minUseLevel == minLevel
 	and query.maxUseLevel == maxLevel
-	-- and query.classIndex == classIndex
-	-- and query.subclassIndex == subclassIndex
 	and query.quality == qualityIndex
-	-- and query.invType == invTypeIndex
 	and query.isUsable == isUsable
 	and query.exactMatch == exactMatch
-	and query.filterData == filterData -- ### temp solution: just check table reference. todo: check if the table contents are the same
+	and private.CompareFilterData(query.filterData, filterData)
 	then
 		return true
 	end
@@ -2626,7 +2685,7 @@ end
 
 private.querycount = 0
 
-function private.NewQueryTable(name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData) -- ### Legion todo: handle filterData
+function private.NewQueryTable(name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData)
 	-- Assumes the parameters have already been scrubbed
 	local class, subclass
 	local query, qryinfo = {}, {}
@@ -2636,17 +2695,6 @@ function private.NewQueryTable(name, minLevel, maxLevel, isUsable, qualityIndex,
 	query.name = name
 	query.minUseLevel = minLevel
 	query.maxUseLevel = maxLevel
-	-- query.invType = invTypeIndex
-	-- if classIndex then
-		-- class = Const.CLASSES[classIndex]
-		-- query.class = class
-		-- query.classIndex = classIndex
-	-- end
-	-- if subclassIndex then
-		-- subclass = Const.SUBCLASSES[classIndex][subclassIndex]
-		-- query.subclass = subclass
-		-- query.subclassIndex = subclassIndex
-	-- end
 	query.isUsable = isUsable
 	query.quality = qualityIndex
 	query.exactMatch = exactMatch
@@ -2890,7 +2938,7 @@ function lib.SetPaused(pause)
 end
 
 private.unexpectedClose = false
-local timeoutCanSend = 0 -- part of fix for Blizzard bug {ADV-595}
+local timeoutSentQuery = 0
 
 function private.OnUpdate(me, dur)
 	if CoCommit then
@@ -2939,18 +2987,29 @@ function private.OnUpdate(me, dur)
 			return
 		end
 
-		if private.sentQuery and private.auctionItemListUpdated then
-			if CanSendAuctionQuery() then
-				timeoutCanSend = 0
+		if private.sentQuery then
+			local itemlistUpdated = private.auctionItemListUpdated
+			local canSend = CanSendAuctionQuery()
+			if itemlistUpdated and canSend then
+				timeoutSentQuery = 0
 				lib.StorePage()
-			elseif timeoutCanSend > 25 then
-				-- Fix for Blizzard Auctionhouse bug {ADV-595}
-				-- CanSendAuctionQuery continues to return nil indefinitely. We use a timeout
-				timeoutCanSend = 0
+			elseif itemlistUpdated and timeoutSentQuery > 30 then
+				-- Fix in case CanSendAuctionQuery continues to return nil indefinitely. We use a timeout {ADV-595}
+				timeoutSentQuery = 0
 				lib.StorePage()
+			elseif canSend and timeoutSentQuery > 75 then
+				-- Fix for AUCTION_ITEM_LIST_UPDATE sometimes not being sent by server after Legion
+				-- In this case Serve has updated CanSendAuctionQuery, it may have sent info, so we'll try to store page
+				-- Note longer timeout: AUCTION_ITEM_LIST_UPDATE is the important event, CanSendAuctionQuery is a backup
+				timeoutSentQuery = 0
+				lib.StorePage()
+			elseif timeoutSentQuery > 180 then
+				-- Neither CanSendAuctionQuery nor AUCTION_ITEM_LIST_UPDATE have occurred and we have waited a long time
+				timeoutSentQuery = 0
+				private.ResetAll()
+				message("Auctioneer: Scan failed, Server is not responding")
 			else
-				-- part of fix for Blizzard bug {ADV-595}
-				timeoutCanSend = timeoutCanSend + dur
+				timeoutSentQuery = timeoutSentQuery + dur
 			end
  		end
 	elseif private.curQuery then
@@ -3229,7 +3288,9 @@ end
 
 function coremodule.Processors.auctionclose(event)
 	-- clearup memory usage when AH closed
-	private.ResetItemInfoCache()
+	if not get("core.scan.keepinfocacheonclose") then
+		private.ResetItemInfoCache()
+	end
 	private.clearImageCaches(event)
 	lib.Interrupt()
 end
@@ -3256,5 +3317,5 @@ function internal.Scan.NotifyOwnedListUpdated()
 --	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Advanced/CoreScan.lua $", "$Rev: 5668 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Advanced/CoreScan.lua $", "$Rev: 5718 $")
 AucAdvanced.CoreFileCheckOut("CoreScan")

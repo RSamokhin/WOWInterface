@@ -3,8 +3,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 <!--
 	Enchantrix:Barker Addon for World of Warcraft(tm).
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: EnchantrixBarker.xml 5567 2015-08-14 18:21:18Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: EnchantrixBarker.xml 5719 2017-08-01 18:50:40Z brykrys $
 	URL: http://enchantrix.org/
 
 	License:
@@ -30,7 +30,7 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 -->
 	<Script>
-		EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Enchantrix-Barker/EnchantrixBarker.xml $", "$Rev: 5567 $")
+		EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Enchantrix-Barker/EnchantrixBarker.xml $", "$Rev: 5719 $")
 	</Script>
 
 	<Button name="Enchantrix_BarkerDisplayButton" inherits="UIPanelButtonTemplate" hidden="true" text="Trade Barker">
@@ -58,7 +58,7 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 	<Button name="Enchantrix_BarkerOptions_FrameTabTemplate" inherits="CharacterFrameTabButtonTemplate" virtual="true">
 		<Scripts>
 			<OnClick>
-				PlaySound("igCharacterInfoTab");
+				PlaySound(PlaySoundKitID  and "igCharacterInfoTab" or SOUNDKIT.IG_CHARACTER_INFO_TAB); -- HYBRID73
 
 				local frame = self:GetParent()
 				PanelTemplates_SetTab(frame, self:GetID());

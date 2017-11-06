@@ -1,10 +1,11 @@
-## Interface: 70000
+## Interface: 70300
 ## Title: PetTracker Config
 ## Notes: Load on demand options and tutorial.
 ## Author: Jaliborc (João Cardoso)
+## X-Category: Battle Pets
+## Version: 7.3.0
 
 ## Dependencies: PetTracker
-## X-Category: Battle Pets
 ## LoadOnDemand: 1
 
 ..\PetTracker\Libs\CustomTutorials-2.1\CustomTutorials-2.1.lua

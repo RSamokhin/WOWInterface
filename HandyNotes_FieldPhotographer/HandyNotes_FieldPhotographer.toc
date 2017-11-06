@@ -1,5 +1,5 @@
-## Interface: 70000
-## Version: 7.0.3.0
+## Interface: 70100
+## Version: 7.1.0.0
 
 ## Title: HandyNotes: Field Photographer
 ## Notes: Shows you where to take selfies for the achievement.

@@ -1,4 +1,4 @@
-﻿-- --------------------
+-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -47,6 +47,7 @@ end
 
 local icons = {}
 local DD = TMW.C.Config_DropDownMenu_NoFrame:New()
+DD:ForceScale(1)
 local function DropdownOnClick(button, self, icon)
 	icon.group:Raise()
 	LoadIcon(icon)

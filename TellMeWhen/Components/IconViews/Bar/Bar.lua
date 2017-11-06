@@ -1,4 +1,4 @@
-﻿-- --------------------
+-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -130,11 +130,14 @@ View:ImplementsModule("IconModule_CooldownSweep", 20, function(Module, icon)
 	end
 
 	Module.cooldown:SetAllPoints(IconContainer.container)
+	Module.cooldown2:SetAllPoints(IconContainer.container)
 
 	if not IconContainer:IsIconSkinned(icon) then
 		Module.cooldown:SetFrameLevel(icon:GetFrameLevel() + 3)
+		Module.cooldown2:SetFrameLevel(icon:GetFrameLevel() + 3)
 	else
 		Module.cooldown:SetFrameLevel(icon:GetFrameLevel() + 2)
+		Module.cooldown2:SetFrameLevel(icon:GetFrameLevel() + 2)
 	end
 end)
 
@@ -189,6 +192,7 @@ View:ImplementsModule("IconModule_Backdrop", 51, function(Module, icon)
 	local gspv = group:GetSettingsPerView()
 
 	Module:SetBorder(gspv.BorderBar, gspv.BorderColor)
+	Module:SetOrientation("HORIZONTAL")
 	
 	Module.container:ClearAllPoints()
 	Module.container:SetAllPoints(icon.Modules.IconModule_TimerBar_BarDisplay.bar)

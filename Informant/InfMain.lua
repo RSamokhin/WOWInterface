@@ -1,8 +1,8 @@
 --[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: InfMain.lua 5650 2016-08-08 00:34:42Z ccox $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: InfMain.lua 5711 2017-04-04 17:45:39Z brykrys $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
 	License:
@@ -27,9 +27,9 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Informant/InfMain.lua $","$Rev: 5650 $")
+Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Informant/InfMain.lua $","$Rev: 5711 $")
 
-INFORMANT_VERSION = "7.1.5675"
+INFORMANT_VERSION = "7.5.5724"
 if (INFORMANT_VERSION == "<".."%version%>") then
 	INFORMANT_VERSION = "5.2.DEV"
 end
@@ -175,20 +175,23 @@ local cache = setmetatable({}, {__mode="v"})
 
 function getItem(itemLink, static)
 	if (not itemLink) then return end
-	if (static and staticDataLink and staticDataLink==itemLink) then return staticDataItem end
+	if static and staticDataLink == itemLink then return staticDataItem end
 	if cache[itemLink] then return cache[itemLink] end
 
 	-- this must use the full itemLink, not just the item ID To get the data correct
-	local itemName, _link, itemQuality, itemLevel, itemUseLevel, itemType, itemSubType, itemStackSize, itemEquipLoc, itemTexture = GetItemInfo(itemLink)
+	local itemName, _link, itemQuality, itemLevel, itemUseLevel, itemType, itemSubType, itemStackSize, itemEquipLoc,
+		itemTexture, itemSell, itemClassID, itemSubClassID, itemBindType, itemExpacID, itemSetID, itemReagent = GetItemInfo(itemLink)
 	--debugPrintQuick("GetItem : ", itemLink, itemLink:match("item:([^|]+)"), GetItemInfo(itemLink) )	-- GetItemInfo is returning base level, not the level with upgrades!
-	
+	local incompleteFlag = not itemName -- flag if GetItemInfo returns nils, so we know not to cache it
+
 	local itemID = idFromLink(itemLink)	-- not optimal, but needed for other code
 	local baseData = self.database[itemID]	-- old database of items that can be safely indexed by ID - if that changes, this code will have to change as well
-	local buy, sell, class, quality, stack, additional, usedby, quantity, limited, merchantlist, soulbind, specialbind
+	local buy, class, quality, stack, additional, usedby, quantity, limited, merchantlist, soulbind, specialbind
 	if (baseData) then
 		buy, class, quality, stack, additional, usedby, quantity, limited, merchantlist, soulbind, specialbind = strsplit(":", baseData)
 		buy = tonumber(buy)
 	end
+	local sell = itemSell
 
 	-- work around a blizzard bug where honor tokens return stack size 2147483647
 	-- this only seems to happen for the obsolete honor tokens shown in the currency frame
@@ -207,7 +210,7 @@ function getItem(itemLink, static)
 			if (itemUpdateData.buy) then
 				buy = tonumber(itemUpdateData.buy)
 			end
-			if (itemUpdateData.sell) then
+			if not sell and itemUpdateData.sell then
 				sell = tonumber(itemUpdateData.sell)
 			end
 			if (itemUpdateData.stack) then
@@ -226,7 +229,6 @@ function getItem(itemLink, static)
 	soulbind = tonumber(soulbind)
 	specialbind = tonumber(specialbind)
 
-	sell = select(11,GetItemInfo(itemLink))
 	local dataItem = (static and staticDataItem or {})
 	dataItem.buy = buy
 	dataItem.sell = sell
@@ -403,12 +405,16 @@ function getItem(itemLink, static)
 		end
 	end
 
-	-- we adjusted the static table, if called with static = true
-	-- so save the link info for future calls
-	if static then
-		staticDataLink = itemLink
-	else
-		cache[itemLink] = dataItem
+	if not incompleteFlag then
+		-- only save cache/static if data complete
+		-- todo: consider caching partial data, with a flag to try to obtain missing data next time?
+		if static then
+			-- we adjusted the static table, if called with static = true
+			-- so save the link info for future calls
+			staticDataLink = itemLink
+		else
+			cache[itemLink] = dataItem
+		end
 	end
 	return dataItem
 end
@@ -813,7 +819,7 @@ local function updateBuyPricesFromMerchant( vendorID )
 
 				-- if no vendors are known, or this vendor isn't on the list, add this vendor
 				if (not foundMerchant) then
-					
+
 					local cleanString = cleanStringFromLink( link )
 					local newItemInfo = InformantLocalUpdates.items[ cleanString ]
 					if (not newItemInfo) then newItemInfo = {} end

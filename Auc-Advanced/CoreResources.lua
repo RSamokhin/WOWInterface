@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: CoreResources.lua 5670 2016-09-03 11:59:41Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -175,5 +175,5 @@ internal.Resources = {
 	end
 }
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Advanced/CoreResources.lua $", "$Rev: 5670 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Advanced/CoreResources.lua $", "$Rev: 5670 $")
 AucAdvanced.CoreFileCheckOut("CoreResources")

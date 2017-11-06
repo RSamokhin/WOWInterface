@@ -1,4 +1,4 @@
-﻿-- --------------------
+-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -116,6 +116,10 @@ end
 local Config = {}
 Type.Config = Config
 
+function Config:Reload()
+	TellMeWhen_MetaIconOptions:OnSettingSaved()
+end
+
 function Config:LoadConfig()
 	if not TellMeWhen_MetaIconOptions then return end
 	local settings = CI.ics.Icons
@@ -149,14 +153,9 @@ end
 
 
 ---------- Click Handlers ----------
-function Config:Insert(where)
-	tinsert(CI.ics.Icons, where, "")
-	Config:LoadConfig()
-end
-
 function Config:Delete(self)
 	tremove(CI.ics.Icons, self:GetParent():GetID())
-	Config:LoadConfig()
+	Config:Reload()
 end
 
 function Config:SwapIcons(id1, id2)
@@ -165,6 +164,9 @@ function Config:SwapIcons(id1, id2)
 	Icons[id1], Icons[id2] = Icons[id2], Icons[id1]
 	
 	Config:LoadConfig()
+
+	-- DO NOT CALL Config:Reload() here - it will break click and drag rearranging.
+	-- Config:Reload()
 end
 
 
@@ -203,7 +205,7 @@ function Config:IconMenu()
 		end
 	elseif TMW.DD.MENU_LEVEL == 2 then
 		for icon in TMW.DD.MENU_VALUE:InIcons() do
-			if icon:IsValid() and CI.icon ~= icon and not icon:IsControlled() then
+			if icon:IsValid() and CI.icon ~= icon then
 				local info = TMW.DD:CreateInfo()
 
 				local text, textshort, tooltip = icon:GetIconMenuText()
@@ -234,7 +236,7 @@ function Config:IconMenuOnClick(frame)
 
 	CI.ics.Icons[frame:GetParent():GetID()] = GUID
 
-	Config:LoadConfig()
+	Config:Reload()
 	TMW.DD:CloseDropDownMenus()
 end
 

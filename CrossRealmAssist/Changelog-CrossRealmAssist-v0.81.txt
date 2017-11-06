@@ -1,0 +1,8 @@
+2016-10-27  ShadowTheAge  <ShadowTheAge>
+
+[2152dcaa9265] [beta-0.81, v0.81]
+* CrossRealmAssist.lua, CrossRealmAssist.toc, CrossRealmAssistSettings.lua:
+
+7.1 update and fix
+
+

@@ -1,6 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: EnxAucUtil.lua 5608 2016-06-13 16:51:37Z brykrys $
 	URL: http://enchantrix.org/
 
@@ -30,7 +30,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 
 ]]
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Enchantrix/EnxAucUtil.lua $","$Rev: 5608 $")
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Enchantrix/EnxAucUtil.lua $","$Rev: 5608 $")
 
 -- Provide fixed price data by registering ourselves as a bonafide legitimate Auctioneer module.
 if not AucAdvanced then return end

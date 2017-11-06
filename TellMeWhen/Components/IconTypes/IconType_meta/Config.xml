@@ -1,4 +1,4 @@
-﻿<Ui>
+<Ui>
 
 	<Frame name="TellMeWhen_MetaGroup" virtual="true">
 		<Size y="30"/>
@@ -35,7 +35,7 @@
 					<OnUpdate>
 						local Config = TMW.Types.meta.Config
 
-						if self:IsMouseOver() and Config.draggingFrame and self ~= Config.draggingFrame then
+						if (self:IsMouseOver() or self.IconPreview:IsMouseOver()) and Config.draggingFrame and self ~= Config.draggingFrame then
 							if Config.draggingButton == "LeftButton" then
 								local sourceID = Config.draggingFrame:GetParent():GetID()
 								local destID = self:GetParent():GetID()
@@ -74,7 +74,7 @@
 						TMW:TT(self, "METAPANEL_REMOVE", "METAPANEL_REMOVE_DESC")
 					</OnLoad>
 					<OnClick>
-						PlaySound("igMainMenuOptionCheckBoxOn")
+						TMW:ClickSound()
 
 						TMW.Types.meta.Config:Delete(self)
 					</OnClick>
@@ -108,10 +108,10 @@
 						self.Background:SetAlpha(0.7)
 					</OnLoad>
 					<OnClick>
-						PlaySound("igMainMenuOptionCheckBoxOn")
+						TMW:ClickSound()
 						
 						tinsert(TMW.CI.ics.Icons, "")
-						TMW.Types.meta.Config:LoadConfig()
+						TMW.Types.meta.Config:Reload()
 					</OnClick>
 				</Scripts>
 			</Button>

@@ -1,7 +1,7 @@
 ﻿--[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: EnxAutoDisenchant.lua 5581 2016-03-15 06:28:38Z ccox $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: EnxAutoDisenchant.lua 5683 2016-10-28 17:39:01Z brykrys $
 	URL: http://enchantrix.org/
 
 	Automatic disenchant scanner.
@@ -28,7 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Enchantrix/EnxAutoDisenchant.lua $", "$Rev: 5581 $")
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Enchantrix/EnxAutoDisenchant.lua $", "$Rev: 5683 $")
 
 local auto_de_session_ignore_list = {}
 local auto_de_frame
@@ -502,7 +502,7 @@ function showPrompt(link, bag, slot, value, spell)
 	auto_de_prompt.link, auto_de_prompt.bag, auto_de_prompt.slot, auto_de_prompt.count = link, bag, slot, count
 	auto_de_prompt.time = GetTime()		-- not yet used
 
-	local _, _, _, _, _, _, _, _, _, texture = GetItemInfo(auto_de_prompt.link)
+	local texture = GetItemIcon(auto_de_prompt.link)
 	auto_de_prompt.Item:SetNormalTexture(texture)
 	debugSpam("item link used:", auto_de_prompt.link, itemStringFromLink(auto_de_prompt.link), auto_de_prompt.bag, auto_de_prompt.slot)
 	

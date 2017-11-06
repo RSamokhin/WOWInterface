@@ -1,5 +1,5 @@
 --[[
-Copyright 2008-2015 João Cardoso
+Copyright 2008-2017 João Cardoso
 Sushi is distributed under the terms of the GNU General Public License (or the Lesser GPL).
 This file is part of Sushi.
 
@@ -18,9 +18,9 @@ along with Sushi. If not, see <http://www.gnu.org/licenses/>.
 --]]
 
 local TipOwner = SushiTipOwner
-local Button = MakeSushi(1, 'Button', 'ButtonBase', nil, nil, TipOwner)
+local Button = MakeSushi(2, 'Button', 'ButtonBase', nil, nil, TipOwner)
 if Button then
-	Button.sound = 'igMainMenuOptionCheckBoxOn'
+	Button.sound = SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON
 else
 	return
 end

@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Search UI - Searcher EnchantMats
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: SearcherEnchantMats.lua 5672 2016-09-10 08:05:35Z ccox $
 	URL: http://auctioneeraddon.com/
 
@@ -455,4 +455,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-SearchUI/SearcherEnchantMats.lua $", "$Rev: 5672 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Util-SearchUI/SearcherEnchantMats.lua $", "$Rev: 5672 $")

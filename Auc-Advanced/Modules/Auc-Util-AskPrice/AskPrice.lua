@@ -1,6 +1,6 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: AskPrice.lua 5599 2016-05-23 16:50:35Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -591,4 +591,4 @@ function private.SetupConfigGui(gui)
 	gui:AddTip(id, _TRANS('ASKP_HelpTooltip_Whisper')) --"Shows (enabled) or hides (disabled) outgoing whispers from Askprice."
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-AskPrice/AskPrice.lua $", "$Rev: 5599 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Util-AskPrice/AskPrice.lua $", "$Rev: 5599 $")

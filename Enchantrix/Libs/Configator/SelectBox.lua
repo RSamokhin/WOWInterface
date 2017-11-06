@@ -1,7 +1,7 @@
 --[[
 	SelectBox
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: SelectBox.lua 396 2015-10-01 16:35:24Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: SelectBox.lua 431 2017-08-01 18:46:12Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 
 	License:
@@ -30,7 +30,7 @@ local LIBRARY_VERSION_MINOR = 5
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/SelectBox.lua $","$Rev: 396 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/SelectBox.lua $","$Rev: 431 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local NUM_MENU_ITEMS = 15
 local SCROLLTIME = 0.2
@@ -148,7 +148,7 @@ function buttonKit:Open()
 	if not box.items then box = self:GetParent() end
 	if not box.items then error("Unable to open menu") end
 
-	PlaySound("igMainMenuOptionCheckBoxOn")
+	PlaySound(PlaySoundKitID and "igMainMenuOptionCheckBoxOn" or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON) -- HYBRID73
 	lib.menu:ClearAllPoints()
 	lib.menu:SetPoint("TOPLEFT", box, "TOPLEFT", 0, 0)
 	lib.menu:SetWidth(box:GetWidth())

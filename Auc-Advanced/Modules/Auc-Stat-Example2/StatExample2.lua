@@ -18,7 +18,7 @@ end
 
 --[[
 	Auctioneer - Stat's API Example module
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: StatExample2.lua 5590 2016-04-12 14:32:46Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -256,4 +256,4 @@ end
 function private.Baz()
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Advanced/Modules/Auc-Stat-Example2/StatExample2.lua $", "$Rev: 5590 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Advanced/Modules/Auc-Stat-Example2/StatExample2.lua $", "$Rev: 5590 $")

@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - BasicFilter
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: BasicFilter.lua 5602 2016-06-01 15:52:11Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -429,4 +429,4 @@ private.IgnorePrompt.no:SetPoint("BOTTOMRIGHT", private.IgnorePrompt, "BOTTOMRIG
 private.IgnorePrompt.no:SetScript("OnClick", private.OnPromptNo)
 private.IgnorePrompt.no:SetText(NO)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Filter-Basic/BasicFilter.lua $", "$Rev: 5602 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Filter-Basic/BasicFilter.lua $", "$Rev: 5602 $")

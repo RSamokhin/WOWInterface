@@ -71,6 +71,7 @@ L["Font"] = "Carattere"
 L["Font Color"] = "Colore del Carattere"
 L["Font Size"] = "Dimensione del Carattere"
 L["Force a square texture. Fixed distortion on square textures."] = "Imponi una texture quadrata. Distorsione adattata su texture quadrate. "
+-- L["Garrison Button (When Available)"] = "Garrison Button (When Available)"
 L["Guild Dungeon Difficulty Indicator (When Available)"] = "Indicatore Difficoltà della Spedizione di Gilda (Quando Disponibile)"
 L["Heart"] = "Cuore"
 L["Height"] = "Altezza"
@@ -163,7 +164,6 @@ L["Use the global profile if you want the same look on every character, or use a
 L["Vehicle Seat"] = "Sedile del Veicolo"
 L["Vertical Nudge"] = "Colpetto Verticale"
 L["Vertical Position"] = "Posizione Verticale"
-L["Video Recording Button (Mac OSX Only, When Available)"] = "Pulsante Registrazione Video (Disponibile solo su Mac OS X, Quando Disponibile)"
 L["Visibility"] = "Visibilità"
 L["Voice Chat Button (When Available)"] = "Pulsante Chat Vocale (Quando Disponibile)"
 L["Width"] = "Larghezza"
@@ -171,5 +171,3 @@ L["You can set a background and edge file for the minimap like you would with an
 L["Zone Text"] = "Testo Zona"
 L["Zoom In Button"] = "Zoom d'Ingrandimento"
 L["Zoom Out Button"] = "Pulsante Zoom d'Ingrandimento"
-
-

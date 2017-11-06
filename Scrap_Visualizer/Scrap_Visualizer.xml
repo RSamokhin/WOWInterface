@@ -1,13 +1,8 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 	<Frame name="ScrapVisualizer" parent="MerchantFrame" inherits="ButtonFrameTemplate" hidden="true">
-		<Size x="336" y="444"/>
-		<Anchors>
-			<Anchor point="TOPRIGHT" x="0" y="0"/>
-		</Anchors>
-		
         <Frames>
-       		<Button name="$parentTab1" inherits="TabButtonTemplate" id="1">
+       		<Button parentKey='tab1' name="$parentTab1" inherits="TabButtonTemplate" id="1">
 				<Anchors>
 					<Anchor point="TOPLEFT" x="70" y="-30"/>
 				</Anchors>
@@ -17,7 +12,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="$parentTab2" inherits="TabButtonTemplate" id="2">
+			<Button parentKey='tab2' name="$parentTab2" inherits="TabButtonTemplate" id="2">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentTab1" relativePoint="RIGHT"/>
 				</Anchors>

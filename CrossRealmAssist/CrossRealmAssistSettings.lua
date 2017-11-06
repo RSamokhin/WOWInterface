@@ -1,4 +1,4 @@
-local version = "v0.8";
+local version = "v0.81";
 local about = [[About:
 I have started to make this addon as a tool for myself. Few people started to use it when I pushed it to Curse. Then updated it once with 6.2 release.
 After some time I have catched a dialog on my own realm discussing it. I went to check curse page and I was shocked - it was in top-60 monthly downloaded addons with lots of suggestions and few bug reports.

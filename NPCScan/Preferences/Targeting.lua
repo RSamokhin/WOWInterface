@@ -126,6 +126,10 @@ local function CreateAnchorFrame()
 	return anchorFrame
 end
 
+local function IsTargetButtonGroupDisabled()
+	return not profile.targetButtonGroup.isEnabled
+end
+
 -- ----------------------------------------------------------------------------
 -- Initialization.
 -- ----------------------------------------------------------------------------
@@ -142,14 +146,28 @@ local function GetTargetingOptions()
 		type = "group",
 		descStyle = "inline",
 		args = {
-			duration = {
+			isEnabled = {
 				order = 1,
+				name = _G.ENABLE,
+				descStyle = "inline",
+				type = "toggle",
+				width = "full",
+				get = function(info)
+					return profile.targetButtonGroup.isEnabled
+				end,
+				set = function(info, value)
+					profile.targetButtonGroup.isEnabled = value
+				end,
+			},
+			duration = {
+				order = 2,
 				name = L["Duration"],
 				desc = L["The number of minutes a targeting button will exist before fading out."],
 				type = "range",
 				width = "full",
 				min = 0.5,
 				max = 5,
+				disabled = IsTargetButtonGroupDisabled,
 				get = function(info)
 					return profile.targetButtonGroup.durationSeconds / 60
 				end,
@@ -158,12 +176,13 @@ local function GetTargetingOptions()
 				end,
 			},
 			scale = {
-				order = 2,
+				order = 3,
 				name = _G.UI_SCALE,
 				type = "range",
 				width = "full",
 				min = 0.5,
 				max = 2,
+				disabled = IsTargetButtonGroupDisabled,
 				get = function(info)
 					return profile.targetButtonGroup.scale
 				end,
@@ -175,13 +194,14 @@ local function GetTargetingOptions()
 				end,
 			},
 			targetButtons = {
-				order = 3,
+				order = 4,
 				name = L["Screen Location"],
 				type = "group",
 				guiInline = true,
+				disabled = IsTargetButtonGroupDisabled,
 				args = {
 					spawnPoint = {
-						order = 60,
+						order = 1,
 						type = "select",
 						name = L["Spawn Point"],
 						descStyle = "inline",
@@ -195,7 +215,7 @@ local function GetTargetingOptions()
 						values = LOCALIZED_SPAWN_POINTS,
 					},
 					x = {
-						order = 70,
+						order = 2,
 						type = "input",
 						name = L["X Offset"],
 						desc = L["Horizontal offset from the anchor point."],
@@ -209,7 +229,7 @@ local function GetTargetingOptions()
 						dialogControl = "EditBox",
 					},
 					y = {
-						order = 80,
+						order = 3,
 						type = "input",
 						name = L["Y Offset"],
 						desc = L["Vertical offset from the anchor point."],
@@ -222,25 +242,43 @@ local function GetTargetingOptions()
 						end,
 						dialogControl = "EditBox",
 					},
+					hideDuringCombat = {
+						order = 4,
+						type = "toggle",
+						name = L["Hide During Combat"],
+						descStyle = "inline",
+						width = "full",
+						get = function()
+							return profile.targetButtonGroup.hideDuringCombat
+						end,
+						set = function(info, value)
+							profile.targetButtonGroup.hideDuringCombat = value
+						end,
+					},
 					empty_4 = {
-						order = 81,
+						order = 5,
 						type = "description",
 						width = "full",
 						name = " ",
 					},
 					reset = {
-						order = 90,
+						order = 6,
 						type = "execute",
 						name = L["Reset Position"],
 						descStyle = "inline",
 						func = function()
-							profile.targetButtonGroup = _G.copyTable(private.DatabaseDefaults.profile.targetButtonGroup)
-							LibWindow.RegisterConfig(anchorFrame, profile.targetButtonGroup)
+							local defaults = private.DatabaseDefaults.profile.targetButtonGroup
+							local preferences = profile.targetButtonGroup
+
+							preferences.point = defaults.point
+							preferences.x = defaults.x
+							preferences.y = defaults.y
+
 							LibWindow.RestorePosition(anchorFrame)
 						end,
 					},
 					showAnchor = {
-						order = 100,
+						order = 7,
 						type = "execute",
 						descStyle = "inline",
 						name = function()

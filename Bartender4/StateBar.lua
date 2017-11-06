@@ -1,5 +1,5 @@
 --[[
-	Copyright (c) 2009-2016, Hendrik "Nevcairiel" Leppkes < h.leppkes at gmail dot com >
+	Copyright (c) 2009-2017, Hendrik "Nevcairiel" Leppkes < h.leppkes at gmail dot com >
 	All rights reserved.
 ]]
 --[[ Generic Template for a ButtonBar with state control ]]
@@ -41,7 +41,7 @@ local _, playerclass = UnitClass("player")
 function Bartender4.StateBar:Create(id, config, name)
 	local bar = setmetatable(Bartender4.ButtonBar:Create(id, config, name), StateBar_MT)
 
-	if playerclass == "DRUID" or playerclass == "ROGUE" then
+	if playerclass == "DRUID" then
 		bar:RegisterEvent("PLAYER_TALENT_UPDATE")
 		bar:RegisterEvent("PLAYER_REGEN_ENABLED")
 		bar:RegisterEvent("GLYPH_UPDATED")

@@ -1,5 +1,5 @@
 --[[
-Copyright 2012-2015 João Cardoso
+Copyright 2012-2017 João Cardoso
 PetTracker is distributed under the terms of the GNU General Public License (Version 3).
 As a special exception, the copyright holders of this addon do not give permission to
 redistribute and/or modify it.
@@ -16,7 +16,7 @@ This file is part of PetTracker.
 --]]
 
 local ADDON, Addon = ...
-local Blip = Addon:NewClass('Button', 'Blip', 'WorldMapUnitTemplate')
+local Blip = Addon:NewClass('Button', 'Blip')
 local Drop = CreateFrame('Frame', ADDON..'BlipDrop', nil, 'UIDropDownMenuTemplate')
 
 Drop.point, Drop.relativePoint = 'TOP', 'BOTTOM'
@@ -28,6 +28,9 @@ Blip.Drop = Drop
 function Blip:OnCreate()
 	self:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
 	self:SetScript('OnClick', self.OnClick)
+
+	self.icon = self:CreateTexture(nil, 'ARTWORK')
+	self.icon:SetAllPoints(true)
 end
 
 function Blip:OnRelease()

@@ -152,9 +152,7 @@ ns.should_show_point = function(coord, point, currentZone, currentLevel)
         if point.follower and C_Garrison.IsFollowerCollected(point.follower) then
             return false
         end
-        -- This is actually super-targeted at Basten, who is repeatable daily and drops a toy
-        -- Might want to generalize at some point...
-        if point.toy and point.item and point.repeatable and select(4, C_ToyBox.GetToyInfo(point.item)) then
+        if point.toy and point.item and PlayerHasToy(point.item) then
             return false
         end
     end
@@ -162,6 +160,9 @@ ns.should_show_point = function(coord, point, currentZone, currentLevel)
         return false
     end
     if point.npc and not point.follower and not ns.db.show_npcs then
+        return false
+    end
+    if point.hide_before and not ns.db.upcoming and not IsQuestFlaggedCompleted(point.hide_before) then
         return false
     end
     return true

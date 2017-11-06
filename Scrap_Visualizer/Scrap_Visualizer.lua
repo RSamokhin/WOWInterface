@@ -1,5 +1,5 @@
 --[[
-Copyright 2008-2015 João Cardoso
+Copyright 2008-2017 João Cardoso
 Scrap is distributed under the terms of the GNU General Public License (Version 3).
 As a special exception, the copyright holders of this addon do not give permission to
 redistribute and/or modify it.
@@ -19,23 +19,20 @@ local Visualizer = ScrapVisualizer
 local L = Scrap_Locals
 local List = {}
 
+
 --[[ Startup ]]--
 
 function Visualizer:Startup()
-	ScrapVisualizerCloseButton:SetScript('OnClick', function() MerchantFrame:Hide() end)
-	ScrapVisualizerTab2:SetText(L.NotJunk)
-	ScrapVisualizerTab1:SetText(L.Junk)
+	self.tab1:SetText(L.Junk)
+	self.tab2:SetText(L.NotJunk)
 	
-	PanelTemplates_TabResize(ScrapVisualizerTab1, 0)
-	PanelTemplates_TabResize(ScrapVisualizerTab2, 0)
+	PanelTemplates_TabResize(self.tab1, 0)
+	PanelTemplates_TabResize(self.tab2, 0)
 	PanelTemplates_SetNumTabs(self, 2)
 
+	self.TitleText:SetText('Scrap')
 	self.portrait:SetTexture('Interface\\Addons\\Scrap\\Art\\Enabled Icon')
-	self.TitleText:SetText('Scrap Visualizer')
 	self.loading:SetText(L.Loading)
-
-	self:SetFrameLevel(self:GetFrameLevel() + 3)
-	self:EnableMouse(true)
 	
 	self:SetScript('OnUpdate', self.QueryItems)
 	self:SetScript('OnShow', self.OnShow)
@@ -45,14 +42,8 @@ function Visualizer:Startup()
 	
 	local portraitBack = self:CreateTexture(nil, 'BORDER')
 	portraitBack:SetPoint('TOPRIGHT', self.portrait, -5, -5)
-	portraitBack:SetPoint('BOTTOMLEFT', self.portrait, 5, 5)
-	portraitBack:SetTexture(0, 0, 0)
-	
-	local UpdateTabs = MerchantFrame_Update
-	function MerchantFrame_Update()
-		UpdateTabs()
-		self:Hide()
-	end
+	portraitBack:SetPoint('BOTTOMLEFT', self.portrait, 6, 5)
+	portraitBack:SetColorTexture(0, 0, 0)
 end
 
 function Visualizer:SetTab(i)

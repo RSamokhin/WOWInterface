@@ -6,7 +6,7 @@
 	rscupdhpcheckhr=GetTime()
 
 SetMapToCurrentZone()
-if GetCurrentMapAreaID()==1094 or GetCurrentMapAreaID()==1088 then
+if GetCurrentMapAreaID()==1094 or GetCurrentMapAreaID()==1088 or GetCurrentMapAreaID()==1147 then
 	RaidAchievement_legionrra:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	RaidAchievement_legionrra:RegisterEvent("UNIT_POWER")
 	RaidAchievement_legionrra:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE")
@@ -30,6 +30,10 @@ legionrraspisokach25={
 10851, -- http://www.wowhead.com/achievement=10851/elementalry
 10704, -- http://www.wowhead.com/achievement=10704/not-for-you
 
+--11724, -- http://www.wowhead.com/achievement=11724/fel-turkey
+11699, -- http://www.wowhead.com/achievement=11699/grand-fin-ale
+11773, -- http://www.wowhead.com/achievement=11773/wax-on-wax-off
+11770, -- http://www.wowhead.com/achievement=11770/dark-souls
 }
 
 
@@ -174,7 +178,36 @@ if (arg2=="SPELL_DAMAGE" and arg10==213531) and arg4 and arg8 then
    end
 end
 
-
+-- 7.2 patch
+if arg2=="UNIT_DIED" and 1==2 then
+  if legionrraspisokon[4]==1 and legionrraachdone1 and UnitGUID("boss1") then
+  local id=raGetUnitID(arg7)
+  if id==116976 then
+      legionrraachcompl(4)
+    end
+  end
+end
+if arg2=="UNIT_DIED" then
+  if legionrraspisokon[4]==1 and legionrraachdone1 and UnitGUID("boss1") then
+  local id=raGetUnitID(arg7)
+  if id==116407 then
+      legionrraachcompl(4)
+    end
+  end
+end
+if arg2=="UNIT_DIED" then
+  if legionrraspisokon[5]==1 and legionrraachdone1 and UnitGUID("boss1") then
+  local id=raGetUnitID(arg7)
+  if id==121498 then
+      legionrraachcompl(5)
+    end
+  end
+end
+if (arg2=="SPELL_CAST_SUCCESS" and arg10==241702) and UnitGUID("boss1") then
+      if legionrraspisokon[6]==1 and legionrraachdone1 then
+         legionrrafailnoreason(6)
+      end
+end
 
 
 

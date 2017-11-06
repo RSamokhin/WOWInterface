@@ -1,5 +1,5 @@
 --[[
-	Copyright (c) 2009-2016, Hendrik "Nevcairiel" Leppkes < h.leppkes at gmail dot com >
+	Copyright (c) 2009-2017, Hendrik "Nevcairiel" Leppkes < h.leppkes at gmail dot com >
 	All rights reserved.
 ]]
 local _, Bartender4 = ...
@@ -15,7 +15,7 @@ local LibDualSpec = LibStub("LibDualSpec-1.0", true)
 local _G = _G
 local type, pairs, hooksecurefunc = type, pairs, hooksecurefunc
 
--- GLOBALS: LibStub, UIParent, PlaySound, RegisterStateDriver, UnregisterStateDriver
+-- GLOBALS: LibStub, UIParent, PlaySound, SOUNDKIT, RegisterStateDriver, UnregisterStateDriver
 -- GLOBALS: BINDING_HEADER_Bartender4, BINDING_CATEGORY_Bartender4, BINDING_NAME_TOGGLEACTIONBARLOCK, BINDING_NAME_BTTOGGLEACTIONBARLOCK
 -- GLOBALS: BINDING_HEADER_BT4PET, BINDING_CATEGORY_BT4PET, BINDING_HEADER_BT4STANCE, BINDING_CATEGORY_BT4STANCE
 -- GLOBALS: CreateFrame, MultiBarBottomLeft, MultiBarBottomRight, MultiBarLeft, MultiBarRight, UIPARENT_MANAGED_FRAME_POSITIONS
@@ -153,6 +153,7 @@ function Bartender4:HideBlizzard()
 	--MainMenuExpBar:UnregisterAllEvents()
 	--MainMenuExpBar:Hide()
 	MainMenuExpBar:SetParent(UIHider)
+	MainMenuExpBar:SetDeferAnimationCallback(nil)
 
 	MainMenuBarMaxLevelBar:Hide()
 	MainMenuBarMaxLevelBar:SetParent(UIHider)
@@ -161,11 +162,11 @@ function Bartender4:HideBlizzard()
 	--ReputationWatchBar:Hide()
 	ReputationWatchBar:SetParent(UIHider)
 
-	if ArtifactWatchBar then
-		ArtifactWatchBar:SetParent(UIHider)
-	end
+	ArtifactWatchBar:SetParent(UIHider)
+	ArtifactWatchBar.StatusBar:SetDeferAnimationCallback(nil)
 
 	HonorWatchBar:SetParent(UIHider)
+	HonorWatchBar.StatusBar:SetDeferAnimationCallback(nil)
 
 	StanceBarFrame:UnregisterAllEvents()
 	StanceBarFrame:Hide()
@@ -331,6 +332,7 @@ function Bartender4:ShowUnlockDialog()
 		f:SetFrameStrata("DIALOG")
 		f:SetToplevel(true)
 		f:EnableMouse(true)
+		f:SetMovable(true)
 		f:SetClampedToScreen(true)
 		f:SetWidth(360)
 		f:SetHeight(110)
@@ -344,11 +346,12 @@ function Bartender4:ShowUnlockDialog()
 		}
 		f:SetPoint("TOP", 0, -50)
 		f:Hide()
-		f:SetScript("OnShow", function() PlaySound("igMainMenuOption") end)
-		f:SetScript("OnHide", function() PlaySound("gsTitleOptionExit") end)
+		f:SetScript('OnShow', function() PlaySound(SOUNDKIT and SOUNDKIT.IG_MAINMENU_OPTION or 'igMainMenuOption') end)
+		f:SetScript('OnHide', function() PlaySound(SOUNDKIT and SOUNDKIT.GS_TITLE_OPTION_EXIT or 'gsTitleOptionExit') end)
 
-		local tr = f:CreateTitleRegion()
-		tr:SetAllPoints(f)
+		f:RegisterForDrag('LeftButton')
+		f:SetScript('OnDragStart', function(f) f:StartMoving() end)
+		f:SetScript('OnDragStop', function(f) f:StopMovingOrSizing() end)
 
 		local header = f:CreateTexture(nil, "ARTWORK")
 		header:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")

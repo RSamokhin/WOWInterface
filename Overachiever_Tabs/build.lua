@@ -15,6 +15,8 @@ local function emptyfunc() end
 local ACHIEVEMENTUI_FONTHEIGHT
 local In_Guild_View   -- imitation of Blizzard's local IN_GUILD_VIEW
 
+local GetPreviousAchievement = GetPreviousAchievement
+
 
 local isAchievementInUI_cache = {}
 local function isAchievementInUI(id, checkNext, useCache)
@@ -337,6 +339,28 @@ local function displayAchievement(button, frame, achievement, index, selectionID
     button.hiddenDescription:Hide();
   end
 
+  if (frame.ShouldCrossOut and frame.ShouldCrossOut(id)) then
+    if (not button.CrossOut) then
+      button.CrossOut = CreateFrame("frame", nil, button) --button.icon
+	  local overPos = button --alternatively: button.shield OR button.icon
+	  local tl = button.CrossOut:CreateTexture(nil, "OVERLAY", nil, 5) --, 1)
+	  button.CrossOut.Left = tl
+	  tl:SetPoint("CENTER", overPos)
+	  tl:SetAtlas("GarrMission_EncounterBar-Xleft")
+	  tl:SetHeight(72) --48
+	  tl:SetWidth(72) --48
+	  local tr = button.CrossOut:CreateTexture(nil, "OVERLAY", nil, 1)
+	  button.CrossOut.Right = tr
+	  tr:SetPoint("CENTER", overPos)
+	  tr:SetAtlas("GarrMission_EncounterBar-Xright")
+	  tr:SetHeight(72)
+	  tr:SetWidth(72)
+	end
+	button.CrossOut:Show()
+  elseif (button.CrossOut) then
+    button.CrossOut:Hide()
+  end
+
   --if (Overachiever_Debug) then  print("- Last bit took for \""..name.."\" took "..(debugprofilestop() - StartTime) .." ms.");  end
 
   return id;
@@ -462,10 +486,9 @@ local function applyAchievementFilter(list, completed, built, checkprev, critlis
   end
   local count, _, c = 0
   for i,id in pairs(list) do  -- Using pairs instead of ipairs so we can safely nil things out.
-    if (critlist and critlist[id]) then
+    _, _, _, c = GetAchievementInfo(id)
+    if (not c and critlist and critlist[id]) then
       _, _, c = GetAchievementCriteriaInfo(id, critlist[id])
-    else
-      _, _, _, c = GetAchievementInfo(id)
     end
     if (c == completed) then
       count = count + 1
@@ -608,7 +631,7 @@ do
     true_clickedTab = nil
 
     -- Don't play sound when this is a silentDisplay or Overachiever.OpenTab_frame call.
-    if (button) then  PlaySound("igCharacterInfoTab");  end
+    if (button) then  PlaySound(SOUNDKIT.IG_CHARACTER_INFO_TAB);  end
 
     if (self.flash and UIFrameIsFading(self.flash)) then
       UIFrameFlashRemoveFrame(self.flash)
@@ -635,6 +658,11 @@ local function compheader_OnShow(...)
 end
 
 local function achbtnOnClick(self, button)
+  if (button == "RightButton") then
+    local frame = getFrameOfButton(self)
+	if (frame.HandleRightClick) then  frame.HandleRightClick(self.id);  end
+    return;
+  end
   local id = self.id
   if ( IsShiftKeyDown() and IsControlKeyDown() and Overachiever.OpenRelatedTab ) then
     Overachiever.OpenRelatedTab(id)
@@ -688,6 +716,10 @@ local function post_AchievementButton_OnLoad(self)
     tinsert(redir_btn_tinsert, self);
     -- Our button isn't put into this table as of WoW 4.0.1, so this line is unneeded:
     -- tremove(AchievementFrameAchievementsContainer.buttons);
+
+	-- Add right click feature:
+	self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+	--shield:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 
     if ( not ACHIEVEMENTUI_FONTHEIGHT ) then
       local _, fontHeight = self.description:GetFont();
@@ -809,9 +841,10 @@ function Overachiever.BuildNewTab(name, text, watermark, helptip, loadFunc, filt
 
   if (varsLoaded and tab.loadFunc) then
 	local v = Overachiever_Tabs_Settings
+	local vc = Overachiever_Tabs_CharVars
 	local AchFilters = v.AchFilters
 	if (AchFilters[name]) then  FilterByTab[tab.frame] = AchFilters[name];  end
-	tab.loadFunc(v, oldver)
+	tab.loadFunc(v, oldver, vc)
 	tab.loadFunc = nil
   end
 
@@ -861,7 +894,7 @@ local function LeftFrame_OnHide(self)
   end
 end
 
-local LeftFrame_OnEvent_CRITERIA_UPDATE, LeftFrame_OnUpdate
+local LeftFrame_OnEvent, LeftFrame_OnUpdate
 local recolor_AchievementObjectives_DisplayCriteria
 do
   local time, last, isSet = time, 0
@@ -895,7 +928,7 @@ do
     self:SetScript("OnUpdate", nil)
     for k,tab in ipairs(tabs) do
       local frame = tab.frame
-      if ( frame.selection and tabselected == frame ) then
+      if ( tabselected == frame and frame.selection ) then
 -- Based on part of AchievementFrameAchievements_OnEvent.
         local id = AchievementFrameAchievementsObjectives.id;
         local button = AchievementFrameAchievementsObjectives:GetParent();
@@ -910,10 +943,21 @@ do
     end
   end
 
-  function LeftFrame_OnEvent_CRITERIA_UPDATE(self)
-    if (isSet) then  return;  end
-    self:SetScript("OnUpdate", LeftFrame_OnUpdate)
-    isSet = true
+  function LeftFrame_OnEvent(self, event, arg1, ...)
+    if (event == "CRITERIA_UPDATE") then
+      if (isSet) then  return;  end
+      self:SetScript("OnUpdate", LeftFrame_OnUpdate)
+      isSet = true
+	elseif (event == "ACHIEVEMENT_EARNED") then
+      isAchievementInUI_cache[arg1] = nil
+	  local failsafe = 0
+      local nextID = GetNextAchievement(arg1)
+      while (nextID and failsafe < 100) do
+        isAchievementInUI_cache[nextID] = nil
+        nextID = GetNextAchievement(nextID)
+		failsafe = failsafe + 1
+      end
+    end
   end
 
 end
@@ -954,7 +998,8 @@ do
     if (arg1 == "Overachiever_Tabs") then
       self:UnregisterEvent("ADDON_LOADED")
       self:RegisterEvent("CRITERIA_UPDATE")
-      self:SetScript("OnEvent", LeftFrame_OnEvent_CRITERIA_UPDATE)
+	  self:RegisterEvent("ACHIEVEMENT_EARNED")
+      self:SetScript("OnEvent", LeftFrame_OnEvent)
       varsLoaded = true
 
       Overachiever_Tabs_Settings = Overachiever_Tabs_Settings or {}
@@ -962,6 +1007,10 @@ do
       oldver = v.Version
       v.Version = GetAddOnMetadata("Overachiever_Tabs", "Version")
       if (oldver == v.Version) then  oldver = false;  end
+
+	  Overachiever_Tabs_CharVars = Overachiever_Tabs_CharVars or {}
+	  local vc = Overachiever_Tabs_CharVars
+	  vc.Version = v.Version
 
       v.AchFilters = v.AchFilters or {}
       local AchFilters = v.AchFilters
@@ -974,7 +1023,7 @@ do
           name = tab.frame:GetName()
           if (AchFilters[name]) then  FilterByTab[tab.frame] = AchFilters[name];  end
           if (tab.loadFunc) then
-            tab.loadFunc(v, oldver)
+            tab.loadFunc(v, oldver, vc)
             tab.loadFunc = nil
           end
         end

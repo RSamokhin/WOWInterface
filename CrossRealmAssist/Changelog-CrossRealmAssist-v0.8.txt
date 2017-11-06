@@ -1,8 +1,0 @@
-2016-07-20  ShadowTheAge  <ShadowTheAge>
-
-[d12ccf325b4b] [v0.8]
-* CrossRealmAssist.lua, CrossRealmAssistSettings.lua:
-
-LibST highlight fix and version number inc
-
-

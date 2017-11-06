@@ -1,5 +1,34 @@
 # Changelog
 
+## Changed in v12
+
+* TOC for 7.3
+* Rares on Argus, still mostly missing treasures
+* Include Dog's pebble in Dalaran, if you've done the quests to have Dog available in your garrison
+* Missing chest in Val'sharah
+* Missing chest in Highmountain
+
+## Changed in v11
+
+* TOC for 7.2
+* Added the Wand of Simulated Life in Dalaran
+* Added post-Snowblind battle treasure in Highmountain
+* Darkpens treasures were mixed up
+* Watchman's Rock chest in Stormheim explained better
+
+## Changed in v10
+
+* Don't show minimap icons if you have the treasure map buff for that zone active.
+* Missing items in Val'sharah and Azsuna.
+* Missing rare in Azsuna: The Muscle.
+
+## Changed in v9
+
+* TOC for 7.1.
+* Include Emerald Winds, even though it's not technically a treasure.
+* Some helpful notes clarifying positions.
+* Missing Suramar treasure.
+
 ## Changed in v8
 
 * Added more treasures to Suramar.

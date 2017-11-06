@@ -164,7 +164,6 @@ L["Use the global profile if you want the same look on every character, or use a
 L["Vehicle Seat"] = "Место в транспорте" -- Needs review
 L["Vertical Nudge"] = "Сдвиг по вертикали" -- Needs review
 L["Vertical Position"] = "Расположение по вертикали" -- Needs review
-L["Video Recording Button (Mac OSX Only, When Available)"] = "кнопку видеозаписи (только для Mac OSX, если доступно)" -- Needs review
 L["Visibility"] = "Видимость" -- Needs review
 L["Voice Chat Button (When Available)"] = "кнопку голосовой связи (если доступно)" -- Needs review
 L["Width"] = "Ширина"
@@ -172,5 +171,3 @@ L["You can set a background and edge file for the minimap like you would with an
 L["Zone Text"] = "Текст игровой зоны" -- Needs review
 L["Zoom In Button"] = "кнопку приближения" -- Needs review
 L["Zoom Out Button"] = "кнопку отдаления" -- Needs review
-
-

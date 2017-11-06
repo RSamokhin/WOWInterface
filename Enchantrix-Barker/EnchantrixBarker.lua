@@ -1,6 +1,6 @@
 ﻿--[[
 	Enchantrix:Barker Addon for World of Warcraft(tm).
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: EnchantrixBarker.lua 5641 2016-08-04 02:23:06Z ccox $
 	URL: http://enchantrix.org/
 
@@ -30,7 +30,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 
 ]]
-EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Enchantrix-Barker/EnchantrixBarker.lua $", "$Rev: 5641 $")
+EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Enchantrix-Barker/EnchantrixBarker.lua $", "$Rev: 5641 $")
 
 local priorityList = {};
 

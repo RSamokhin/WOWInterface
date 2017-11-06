@@ -1,4 +1,4 @@
-﻿-- --------------------
+-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -32,8 +32,6 @@ local UnitInRaid, GetNumPartyMembers =
       UnitInRaid, GetNumPartyMembers
 	  
 
-local clientVersion = select(4, GetBuildInfo())
-local wow_501 = clientVersion >= 50100
 
 
 
@@ -258,19 +256,15 @@ Announcements:RegisterEventHandlerDataNonSpecific(22, "RAID_WARNING", {
 Announcements:RegisterEventHandlerDataNonSpecific(24, "BATTLEGROUND", {
 	text = CHAT_MSG_BATTLEGROUND,
 	isBlizz = 1,
-	handler =
-	wow_501 and 
-		function(icon, eventSettings, Text)
-			if UnitInBattleground("player") then
-				SendChatMessage(Text, "INSTANCE_CHAT")
-			end
+	handler = function(icon, eventSettings, Text)
+		if UnitInBattleground("player") then
+			SendChatMessage(Text, "INSTANCE_CHAT")
 		end
-	or nil,
+	end,
 })
 Announcements:RegisterEventHandlerDataNonSpecific(25, "INSTANCE_CHAT", {
 	text = INSTANCE_CHAT,
 	isBlizz = 1,
-	hidden = not wow_501,
 	handler = function(icon, eventSettings, Text)
 		if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
 			SendChatMessage(Text, "INSTANCE_CHAT")
@@ -281,32 +275,17 @@ Announcements:RegisterEventHandlerDataNonSpecific(30, "SMART", {
 	text = L["CHAT_MSG_SMART"],
 	desc = L["CHAT_MSG_SMART_DESC"],
 	isBlizz = 1, -- flagged to not use override %t and %f substitutions, and also not to try and color any names
-	handler =
-	wow_501 and
-		function(icon, eventSettings, Text)
-			local channel = "SAY"
-			if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
-				channel = "INSTANCE_CHAT"
-			elseif IsInRaid(LE_PARTY_CATEGORY_HOME) then
-				channel = "RAID"
-			elseif IsInGroup() then
-				channel = "PARTY"
-			end
-			SendChatMessage(Text, channel)
+	handler = function(icon, eventSettings, Text)
+		local channel = "SAY"
+		if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+			channel = "INSTANCE_CHAT"
+		elseif IsInRaid(LE_PARTY_CATEGORY_HOME) then
+			channel = "RAID"
+		elseif IsInGroup() then
+			channel = "PARTY"
 		end
-	or
-		function(icon, eventSettings, Text)
-			local channel = "SAY"
-			if UnitInBattleground("player") then
-				channel = "BATTLEGROUND"
-			elseif IsInRaid() then
-				channel = "RAID"
-			elseif IsInGroup() then
-				channel = "PARTY"
-			end
-			SendChatMessage(Text, channel)
-		end
-	,
+		SendChatMessage(Text, channel)
+	end,
 })
 Announcements:RegisterEventHandlerDataNonSpecific(40, "CHANNEL", {
 	text = L["CHAT_MSG_CHANNEL"],
@@ -423,7 +402,7 @@ Announcements:RegisterEventHandlerDataNonSpecific(70, "FRAME", {
 	end,
 })
 
-local bullshitTable = {}
+local empty = {}
 Announcements:RegisterEventHandlerDataNonSpecific(71, "RAID_WARNING_FAKE", {
 	text = L["RAID_WARNING_FAKE"],
 	desc = L["RAID_WARNING_FAKE_DESC"],
@@ -444,9 +423,10 @@ Announcements:RegisterEventHandlerDataNonSpecific(71, "RAID_WARNING_FAKE", {
 		-- GLOBALS: RaidWarningFrame, RaidNotice_AddMessage
 		
 		-- workaround: blizzard's code doesnt manage colors correctly when there are 2 messages being displayed with different colors.
-		Text = "|c" .. eventSettings.TextColor .. Text .. "|r"
+		-- The gsub here is so that text that appears after a link of some kind will be the correct color instead of black (caused by the |r at the end of the link).
+		Text = "|c" .. eventSettings.TextColor .. Text:gsub("|r", "|c" .. eventSettings.TextColor) .. "|r"
 
-		RaidNotice_AddMessage(RaidWarningFrame, Text, bullshitTable, eventSettings.TextDuration) -- arg3 still demands a valid table for the color info, even if it is empty
+		RaidNotice_AddMessage(RaidWarningFrame, Text, empty, eventSettings.TextDuration) -- arg3 still demands a valid table for the color info, even if it is empty
 		
 	end,
 })

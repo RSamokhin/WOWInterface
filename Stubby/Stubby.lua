@@ -1,6 +1,6 @@
 --[[
 	Stubby AddOn for World of Watcraft (tm)
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: Stubby.lua 374 2014-10-31 12:11:53Z brykrys $
 	URL: http://auctioneeraddon.com/dl/Stubby/
 

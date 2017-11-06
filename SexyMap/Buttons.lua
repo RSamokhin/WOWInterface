@@ -22,43 +22,29 @@ local dynamicButtons = {
 	MiniMapChallengeMode = L["Challenge Mode Button (When Available)"],
 	MiniMapInstanceDifficulty = L["Dungeon Difficulty Indicator (When Available)"],
 	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
-	MiniMapRecordingButton = L["Video Recording Button (Mac OSX Only, When Available)"],
 	MiniMapVoiceChatFrame = L["Voice Chat Button (When Available)"],
 	QueueStatusMinimapButton = L["Queue Status (PvP/LFG) Button (When Available)"],
 	GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
 }
-local addonButtons = { -- For the rare addons that don't use LibDBIcon for some reason :(
-	EnxMiniMapIcon = "Enchantrix",
-	["FuBarPluginBig BrotherFrameMinimapButton"] = "Big Brother",
-	RA_MinimapButton = "RaidAchievement",
+-- XXX Custom support for addons is now being phased out, this list will reduce over time.
+-- XXX Eventually we want all drag-handling code to be handled by the LibDBIcon library.
+-- XXX People should be free to use interesting shapes no matter what minimap addon they use.
+-- XXX Being forced to use SexyMap for this is silly. If someone creates a small minimap addon
+-- XXX with a cool custom shape, all buttons (created by LibDBIcon) should react accordingly! No need to replicate SexyMap code in their minimap addon!
+-- XXX People who whine about this should be redirected to authors of the individual addons to use LibDBIcon instead of creating custom minimap buttons.
+local addonButtons = {
 	DBMMinimapButton = "DBM (Deadly Boss Mods)",
-	XPerl_MinimapButton_Frame = "X-Perl",
 	WIM3MinimapButton = "WIM (WoW Instant Messenger)",
-	VuhDoMinimapButton = "VuhDo",
-	AltoholicMinimapButton = "Altoholic",
 	DominosMinimapButton = "Dominos",
 	Gatherer_MinimapOptionsButton = "Gatherer",
-	DroodFocusMinimapButton = "Drood Focus",
-	D32MiniMapButton = "Mistra's Diablo Orbs",
-	DKPBidderMapIcon = "DKP-Bidder",
 	HealiumMiniMap = "Healium",
 	HealBot_MMButton = "HealBot",
-	IonMinimapButton = "Ion",
 	OutfitterMinimapButton = "Outfitter",
-	FlightMapEnhancedMinimapButton = "Flight Map Enhanced",
 	NXMiniMapBut = "Carbonite",
-	RaidTrackerAceMMI = "Raid Tracker",
-	TellTrackAceMMI = "Tell Track",
-	TenTonHammer_MinimapButton = "PlayerScore",
 	ZygorGuidesViewerMapIcon = "Zygor",
-	RBSMinimapButton = "Raid Buff Status",
 	BankItems_MinimapButton = "BankItems",
-	OQ_MinimapButton = "oQueue",
 	ItemRackMinimapFrame = "ItemRack",
-	MageNug_MinimapFrame = "Mage Nuggets",
-	CraftBuster_MinimapFrame = "CraftBuster",
 	wlMinimapButton = "Wowhead Looter",
-	AtlasLoot_MiniMapButton = "AtlasLoot",
 }
 
 local options = {
@@ -227,15 +213,9 @@ function mod:OnInitialize(profile)
 	end
 
 	self.db = profile.buttons
-	-- XXX temp
-	if not self.db.TEMP then
-		self.db.visibilitySettings.QueueStatusMinimapButton = "always"
-		self.db.TEMP = true
-	end
-	if not self.db.TEMP2 then
-		self.db.visibilitySettings.GarrisonLandingPageMinimapButton = "always"
-		self.db.TEMP2 = true
-	end
+	-- XXX temp [7.2.5]
+	self.db.TEMP = nil
+	self.db.TEMP2 = nil
 end
 
 function mod:OnEnable()
@@ -570,7 +550,7 @@ do
 			grabFrames(
 				Minimap, MiniMapTrackingButton, MinimapZoneTextButton, MiniMapTracking, TimeManagerClockButton, GameTimeFrame,
 				MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton, GuildInstanceDifficulty, MiniMapChallengeMode, MiniMapInstanceDifficulty,
-				MiniMapMailFrame, MiniMapRecordingButton, MiniMapVoiceChatFrame, QueueStatusMinimapButton, GarrisonLandingPageMinimapButton
+				MiniMapMailFrame, MiniMapVoiceChatFrame, QueueStatusMinimapButton, GarrisonLandingPageMinimapButton
 			)
 			grabNewFrames()
 			dragFrame:RegisterEvent("ADDON_LOADED")

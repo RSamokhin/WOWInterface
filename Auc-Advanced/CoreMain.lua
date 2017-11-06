@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: CoreMain.lua 5634 2016-08-02 19:54:00Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: CoreMain.lua 5698 2017-01-10 19:57:32Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -336,6 +336,7 @@ local function OnEnteringWorld(frame)
 
 	frame:RegisterEvent("ITEM_LOCK_CHANGED")
 	frame:RegisterEvent("BAG_UPDATE")
+	frame:RegisterEvent("GET_ITEM_INFO_RECEIVED")
 	-- Following items are for experimental scan processor modifications
 	frame:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
 	frame:RegisterEvent("AUCTION_OWNED_LIST_UPDATE")
@@ -370,8 +371,10 @@ local function OnEvent(self, event, arg1, arg2, ...)
 		internal.Scan.NotifyOwnedListUpdated()
 	elseif (event == "ITEM_LOCK_CHANGED" and arg2) or event == "BAG_UPDATE" then
 		if arg1 >= 0 and arg1 <= 4 then
-			ScheduleMessage("inventory", 0.05) -- collect multiple events for same bag change using a slight delay
+			ScheduleMessage("inventory", 0.15) -- collect multiple events for same bag change using a slight delay
 		end
+	elseif event == "GET_ITEM_INFO_RECEIVED" then
+		ScheduleMessage("iteminfoupdate", 0.15)
 	elseif event == "ADDON_LOADED" then
 		OnLoad(arg1)
 	elseif event == "SAVED_VARIABLES_TOO_LARGE" then
@@ -417,5 +420,5 @@ do -- ScheduleMessage handler
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Advanced/CoreMain.lua $", "$Rev: 5634 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Advanced/CoreMain.lua $", "$Rev: 5698 $")
 AucAdvanced.CoreFileCheckOut("CoreMain")

@@ -1,5 +1,5 @@
 --[[
-	Copyright (c) 2009-2016, Hendrik "Nevcairiel" Leppkes < h.leppkes at gmail dot com >
+	Copyright (c) 2009-2017, Hendrik "Nevcairiel" Leppkes < h.leppkes at gmail dot com >
 	All rights reserved.
 ]]
 local _, Bartender4 = ...
@@ -61,8 +61,6 @@ Bartender4.ActionBar.defaults = abdefaults['**']
 function BT4ActionBars:OnInitialize()
 	self.db = Bartender4.db:RegisterNamespace("ActionBars", defaults)
 end
-
-local LBF = LibStub("LibButtonFacade", true)
 
 -- setup the 10 actionbars
 local first = true

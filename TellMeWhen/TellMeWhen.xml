@@ -1,4 +1,4 @@
-﻿<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ .. \FrameXML\UI.xsd">
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ .. \FrameXML\UI.xsd">
 
 	<!-- TEMPLATES -->
 
@@ -161,7 +161,7 @@
 						self:SetScale(2)
 					</OnLoad>
 					<OnClick>
-						PlaySound("igMainMenuOptionCheckBoxOn")
+						TMW:ClickSound()
 
 						TMW:SlashCommand("options")
 					</OnClick>

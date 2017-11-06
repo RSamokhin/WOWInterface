@@ -1,18 +1,18 @@
 ## Title: Informant
 ## Notes: Displays detailed item information in tooltips, such as use, vendor sales information, and more.
 ##
-## Interface: 70000
+## Interface: 70300
 ## LoadOnDemand: 1
 ## Dependencies: Stubby
 ## OptionalDeps: !nLog, Babylonian, DebugLib, Configator, SlideBar, LibExtraTip, TipHelper, LibDataBroker
 ## SavedVariables: InformantConfig, InformantLocalUpdates
 ##
-## Version: 7.1.5675 (TasmanianThylacine)
-## Revision: $Id: Informant.toc 5647 2016-08-07 22:02:39Z ccox $
+## Version: 7.5.5724 (TasmanianThylacine)
+## Revision: $Id: Informant.toc 5722 2017-09-02 11:56:11Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer
 ## X-Category: Item Data
-## X-Max-Interface: 70000
+## X-Max-Interface: 70300
 ## X-URL: http://auctioneeraddon.com/
 ## X-Feedback: http://forums.norganna.org
 ##

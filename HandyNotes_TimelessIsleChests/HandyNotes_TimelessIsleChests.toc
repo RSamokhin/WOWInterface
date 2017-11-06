@@ -1,16 +1,12 @@
-## Interface: 70000
+## Interface: 70300
 ## Title: HandyNotes_TimelessIsleChests
-## Version: 1.15
+## Version: 1.18
 ## Notes: Shows location of treasure chests on the Timeless Isle
 ## Author: Bartruby of Cairne
 ## OptionalDeps: Ace3
 ## RequiredDeps: HandyNotes
 ## X-Embeds: Ace3
 ## SavedVariables: TimelessIsleChestsDB
-## X-Curse-Packaged-Version: 1.15
-## X-Curse-Project-Name: HandyNotes_TimelessIsleChests
-## X-Curse-Project-ID: timelessislechests
-## X-Curse-Repository-ID: wow/timelessislechests/mainline
 
 #@no-lib-strip@
 libs\LibStub\LibStub.lua

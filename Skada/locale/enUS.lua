@@ -481,8 +481,40 @@ L["Holy power gain sources"] = true
 L["Runic power gain sources"] = true
 L["Power gains"] = true
 L["Focus gained"] = true
+L["Fury gained"] = true
+L["Pain gained"] = true
+L["Soul Shards gained"] = true
 L["Focus gain sources"] = true
+L["Fury gain sources"] = true
+L["Pain gain sources"] = true
+L["Soul Shards gain sources"] = true
 
 L["Minimum"] = true
 L["Maximum"] = true
 L["Average"] = true
+
+L["Spell school colors"] = true
+L["Use spell school colors where applicable."] = true
+
+L["Sort modes by usage"] = true
+L["The mode list will be sorted to reflect usage instead of alphabetically."] = true
+
+L["Smooth bars"] = true
+L["Animate bar changes smoothly rather than immediately."] = true
+
+L["Update frequency"] = true
+L["How often windows are updated. Shorter for faster updates. Increases CPU usage."] = true
+
+L["Buffs"] = true
+L["Debuffs"] = true
+
+L["Healing: Personal HPS"] = true
+L["Healing: Raid HPS"] = true
+L["RHPS"] = true
+
+L["Friendly Fire"] = true
+L["List of players damaged"] = true
+L["List of damaging spells"] = true
+L["spells"] = true
+L["targets"] = true
+L["Shows damage done on players by friendly players."] = true

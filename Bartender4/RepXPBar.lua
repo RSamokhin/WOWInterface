@@ -1,5 +1,5 @@
 --[[
-	Copyright (c) 2009-2016, Hendrik "Nevcairiel" Leppkes < h.leppkes at gmail dot com >
+	Copyright (c) 2009-2017, Hendrik "Nevcairiel" Leppkes < h.leppkes at gmail dot com >
 	All rights reserved.
 ]]
 local _, Bartender4 = ...
@@ -35,12 +35,7 @@ function RepBarMod:OnEnable()
 		self.bar.content:SetParent(self.bar)
 		self.bar.content:SetFrameLevel(self.bar:GetFrameLevel() + 1)
 	end
-	if ReputationWatchBar_Update then
-		self:SecureHook("ReputationWatchBar_Update", "UpdateLayout")
-	end
-	if MainMenuBar_UpdateExperienceBars then
-		self:SecureHook("MainMenuBar_UpdateExperienceBars", "UpdateLayout")
-	end
+	self:SecureHook("MainMenuBar_UpdateExperienceBars", "UpdateLayout")
 	self.bar:Enable()
 	self:ToggleOptions()
 	self:ApplyConfig()
@@ -110,8 +105,6 @@ XPBar.width = 1038
 XPBar.height = 21
 XPBar.offsetX = 8
 
-if ArtifactWatchBar then
-
 -- register module
 local APBarMod = Bartender4:NewModule("APBar", "AceHook-3.0")
 
@@ -150,5 +143,3 @@ APBar.ControlClickThrough = RepBar.ControlClickThrough
 APBar.width = 1038
 APBar.height = 21
 APBar.offsetX = 8
-
-end

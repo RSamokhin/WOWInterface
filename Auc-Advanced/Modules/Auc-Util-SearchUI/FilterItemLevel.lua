@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreItemQuality
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: FilterItemLevel.lua 5622 2016-07-29 18:06:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -105,4 +105,4 @@ function lib.Filter(item, searcher)
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-SearchUI/FilterItemLevel.lua $", "$Rev: 5622 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Util-SearchUI/FilterItemLevel.lua $", "$Rev: 5622 $")

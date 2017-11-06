@@ -37,7 +37,7 @@
 						<FontString parentKey="When" inherits="GameFontWhiteSmall">
 							<Anchors>
 								<Anchor point="RIGHT" relativeKey="$parent.Pet1" relativePoint="LEFT" x="-13" y="9"/>
-							</Anchors>	
+							</Anchors>
 							<Color r="0.7" g="0.7" b="0.7"/>
 						</FontString>
 					</Layer>
@@ -52,7 +52,7 @@
 				self.Content.Pet1:SetScale(0.8)
 			</OnLoad>
 			<OnClick>
-				PlaySound('igMainMenuOptionCheckBoxOn')
+				PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 				PetTrackerTamerJournal.History:SetSelected(self:GetID())
 			</OnClick>
 			<OnMouseDown>

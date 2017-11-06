@@ -28,7 +28,7 @@ local next = next
 local pairs = pairs
 
 
-local metas = Overachiever.GetMetaCriteriaLookup()
+local metas -- = Overachiever.GetMetaCriteriaLookup()
 local seriesLookup, seriesPlace = {}, {}
 local seriesCount = 0
 
@@ -176,8 +176,8 @@ local function closePanel()
     --]]
   end
   baseAchID = nil
-  PlaySound("igSpellBookClose")
-  --PlaySound("igCharacterInfoTab")
+  PlaySound(SOUNDKIT.IG_SPELLBOOK_CLOSE)
+  --PlaySound(SOUNDKIT.IG_CHARACTER_INFO_TAB)
 end
 
 
@@ -302,11 +302,11 @@ local function buildRelatedTab()
 
 	RecursiveCheckbox:SetScript("OnClick", function(self)
 		if (self:GetChecked()) then
-			PlaySound("igMainMenuOptionCheckBoxOn");
+			PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
 			VARS.RelatedRecursive = true
 			findRelatives()
 		else
-			PlaySound("igMainMenuOptionCheckBoxOff");
+			PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF);
 			VARS.RelatedRecursive = false
 			findRelatives()
 		end
@@ -351,6 +351,7 @@ end
 
 
 function Overachiever.OpenRelatedTab(id)
+	metas = metas or Overachiever.GetMetaCriteriaLookup()
 	if (not frame) then
 		buildRelatedTab()
 		buildRelatedTab = nil
@@ -364,7 +365,7 @@ function Overachiever.OpenRelatedTab(id)
 	if (achProcessed ~= id) then  findRelatives();  end
 	if (Overachiever.GetSelectedTab() == frame) then
 		Overachiever.OpenTab_frame(frame)
-		PlaySound("igMainMenuOptionCheckBoxOn")
+		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 	else
 		Overachiever.OpenTab_frame(frame, true)
 	end

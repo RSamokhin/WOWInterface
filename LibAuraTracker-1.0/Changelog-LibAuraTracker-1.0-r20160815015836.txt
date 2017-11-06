@@ -1,0 +1,32 @@
+turtleguy:
+	- Updates on documentation and added functions to query modify existing aura information
+	- Some stuff
+	- cleanup of how untracking things is handled
+	- Updated documentation
+	- Updated documentation
+	- Updated documentation
+	- Updated documentation
+	- Updated documentation
+	- Updated documentation
+	- Updated documentation
+	- Updated documentation
+	- Updated documentation
+	- Updated documentation
+	- Updated documentation
+	- Updated documentation
+	- Updated documentation
+	- Updated documentation
+	- Updated documentation
+	- added checking of tracking status
+	- fixed an error in filter merging logic
+	- Removed some bad stuff
+	- removed some debugging stuff
+	- removed some debugging stuff
+	- Changed Some things
+	- fixed the thing
+	- added function go get the total pandemic duration
+	- fixed a name issue
+	- Removed some leftover debugging code
+	- Cleaned up everything and added extensive documentation
+	- changed some paths for the documenter and also some names of variables so api's order will make sense
+	- Initial Commit

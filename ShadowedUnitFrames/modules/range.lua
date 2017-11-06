@@ -32,11 +32,11 @@ local Range = {
 			(GetSpellInfo(133)), -- Fireball
 		},
 		["MONK"] = GetSpellInfo(115546), -- Provoke
-		["PALADIN"] = GetSpellInfo(20271), -- Judgement
+		["PALADIN"] = GetSpellInfo(62124), -- Hand of Reckoning
 		["PRIEST"] = GetSpellInfo(585), -- Smite
 		--["ROGUE"] = GetSpellInfo(1725), -- Distract
 		["SHAMAN"] = GetSpellInfo(403), -- Lightning Bolt
-		["WARLOCK"] = GetSpellInfo(689), -- Drain Life
+		["WARLOCK"] = GetSpellInfo(686), -- Shadow Bolt
 		["WARRIOR"] = GetSpellInfo(355), -- Taunt
 	},
 }
@@ -59,7 +59,7 @@ local function checkRange(self)
 		spell = rangeSpells.hostile
 	end
 
-	if( not UnitIsConnected(frame.unit) ) then
+	if( not UnitIsConnected(frame.unit) or not UnitInPhase(frame.unit) ) then
 		frame:SetRangeAlpha(ShadowUF.db.profile.units[frame.unitType].range.oorAlpha)
 	elseif( spell ) then
 		frame:SetRangeAlpha(LSR.IsSpellInRange(spell, frame.unit) == 1 and ShadowUF.db.profile.units[frame.unitType].range.inAlpha or ShadowUF.db.profile.units[frame.unitType].range.oorAlpha)
@@ -95,12 +95,26 @@ local function updateSpellCache(category)
 	end
 end
 
+local function createTimer(frame)
+	if( not frame.range.timer ) then
+		frame.range.timer = C_Timer.NewTicker(0.5, checkRange)
+		frame.range.timer.parent = frame
+	end
+end
+
+local function cancelTimer(frame)
+	if( frame.range and frame.range.timer ) then
+		frame.range.timer:Cancel()
+		frame.range.timer = nil
+	end
+end
+
 function Range:ForceUpdate(frame)
 	if( UnitIsUnit(frame.unit, "player") ) then
 		frame:SetRangeAlpha(ShadowUF.db.profile.units[frame.unitType].range.inAlpha)
-		frame.range.timer:Stop()
+		cancelTimer(frame)
 	else
-		frame.range.timer:Play()
+		createTimer(frame)
 		checkRange(frame.range.timer)
 	end
 end
@@ -108,15 +122,12 @@ end
 function Range:OnEnable(frame)
 	if( not frame.range ) then
 		frame.range = CreateFrame("Frame", nil, frame)
-
-		frame.range.timer = frame:CreateOnUpdate(0.50, checkRange)
-		frame.range.timer.parent = frame
 	end
 
 	frame:RegisterNormalEvent("PLAYER_SPECIALIZATION_CHANGED", self, "SpellChecks")
 	frame:RegisterUpdateFunc(self, "ForceUpdate")
 
-	frame.range.timer:Play()
+	createTimer(frame)
 end
 
 function Range:OnLayoutApplied(frame)
@@ -127,7 +138,7 @@ function Range:OnDisable(frame)
 	frame:UnregisterAll(self)
 	
 	if( frame.range ) then
-		frame.range.timer:Stop()
+		cancelTimer(frame)
 		frame:SetRangeAlpha(1.0)
 	end
 end
@@ -137,6 +148,6 @@ function Range:SpellChecks(frame)
 	updateSpellCache("friendly")
 	updateSpellCache("hostile")
 	if( frame.range ) then
-		checkRange(frame.range.timer)
+		self:ForceUpdate(frame)
 	end
 end

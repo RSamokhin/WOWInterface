@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: CoreManifest.lua 5634 2016-08-02 19:54:00Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: CoreManifest.lua 5697 2017-01-10 19:55:02Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -52,9 +52,9 @@ AucAdvanced = {Modules = {Filter={}, Match={}, Stat={}, Util={}}, Data = {}}
 local lib = AucAdvanced
 
 -- Manifest Constants
-local DEV_VERSION = "7.0.DEV"
-local MINIMUM_TOC = 70000
-local MINIMUM_CLIENT = "7.0.3"
+local DEV_VERSION = "7.4.DEV"
+local MINIMUM_TOC = 70100
+local MINIMUM_CLIENT = "7.1.0"
 -- MINIMUM_BUILD is optional, and should only be used where TOC is not sufficient; otherwise it should be commented out
 -- local MINIMUM_BUILD = 00000
 
@@ -87,7 +87,7 @@ end
 lib.CoreFileCheckIn("CoreManifest") -- check CoreManifest in as early as possible
 
 -- Version checking
-lib.Version="7.1.5675";
+lib.Version="7.5.5724";
 if lib.Version:byte(1) == 60 then -- 60 = '<'
 	lib.Version = DEV_VERSION
 end
@@ -280,5 +280,5 @@ function lib.ValidateInstall()
 end
 
 
-lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Advanced/CoreManifest.lua $", "$Rev: 5634 $")
+lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Advanced/CoreManifest.lua $", "$Rev: 5697 $")
 lib.CoreFileCheckOut("CoreManifest")

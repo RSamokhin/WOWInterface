@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Simplified Auction Posting
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: SimpFrame.lua 5654 2016-08-09 17:49:16Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: SimpFrame.lua 5705 2017-02-07 10:34:30Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a simple dialog for
@@ -880,37 +880,33 @@ function private.PostAuction()
 end
 
 function private.Refresh(background)
-	local name, minLevel, quality, filterData
+	local name, filterData
 	local link = frame.CurItem.link
 	if not link then return end
-	local lType, itemID, _, petQuality = strsplit(":", link)
+	local lType, itemID = strsplit(":", link)
 	lType = lType:sub(-4)
 	itemID = tonumber(itemID)
 	if not itemID then
 		-- link should always have an itemID, or speciesID for battlepets
 		return
 	elseif lType == "item" then
-		local itemName, _, itemRarity, _, itemMinLevel, _, _, _, _, _, _, classID, subClassID = GetItemInfo(link)
+		local itemName, _, _, _, _, _, _, _, _, _, _, classID, subClassID = GetItemInfo(link)
 		name = itemName
-		if itemMinLevel and itemMinLevel > 0 then minLevel = itemMinLevel end
-		if itemRarity and itemRarity > 0 then quality = itemRarity end
 		filterData = AucAdvanced.Scan.QueryFilterFromID(classID, subClassID)
 	elseif lType == "epet" then -- last 4 letters of "battlepet"
 		-- all caged pets should have the default pet name (custom names are removed when caging)
 		local petName, _, petType = C_PetJournal.GetPetInfoBySpeciesID(itemID) -- itemID is speciesID
 		name = petName
-		petQuality = tonumber(petQuality)
-		if petQuality and petQuality > 0 then quality = petQuality end
 		filterData = AucAdvanced.Scan.QueryFilterFromID(LE_ITEM_CLASS_BATTLEPET, Const.AC_PetType2SubClassID[petType])
 	end
 	if not name or name == "" then return end
 	local exact = #name < 30 -- use exact match, except for very long names
 	aucPrint(("Refreshing view of {{%s}}"):format(name))--Refreshing view of {{%s}}
 	if background == true then
-		StartPushedScan(name, minLevel, minLevel, nil, quality, exact, filterData)
+		StartPushedScan(name, nil, nil, nil, nil, exact, filterData)
 	else
 		PushScan()
-		StartScan(name, minLevel, minLevel, nil, quality, nil, exact, filterData)
+		StartScan(name, nil, nil, nil, nil, nil, exact, filterData)
 	end
 end
 
@@ -1360,4 +1356,4 @@ function private.CreateFrames()
 	frame:RegisterEvent("BAG_UPDATE")
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 5654 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 5705 $")

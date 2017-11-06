@@ -1,6 +1,6 @@
 --[[
 	Enchantrix:Barker Addon for World of Warcraft(tm).
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: BarkerManifest.lua 5403 2013-04-03 16:50:32Z brykrys $
 	URL: http://enchantrix.org/
 
@@ -105,4 +105,4 @@ function manifest.Validate()
 	return true
 end
 
-EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Enchantrix-Barker/BarkerManifest.lua $", "$Rev: 5403 $")
+EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Enchantrix-Barker/BarkerManifest.lua $", "$Rev: 5403 $")

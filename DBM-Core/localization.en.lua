@@ -1,7 +1,8 @@
 
 DBM_CORE_NEED_LOCALS				= "Are you good with programming or languages? If yes, the DBM needs your help in localizing DBM in more languages. If you can help, visit our forums by |HDBM:localizersneeded|h|cff3588ffclicking here|r"
-DBM_CORE_NEED_LOGS					= "DBM needs Transcriptor (http://www.wowace.com/addons/transcriptor/) logs of these test fights to make best mods possible. If you want to help, log these fights with transcriptor and post them to our forums. Only interested in 7.0 raid & dungeon logs."
+DBM_CORE_NEED_LOGS					= "DBM needs Transcriptor (http://www.wowace.com/addons/transcriptor/) log of this fight to make best mods possible. If you want to help, log this fight with transcriptor and post them to DBM forums or discord"
 DBM_HOW_TO_USE_MOD					= "Welcome to DBM. Type /dbm help for a list of supported commands. To access options type /dbm in your chat to begin configuration. Load specific zones manually to configure any boss specific settings to your liking as well. DBM tries to do this for you by scanning your spec on first run, but some might want additional options turned on anyways."
+DBM_SILENT_REMINDER					= "Reminder: DBM is still in silent mode."
 
 DBM_FORUMS_MESSAGE					= "Found a bug or wrong timer? Do you think some mod would need an additional warning, timer or special feature?\nVisit the new Deadly Boss Mods discussion, bug report and feature request forums at |HDBM:forums|h|cff3588ffhttp://www.deadlybossmods.com|r (you can click the link to copy the URL)"
 DBM_FORUMS_COPY_URL_DIALOG			= "Come visit our discussion and support forums"
@@ -14,12 +15,12 @@ DBM_CORE_LOAD_GUI_ERROR				= "Could not load GUI: %s"
 DBM_CORE_LOAD_GUI_COMBAT			= "GUI cannot be initially loaded in combat. GUI will be loaded out of combat. After GUI loaded, you can open GUI in combat."
 DBM_CORE_BAD_LOAD					= "DBM has detected your mod for this instance failed to fully load correctly because of combat. As soon as you are out of combat, please do /console reloadui as soon as possible."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s could not be loaded because your DBM-Core does not meet requirements. An updated version is required"
+DBM_CORE_LOAD_MOD_DISABLED			= "%s is installed but currently disabled. This mod will not be loaded unless you enable it."
+DBM_CORE_LOAD_MOD_DISABLED_PLURAL	= "%s are installed but currently disabled. These mods will not be loaded unless you enable them."
 
-DBM_CORE_WHATS_NEW					= "New in this version: Fixed a bug that caused 'Major Patch' force update/disable to trigger wrongfully for non major patch updates. DBM will no longer filter Broken Shore cut scenes regardless of user settings. Added Demonic Invasions mod. Minor Text Fixes"
-DBM_CORE_WHATS_NEW_LINK				= "In upcoming version of DBM, many features that relied on unit positions will be pruned. You can read more about why by |HDBM:forumsnews|h|cff3588ffclicking here|r"
+DBM_CORE_WHATS_NEW					= "'Expand Upwards' and 'Fill Bars' options can now be adjusted per bar type (small/large) instead of globally. Try it out!"
+DBM_CORE_WHATS_NEW_LINK				= "Remember: You can report bugs, give feedback, or just hang out in DBM Discord. |HDBM:forumsnews|h|cff3588ffDiscord Link|r"
 
---Pre Patch 7.1 Notice
-DBM_CORE_NO_RANGE_SOON				= "Note: range radar will no longer be available within instances in patch 7.1"
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "Range Radar can not be used in instances. Legacy text range frame used instead"
 DBM_CORE_NO_ARROW					= "Arrow can not be used in instances"
@@ -31,7 +32,7 @@ DBM_CORE_DYNAMIC_MULTIPLE			= "DBM has disabled multiple features on this fight 
 
 DBM_CORE_LOOT_SPEC_REMINDER			= "Your current spec is %s. Your current loot choice is %s."
 
-DBM_CORE_BIGWIGS_ICON_CONFLICT		= "DBM has detected that you have raid icons turned on in both BigWigs and DBM. Please disable icons in one of them to avoid conflict with your group leader"
+DBM_CORE_BIGWIGS_ICON_CONFLICT		= "DBM has detected that you have raid icons turned on in both BigWigs and DBM. Please disable icons in one of them to avoid conflicts"
 
 DBM_CORE_MOD_AVAILABLE				= "%s is available for this content. You can find on |HDBM:forums|h|cff3588ffdeadlybossmods.com|r or on Curse. This message will only display once."
 
@@ -58,7 +59,9 @@ DBM_CORE_COMBAT_STATE_RECOVERED		= "%s was engaged %s ago, recovering timers..."
 DBM_CORE_TRANSCRIPTOR_LOG_START		= "Transcriptor logging started."
 DBM_CORE_TRANSCRIPTOR_LOG_END		= "Transcriptor logging ended."
 
-DBM_CORE_MOVIE_SKIPPED				= "A cut scene has automatically been skipped."
+DBM_CORE_MOVIE_SKIPPED				= "DBM has attempted to skip a cut scene automatically."
+
+DBM_CORE_AFK_WARNING				= "You are AFK and in combat (%d percent health remaining), firing sound alert. If you are not AFK, clear your AFK flag or disable this option in 'extra features'."
 
 DBM_CORE_COMBAT_STARTED_AI_TIMER	= "My CPU is a neural net processor; a learning computer. (This fight will use the new timer AI feature to generate timer approximations)"
 
@@ -91,7 +94,7 @@ DBM_CORE_NOTE_SHARE_FAIL			= "%s attempted to share note text with you for %s. H
 DBM_CORE_NOTEHEADER					= "Enter your note text here for %s. Enclosing a players name with >< class colors it. For alerts with multiple notes, separate notes with '/'"
 DBM_CORE_NOTEFOOTER					= "Press 'Okay' to accept changes or 'Cancel' to decline changes"
 DBM_CORE_NOTESHAREDHEADER			= "%s has shared below note text for %s. If you accept it, it will overwrite your existing note"
-DBM_CORE_NOTESHARED					= "You're note has been sent to the group"
+DBM_CORE_NOTESHARED					= "Your note has been sent to the group"
 DBM_CORE_NOTESHAREERRORSOLO			= "Lonely? Shouldn't be passing notes to yourself"
 DBM_CORE_NOTESHAREERRORBLANK		= "Cannot share blank notes"
 DBM_CORE_NOTESHAREERRORGROUPFINDER	= "Notes cannot be shared in BGs, LFR, or LFG"
@@ -121,6 +124,7 @@ DBM_CORE_OPTION_TIMER_BERSERK		= "Show timer for $spell:26662"
 DBM_CORE_GENERIC_TIMER_COMBAT		= "Combat starts"
 DBM_CORE_OPTION_TIMER_COMBAT		= "Show timer for combat start"
 DBM_CORE_OPTION_HEALTH_FRAME		= "Show boss health frame"
+DBM_CORE_BAD						= "Bad"
 
 DBM_CORE_OPTION_CATEGORY_TIMERS			= "Bars"
 DBM_CORE_OPTION_CATEGORY_WARNINGS		= "General Announces"
@@ -151,16 +155,17 @@ DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s: No boss mod installed"
 DBM_CORE_VERSIONCHECK_FOOTER		= "Found %d player(s) with DBM & %d player(s) with Bigwigs"
 DBM_CORE_VERSIONCHECK_OUTDATED		= "Following %d player(s) have outdated boss mod version: %s"
 DBM_CORE_YOUR_VERSION_OUTDATED      = "Your version of Deadly Boss Mods is out-of-date. Please visit http://www.deadlybossmods.com to get the latest version."
-DBM_CORE_VOICE_PACK_OUTDATED		= "Your DBM voice pack may be missing sounds supported by this version of DBM. Some special warning sounds will not be supressed for alerts using voices not supported by your voice pack version. Please download a newer version of voice pack or contact author for an update that contains missing audio files"
+DBM_CORE_VOICE_PACK_OUTDATED		= "Your selected DBM voice pack is missing some sounds supported by DBM. Some warning sounds will still play default sounds. Please download a newer version of voice pack or pack contact author for an update that contains missing audio"
 DBM_CORE_VOICE_MISSING				= "You had a DBM voice pack selected that could not be found. Your selection has been reset to 'None'. If this is an error, make sure your voice pack is properly installed and enabled in addons."
-DBM_CORE_VOICE_COUNT_MISSING		= "Countdown voice %d is set to a voice/count pack that could not be found. It has be reset to default settings."
+DBM_CORE_VOICE_DISABLED				= "You currently have at least one DBM voice pack installed but none enabled. If you intend to use a voice pack, make sure it's chosen in 'Spoken Alerts', else uninstall unused voice packs to hide this message"
+DBM_CORE_VOICE_COUNT_MISSING		= "Countdown voice %d is set to a voice/count pack that could not be found. It has be reset to default setting: %s."
 DBM_BIG_WIGS						= "BigWigs"
 
 DBM_CORE_UPDATEREMINDER_HEADER			= "Your version of Deadly Boss Mods is out-of-date.\n Version %s (r%d) is available for download through Curse, WoWI, or from here:"
 DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "Your ALPHA version of Deadly Boss Mods is out-of-date.\n You are at least %d test versions behind. It is recommended that DBM users that choose ALPHA versions run the latest ALPHA. Otherwise, they should run latest RELEASE version. Out of date ALPHAs have a stricter version check because they are development versions of DBM."
 DBM_CORE_UPDATEREMINDER_FOOTER			= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the download link to your clipboard."
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the link to your clipboard."
-DBM_CORE_UPDATEREMINDER_DISABLE			= "WARNING: Do to your Deadly Boss Mods being too out of date, it has been force disabled and cannot be enabled until updated. This is to ensure old and incompatible code doesn't cause poor play experience for yourself or fellow raid members."
+DBM_CORE_UPDATEREMINDER_DISABLE			= "WARNING: Do to your Deadly Boss Mods being too out of date, it has been force disabled and cannot used until updated. This is to ensure old and incompatible code doesn't cause poor play experience for yourself or fellow raid members."
 DBM_CORE_UPDATEREMINDER_HOTFIX			= "DBM version you are on has known issues during this boss encounter that are corrected if you update to latest release"
 DBM_CORE_UPDATEREMINDER_HOTFIX_ALPHA	= "DBM version you are on has known issues during this boss encounter that are corrected in an upcoming release (or latest alpha version)"
 DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "WARNING: Do to your Deadly Boss Mods being out of date, DBM has been disabled until updated, since this is a major game patch. This is to ensure old and incompatible code doesn't cause poor play experience for yourself or fellow group members. Make sure you download a newer version from deadlybossmods.com or curse as soon as possible."
@@ -224,7 +229,8 @@ DBM_CORE_SLASHCMD_HELP2				= {
 	"/dbm version: Performs a boss mod version check (alias: ver).",
 	"/dbm version2: Performs a boss mod version check that also whispers out of date users (alias: ver2).",
 	"/dbm lockout: Asks raid members for their current raid instance lockouts (aliases: lockouts, ids) (requires promoted).",
-	"/dbm lag: Performs a raid-wide latency check."
+	"/dbm lag: Performs a raid-wide latency check.",
+	"/dbm durability: Performs a raid-wide durability check."
 }
 DBM_CORE_TIMER_USAGE	= {
 	"DBM timer commands:",
@@ -241,20 +247,37 @@ DBM_ERROR_NO_PERMISSION				= "You don't have the required permission to do this.
 
 DBM_CORE_BOSSHEALTH_HIDE_FRAME		= "Close health frame"
 
+--Common Locals
+DBM_NEXT							= "Next %s"
+DBM_COOLDOWN						= "%s CD"
 DBM_CORE_UNKNOWN					= "unknown"--UNKNOWN which is "Unknown" (does u vs U matter?)
 DBM_CORE_LEFT						= "Left"
 DBM_CORE_RIGHT						= "Right"
 DBM_CORE_BACK						= "Back"--BACK
 DBM_CORE_MIDDLE						= "Middle"
 DBM_CORE_FRONT						= "Front"
+DBM_CORE_EAST						= "East"
+DBM_CORE_WEST						= "West"
+DBM_CORE_NORTH						= "North"
+DBM_CORE_SOUTH						= "South"
 DBM_CORE_INTERMISSION				= "Intermission"--No blizz global for this, and will probably be used in most end tier fights with intermission phases
+DBM_CORE_ORB						= "Orb"
+DBM_CHEST							= "Chest"--As in Treasure 'Chest'. Not Chest as in body part.
+DBM_NO_DEBUFF						= "Not %s"--For use in places like info frame where you put "Not Spellname"
+DBM_ALLY							= "Ally"--Such as "Move to Ally"
+DBM_ADDS							= "Adds"--Such as "Move to Ally"
+DBM_CORE_ROOM_EDGE					= "Room Edge"
+DBM_CORE_FAR_AWAY					= "Far Away"
+DBM_CORE_SAFE						= "Safe"
+DBM_INCOMING						= "%s Incoming"
+--Common Locals end
 
 DBM_CORE_BREAK_USAGE				= "Break timer cannot be longer than 60 minutes. Make sure you're inputting time in minutes and not seconds."
 DBM_CORE_BREAK_START				= "Break starting now -- you have %s! (Sent by %s)"
 DBM_CORE_BREAK_MIN					= "Break ends in %s minute(s)!"
 DBM_CORE_BREAK_SEC					= "Break ends in %s seconds!"
 DBM_CORE_TIMER_BREAK				= "Break time!"
-DBM_CORE_ANNOUNCE_BREAK_OVER		= "Break has ended"
+DBM_CORE_ANNOUNCE_BREAK_OVER		= "Break has ended at %s"
 
 DBM_CORE_TIMER_PULL					= "Pull in"
 DBM_CORE_ANNOUNCE_PULL				= "Pull in %d sec. (Sent by %s)"
@@ -280,8 +303,8 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS = {
 	cast		= "Casting %s: %.1f sec",
 	soon		= "%s soon",
 	prewarn		= "%s in %s",
-	phase		= "Phase %s",
-	prephase	= "Phase %s soon",
+	stage		= "Stage %s",
+	prestage	= "Stage %s soon",
 	count		= "%s (%%s)",
 	stack		= "%s on >%%s< (%%d)"
 }
@@ -299,9 +322,9 @@ DBM_CORE_AUTO_ANNOUNCE_OPTIONS = {
 	cast		= "Show warning when $spell:%s is being cast",
 	soon		= prewarnOption,
 	prewarn 	= prewarnOption,
-	phase		= "Announce Phase %s",
-	phasechange	= "Announce phase changes",
-	prephase	= "Show a prewarning for Phase %s",
+	stage		= "Announce Stage %s",
+	stagechange	= "Announce stage changes",
+	prestage	= "Show a prewarning for Stage %s",
 	count		= "Show warning for $spell:%s (with count)",
 	stack		= "Announce $spell:%s stacks"
 }
@@ -331,11 +354,15 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
 	jump			= "%s - jump",
 	run				= "%s - run away",
 	cast			= "%s - stop casting",
+	lookaway		= "%s - look away",
 	reflect			= "%s on >%%s< - stop attacking",
 	count			= "%s! (%%s)",
 	stack			= "%%d stacks of %s on you",
 	switch			= "%s - switch targets",
-	switchcount		= "%s - switch targets (%%s)"
+	switchcount		= "%s - switch targets (%%s)",
+	gtfo			= "%%s under you - move away",
+	Adds			= "Incoming Adds - switch targets",
+	Addscustom		= "Incoming Adds - %s"
 }
 
 -- Auto-generated Special Warning Localizations
@@ -360,21 +387,26 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
 	move 			= "Show special warning to move out from $spell:%s",
 	dodge 			= "Show special warning to dodge $spell:%s",
 	moveaway		= "Show special warning to move away from others for $spell:%s",
-	moveto			= "Show special warning to move to someone affected by $spell:%s",
+	moveto			= "Show special warning to move to someone or some place for $spell:%s",
 	jump			= "Show special warning to move to jump for $spell:%s",
 	run 			= "Show special warning to run away from $spell:%s",
 	cast 			= "Show special warning to stop casting for $spell:%s",--Spell Interrupt
+	lookaway		= "Show special warning to look away for $spell:%s",
 	reflect 		= "Show special warning to stop attacking $spell:%s",--Spell Reflect
 	count 			= "Show special warning (with count) for $spell:%s",
 	stack 			= "Show special warning when you are affected by >=%d stacks of $spell:%s",
 	switch			= "Show special warning to switch targets for $spell:%s",
-	switchcount		= "Show special warning (with count) to switch targets for $spell:%s"
+	switchcount		= "Show special warning (with count) to switch targets for $spell:%s",
+	gtfo 			= "Show special warning to move out bad stuff on ground",
+	Adds			= "Show special warning to switch targets for incoming adds",
+	Addscustom		= "Show special warning for incoming adds"
 }
 
 -- Auto-generated Timer Localizations
 DBM_CORE_AUTO_TIMER_TEXTS = {
 	target		= "%s: %%s",
 	cast		= "%s",
+	castsource	= "%s: %%s",
 	active		= "%s ends",--Buff/Debuff/event on boss
 	fades		= "%s fades",--Buff/Debuff on players
 	ai			= "%s AI",
@@ -387,13 +419,16 @@ DBM_CORE_AUTO_TIMER_TEXTS = {
 	nextsource	= "Next %s: %%s",
 	nextspecial	= "Next Special Ability",
 	achievement	= "%s",
-	phase		= "Next Phase",
-	roleplay	= GUILD_INTEREST_RP--Does not require DBM_CORE_AUTO_TIMER_TEXTS.roleplay in other languages, skip this one unless you want to word better.
+	stage		= "Next Stage",
+	adds		= "Next Incoming Adds",
+	addscustom	= "Incoming Adds (%s)",
+	roleplay	= GUILD_INTEREST_RP
 }
 
 DBM_CORE_AUTO_TIMER_OPTIONS = {
 	target		= "Show timer for $spell:%s debuff",
 	cast		= "Show timer for $spell:%s cast",
+	castsource	= "Show timer (with source) for $spell:%s cast",
 	active		= "Show timer for $spell:%s duration",
 	fades		= "Show timer for when $spell:%s fades from players",
 	ai			= "Show AI timer for $spell:%s cooldown",
@@ -406,7 +441,9 @@ DBM_CORE_AUTO_TIMER_OPTIONS = {
 	nextsource	= "Show timer (with source) for next $spell:%s",--Maybe better wording?
 	nextspecial	= "Show timer for next special ability",
 	achievement	= "Show timer for %s",
-	phase		= "Show timer for next phase",
+	stage		= "Show timer for next stage",
+	adds		= "Show timer for incoming adds",
+	addscustom	= "Show timer for incoming adds",
 	roleplay	= "Show timer for roleplay duration"--This does need localizing though.
 }
 
@@ -417,24 +454,36 @@ DBM_CORE_AUTO_ARROW_OPTION_TEXT			= "Show DBM Arrow to move toward target affect
 DBM_CORE_AUTO_ARROW_OPTION_TEXT2		= "Show DBM Arrow to move away from target affected by $spell:%s"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT3		= "Show DBM Arrow to move toward specific location for $spell:%s"
 DBM_CORE_AUTO_VOICE_OPTION_TEXT			= "Play spoken alerts for $spell:%s"
-DBM_CORE_AUTO_VOICE2_OPTION_TEXT		= "Play spoken alerts for phase changes"
+DBM_CORE_AUTO_VOICE2_OPTION_TEXT		= "Play spoken alerts for stage changes"
+DBM_CORE_AUTO_VOICE3_OPTION_TEXT		= "Play spoken alerts for incoming adds"
+DBM_CORE_AUTO_VOICE4_OPTION_TEXT		= "Play spoken alerts for bad stuff on ground"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Play countdown sound for $spell:%s cooldown"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2	= "Play countdown sound for when $spell:%s fades"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Play countout sound for $spell:%s duration"
 DBM_CORE_AUTO_YELL_OPTION_TEXT = {
-	yell		= "Yell when you are affected by $spell:%s",
-	count		= "Yell (with count) when you are affected by $spell:%s",
-	fade		= "Yell (with countdown) when $spell:%s is fading",
-	position	= "Yell (with position) when you are affected by $spell:%s"
+	shortyell		= "Yell when you are affected by $spell:%s",
+	yell			= "Yell (with player name) when you are affected by $spell:%s",
+	count			= "Yell (with count) when you are affected by $spell:%s",
+	fade			= "Yell (with countdown and spell name) when $spell:%s is fading",
+	shortfade		= "Yell (with countdown) when $spell:%s is fading",
+	iconfade		= "Yell (with countdown and icon) when $spell:%s is fading",
+	position		= "Yell (with position) when you are affected by $spell:%s"
 }
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT = {
-	yell		= "%s on " .. UnitName("player") .. "!",
-	count		= "%s on " .. UnitName("player") .. "! (%%d)",
-	fade		= "%s fading in %%d",
-	position 	= "%s %%s on {rt%%d}"..UnitName("player").."{rt%%d}"
+	shortyell		= "%s",
+	yell			= "%s on " .. UnitName("player"),
+	count			= "%s on " .. UnitName("player") .. " (%%d)",
+	fade			= "%s fading in %%d",
+	shortfade		= "%%d",
+	iconfade		= "{rt%%2$d}%%1$d",
+	position 		= "%s %%s on {rt%%d}"..UnitName("player").."{rt%%d}"
 }
-DBM_CORE_AUTO_HUD_OPTION_TEXT			= "Show HudMap for $spell:%s"
-DBM_CORE_AUTO_HUD_OPTION_TEXT_MULTI		= "Show HudMap for various mechanics"
+DBM_CORE_AUTO_YELL_CUSTOM_POSITION		= "{rt%d}%s{rt%d}"--Doesn't need translating. Has no strings
+DBM_CORE_AUTO_YELL_CUSTOM_POSITION2		= "{rt%d}{rt%d}%s{rt%d}{rt%d}"--Doesn't need translating. Has no strings
+DBM_CORE_AUTO_YELL_CUSTOM_FADE			= "%s faded"
+DBM_CORE_AUTO_HUD_OPTION_TEXT			= "Show HudMap for $spell:%s (Retired)"
+DBM_CORE_AUTO_HUD_OPTION_TEXT_MULTI		= "Show HudMap for various mechanics (Retired)"
+DBM_CORE_AUTO_NAMEPLATE_OPTION_TEXT		= "Show Nameplate Auras for $spell:%s"
 DBM_CORE_AUTO_RANGE_OPTION_TEXT			= "Show range frame (%s) for $spell:%s"--string used for range so we can use things like "5/2" as a value for that field
 DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT	= "Show range frame (%s)"--For when a range frame is just used for more than one thing
 DBM_CORE_AUTO_RRANGE_OPTION_TEXT		= "Show reverse range frame (%s) for $spell:%s"--Reverse range frame (green when players in range, red when not)
@@ -479,7 +528,7 @@ DBM_ARROW_ERROR_USAGE	= {
 DBM_SPEED_KILL_TIMER_TEXT	= "Record Victory"
 DBM_SPEED_CLEAR_TIMER_TEXT	= "Best Clear"
 DBM_COMBAT_RES_TIMER_TEXT	= "Next CR Charge"
-DBM_CORE_TIMER_RESPAWN		= "Respawn"
+DBM_CORE_TIMER_RESPAWN		= "%s Respawn"
 
 
 DBM_REQ_INSTANCE_ID_PERMISSION		= "%s requested to see your current instance IDs and progress.\nDo you want to send this information to %s? He or she will be able to request this information during your current session (i. e. until you relog)."
@@ -501,6 +550,11 @@ DBM_INSTANCE_INFO_SHOW_RESULTS		= "Players yet to respond: %s\n|HDBM:showRaidIdR
 DBM_CORE_LAG_CHECKING				= "Checking raid Latency..."
 DBM_CORE_LAG_HEADER					= "Deadly Boss Mods - Latency Results"
 DBM_CORE_LAG_ENTRY					= "%s: World delay [%d ms] / Home delay [%d ms]"
+DBM_CORE_LAG_FOOTER					= "No Response: %s"
+
+DBM_CORE_DUR_CHECKING				= "Checking raid Durability..."
+DBM_CORE_DUR_HEADER					= "Deadly Boss Mods - Durability Results"
+DBM_CORE_DUR_ENTRY					= "%s: Durability [%d percent] / Gear broken [%s]"
 DBM_CORE_LAG_FOOTER					= "No Response: %s"
 
 --Role Icons

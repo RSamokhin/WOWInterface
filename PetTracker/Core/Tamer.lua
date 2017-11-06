@@ -45,14 +45,14 @@ end
 function Tamer:Display()
 	if GetAddOnEnableState(UnitName('player'), 'PetTracker_Journal') >= 2 then
 		CollectionsJournal_LoadUI()
-		ShowUIPanel(CollectionsJournal)
-		PetTrackerTamerJournal.Tab:GetScript('OnClick')(PetTrackerTamerJournal.Tab)
+		ShowUIPanel(CollectionsJournal) -- this here causes taint for sure
+		PetTrackerTamerJournal.PanelTab:GetScript('OnClick')(PetTrackerTamerJournal.PanelTab)
 		PetTrackerTamerJournal:SetTamer(self)
 	end
 end
 
 function Tamer:GetZoneTitle()
-	local name = GetMapNameByID(self:GetZone())
+	local name = GetMapNameByID(self:GetZone()) or UNKNOWN
 	local continent = Addon.ContinentByZone[name]
 	if continent == 'Draenor' and self:GetLevel() < 25 then
 		continent = 'Outland'
@@ -74,14 +74,18 @@ function Tamer:IsCompleted()
 end
 
 function Tamer:GetType()
-	local list = {}
-	for i, pet in ipairs(self) do
-		local family = pet:GetType()
-		if list[family] then
-			return family
-		elseif family then
-			list[family] = true
+	if #self > 1 then
+		local list = {}
+		for i, pet in ipairs(self) do
+			local family = pet:GetType()
+			if list[family] then
+				return family
+			elseif family then
+				list[family] = true
+			end
 		end
+	else
+		return self[1]:GetType()
 	end
 end
 
@@ -154,7 +158,8 @@ function Pet:GetStats()
 end
 
 function Pet:GetBreed()
-	return Addon.Breeds[self.Specie][1]
+	local breeds = Addon.Breeds[self.Specie]
+	return breeds and breeds[1] or 3
 end
 
 function Pet:GetAbility(i)

@@ -1,5 +1,5 @@
 --[[
-Copyright 2008-2015 João Cardoso
+Copyright 2008-2017 João Cardoso
 Scrap is distributed under the terms of the GNU General Public License (Version 3).
 As a special exception, the copyright holders of this addon do not give permission to
 redistribute and/or modify it.
@@ -20,7 +20,7 @@ local HasPawn = IsAddOnLoaded('Pawn_Scrap')
 local Options = SushiMagicGroup(ScrapOptions)
 
 Options:SetAddon('Scrap')
-Options:SetFooter('Copyright 2008-2015 João Cardoso')
+Options:SetFooter('Copyright 2008-2017 João Cardoso')
 Options:SetChildren(function(self)
 	self:CreateHeader('Behaviour', 'GameFontHighlight', true)
 	self:Create('CheckButton', 'AutoSell')

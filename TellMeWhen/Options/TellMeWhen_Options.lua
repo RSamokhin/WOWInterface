@@ -1,4 +1,4 @@
-﻿-- --------------------
+-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -13,6 +13,8 @@
 
 if not TMW then return end
 
+local clientVersion = select(4, GetBuildInfo())
+local wow_701 = clientVersion >= 70100 or GetBuildInfo() == "7.1.0" -- they haven't updated the interface number yet.
 
 ---------- Libraries ----------
 local LSM = LibStub("LibSharedMedia-3.0")
@@ -948,6 +950,7 @@ TMW:NewClass("StaticConfigPanelInfo", "ConfigPanelInfo"){
 
 local CScriptProvider
 local CS_SDepth = 0
+local CS_Root = "";
 local function bubble(frame, get, script, ...)
 	if not frame then
 		return
@@ -1003,6 +1006,9 @@ CScriptProvider = TMW:NewClass("CScriptProvider"){
 		return bubble(self:GetParent(), true, script, ...)
 	end,
 	CScriptTunnel = function(self, script, ...)
+		if CS_SDepth == 0 then
+			CS_Root = script .. ":" .. (self:GetDebugName() or self.setting or "?")
+		end
 		CS_SDepth = CS_SDepth + 1
 
 		for _, child in TMW:Vararg(self:GetChildren()) do
@@ -1012,6 +1018,9 @@ CScriptProvider = TMW:NewClass("CScriptProvider"){
 		CS_SDepth = CS_SDepth - 1
 	end,
 	CScriptBubble = function(self, script, ...)
+		if CS_SDepth == 0 then
+			CS_Root = script .. ":" .. (self:GetDebugName() or self.setting or "?")
+		end
 		CS_SDepth = CS_SDepth + 1
 
 		bubble(self:GetParent(), false, script, ...)
@@ -1092,9 +1101,12 @@ CScriptProvider = TMW:NewClass("CScriptProvider"){
 			return
 		end
 		
+		if CS_SDepth == 0 then
+			CS_Root = script .. ":" .. (self:GetDebugName() or self.setting or "?")
+		end
+		CS_SDepth = CS_SDepth + 1
 		-- If we enter 10 deep cscripts, go into emergency mode
 		-- and start recording data about what is being called.
-		CS_SDepth = CS_SDepth + 1
 		if CS_SDepth > 10 and not self.DEBUG_Started then
 			self:DEBUG_Start()
 		end
@@ -1135,16 +1147,16 @@ CScriptProvider = TMW:NewClass("CScriptProvider"){
 		if not CScriptProvider.DEBUG_Started then
 			print("entering cscript debug mode")
 
-			CScriptProvider.DEBUG_Stack = {}
+			CScriptProvider.DEBUG_Stack = {{"ROOT", CS_Root}}
 			CScriptProvider.DEBUG_PrevDepth = CS_SDepth - 1
 
 			CScriptProvider.CScriptCall_ORIGINAL = CScriptProvider.CScriptCall
 			CScriptProvider.CScriptBubble_ORIGINAL = CScriptProvider.CScriptBubble
 			CScriptProvider.CScriptTunnel_ORIGINAL = CScriptProvider.CScriptTunnel
 
-			CScriptProvider:PostHookMethod("CScriptCall", self.DEBUG_CScriptCallBase)
-			CScriptProvider:PostHookMethod("CScriptBubble", self.DEBUG_CScriptCallBase)
-			CScriptProvider:PostHookMethod("CScriptTunnel", self.DEBUG_CScriptCallBase)
+			CScriptProvider:PreHookMethod("CScriptCall", self.DEBUG_CScriptCallBase)
+			CScriptProvider:PreHookMethod("CScriptBubble", self.DEBUG_CScriptCallBase)
+			CScriptProvider:PreHookMethod("CScriptTunnel", self.DEBUG_CScriptCallBase)
 
 			CScriptProvider.DEBUG_Started = true
 		end
@@ -1172,7 +1184,12 @@ CScriptProvider = TMW:NewClass("CScriptProvider"){
 		end
 
 		-- Only record calls that change the stack depth.
-		local stackFrame = {CS_SDepth, script, tostring(self:GetName() or self.setting or self.class)}
+		local name = tostring(self:GetDebugName() or self.setting or self.class)
+			:gsub("^TellMeWhen_?", "")
+			:gsub("_IconEditorPages", "P*")
+			:gsub("_IconEditor", "IE")
+			:gsub("[%x]*.container", "S*")
+		local stackFrame = {CS_SDepth, script, name}
 		if CScriptProvider.DEBUG_PrevDepth ~= CS_SDepth then
 			tinsert(CScriptProvider.DEBUG_Stack, CScriptProvider.DEBUG_PrevStackFrame)
 			tinsert(CScriptProvider.DEBUG_Stack, stackFrame)
@@ -1198,7 +1215,10 @@ CScriptProvider = TMW:NewClass("CScriptProvider"){
 				str = str .. table.concat(data, ":") .. "\n"
 			end
 
+			-- We fire this off in a delayed timer as well since there is a
+			-- good chance that the stack depth will end up going negative as the stack unwinds through some safecalls.
 			CS_SDepth = 0
+			C_Timer.After(0, function() CS_SDepth = 0 end)
 
 			CScriptProvider:DEBUG_Stop()
 
@@ -1281,6 +1301,13 @@ TMW:NewClass("Config_Frame", "Frame", "CScriptProvider"){
 		self.text:SetMaxLines(3)
 	end,
 
+	-- Wow 7.1 wow_701 shim. Delete when the patch is live.
+	DoesClipChildren = not wow_701 and function() return false end or nil,
+	SetClipsChildren = not wow_701 and TMW.NULLFUNC or nil,
+
+	SetAnimateHeightAdjustments = function(self, animateHeightAdjusts)
+		self.animateHeightAdjusts = animateHeightAdjusts
+	end,
 
 	SetMinAdjustHeight = function(self, minAdjustHeight)
 		self.minAdjustHeight = minAdjustHeight
@@ -1392,7 +1419,15 @@ TMW:NewClass("Config_Frame", "Frame", "CScriptProvider"){
 		return max(self.minAdjustHeight or 1, height)
 	end,
 
-	AdjustHeight = function(self, bottomPadding)
+	AdjustHeight = function(self, bottomPadding, duration)
+		if self.animateHeightAdjusts then
+			self:AdjustHeightAnimated(bottomPadding, duration)
+		else
+			self:AdjustHeightUnanimated(bottomPadding)
+		end
+	end,
+
+	AdjustHeightUnanimated = function(self, bottomPadding)
 		local height = self:CalculateAutoHeight(bottomPadding)
 
 		if height == -1 then return end
@@ -1628,6 +1663,9 @@ TMW:NewClass("Config_Page", "Config_Frame"){
 
 		if IE.CurrentTab and IE.CurrentTab.pageKey == self:GetParentKey() then
 			IE.CurrentTab:CScriptCall("PageReloadRequested", self)
+		elseif not IE.CurrentTab then
+			IE.UndoButton:Disable()
+			IE.RedoButton:Disable()
 		end
 	end,
 }
@@ -1803,7 +1841,7 @@ TMW:NewClass("Config_Button", "Button", "Config_Frame"){
 	end,
 
 	OnClick = function(self)
-		PlaySound("igMainMenuOptionCheckBoxOn")
+		TMW:ClickSound()
 	end,
 }
 
@@ -1838,15 +1876,10 @@ TMW:NewClass("Config_CheckButton", "CheckButton", "Config_Frame"){
 
 	-- Script Handlers
 	OnClick = function(self, button)
+		TMW:ClickSound()
 		local settings = self:GetSettingTable()
 
 		local checked = not not self:GetChecked()
-
-		if checked then
-			PlaySound("igMainMenuOptionCheckBoxOn")
-		else
-			PlaySound("igMainMenuOptionCheckBoxOff")
-		end
 
 		if settings and self.setting then
 			if self.value == nil then
@@ -2027,6 +2060,8 @@ TMW:NewClass("Config_EditBox", "EditBox", "Config_Frame"){
 
 TMW:NewClass("Config_EditBox_Lua", "Config_EditBox") {
 	GetText_original = TMW.C.Config_EditBox_Lua.GetText,
+	SetText_original = TMW.C.Config_EditBox_Lua.SetText,
+	padNewlines = true,
 
 	ColorTable = (function()
 		local colorTable = {}
@@ -2056,12 +2091,24 @@ TMW:NewClass("Config_EditBox_Lua", "Config_EditBox") {
 
 		self:SetNewlineOnEnter(true)
 
+		local old = IndentationLib.padWithLinebreaks
+		IndentationLib.padWithLinebreaks = function(code)
+			if self:HasFocus() and not padNewlines then
+				return code, false
+			end
+			return old(code)
+		end
+
 		self:SetAcceptsTMWLinks(true, TMW.L["LUA_INSERTGUID_TOOLTIP"])
 		TMW.Classes.ChatEdit_InsertLink_Hook:New(self, self.InsertLinkHook)
 	end,
 
 	OnTabPressed = function(self)
 		self:Insert("    ")
+	end,
+
+	SetPadNewlines = function(self, value)
+		self.padNewlines = value;
 	end,
 
 	GetCursorLineNumber = function(self)
@@ -2114,6 +2161,9 @@ TMW:NewClass("Config_TimeEditBox", "Config_EditBox"){
 	end,
 
 	ModifyValueForLoad = function(self, value)
+		if value < 0 then
+			return value
+		end
 		return TMW.C.Formatter.TIME_COLONS_FORCEMINS:Format(value)
 	end,
 }
@@ -2491,7 +2541,7 @@ TMW:NewClass("Config_Slider", "Slider", "Config_Frame")
 		self.EditBox.title:SetText(self.title)
 
 		if not self.EditBoxShowing then
-			PlaySound("igMainMenuOptionCheckBoxOn")
+			TMW:ClickSound()
 			
 			self.EditBoxShowing = true
 			
@@ -2507,7 +2557,7 @@ TMW:NewClass("Config_Slider", "Slider", "Config_Frame")
 	end,
 	UseSlider = function(self)
 		if self.EditBoxShowing then
-			PlaySound("igMainMenuOptionCheckBoxOn")
+			TMW:ClickSound()
 
 			self.EditBoxShowing = false
 
@@ -2986,7 +3036,7 @@ TMW:NewClass("Config_PointSelect", "Config_Frame"){
 
 				local settings = self:GetSettingTable()
 
-				PlaySound("igMainMenuOptionCheckBoxOn")
+				TMW:ClickSound()
 				self:SetSelectedPoint(k)
 
 				if settings and self.setting then
@@ -3282,7 +3332,7 @@ TMW:NewClass("IconEditorTabGroup", "IconEditorTabBase"){
 	end,
 
 	OnClick = function(self)
-		PlaySound("igCharacterInfoTab")
+		PlaySound(SOUNDKIT and SOUNDKIT.IG_CHARACTER_INFO_TAB or "igCharacterInfoTab") -- SOUNDKIT is patch 7.3 compat
 
 		IE.CurrentTabGroup = self
 
@@ -3383,7 +3433,7 @@ TMW:NewClass("IconEditorTab", "IconEditorTabBase"){
 	end,
 
 	OnClick = function(self)
-		PlaySound("igCharacterInfoTab")
+		PlaySound(SOUNDKIT and SOUNDKIT.IG_CHARACTER_INFO_TAB or "igCharacterInfoTab") -- SOUNDKIT is patch 7.3 compat
 
 		if IE.CurrentTabGroup ~= self.parent then
 			self.parent:Click()
@@ -3857,14 +3907,14 @@ end
 ---------- Dropdown ----------
 TMW:RegisterCallback("TMW_CONFIG_REQUEST_AVAILABLE_IMPORT_EXPORT_TYPES", function(event, editbox, import, export)
 	if editbox == TMW.IE.ExportBox then
-		if IE.CurrentTabGroup.identifier == "ICON" then
+		if IE.CurrentTabGroup.identifier == "ICON" and CI.icon then
 			import.icon = CI.icon
 			export.icon = CI.icon
 
 			import.group_overwrite = CI.icon.group
 			export.group = CI.icon.group
 
-		elseif IE.CurrentTabGroup.identifier == "GROUP" then	
+		elseif IE.CurrentTabGroup.identifier == "GROUP" and CI.group then	
 			import.group_overwrite = CI.group
 			export.group = CI.group
 		end

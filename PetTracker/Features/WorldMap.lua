@@ -1,5 +1,5 @@
 --[[
-Copyright 2012-2015 João Cardoso
+Copyright 2012-2017 João Cardoso
 PetTracker is distributed under the terms of the GNU General Public License (Version 3).
 As a special exception, the copyright holders of this addon do not give permission to
 redistribute and/or modify it.
@@ -97,15 +97,15 @@ end
 
 function Map:ShowSpecies()
 	local species = Journal:GetSpeciesIn(Addon.zone)
-	
+
 	for specie, floors in pairs(species) do
 		local spots = floors[Addon.level]
 		local specie = Addon.Specie:Get(specie)
-			
+
 		if spots and Addon:Filter(specie, Addon.Sets.MapFilter) then
 			local icon = specie:GetTypeIcon()
 
-			for x, y in gmatch(spots, '(%w%w)(%w%w)') do 
+			for x, y in gmatch(spots, '(%w%w)(%w%w)') do
 				local blip = Addon.SpecieBlip(BlipParent)
 				blip.icon:SetTexture(icon)
 				blip.specie = specie
@@ -121,7 +121,7 @@ end
 function Map:ShowStables()
 	local stables = Journal:GetStablesIn(Addon.zone, Addon.level)
 
-	for x, y in gmatch(stables, '(%w%w)(%w%w)') do    
+	for x, y in gmatch(stables, '(%w%w)(%w%w)') do
 		self:AddBlip(
 			Addon.StableBlip(BlipParent), x, y)
 	end
@@ -186,7 +186,7 @@ function Map:UpdateTip()
 		for i, blip in ipairs(self.blips) do
 			if blip:IsMouseOver() then
 				local title, text = blip:GetTooltip()
-				
+
 				Tooltip:AddHeader(title)
 				Tooltip:AddLine(text, 1,1,1)
 			end
@@ -236,6 +236,14 @@ end
 
 function Map:ShowTrackingTypes()
 	SushiDropFrame:Toggle('TOPRIGHT', self, 'BOTTOM', 10, -15, true, function(drop)
+		local function TitleLine(text)
+			drop:AddLine {
+				text = text,
+				notCheckable = 1,
+				isTitle = 1
+			}
+		end
+
 		local function BlizzLine(value, cvar, text, visible)
 			if visible then
 				drop:AddLine {
@@ -258,15 +266,26 @@ function Map:ShowTrackingTypes()
 			}
 		end
 
-		BlizzLine('quests', 'questPOI', SHOW_QUEST_OBJECTIVES_ON_MAP_TEXT, 1)
-
 		local prof1, prof2, arch, fish, cook, firstAid = GetProfessions()
-		BlizzLine('digsites', 'digSites', ARCHAEOLOGY_SHOW_DIG_SITES, arch)
-		BlizzLine('primaryProfessionsFilter', 'primaryProfessionsFilter', SHOW_PRIMARY_PROFESSION_ON_MAP_TEXT, prof1 or prof2)
-		BlizzLine('secondaryProfessionsFilter', 'secondaryProfessionsFilter', SHOW_SECONDARY_PROFESSION_ON_MAP_TEXT, fish or cook or firstAid)
+		local worldQuests = WorldMapFrame.UIElementsFrame.BountyBoard and WorldMapFrame.UIElementsFrame.BountyBoard:AreBountiesAvailable()
 
-		CustomLine('Species', PETS)
-		BlizzLine('tamers', 'showTamers', SHOW_PET_BATTLES_ON_MAP_TEXT, CanTrackBattlePets())
+		BlizzLine('quests', 'questPOI', SHOW_QUEST_OBJECTIVES_ON_MAP_TEXT, 1)
+		BlizzLine('digsites', 'digSites', ARCHAEOLOGY_SHOW_DIG_SITES, arch)
+		if worldQuests then
+			BlizzLine('primaryProfessionsFilter', 'primaryProfessionsFilter', SHOW_PRIMARY_PROFESSION_ON_MAP_TEXT, prof1 or prof2)
+			BlizzLine('secondaryProfessionsFilter', 'secondaryProfessionsFilter', SHOW_SECONDARY_PROFESSION_ON_MAP_TEXT, fish or cook or firstAid)
+
+			TitleLine(WORLD_QUEST_REWARD_FILTERS_TITLE)
+			BlizzLine('worldQuestFilterProfessionMaterials', 'worldQuestFilterProfessionMaterials', WORLD_QUEST_REWARD_FILTERS_PROFESSION_MATERIALS, 1)
+			BlizzLine('worldQuestFilterOrderResources', 'worldQuestFilterOrderResources', WORLD_QUEST_REWARD_FILTERS_ORDER_RESOURCES, 1)
+			BlizzLine('worldQuestFilterArtifactPower', 'worldQuestFilterArtifactPower', WORLD_QUEST_REWARD_FILTERS_ARTIFACT_POWER, 1)
+			BlizzLine('worldQuestFilterEquipment', 'worldQuestFilterEquipment', WORLD_QUEST_REWARD_FILTERS_EQUIPMENT, 1)
+			BlizzLine('worldQuestFilterGold', 'worldQuestFilterGold', WORLD_QUEST_REWARD_FILTERS_GOLD, 1)
+		end
+
+		TitleLine(PETS)
+		CustomLine('Species', L.Species)
+		BlizzLine('tamers', 'showTamers', L.Battles, CanTrackBattlePets())
 		CustomLine('Stables', STABLES)
 	end)
 end

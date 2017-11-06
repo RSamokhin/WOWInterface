@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 	Revision: $Id: CoreUtil.lua 5670 2016-09-03 11:59:41Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -949,5 +949,5 @@ function lib.CreateMoney(height)
 	return (tooltip:CreateMoney(height))
 end
 
-lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Advanced/CoreUtil.lua $", "$Rev: 5670 $")
+lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Advanced/CoreUtil.lua $", "$Rev: 5670 $")
 lib.CoreFileCheckOut("CoreUtil")

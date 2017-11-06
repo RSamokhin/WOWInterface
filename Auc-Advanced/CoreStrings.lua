@@ -4,8 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: Auctioneer
-	Revision: $Id: CoreStrings.lua 5557 2015-05-13 13:56:40Z brykrys $
-	Version: 7.1.5675 (TasmanianThylacine)
+	Revision: $Id: CoreStrings.lua 5684 2016-10-28 18:21:28Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -238,13 +238,6 @@ AuctioneerLocalizations = {
 		["UCUT_Tooltip_MovingPrice"]	= "Pohyblivá cena";
 		["UCUT_Tooltip_NoCompetition"]	= "Podťať: %s Bez konkurencie";
 		["UCUT_Tooltip_Undercutting"]	= "Podťať: %s Podťatie konkurencie";
-		["WECN_Tooltip_GlobalPrice"]	= "Globálna cena:";
-		["WECN_Tooltip_GlobalSeen"]	= "Celkovo nájdené {{%s}}:";
-		["WECN_Tooltip_Individually"]	= "(alebo jednotlivo)";
-		["WECN_Tooltip_NeverSeen"]	= "Doteraz nenájdené na servri";
-		["WECN_Tooltip_PricesSeen"]	= "WOWEcon ceny nájdené:";
-		["WECN_Tooltip_ServerPrice"]	= "Cena na servri:";
-		["WECN_Tooltip_ServerSeen"]	= "Nájdené na servri {{%s}}:";
 
 	};
 
@@ -294,8 +287,6 @@ AuctioneerLocalizations = {
 		["SIMP_Help_WhyMultiplyStack"]	= "hvorfor have en mulighed for at gange stakke størrelsen?";
 		["SIMP_Help_WhyVariance"]	= "hvad er pointen ved at variere minimum buy-out?";
 		["UCUT_Help_WhatUndercut"]	= "hvad er underbydningmodulet?";
-		["WECN_Help_WhatGlobalPrices"]	= "Hvad er globale priser?";
-		["WECN_Help_WhyGlobalPrices"]	= "Hvorfor skulle jeg bruge globale priser?";
 
 		-- Section: HelpTooltip
 		["AAMU_HelpTooltip_AutoSellGrey"]	= "auto-sælg grey-kvalitets ting til købmand";
@@ -601,8 +592,6 @@ AuctioneerLocalizations = {
 		["UCUT_Interface_UndercutNoMatch"]	= "Underbyd. %% ændring: %s%s underbyd: kan ikke matche den laveste pris";
 		["UCUT_Interface_UndercutOptions"]	= "Underbydnings indstillinger";
 		["UCUT_Interface_UndercutTooltipSettings"]	= "Tooltip indstilling";
-		["WECN_Interface_AlwaysGlobalPrice"]	= "Brug altid globale priser og ikke Server priser.";
-		["WECN_Interface_ShowWOWEconTooltip"]	= "Vis WOWEcon værdi i tooltip(se note)";
 
 		-- Section: Tooltip
 		["APPR_Tooltip_AppraiserCurModel"]	= "Vurderingsbud ({{%s}}x{{%s}})";
@@ -656,13 +645,6 @@ AuctioneerLocalizations = {
 		["UCUT_Tooltip_MovingPrice"]	= "Flyttende pris";
 		["UCUT_Tooltip_NoCompetition"]	= "underbyd: %s Ingen konkurrence på markedet";
 		["UCUT_Tooltip_Undercutting"]	= "Underbyd: %s konkurrence pris blvier underbudt";
-		["WECN_Tooltip_GlobalPrice"]	= "Global pris:";
-		["WECN_Tooltip_GlobalSeen"]	= "Set globalt {{%s}}:";
-		["WECN_Tooltip_Individually"]	= "(eller individuelt)";
-		["WECN_Tooltip_NeverSeen"]	= "Aldrig set på serveren";
-		["WECN_Tooltip_PricesSeen"]	= "WOWEcon priser set:";
-		["WECN_Tooltip_ServerPrice"]	= "Server pris:";
-		["WECN_Tooltip_ServerSeen"]	= "Server set {{%s}}:";
 
 	};
 
@@ -876,15 +858,6 @@ AuctioneerLocalizations = {
 		["SPRG_Help_WhatScanProgressAnswer"]	= "Die Fortschrittsanzeige erscheint während des Aktionshaus-Scans. Sie zeigt die Geschwindigkeit des Scans, die momentane und die gesamte Anzahl der Auktionen, sowie die Anzahl der bisher gescannten Seiten und die Gesamtzahl der Seiten an.";
 		["UCUT_Help_WhatUndercut"]	= "Was ist das 'Unterbieten'-Modul?";
 		["UCUT_Help_WhatUndercutAnswer"]	= "Das 'Unterbieten'-Modul erlaubt es alle derzeit verfügbaren Auktionen (Konkurrenten) zu unterbieten, anhand Deiner Einstellungen.\nEs wird empfohlen, 'Unterbieten' nach allen anderen Vergleichsmodulen laufen zu lassen.";
-		["WECN_Help_WhatGlobalPrices"]	= "Was sind globale Preise?";
-		["WECN_Help_WhatGlobalPricesAnswer"]	= "WoWecon bietet zwei verschiedene Preistypen. Ein Globalen Durschnittspreis, Serverübergreiffend und einen spezifischen Preis, nur für Deinen Server und Deine Fraktion.";
-		["WECN_Help_WhatSanitize "]	= "Was bewirkt die Link-Bereinigungs-Option?";
-		["WECN_Help_WhatSanitizeAnswer"]	= "Die Bereinigung der Links von sehr spezifischen Teilen (wie Verzauberungen, Einflußgrößen der Gegenstände oder Edelstein-Informationen) kann die Preisdaten verbessern die man von WOWEcon erhält, um den genauen Basispreis des Gegenstands zu erhalten. Dies wird meistens nur Gegenstände betreffen, die geringfügig von den normalen Basisgegenständen abweichen und zu denen aufgrund ihrer Einzigartigkeit keine oder nur sehr wenige Preisdaten vorhanden sind.";
-		["WECN_Help_WhyGlobalPrices"]	= "Warum sollte ich globale Preise nutzen?";
-		["WECN_Help_WhyGlobalPricesAnswer"]	= "Server-spezifische Preise können nützlich sein, wenn die Preise auf dem Server weit weg vom Durchschnitt sind, aber oft basieren diese Preise auf viel zu wenigen Daten; dies verursacht, daß der Server-spezifische Preis für einige Gegenstände aus dem Gleichgewicht gerät. Diese Option zwingt den WOWEcon statt dessen, immer globale Preise anzuzeigen, wenn Ihr diese bevorzugt.";
-		["WECN_Help_WhyWOWEcon"]	= "Warum sollte ich den WoWEcon-Preis im Tooltip anzeigen lassen?";
-		["WECN_Help_WhyWOWEconAnswer"]	= "Die Preisdaten, die der Appraiser für Gegenstände benutzt, können sich von denen unterscheiden, die WoWEcon als Vorgabewert angibt. Dies liegt daran, dass Daten von WoWEcon auf spezielle Weise verarbeitet werden. Das Einschalten dieser Option lässt Euch den exakten Preis sehen, den dieses Modul für den momentanen Gegenstand wiedergibt.";
-		["WECN_Help_WoweconNoMatchAnswer "]	= "WoWEcon gibt Euch die Möglichkeit, Server-spezifische Preise zu verstecken, wenn diese weniger als eine bestimmte Anzahl Sichtungen aufweisen. Aber auch, wenn diese Preise im Tooltip versteckt werden, so werden sie doch an den Appraiser weitergegeben. Wenn Ihr also nicht die Globalpreisoption benutzt, solltet Ihr sicherstellen, daß der Preis nicht ein versteckter Server-spezifischer ist, mit nur einer geringen Zahl von Sichtungen.";
 
 		-- Section: HelpTooltip
 		["AAMU_HelpTooltip_AutoSellBOP"]	= "Unbenutzbare seelengebundene Gegenstände automatisch verkaufen";
@@ -1084,10 +1057,6 @@ AuctioneerLocalizations = {
 		["UCUT_HelpTooltip_ShowInTooltip"]	= "Fügt dem Tooltip eine Zeile hinzu, die anzeigt ob die aktuelle Konkurrenz zu unterbieten ist.";
 		["UCUT_HelpTooltip_UndercutAmount"]	= "Gib einen bestimmten Betrag zum Unterbieten an, anstatt eines Prozent-Wertes";
 		["UCUT_HelpTooltip_UndercutMinimum"]	= "Das kontrolliert die minimale Unterbietung. AucAdvance versucht die Konkurrenz mit diesem Wert zu unterbieten.";
-		["WECN_HelpTooltip_AlwaysGlobalPrice"]	= "Aktiviert die Nutzung von Server-spezifischen WOWEcon-Preis-Statistiken, falls vorhanden";
-		["WECN_HelpTooltip_EnableWOWEconStats"]	= "Erlaubt WOWEcon Daten zu sammeln, aufzubereiten und zu senden";
-		["WECN_HelpTooltip_SanitizeWOWEcon"]	= "Entfernt ultra-spezifische Itemdaten aus Links, bevor der Preis berechnet wird";
-		["WECN_HelpTooltip_ShowWOWEconTooltip"]	= "Hinweis: WOWEcon zeigt dies bereits als Standard an, es kann zu doppelten Informationen im Tooltip kommen";
 
 		-- Section: Interface
 		["AAMU_HelpTooltip_AutoSellGreyNoPrompt"]	= "Beim Verkaufen von grauen (Müll-)Gegenständen wird kein Bestätigungsfenster angezeigt.";
@@ -1459,11 +1428,6 @@ AuctioneerLocalizations = {
 		["UCUT_Interface_UndercutNoMatch"]	= "Unterbieten: %% Ändern: %s%s Unterbieten: Kann den niedrigsten Preis nicht erreichen";
 		["UCUT_Interface_UndercutOptions"]	= "Optionen zum Unterbieten";
 		["UCUT_Interface_UndercutTooltipSettings"]	= "Tooltip-Einstellung";
-		["WECN_Interface_AlwaysGlobalPrice"]	= "Immer den globalen Preis statt des Server-Preises benutzen";
-		["WECN_Interface_EnableWOWEconStats"]	= "Aktiviere WOWEcon-Statistik";
-		["WECN_Interface_SanitizeWOWEcon"]	= "Links vor der Übergabe an die WoWEcon-API bereinigen";
-		["WECN_Interface_ShowWOWEconTooltip"]	= "Zeige den WoWEcon-Wert im Tooltip (siehe Hinweis)";
-		["WECN_Interface_WOWEconOptions"]	= "WOWEcon-Optionen";
 
 		-- Section: Scanning Messages
 		["PSS_AtEnd"]	= "am Ende";
@@ -1547,13 +1511,6 @@ AuctioneerLocalizations = {
 		["UCUT_Tooltip_MovingPrice"]	= "gleitender Preis";
 		["UCUT_Tooltip_NoCompetition"]	= "Unterbieten: %s kein Wettbewerb";
 		["UCUT_Tooltip_Undercutting"]	= "Unterbieten: %s Unterbieten (Wettbewerb)";
-		["WECN_Tooltip_GlobalPrice"]	= "Globaler Preis:";
-		["WECN_Tooltip_GlobalSeen"]	= "Global gesehen {{%s}}:";
-		["WECN_Tooltip_Individually"]	= "(oder individuell)";
-		["WECN_Tooltip_NeverSeen"]	= "Nie auf Server gesehen";
-		["WECN_Tooltip_PricesSeen"]	= "WOWEcon Preis gesehen:";
-		["WECN_Tooltip_ServerPrice"]	= "Server Preis:";
-		["WECN_Tooltip_ServerSeen"]	= "Server gesehen {{%s}}:";
 
 	};
 
@@ -1821,15 +1778,6 @@ AuctioneerLocalizations = {
 		["SPRG_Help_WhatScanProgressAnswer"]	= "The Scan Progress indicator is the text that appears while scanning the Auction House. It displays: the speed of the scan, current auctions and total number of auctions scanned, aswell as the current number of pages and total pages scanned.";
 		["UCUT_Help_WhatUndercut"]	= "What is this undercut module?";
 		["UCUT_Help_WhatUndercutAnswer"]	= "The undercut module allows you to undercut the lowest price of all currently available items, based on your settings.\n\nIt is recommended to have undercut run after any other matcher modules.";
-		["WECN_Help_WhatGlobalPrices"]	= "What are global prices?";
-		["WECN_Help_WhatGlobalPricesAnswer"]	= "Wowecon provides two different types of prices: a global price, averaged across all servers, and a server specific price, for just your server and faction.";
-		["WECN_Help_WhatSanitize "]	= "What does the sanitize link option do?";
-		["WECN_Help_WhatSanitizeAnswer"]	= "Sanitizing the link can improve the price data you receive from WOWEcon by removing the parts of the link that are very specific (such as enchants, item factors, and gem informatio) to just get the price information for the common base item. This will generally only affect items that are slightly different from the normal base item, and have no, or very little price data due to their uniqueness.";
-		["WECN_Help_WhyGlobalPrices"]	= "Why should I use global prices?";
-		["WECN_Help_WhyGlobalPricesAnswer"]	= "Server specific prices can be useful if your server has prices which are far removed from the average, but often these prices are based on many fewer data points, causing your server specific price to possibly get out of whack for some items.  This option lets you force the Wowecon stat to always use global prices, if you'd prefer.";
-		["WECN_Help_WhyWOWEcon"]	= "Why would I want to show the WOWEcon price in the tooltip?";
-		["WECN_Help_WhyWOWEconAnswer"]	= "The pricing data that Appraiser uses for the items may be different to the price data that WOWEcon displays by default, since WOWEcon can get very specific with the data that it returns. Enabling this option will let you see the exact price that this module is reporting for the current item.";
-		["WECN_Help_WoweconNoMatchAnswer "]	= "Wowecon gives you the option to hide server specific prices if seen fewer than a given number of times.  Even though these prices are hidden from the tooltip, they are still reported to Appraiser.  If you are not using the global price option here, you should check to make sure there isn't a hidden server specific price for your server, with just a small number of seen times.";
 
 		-- Section: HelpTooltip
 		["AAMU_HelpTooltip_AutoSellBOP"]	= "Auto-sell unusable soulbound gear";
@@ -2032,10 +1980,6 @@ AuctioneerLocalizations = {
 		["UCUT_HelpTooltip_ShowInTooltip"]	= "Add a line to the tooltip showing whether the current competition is undercuttable";
 		["UCUT_HelpTooltip_UndercutAmount"]	= "Specify the amount to undercut by a specific amount, instead of by a percentage";
 		["UCUT_HelpTooltip_UndercutMinimum"]	= "This controls the minimum undercut. AucAdvanced will try to undercut the competition by this amount";
-		["WECN_HelpTooltip_AlwaysGlobalPrice"]	= "Toggle use of server specific Wowecon price stats, if they exist";
-		["WECN_HelpTooltip_EnableWOWEconStats"]	= "Allow WOWEcon to gather and return price data";
-		["WECN_HelpTooltip_SanitizeWOWEcon"]	= "Removes ultra-specific item data from links before issuing the price request";
-		["WECN_HelpTooltip_ShowWOWEconTooltip"]	= "Note: WOWEcon already shows this by default, this may produce redundant information in your tooltip";
 
 		-- Section: Interface
 		["AAMU_HelpTooltip_AutoSellGreyNoPrompt"]	= "No confirmation window will be shown for vendoring grey (trash) items.";
@@ -2410,11 +2354,6 @@ AuctioneerLocalizations = {
 		["UCUT_Interface_UndercutNoMatch"]	= "Undercut: %% change: %s%s Undercut: Cannot match lowest price";
 		["UCUT_Interface_UndercutOptions"]	= "Undercut Options";
 		["UCUT_Interface_UndercutTooltipSettings"]	= "Tooltip Setting";
-		["WECN_Interface_AlwaysGlobalPrice"]	= "Always use global price, not server price";
-		["WECN_Interface_EnableWOWEconStats"]	= "Enable WOWEcon Stats";
-		["WECN_Interface_SanitizeWOWEcon"]	= "Sanitize links before sending to WOWEcon API";
-		["WECN_Interface_ShowWOWEconTooltip"]	= "Show WOWEcon value in tooltip (see note)";
-		["WECN_Interface_WOWEconOptions"]	= "WOWEcon Options";
 
 		-- Section: Scanning Messages
 		["PSS_AtEnd"]	= "at end";
@@ -2500,13 +2439,6 @@ AuctioneerLocalizations = {
 		["UCUT_Tooltip_MovingPrice"]	= "Moving price";
 		["UCUT_Tooltip_NoCompetition"]	= "Undercut: %s No competition";
 		["UCUT_Tooltip_Undercutting"]	= "Undercut: %s Undercutting competition";
-		["WECN_Tooltip_GlobalPrice"]	= "Global price:";
-		["WECN_Tooltip_GlobalSeen"]	= "Global seen {{%s}}:";
-		["WECN_Tooltip_Individually"]	= "(or individually)";
-		["WECN_Tooltip_NeverSeen"]	= "Never seen for server";
-		["WECN_Tooltip_PricesSeen"]	= "WOWEcon prices seen:";
-		["WECN_Tooltip_ServerPrice"]	= "Server price:";
-		["WECN_Tooltip_ServerSeen"]	= "Server seen {{%s}}:";
 
 	};
 
@@ -2594,8 +2526,6 @@ AuctioneerLocalizations = {
 		["ASKP_Help_WhatAskPrice"]	= "Que es AskPrice y que hace?";
 		["ASKP_Help_WhatAskPriceAnswer"]	= "AskPrice es un modulo que permite a otros jugadores obtener los valores de los items enviando mensajes especiales a varios canales, o enviando esos mensajes drectamente a ti via susurro";
 		["ASKP_Help_WhatTriggers"]	= "Que son estos Triggers(desencadenadores) y como son usados?";
-		["WECN_Help_WhyGlobalPricesAnswer"]	= "Los precios específicos del servidor pueden ser útiles si tu servidor tiene precios que distan mucho del promedio, pero a menudo estos precios están basados en una cantidad de datos mucho menor, por lo que podrían ser disparatados para algunos items. Esta opción te permite forzar a la estadística de WOWEcon a usar precios globales, si así lo prefieres.";
-		["WECN_Help_WhyWOWEcon"]	= "Por qué querría mostrar el precio de WOWEcon en el tooltip?";
 
 		-- Section: HelpTooltip
 		["AAMU_HelpTooltip_AutoSellBOP"]	= "Auto-vender objetos ligados inusables";
@@ -2722,9 +2652,6 @@ AuctioneerLocalizations = {
 		["SIMP_HelpTooltip_Toggle3Day"]	= "Activar/Desactivar la media de los últimos 3 días.";
 		["SIMP_HelpTooltip_Toggle7Day"]	= "Activar/Desactivar la media de los últimos 7 días.";
 		["UCUT_HelpTooltip_EnableUndercut"]	= "Activa las funciones de este modulo.";
-		["WECN_HelpTooltip_AlwaysGlobalPrice"]	= "Usar precios concretos del servidor provistos por Wowecon en caso de que existan.";
-		["WECN_HelpTooltip_EnableWOWEconStats"]	= "Permitir a WOWEcon reunir y mostrar datos de precios.";
-		["WECN_HelpTooltip_ShowWOWEconTooltip"]	= "Nota: WOWEcon ya muestra esta información por defecto, esto podría producir información redudante en el tooltip.";
 
 		-- Section: Interface
 		["AAMU_HelpTooltip_AutoSellGreyNoPrompt"]	= "No se mostrará la ventana de confirmación para la venta de objetos grises (Chatarra).";
@@ -3083,11 +3010,6 @@ AuctioneerLocalizations = {
 		["UCUT_Interface_UndercutNoMatch"]	= "Rebaja: %% cambio: %s%s Rebaja: no coincide el precio mas bajo";
 		["UCUT_Interface_UndercutOptions"]	= "Opciones de rebaja";
 		["UCUT_Interface_UndercutTooltipSettings"]	= "Configuración Tooltip";
-		["WECN_Interface_AlwaysGlobalPrice"]	= "Usar siempre precio global, no el precio del servidor";
-		["WECN_Interface_EnableWOWEconStats"]	= "Activar estadísticas WOWEcon";
-		["WECN_Interface_SanitizeWOWEcon"]	= "Limpiar enlaces anttes de mandarlos a WOWEcon API";
-		["WECN_Interface_ShowWOWEconTooltip"]	= "Mostrar valor WOWEcon en tooltip (ver nota)";
-		["WECN_Interface_WOWEconOptions"]	= "Opciones WOWEcon";
 
 		-- Section: Scanning Messages
 		["PSS_AtEnd"]	= "al final";
@@ -3162,13 +3084,6 @@ AuctioneerLocalizations = {
 		["UCUT_Tooltip_MovingPrice"]	= "Precio Flotante";
 		["UCUT_Tooltip_NoCompetition"]	= "Rebaja: %s Sin Competencia";
 		["UCUT_Tooltip_Undercutting"]	= "Rebaja: %s Rebajando a la Competencia";
-		["WECN_Tooltip_GlobalPrice"]	= "Precio Global:";
-		["WECN_Tooltip_GlobalSeen"]	= "Vistos Global {{%s}}:";
-		["WECN_Tooltip_Individually"]	= "(o individual)";
-		["WECN_Tooltip_NeverSeen"]	= "Nunca Visto en Servidor";
-		["WECN_Tooltip_PricesSeen"]	= "WOWEcon, Precios Vistos:";
-		["WECN_Tooltip_ServerPrice"]	= "Precio en Servidor:";
-		["WECN_Tooltip_ServerSeen"]	= "Nunca Visto {{%s}}";
 
 	};
 
@@ -3477,15 +3392,6 @@ AuctioneerLocalizations = {
 		["SPRG_Help_WhatScanProgressAnswer"]	= "L'indicateur \"Analyse (scan) en Cours\" est le texte qui apparait pendant que vous analysez l'hôtel des Ventes. Il affiche : la vitesse de l'analyse, les enchères actuelles et le nombre total de enchères analysées, ainsi que le nombre de pages actuel et le total des pages analysées.";
 		["UCUT_Help_WhatUndercut"]	= "Qu'est-ce que le module Concurrence ?";
 		["UCUT_Help_WhatUndercutAnswer"]	= "Le module Concurrence vous permet de vous placer sous le plus bas prix de chaque objet disponible, suivant vos réglages.\n\nIl est recommandé de n'activer Concurrence qu'après les autres modules.";
-		["WECN_Help_WhatGlobalPrices"]	= "Quels sont les prix globaux ?";
-		["WECN_Help_WhatGlobalPricesAnswer"]	= "Wowecon fournit deux prix différents : un prix global, une moyenne de tout les serveurs, et un spécifique pour le serveur, pour votre serveur et votre faction.";
-		["WECN_Help_WhatSanitize "]	= "À quoi sert le lien 'aseptiser' ?";
-		["WECN_Help_WhatSanitizeAnswer"]	= "le lien 'aseptiser' peut améliorer les données de prix que vous recevez de WOWEcon en enlevant la partie du lien très spécifique (comme les enchantements, les améliorations d'objet, et l'information des gemmes) pour ne retenir que les informations de prix de l'objet de base brut. En général, cela n'affectera que les objets qui ne sont que légéement différent de l'objet de base, et n'aura pas, ou peu, sur les données de prix à cause de leur rareté.";
-		["WECN_Help_WhyGlobalPrices"]	= "Pourquoi devrais-je utiliser les prix globaux ?";
-		["WECN_Help_WhyGlobalPricesAnswer"]	= "Des prix spécifiques à votre serveur peuvent être utiles si votre serveur a des prix éloignés de la moyenne, mais souvent ces prix se basent sur très peu de données, ce qui fait que votre prix serveur-spécifique sera déséquilibré pour quelques objets. Cette option force les statistiques Wowecon à utiliser les prix globaux, si vous le souhaitez.";
-		["WECN_Help_WhyWOWEcon"]	= "Pourquoi voudrais-je afficher les prix fournis par WOWEcon dans les \"bulles d'aides\" ?";
-		["WECN_Help_WhyWOWEconAnswer"]	= "Les références de prix utilisées par l'évaluateur (Appraiser) peuvent être différentes de celles que WOWEcon affiche par défaut, car WOWEcon peut être très précis sur les données qu'il fournit. Activer cette option vous permet de voir quel est le prix exact pour l'objet en cours.";
-		["WECN_Help_WoweconNoMatchAnswer "]	= "Wowecon vous donne la possibilité de cacher des prix spécifiques au serveur si ils n'ont été vu qu'un nombre donné de fois. Bien que ces prix soient cachés dans la bulle d'aide, ils sont encore rapportés à Appraiser. Si vous n'employez pas l'option globale des prix ici, vous devriez vérifier pour s'assurer qu'il n'y a pas un prix caché spécifique à votre serveur, avec seulement un nombre de fois vues limité.";
 
 		-- Section: HelpTooltip
 		["AAMU_HelpTooltip_AutoSellBOP"]	= "Vendre automatiquement les objets liés inutilisables";
@@ -3684,10 +3590,6 @@ AuctioneerLocalizations = {
 		["UCUT_HelpTooltip_ShowInTooltip"]	= "Ajoute une ligne dans l'info-bulle montrant si l'on peut vendre moins cher que la compétition actuelle";
 		["UCUT_HelpTooltip_UndercutAmount"]	= "Donne le montant de vente moins chère par un montant spécifique, plutôt que par un pourcentage";
 		["UCUT_HelpTooltip_UndercutMinimum"]	= "Contrôle du montant minimum de vente moins chère. AucAdvanced essayera de vendre moins cher que la compétition par cette valeur.";
-		["WECN_HelpTooltip_AlwaysGlobalPrice"]	= "Bascule l'utilisation de stats de prix de Wowecon spécifique au serveur, si elles existent";
-		["WECN_HelpTooltip_EnableWOWEconStats"]	= "Autoriser WOWEcon à collecter et renvoyer des données de prix";
-		["WECN_HelpTooltip_SanitizeWOWEcon"]	= "Enlève des informations ultra-spécifiques sur l'objet avant de produire une requête de prix.";
-		["WECN_HelpTooltip_ShowWOWEconTooltip"]	= "Note: WOWEcon affiche déjà cette information par défaut et pourrait produire de l'information redondante dans l'info-bulle.";
 
 		-- Section: Interface
 		["AAMU_HelpTooltip_AutoSellGreyNoPrompt"]	= "Aucune fenêtre de confirmation ne sera affichée pour la vente d'objet gris.";
@@ -4029,6 +3931,7 @@ AuctioneerLocalizations = {
 		["SHTG_Interface_MultiplyStack"]	= "Multiplier par la taille des piles";
 		["SHTG_Interface_ShowHistogramTooltips"]	= "Afficher les statistiques de l'histogramme dans les infobulles ?";
 		["SIMP_Interface_ClearingSimple"]	= "Effacer les statistiques simples pour";
+		["SIMP_Interface_CombinedAverage"]	= "Afficher la moyenne totale";
 		["SIMP_Interface_EnableSimpleStats"]	= "Autoriser les statistiques simple";
 		["SIMP_Interface_LongerAverage"]	= "Rapporter des prix plus fiables pour les objets en faible quantité";
 		["SIMP_Interface_MinBuyout"]	= "Montrer le prix de vente journalier minimum";
@@ -4058,11 +3961,6 @@ AuctioneerLocalizations = {
 		["UCUT_Interface_UndercutNoMatch"]	= "Concurrencer : %% changer : %s%s Concurrencer : impossible d'égaler le prix le plus bas";
 		["UCUT_Interface_UndercutOptions"]	= "Options de concurrence";
 		["UCUT_Interface_UndercutTooltipSettings"]	= "Option des infobulles";
-		["WECN_Interface_AlwaysGlobalPrice"]	= "Toujours utiliser le prix global et non le prix du serveur";
-		["WECN_Interface_EnableWOWEconStats"]	= "Activer les statistiques WOWEcon";
-		["WECN_Interface_SanitizeWOWEcon"]	= "Nettoyer les liens avant l'envoi à l'API WOWEcon";
-		["WECN_Interface_ShowWOWEconTooltip"]	= "Montrer les valeurs WOWEcon dans les infobulles (voir note)";
-		["WECN_Interface_WOWEconOptions"]	= "Options pour WOWEcon";
 
 		-- Section: Scanning Messages
 		["PSS_AtEnd"]	= "à la fin";
@@ -4136,6 +4034,7 @@ AuctioneerLocalizations = {
 		["SIMP_Tooltip_3DayAverage"]	= "Moyenne sur 3 jours";
 		["SIMP_Tooltip_7DayAverage"]	= "Moyenne sur 7 jours";
 		["SIMP_Tooltip_AverageMBO"]	= "Prix de rachat moyen";
+		["SIMP_Tooltip_CombinedAverage"]	= "Total moyen";
 		["SIMP_Tooltip_SeenNumberDays"]	= "Vu {{%s}} fois durant les  {{%s}} derniers jours :";
 		["SIMP_Tooltip_SeenToday"]	= "Vu {{%s}} fois aujourd'hui :";
 		["SIMP_Tooltip_SimplePrices"]	= "Prix simples :";
@@ -4146,13 +4045,6 @@ AuctioneerLocalizations = {
 		["UCUT_Tooltip_MovingPrice"]	= "Prix glissant";
 		["UCUT_Tooltip_NoCompetition"]	= "Vendre moins cher: %s pas de concurrent";
 		["UCUT_Tooltip_Undercutting"]	= "Vendre moins cher: %s vendre en dessous du prix des concurrents";
-		["WECN_Tooltip_GlobalPrice"]	= "Prix global :";
-		["WECN_Tooltip_GlobalSeen"]	= "Vue globale {{%s}} :";
-		["WECN_Tooltip_Individually"]	= "(ou individuellement)";
-		["WECN_Tooltip_NeverSeen"]	= "Jamais vu sur ce serveur";
-		["WECN_Tooltip_PricesSeen"]	= "Prix WOWEcon constatés :";
-		["WECN_Tooltip_ServerPrice"]	= "Prix du serveur :";
-		["WECN_Tooltip_ServerSeen"]	= "Vu {{%s}} fois sur le serveur :";
 
 	};
 
@@ -4455,9 +4347,6 @@ AuctioneerLocalizations = {
 		["UCUT_Interface_UndercutAmount"]	= "Specifica l'ammontare di svendita tramite un valore in monete";
 		["UCUT_Interface_UndercutMinimum"]	= "Svendita:";
 		["UCUT_Interface_UndercutOptions"]	= "Opzioni di Svendita";
-		["WECN_Interface_AlwaysGlobalPrice"]	= "Usa sempre il prezzo globale, non il prezzo del server";
-		["WECN_Interface_EnableWOWEconStats"]	= "Abilita Statistiche WOWEcon";
-		["WECN_Interface_WOWEconOptions"]	= "Opzioni WOWEcon";
 
 		-- Section: Scanning Messages
 		["PSS_AtEnd"]	= "alla fine";
@@ -4539,13 +4428,6 @@ AuctioneerLocalizations = {
 		["UCUT_Tooltip_MovingPrice"]	= "Prezzo Mobile";
 		["UCUT_Tooltip_NoCompetition"]	= "Ribasso: %s nessun competitor";
 		["UCUT_Tooltip_Undercutting"]	= "Ribasso: %s ribassamento competitor";
-		["WECN_Tooltip_GlobalPrice"]	= "Prezzo Globale:";
-		["WECN_Tooltip_GlobalSeen"]	= "Viste Globali {{%s}}:";
-		["WECN_Tooltip_Individually"]	= "(od individualmente)";
-		["WECN_Tooltip_NeverSeen"]	= "Mai visto sul server";
-		["WECN_Tooltip_PricesSeen"]	= "Prezzo visto su WOWEcon:";
-		["WECN_Tooltip_ServerPrice"]	= "Prezzo sul server:";
-		["WECN_Tooltip_ServerSeen"]	= "Visto sul server {{%s}}:";
 
 	};
 
@@ -4734,8 +4616,6 @@ AuctioneerLocalizations = {
 		["APPR_HelpTooltip_RestrictActiveAuctions"]	= "낱개 판매가 활발히 이루어지는 경매에만 사용";
 		["APPR_HelpTooltip_SelectPricingModel"]	= "사용할 가격 모델 선택";
 		["APPR_HelpTooltip_SwitchSimpleLayout"]	= "간단한 레이아웃으로 전환";
-		["WECN_HelpTooltip_EnableWOWEconStats"]	= "WOWEcon이 가격 정보를 수집하고 반환 할수 있도록 허용";
-		["WECN_HelpTooltip_ShowWOWEconTooltip"]	= "설명: 이미 WOWEcon이 기본으로 설정되어있습니다.";
 
 		-- Section: Interface
 		["AAMU_Interface_AutoSellGrey"]	= "AutoMagic은 상점 아이템들을 구입할 때 추가적으로 회색 아이템들을 자동-판매하도록해줍니다.";
@@ -5055,11 +4935,6 @@ AuctioneerLocalizations = {
 		["UCUT_Interface_UndercutNoMatch"]	= "가격낮춤: %% 바뀜: %s%s 가격낮춤: 최저가와 맞춤 불가";
 		["UCUT_Interface_UndercutOptions"]	= "가격낮춤 설정";
 		["UCUT_Interface_UndercutTooltipSettings"]	= "툴팁 설정";
-		["WECN_Interface_AlwaysGlobalPrice"]	= "특정 서버 가격이 아닌 전체 서버 가격을 사용";
-		["WECN_Interface_EnableWOWEconStats"]	= "WOWEcon 통계를 사용";
-		["WECN_Interface_SanitizeWOWEcon"]	= "WOWEcon API로 보내기전 링크를 정리합니다.";
-		["WECN_Interface_ShowWOWEconTooltip"]	= "WOWEcon 값을 툴팁에 표시합니다(노트 참고)";
-		["WECN_Interface_WOWEconOptions"]	= "WOWEcon 선택사항";
 
 		-- Section: Scanning Messages
 		["PSS_Complete"]	= "Auctioneer {{%d}} 경매 스캔 완료. 시간은 {{%s}} 촬영";
@@ -5119,13 +4994,6 @@ AuctioneerLocalizations = {
 		["UCUT_Tooltip_MovingPrice"]	= "가격 변화";
 		["UCUT_Tooltip_NoCompetition"]	= "가격 낮춤: %s 경쟁 없음";
 		["UCUT_Tooltip_Undercutting"]	= "가격 낮춤: %s 경쟁자와 경쟁중";
-		["WECN_Tooltip_GlobalPrice"]	= "전섭 통합 가격:";
-		["WECN_Tooltip_GlobalSeen"]	= "전서버에서 보임 {{%s}}:";
-		["WECN_Tooltip_Individually"]	= "(혹은 개별적으로)";
-		["WECN_Tooltip_NeverSeen"]	= "서버에서 본적 없음";
-		["WECN_Tooltip_PricesSeen"]	= "WOWEcon 가격 정보:";
-		["WECN_Tooltip_ServerPrice"]	= "서버 가격:";
-		["WECN_Tooltip_ServerSeen"]	= "서버에서 보임 {{%s}}:";
 
 	};
 
@@ -5189,10 +5057,6 @@ AuctioneerLocalizations = {
 		["SHTG_Help_SlashHelp1"]	= "Hulp voor Auctioneer Advanced - Histogram";
 		["SHTG_Help_SlashHelp5"]	= "wis histogram statustieken voor";
 		["UCUT_Help_WhatUndercut"]	= "Wat is de undercut (onderbied) module?";
-		["WECN_Help_WhatSanitize "]	= "Wat doet de Sanitize Link optie?";
-		["WECN_Help_WhyGlobalPrices"]	= "Waarom zou ik globale prijzen willen gebruiken?";
-		["WECN_Help_WhyWOWEcon"]	= "Waarom zou ik de WOWEcon prijs in de tooltip willen tonen?";
-		["WECN_Help_WoweconNoMatchAnswer "]	= "Wowecon geeft je de mogelijkheid om server-specifieke prijzen te verbergen als deze minder dan een aantal keer gezien zijn. Ondanks dat deze prijzen verborgen zijn in de tooltip, worden ze wel aan Appraiser gerapporteerd. Als je niet de globale prijs optie hier gebruikt, zul je moeten controleren dat er niet een verborgen server-specifieke prijs voor je server is.";
 
 		-- Section: HelpTooltip
 		["AAMU_HelpTooltip_AutoSellGrey"]	= "Grijze items automatisch verkopen aan de verkoper.";
@@ -5574,11 +5438,6 @@ AuctioneerLocalizations = {
 		["UCUT_Interface_UndercutNoMatch"]	= "Onderbieden: %% verandering: %s%s Onderbieden: kan de laagste prijs niet halen";
 		["UCUT_Interface_UndercutOptions"]	= "Onderbieden opties";
 		["UCUT_Interface_UndercutTooltipSettings"]	= "Tooltip instelling";
-		["WECN_Interface_AlwaysGlobalPrice"]	= "Gebruik altijd wereldprijs, niet serverprijs";
-		["WECN_Interface_EnableWOWEconStats"]	= "Schakel WOWEcon statistieken in";
-		["WECN_Interface_SanitizeWOWEcon"]	= "Schoon verwijzingen op voordat ze worden verzonden naar WOWEcon API";
-		["WECN_Interface_ShowWOWEconTooltip"]	= "Toon WOWEcon waarde in de tooltip (zie opmerking)";
-		["WECN_Interface_WOWEconOptions"]	= "WOWEcon opties";
 
 		-- Section: Tooltip
 		["APPR_Tooltip_AppraiserCurModel"]	= "Appraiser ({{%s}}x{{%s}})";
@@ -5632,13 +5491,6 @@ AuctioneerLocalizations = {
 		["UCUT_Tooltip_MovingPrice"]	= "Veranderde prijs";
 		["UCUT_Tooltip_NoCompetition"]	= "Onderbieden: %s Geen competitie";
 		["UCUT_Tooltip_Undercutting"]	= "Onderbieden: %s onder competitie bieden";
-		["WECN_Tooltip_GlobalPrice"]	= "Algemene prijs:";
-		["WECN_Tooltip_GlobalSeen"]	= "Globaal gezien {{%s}}:";
-		["WECN_Tooltip_Individually"]	= "(of individueel)";
-		["WECN_Tooltip_NeverSeen"]	= "Nooit gezien op server:";
-		["WECN_Tooltip_PricesSeen"]	= "WOWEcon prijzen gezien:";
-		["WECN_Tooltip_ServerPrice"]	= "Server prijs:";
-		["WECN_Tooltip_ServerSeen"]	= "Gezien op server {{%s}}:";
 
 	};
 
@@ -5776,15 +5628,6 @@ AuctioneerLocalizations = {
 		["SPRG_Help_WhatScanProgress"]	= "Jaki jest wskaźnik postępu skanowania?";
 		["SPRG_Help_WhatScanProgressAnswer"]	= "Wskaźnik postępu skanowania jest tekst, który pojawia się podczas skanowania Auction House. Pokazuje on: prędkość skanowania, aktualne aukcje i całkowitej liczby aukcji skanowane, jak również bieżącą liczbę stron, a ogólna liczba stron skanowane.";
 		["UCUT_Help_WhatUndercut"]	= "Czym jest moduł obcinania?";
-		["WECN_Help_WhatGlobalPrices"]	= "Czym są globalne ceny?";
-		["WECN_Help_WhatGlobalPricesAnswer"]	= "Wowecon przewiduje dwa rodzaje cen: globalne ceny, średnio na wszystkich serwerach i serwera określonej cenie, tylko dla serwera i frakcji.";
-		["WECN_Help_WhatSanitize "]	= "Co oznacza opcja link do dezynfekcji?";
-		["WECN_Help_WhatSanitizeAnswer"]	= "Dezynfekcja link może poprawić dane na temat cen uzyskiwanych z WOWEcon przez usunięcie części link, które są bardzo specyficzne (takich jak zachwyca, czynniki element, a informatio gem) aby uzyskać informacje na temat cen dla wspólnej pozycji bazowej. Będzie to na ogół dotyczą tylko przedmiotów, które różnią się nieco od normalnego elementu, i nie ma, albo bardzo niewiele danych na temat cen ze względu na ich wyjątkowość.";
-		["WECN_Help_WhyGlobalPrices"]	= "Dlaczego powinienem używać globalnych cen?";
-		["WECN_Help_WhyGlobalPricesAnswer"]	= "Server konkretnych cen może być przydatna jeśli serwer ma cen, które są dalekie od średniej, jednak często ceny te są oparte na wielu mniej punktów danych, powodując serwer konkretną cenę ewentualnego wydostać się z walnięcie dla niektórych elementów. Ta opcja pozwala na życie stat Wowecon, aby zawsze używać światowych cen, jeśli wolisz.";
-		["WECN_Help_WhyWOWEcon"]	= "Dlaczego warto się pokazać ceny WOWEcon w dymku?";
-		["WECN_Help_WhyWOWEconAnswer"]	= "danych dotyczących cen, że rzeczoznawca zastosowań dla przedmiotów może różnić się od danych dotyczących cen, który wyświetla WOWEcon domyślnie od WOWEcon można uzyskać bardzo szczegółowe z danymi wraca. Włączenie tej opcji pozwoli Ci zobaczyć dokładną cenę że ten moduł jest w zakresie sprawozdawczości dla aktualnego elementu.";
-		["WECN_Help_WoweconNoMatchAnswer "]	= "Wowecon daje możliwość ukrycia serwera konkretnych cen jeśli widać mniej niż określoną liczbę razy. Mimo że ceny te są ukryte podpowiedzi, są nadal zgłaszane rzeczoznawcę. Jeśli nie korzystasz z opcji globalnych cen, powinien Pan sprawdzić, czy nie ma ukrytych określonej cenie serwera dla serwera, tylko niewielka liczba online razy.";
 
 		-- Section: HelpTooltip
 		["AAMU_HelpTooltip_AutoSellBOP"]	= "Auto-sprzedaż nieużywanego sprzętu będącego soulbound";
@@ -5921,11 +5764,6 @@ AuctioneerLocalizations = {
 		["SIMP_Tooltip_SeenNumberDays"]	= "Widziano {{%s}} przez {{%s}} dni:";
 		["SIMP_Tooltip_SeenToday"]	= "Widziano {{%s}} dzisiaj:";
 		["SIMP_Tooltip_SimplePrices"]	= "Proste ceny:";
-		["WECN_Tooltip_GlobalPrice"]	= "Cena globalna";
-		["WECN_Tooltip_Individually"]	= "(lub pojedynczo)";
-		["WECN_Tooltip_NeverSeen"]	= "Nigdy nie widziano na serwerze";
-		["WECN_Tooltip_ServerPrice"]	= "Cena na serwerze";
-		["WECN_Tooltip_ServerSeen"]	= "Widziano na serwerze {{%s}}:";
 
 	};
 
@@ -6018,13 +5856,6 @@ AuctioneerLocalizations = {
 		["SPRG_Help_WhatScanProgressAnswer"]	= "O indicador Progresso de Busca é o texto que aparece enquanto estiver escaneando a Casa de Leilão. Ele mostra: a velocidade da busca, leilões atuais e total de leilões lidos, assim como o número atual de páginas e total de páginas escaneadas.";
 		["UCUT_Help_WhatUndercut"]	= "O que é esse módulo de desconto?";
 		["UCUT_Help_WhatUndercutAnswer"]	= "O módulo de desconto permite a você reduzir o menor preço de todos os itens atualmente disponíveis, baseado no seu ajuste. É recomendado rodar o desconto após qualquer outro módulo de busca.";
-		["WECN_Help_WhatGlobalPrices"]	= "O que são preços globais?";
-		["WECN_Help_WhatGlobalPricesAnswer"]	= "Wowecon provê dois tipos diferentes de preço: um preço global, uma média através de todos os servidores, e um preço específico, para somente seu servidor ou facção.";
-		["WECN_Help_WhatSanitize "]	= "O que a opção sanear link faz?";
-		["WECN_Help_WhyGlobalPrices"]	= "Porque eu deveria usar os preços globais?";
-		["WECN_Help_WhyGlobalPricesAnswer"]	= "Preços específicos do servidor podem ser úteis se o servidor tem preços que estão longe da média global, mas estes preços  normalmente são baseados em poucos dados, fazendo com que o seu preço específico de servidor fique exagerado. Esta opção permite que você force o stat Wowecon usar sempre os preços globais, se você preferir.";
-		["WECN_Help_WhyWOWEcon"]	= "Porque eu deveria mostrar o preço WOWEcon na tooltip?";
-		["WECN_Help_WhyWOWEconAnswer"]	= "Os dados de preço que o Appraiser utiliza para os itens podem ser diferentes dos dados que o WOWEcon mostra por padrão, desde que o WOWEcon pode ser muito específico com os dados mostrados. Habilitando esta opção pertimitirá você ver o preço exato que este módulo reporta para o item atual.";
 
 		-- Section: HelpTooltip
 		["AAMU_HelpTooltip_AutoSellBOP"]	= "Auto-vender equipamentos vinculados inutilizáveis";
@@ -6068,19 +5899,15 @@ AuctioneerLocalizations = {
 		["ASKP_HelpTooltip_SmartWordOne"]	= "Os SmartWords permitir consultas em linguagem natural.";
 		["ASKP_HelpTooltip_SmartWords"]	= "Alternando isso vai permitir respostas aos SmartWords.";
 		["UCUT_HelpTooltip_UndercutMinimum"]	= "Isto controla o corte minimo. AucAdvanced irá tentar cortar a competição por este montante";
-		["WECN_HelpTooltip_AlwaysGlobalPrice"]	= "Alterna o uso de servidor específico Wowecon de estatísticas de preços, se existirem";
-		["WECN_HelpTooltip_EnableWOWEconStats"]	= "Permite WOWEcon recolher e retornar dado de preço";
-		["WECN_HelpTooltip_SanitizeWOWEcon"]	= "Remove dados ultra-específicos de itens a partir de links antes de emitir requisição de Preço";
-		["WECN_HelpTooltip_ShowWOWEconTooltip"]	= "Nota: WOWEcon sempre mostra isto por padrão, isto pode produzir informação redundante em sua ferramenta de dica";
 
 		-- Section: Interface
 		["AAMU_HelpTooltip_AutoSellGreyNoPrompt"]	= "Sem janela de confirmação para vender itens cinza (lixo).";
-		["AAMU_Interface_AutoNoPrompt"]	= "...Sem prompt de confirmação";
-		["AAMU_Interface_AutoSellBOP"]	= "Auto-venda para equipamento vinculado inútil";
-		["AAMU_Interface_AutoSellGrey"]	= "Auto-venda para items de qualidade cinza.";
+		["AAMU_Interface_AutoNoPrompt"]	= "...Sem janela de confirmação";
+		["AAMU_Interface_AutoSellBOP"]	= "Auto-venda não serve para equipamento vinculado";
+		["AAMU_Interface_AutoSellGrey"]	= "Auto-venda para itens de qualidade cinza.";
 		["AAMU_Interface_AutoSellList"]	= "Lista de Auto-venda.";
 		["AAMU_Interface_AutoSellListItems"]	= "Auto-venda para items na lista 'sempre vender'";
-		["AAMU_Interface_AutoSellReason"]	= "Auto-venda de items comprados pela busca de vendedor";
+		["AAMU_Interface_AutoSellReason"]	= "Auto-venda de itens comprados pela busca de vendedor";
 		["AAMU_Interface_AutoStop12"]	= "Pausar após vender 12 items.";
 		["AAMU_Interface_BeginnerTooltip"]	= "Ativa tooltips para iniciante do AutoMagic.";
 		["AAMU_Interface_Chatspam"]	= "Ativa spam do chat do AutoMagic";
@@ -6209,8 +6036,8 @@ AuctioneerLocalizations = {
 		["APPR_Interface_ColorAppraiserPriceLevel"]	= "Colorir items do Avaliador pelos seus dados de Nível de Preço";
 		["APPR_Interface_ColorManifestByPriceLevel"]	= "Colorir preços de oferta e compra no quadro de manifesto pelos dados de Nível de Preço";
 		["APPR_Interface_Configure"]	= "Configurar";
-		["APPR_Interface_Cur/ea"]	= "Cur/ea";
-		["APPR_Interface_CurBid"]	= "LanceCur";
+		["APPR_Interface_Cur/ea"]	= "Atual/cada";
+		["APPR_Interface_CurBid"]	= "LanceAtual";
 		["APPR_Interface_Data1MinOld"]	= "Dados são < 1 minuto antigos";
 		["APPR_Interface_Data48HoursOld"]	= "Dados são > 48 horas antigos";
 		["APPR_Interface_DataIsXOld"]	= "Dados são %s antigo";
@@ -6238,11 +6065,11 @@ AuctioneerLocalizations = {
 		["APPR_Interface_HideThisItem"]	= "Ocultar este item";
 		["APPR_Interface_HowIgnoreSeller"]	= "Como ignorar os leilões de um vendedor";
 		["APPR_Interface_HowUnIgnoreSeller"]	= "Como designorar os leilões de um vendedor";
-		["APPR_Interface_Items"]	= "%d items";
+		["APPR_Interface_Items"]	= "%d itens";
 		["APPR_Interface_Left"]	= "Esquerda";
 		["APPR_Interface_LotsOfStacks"]	= "%d vários de %dx pilhas:";
 		["APPR_Interface_MarkdownBy"]	= "Anotado para:";
-		["APPR_Interface_Min/ea"]	= "Min/ea";
+		["APPR_Interface_Min/ea"]	= "Min/cada";
 		["APPR_Interface_MinBid"]	= "LanceMin";
 		["APPR_Interface_NoDataFor"]	= "Sem dados para";
 		["APPR_Interface_NoItemSelected"]	= "Sem item selecionado";
@@ -6261,11 +6088,11 @@ AuctioneerLocalizations = {
 		["APPR_Interface_NumberGreaterAvailable"]	= "(Número> Disponível)";
 		["APPR_Interface_NumberItems"]	= "Número: %d itens";
 		["APPR_Interface_NumberStacks"]	= "Número: %d pilhas = %d";
-		["APPR_Interface_Off"]	= "off";
+		["APPR_Interface_Off"]	= "desligado";
 		["APPR_Interface_Only"]	= "Apenas";
 		["APPR_Interface_PickGradientDirection"]	= "Escolha a direção da inclinação";
-		["APPR_Interface_PostItems"]	= "Mensagem itens";
-		["APPR_Interface_PricingModelUse"]	= "Utilizar quel modelo de preço:";
+		["APPR_Interface_PostItems"]	= "Postar itens";
+		["APPR_Interface_PricingModelUse"]	= "Utilizar qual modelo de preço:";
 		["APPR_Interface_RefreshingView"]	= "examinar {{% s}}";
 		["APPR_Interface_Right"]	= "Direito";
 		["APPR_Interface_RoundBuyoutValue"]	= "Arredondar valor de arremate";
@@ -6399,10 +6226,10 @@ AuctioneerLocalizations = {
 		["SDEV_Interface_DisplayMean"]	= "Mostrar média";
 		["SDEV_Interface_DisplayNormalized"]	= "Mostrar Normalizada";
 		["SDEV_Interface_DisplayStandardDeviation"]	= "Mostrar Desvio Padrão";
-		["SDEV_Interface_EnableStdDevStats"]	= "Habilitar StdDev Estatísticas";
+		["SDEV_Interface_EnableStdDevStats"]	= "Habilitar Estatísticas de Desvio Padrão";
 		["SDEV_Interface_MultiplyStack"]	= "Multiplique por tamanho da pilha";
-		["SDEV_Interface_Show"]	= "Mostrar estatísticas StdDev na dica";
-		["SDEV_Interface_StdDevOptions"]	= "Opções stdDev";
+		["SDEV_Interface_Show"]	= "Mostrar estatísticas de Desvio Padrão na dica";
+		["SDEV_Interface_StdDevOptions"]	= "Opções de Desvio Padrão";
 		["SHTG_Interface_ClearingData"]	= "- Histograma: Limpeza de dados para %s para {{%s}}";
 		["SHTG_Interface_DisplayIQR"]	= "Mostrar IQR";
 		["SHTG_Interface_DisplayMedian"]	= "Mostrar média";
@@ -6414,7 +6241,9 @@ AuctioneerLocalizations = {
 		["SHTG_Interface_MultiplyStack"]	= "Multiplique por tamanho da pilha";
 		["SHTG_Interface_ShowHistogramTooltips"]	= "Mostrar estatísticas de histograma na dica";
 		["SIMP_Interface_ClearingSimple"]	= "Limpando Estatísticas simples para";
+		["SIMP_Interface_CombinedAverage"]	= "Mostrar média combinada";
 		["SIMP_Interface_EnableSimpleStats"]	= "Habilitar Estatísticas Simples";
+		["SIMP_Interface_Fallback"]	= "Usar preços anteriores";
 		["SIMP_Interface_LongerAverage"]	= "Relatório preços mais seguros para itens de baixo volume";
 		["SIMP_Interface_MinBuyout"]	= "Mostrar Comprar mínimo diário para fora";
 		["SIMP_Interface_MinBuyoutAverage"]	= "Mostrar média mínima diária de preço de arremate";
@@ -6422,6 +6251,7 @@ AuctioneerLocalizations = {
 		["SIMP_Interface_SeenCount"]	= "Atividade |cffddeeff %d%s hoje %s";
 		["SIMP_Interface_Show"]	= "Mostrar estatísticas simples nas dicas";
 		["SIMP_Interface_SimpleOptions"]	= "Opções Simples";
+		["SIMP_Interface_StdDev"]	= "Exibir Desvio Padrão";
 		["SIMP_Interface_Toggle14Day"]	= "Mostrar Média de Mudanças de 14 Dias";
 		["SIMP_Interface_Toggle3Day"]	= "Mostrar Média de Mudanças de 3 Dias";
 		["SIMP_Interface_Toggle7Day"]	= "Mostrar Média de Mudanças de 7 Dias";
@@ -6443,11 +6273,6 @@ AuctioneerLocalizations = {
 		["UCUT_Interface_UndercutNoMatch"]	= "Rebaixada: %% Mudança: %s%s Rebaixada: Pode não coincidir com menor preço";
 		["UCUT_Interface_UndercutOptions"]	= "Opções de rebaixamento";
 		["UCUT_Interface_UndercutTooltipSettings"]	= "Configuração de Dicas";
-		["WECN_Interface_AlwaysGlobalPrice"]	= "Sempre usar preço global, não preço do servidor.";
-		["WECN_Interface_EnableWOWEconStats"]	= "Ativa Estatísticas WOWEcon";
-		["WECN_Interface_SanitizeWOWEcon"]	= "Limpar links antes de enviar para a API do WOWEcon";
-		["WECN_Interface_ShowWOWEconTooltip"]	= "Exibe valores do WOWEcon na tooltip (ver nota)";
-		["WECN_Interface_WOWEconOptions"]	= "Opções do WOWEcon";
 
 		-- Section: Scanning Messages
 		["PSS_AtEnd"]	= "No fim";
@@ -6531,13 +6356,6 @@ AuctioneerLocalizations = {
 		["UCUT_Tooltip_MovingPrice"]	= "Preço de movimento.";
 		["UCUT_Tooltip_NoCompetition"]	= "Pechincha: %s Sem competição";
 		["UCUT_Tooltip_Undercutting"]	= "Pechincha: %s quebrando a competição";
-		["WECN_Tooltip_GlobalPrice"]	= "Preço global:";
-		["WECN_Tooltip_GlobalSeen"]	= "Visto global {{%s}}:";
-		["WECN_Tooltip_Individually"]	= "(ou individualmente)";
-		["WECN_Tooltip_NeverSeen"]	= "Nunca visto no servidor";
-		["WECN_Tooltip_PricesSeen"]	= "preços vistos no WOWEcon:";
-		["WECN_Tooltip_ServerPrice"]	= "Preço no servidor:";
-		["WECN_Tooltip_ServerSeen"]	= "Visto no servidor {{%s}}:";
 
 	};
 
@@ -6561,9 +6379,6 @@ AuctioneerLocalizations = {
 		["ASAL_Help_StatSalesAnswer"]	= "Estatísticas de vendas são os números gerados pelo módulo de vendas da bas de dados do BeanCounter. São as médias de todos os preços de todos os objectos que já vendeu.";
 		["BASC_Help_WhatBasicFilter"]	= "O que é o Filtro Básico?";
 		["SIMP_Help_WhyMultiplyStack"]	= "Porque existe a opção de multiplicar pela quantidade da pilha?";
-		["WECN_Help_WhatGlobalPrices"]	= "O que são preços globais?";
-		["WECN_Help_WhatGlobalPricesAnswer"]	= "Wowecon fornece dois tipos diferentes de preços: um preço global, obtido pela média em todos os servidores, e um preço específico, só para o teu servidor e fação.";
-		["WECN_Help_WhyGlobalPrices"]	= "Porque devo usar preços globais?";
 
 		-- Section: HelpTooltip
 		["AAMU_HelpTooltip_AutoSellGrey"]	= "Vende Automaticamente itens de qualidade cinzenta aos comerciantes.";
@@ -6787,11 +6602,6 @@ AuctioneerLocalizations = {
 		["UCUT_Interface_UndercutNoMatch"]	= "Corte de preço: %% troco: %s%s Corte de preço: Não coincide com menor preço";
 		["UCUT_Interface_UndercutOptions"]	= "Opções de corte de preço";
 		["UCUT_Interface_UndercutTooltipSettings"]	= "Configuração da Tooltip";
-		["WECN_Interface_AlwaysGlobalPrice"]	= "Sempre usar preço global, não preço do servidor";
-		["WECN_Interface_EnableWOWEconStats"]	= "Habilitar estatísticas WOWEcon";
-		["WECN_Interface_SanitizeWOWEcon"]	= "Sanear links antes de enviar à API de WOWEcon";
-		["WECN_Interface_ShowWOWEconTooltip"]	= "Mostrar valor de WOWEcon no tooltip";
-		["WECN_Interface_WOWEconOptions"]	= "Opções de WOWEcon";
 
 		-- Section: Scanning Messages
 		["PSS_AtEnd"]	= "Fim";
@@ -6821,8 +6631,6 @@ AuctioneerLocalizations = {
 		["PURC_Tooltip_7DayAverage"]	= "Média 7 dias";
 		["PURC_Tooltip_PurchasedPrices"]	= "Preço comprado";
 		["SHTG_Tooltip_Median"]	= "média:";
-		["WECN_Tooltip_GlobalPrice"]	= "Preço Global:";
-		["WECN_Tooltip_ServerPrice"]	= "Preço Servidor:";
 
 	};
 
@@ -7030,15 +6838,6 @@ AuctioneerLocalizations = {
 		["SPRG_Help_WhatScanProgressAnswer"]	= "Индикатор сканирования это текст, который показывается во время сканирования аукциона. Он показывает скорость сканирования, текущий лот, общее количество лотов, а так же номер текущей страницы и общее количество страниц.";
 		["UCUT_Help_WhatUndercut"]	= "Что делает модуль сбивания цен?";
 		["UCUT_Help_WhatUndercutAnswer"]	= "Модуль сбивания цены позволяет сбить цену ниже самого дешевого предложения на рынке, базируясь на ваших настройках.\n\nРекомендуется помещать этот модуль самым последним среди модулей подбора цен.";
-		["WECN_Help_WhatGlobalPrices"]	= "Что такое глобальные цены?";
-		["WECN_Help_WhatGlobalPricesAnswer"]	= "WOWEcon предоставляет два разных типа цен: глобальные цены, усредняемые по данным всех серверов и серверные цены, показывающие цену для конкретного сервера и фракции.";
-		["WECN_Help_WhatSanitize "]	= "Для чего предназначена опция санирования ссылок?";
-		["WECN_Help_WhatSanitizeAnswer"]	= "Санирование ссылок может улучшить данные о ценах, которые  получаются от WOWEcon. При её включении для получения общей цены базового предмета удаляются слишком специфические части ссылки (такие как чанты, информация о камнях и специфические суффиксы). В общем случае это влияет только на те предметы, которые при своей уникальности почти не отличаются от базового предмета по цене.";
-		["WECN_Help_WhyGlobalPrices"]	= "Почему я должен использовать глобальные цены?";
-		["WECN_Help_WhyGlobalPricesAnswer"]	= "Серверные цены могут быть полезны, если рынок на вашем сервере сильно отличается от усредненного значения. Однако, очень часто они базируются на гораздо меньшем количестве замеров и не могут не отражать реальную рыночную стоимость отдельных предметов. Эта опция заставит WOWEcon всегда использовать глобальные цены вместо серверных.";
-		["WECN_Help_WhyWOWEcon"]	= "Для чего мне могут понадобится цены WOWEcon в подсказке?";
-		["WECN_Help_WhyWOWEconAnswer"]	= "Данные о ценах, которые использует Оценщик, могут очень сильно отличаться от цен, которые WOWEcon показывает по умолчанию, поскольку WOWEcon может возвращать очень специфичные данные. Эта опция позволит вам увидеть точное значение, которое этот модуль возвращает для текущего предмета.";
-		["WECN_Help_WoweconNoMatchAnswer "]	= "WOWEcon дает вам возможность прятать серверные цены на товары если количество собранных данных меньше заданного предела. Хотя эти цены убраны из подсказки, они все равно передаются Оценщику. Если вы не используете глобальные цены, вы должны включить эту опцию, что бы быть уверены, что Оценщик не использует недостоверные серверные цены.";
 
 		-- Section: HelpTooltip
 		["AAMU_HelpTooltip_AutoSellBOP"]	= "Автоматически продавать неиспользуемые персональные вещи";
@@ -7237,10 +7036,6 @@ AuctioneerLocalizations = {
 		["UCUT_HelpTooltip_ShowInTooltip"]	= "Добавить строку во всплывающую подсказку показывающую можно ли сбить текущую цену";
 		["UCUT_HelpTooltip_UndercutAmount"]	= "Сбивать цену на указанную сумму, вместо процента";
 		["UCUT_HelpTooltip_UndercutMinimum"]	= "Минимальная сумма для сбавки цены. AucAdvanced будет пытаться сбить цену на указанное значение.";
-		["WECN_HelpTooltip_AlwaysGlobalPrice"]	= "Включение использования Wowecon'ом цен сервера, если они существуют";
-		["WECN_HelpTooltip_EnableWOWEconStats"]	= "Разрешить модулю WOWEcon собирать и возвращать данные о ценах";
-		["WECN_HelpTooltip_SanitizeWOWEcon"]	= "Удалить из ссылки узкоспециализированную информацию об объекте перед выдачей запроса на цену";
-		["WECN_HelpTooltip_ShowWOWEconTooltip"]	= "Заметка: WOWEcon по умолчанию уже показывает это, поэтому в подсказках может появится лишняя информация";
 
 		-- Section: Interface
 		["AAMU_HelpTooltip_AutoSellGreyNoPrompt"]	= "При продаже серых вещей (мусора) окно подтверждения показано не будет.";
@@ -7611,11 +7406,6 @@ AuctioneerLocalizations = {
 		["UCUT_Interface_UndercutNoMatch"]	= "Сбивание цены: %% изменение: %s%s Сбивание цены: Невозможно подобрать низшую цену";
 		["UCUT_Interface_UndercutOptions"]	= "Настройки сбивания цены";
 		["UCUT_Interface_UndercutTooltipSettings"]	= "Настройка всплывающих подсказок";
-		["WECN_Interface_AlwaysGlobalPrice"]	= "Всегда использовать глобальные цены, вместо серверных цен";
-		["WECN_Interface_EnableWOWEconStats"]	= "Разрешить статистики WoWEcon";
-		["WECN_Interface_SanitizeWOWEcon"]	= "Санировать ссылки перед отправкой в WOWEcon API";
-		["WECN_Interface_ShowWOWEconTooltip"]	= "Показывать значение WOWEcon в подсказке (смотрите справку)";
-		["WECN_Interface_WOWEconOptions"]	= "Настройки WOWEcon";
 
 		-- Section: Scanning Messages
 		["PSS_AtEnd"]	= "конец в";
@@ -7699,13 +7489,6 @@ AuctioneerLocalizations = {
 		["UCUT_Tooltip_MovingPrice"]	= "Изменяющаяся цена";
 		["UCUT_Tooltip_NoCompetition"]	= "Сбивание цены: %s Конкуренция отсутствует";
 		["UCUT_Tooltip_Undercutting"]	= "Сбивание цены: %s Сбивание цены конкурентов";
-		["WECN_Tooltip_GlobalPrice"]	= "Общая цена:";
-		["WECN_Tooltip_GlobalSeen"]	= "Всего просмотрено {{%s}}:";
-		["WECN_Tooltip_Individually"]	= "(или индивидуально)";
-		["WECN_Tooltip_NeverSeen"]	= "Никогда не встречалось на сервере";
-		["WECN_Tooltip_PricesSeen"]	= "Просмотрено цен WOWEcon:";
-		["WECN_Tooltip_ServerPrice"]	= "Цена сервера:";
-		["WECN_Tooltip_ServerSeen"]	= "Просмотрено на сервере {{%s}}:";
 
 	};
 
@@ -7988,11 +7771,6 @@ AuctioneerLocalizations = {
 		["UCUT_Interface_UndercutNoMatch"]	= "İndirim: %% fark:%s%s indirim: en düşük fiyat bilinmiyor";
 		["UCUT_Interface_UndercutOptions"]	= "İndirim seçenekleri";
 		["UCUT_Interface_UndercutTooltipSettings"]	= "İpucu ayarları";
-		["WECN_Interface_AlwaysGlobalPrice"]	= "Her zaman server fiyatlarını değil, global fiyatları kullan";
-		["WECN_Interface_EnableWOWEconStats"]	= "WOWEcon istatistiğini aç";
-		["WECN_Interface_SanitizeWOWEcon"]	= "WOWEcon'a göndermeden önce linkleri doğrula";
-		["WECN_Interface_ShowWOWEconTooltip"]	= "WOWEcon fiyatını ipucunda göster(notu okuyun)";
-		["WECN_Interface_WOWEconOptions"]	= "WOWEcon Seçenekleri";
 
 	};
 
@@ -8206,15 +7984,6 @@ AuctioneerLocalizations = {
 		["SPRG_Help_WhatScanProgressAnswer"]	= "扫描进度指示器是当扫描拍卖行时出现的一个文本。它显示出：扫描速度和扫描到的拍卖品总数，还有每页数量和总页数";
 		["UCUT_Help_WhatUndercut"]	= "什么是廉价出售模块?";
 		["UCUT_Help_WhatUndercutAnswer"]	= "根据你的设定,廉价出售模块允许你以最低价格廉价出售所有当前可用的物品.\n\n建议在任何其它匹配模块运行后再运行廉价出售.";
-		["WECN_Help_WhatGlobalPrices"]	= "什么是全局物价?";
-		["WECN_Help_WhatGlobalPricesAnswer"]	= "Wowecon提供两种不同的价格类型:一种全局价格,平均分布在所有服务器,和一种服务器具体价格,只在你的服务器和阵营.";
-		["WECN_Help_WhatSanitize "]	= "净化链接做什么用的?";
-		["WECN_Help_WhatSanitizeAnswer"]	= "净化链接可以通过删除一些非常具体的链接部件(例如附魔,物品要素,宝石信息)来改善你从WOWEcon得到的价格数据以为普通基础物品正确地获得价格信息.从一般意义上来讲它只对那些略微不同于普通基础物品的东西产生影响,并且由于它们的独特性只会不产生或者产生很少的价格数据.";
-		["WECN_Help_WhyGlobalPrices"]	= "为什么我要使用全局价格?";
-		["WECN_Help_WhyGlobalPricesAnswer"]	= "如果你所在服务器有些价格离平均价格相去甚远时,服务器具体价格将会对你有用,但是这些价格常常基于一些较少的数据点,很可能引起你的服务器具体价格相对一些物品失衡.此选项允许你强制Wowecon统计一直使用全局价格,如果你想要的话.";
-		["WECN_Help_WhyWOWEcon"]	= "为什么我想要在工具提示栏中显示WOWEcon价格?";
-		["WECN_Help_WhyWOWEconAnswer"]	= "自从WOWEcon可以取得非常具体返回数据之后,估价师用于物品的价格数据可能不同于WOWEcon默认下所显示的价格数据.启动此选项将使你看到此模块为当前物品报告准确价格.";
-		["WECN_Help_WoweconNoMatchAnswer "]	= "如果浏览次数少于所给出的,Wowecon会给你隐藏服务器具体价格的选项.即使这些价格从提示栏中隐去,他们依然报告给估价师.如果这里你没有使用全局价格选项,你应该检查以确保这里没有隐藏一个你所在服务器的服务器具体价格而仅仅只有浏览次数.";
 
 		-- Section: HelpTooltip
 		["AAMU_HelpTooltip_AutoSellBOP"]	= "自动出售无法使用的绑定装备";
@@ -8414,10 +8183,6 @@ AuctioneerLocalizations = {
 		["UCUT_HelpTooltip_ShowInTooltip"]	= "为提示栏加上一条线显示当前竞拍是否处于廉价销售";
 		["UCUT_HelpTooltip_UndercutAmount"]	= "指定一个削价的具体数额,而不是一个百分比";
 		["UCUT_HelpTooltip_UndercutMinimum"]	= "这个控制最低廉价出售.AucAdvanced会尝试通过这个数额削减竞价.";
-		["WECN_HelpTooltip_AlwaysGlobalPrice"]	= "触发使用服务器具体Wowecon价格统计,如果他们存在的话";
-		["WECN_HelpTooltip_EnableWOWEconStats"]	= "允许WOWEcon收集和返还价格数据";
-		["WECN_HelpTooltip_SanitizeWOWEcon"]	= "在发出价格请求之前,从链接中删除超范围物品数据";
-		["WECN_HelpTooltip_ShowWOWEconTooltip"]	= "注:WOWEcon已经表明这一点,默认情况下,这可能会产生多余的信息在您的提示";
 
 		-- Section: Interface
 		["AAMU_HelpTooltip_AutoSellGreyNoPrompt"]	= "售卖灰色（垃圾）物品时不需要确认提示";
@@ -8789,11 +8554,6 @@ AuctioneerLocalizations = {
 		["UCUT_Interface_UndercutNoMatch"]	= "降价: %% 改变: %s%s 降价：未能低于最低价格";
 		["UCUT_Interface_UndercutOptions"]	= "降价选项";
 		["UCUT_Interface_UndercutTooltipSettings"]	= "提示栏设置";
-		["WECN_Interface_AlwaysGlobalPrice"]	= "一直使用本地价格，而非服务器价格";
-		["WECN_Interface_EnableWOWEconStats"]	= "开启WOWEcon状态";
-		["WECN_Interface_SanitizeWOWEcon"]	= "发送至WOWEcon API前清理链接";
-		["WECN_Interface_ShowWOWEconTooltip"]	= "在提示信息中显示WOWEcon资料（见说明）";
-		["WECN_Interface_WOWEconOptions"]	= "WOWEcon选项";
 
 		-- Section: Scanning Messages
 		["PSS_AtEnd"]	= "最终";
@@ -8867,9 +8627,11 @@ AuctioneerLocalizations = {
 		["SIMP_Tooltip_3DayAverage"]	= "3天平均";
 		["SIMP_Tooltip_7DayAverage"]	= "7天平均";
 		["SIMP_Tooltip_AverageMBO"]	= "平均最小一口价";
+		["SIMP_Tooltip_CombinedAverage"]	= "综合平均";
 		["SIMP_Tooltip_SeenNumberDays"]	= "{{%s}}出现已超过{{%s}}天:";
 		["SIMP_Tooltip_SeenToday"]	= "今日出现{{%s}}";
 		["SIMP_Tooltip_SimplePrices"]	= "单一价格：";
+		["SIMP_Tooltip_StdDev"]	= "标准偏差";
 		["SIMP_Tooltip_TodaysMBO"]	= "今天的最小一口价";
 		["UCUT_Tooltip_CannotUndercut"]	= "降价: %s 不能降价";
 		["UCUT_Tooltip_CompetitionAbove"]	= "降价: %s 竞争者高于市场价";
@@ -8877,13 +8639,6 @@ AuctioneerLocalizations = {
 		["UCUT_Tooltip_MovingPrice"]	= "调整价格";
 		["UCUT_Tooltip_NoCompetition"]	= "降价: %s 无竞争者";
 		["UCUT_Tooltip_Undercutting"]	= "降价: %s 降价竞争者";
-		["WECN_Tooltip_GlobalPrice"]	= "全球价格：";
-		["WECN_Tooltip_GlobalSeen"]	= "全球出现{{%s}}:";
-		["WECN_Tooltip_Individually"]	= "(或单独)";
-		["WECN_Tooltip_NeverSeen"]	= "本服务器从未出现";
-		["WECN_Tooltip_PricesSeen"]	= "WOWEcon 价格出现:";
-		["WECN_Tooltip_ServerPrice"]	= "服务器价格:";
-		["WECN_Tooltip_ServerSeen"]	= "服务器出现过{{%s}}:";
 
 	};
 
@@ -9097,15 +8852,6 @@ AuctioneerLocalizations = {
 		["SPRG_Help_WhatScanProgressAnswer"]	= "掃瞄進度指示器是當掃瞄拍賣行時出現的一個文本。它顯示出：掃瞄速度和掃瞄到的拍賣品總數，還有每頁數量和總頁數";
 		["UCUT_Help_WhatUndercut"]	= "什麼是削價(undercut)模組？";
 		["UCUT_Help_WhatUndercutAnswer"]	= "削價模塊基於你的設定允許你以低於市場最低價的價格出售目前的所有物品。\n\n建議在其他任何匹配模組執行後再進行削價。";
-		["WECN_Help_WhatGlobalPrices"]	= "什麼是全局價格(global prices)？";
-		["WECN_Help_WhatGlobalPricesAnswer"]	= "WOWEcon提供兩種不同方式的價格:一種全局價格,平局分佈在所有服務器,和一個您的服務器或陣營的單一服務器具體價格.";
-		["WECN_Help_WhatSanitize "]	= "安全鏈接選項是做什麽的？";
-		["WECN_Help_WhatSanitizeAnswer"]	= "安全鏈接可以藉由去除一些遊戲內部連結資料(如附魔、物品資訊和寶石資訊)，來提高由WOWECon傳輸給您一般基本物品的價格資訊。一般情況下，這只會影響一些不同於一般基本物品的東西，且它們本身的獨特性將對價格不影響或是影響很小。";
-		["WECN_Help_WhyGlobalPrices"]	= "為什麼我要使用全局價格？";
-		["WECN_Help_WhyGlobalPricesAnswer"]	= "如果你所在服務器有些價格離平均價格相去甚遠時,服務器具體價格將會對你有用,但是這些價格常常基於一些較少的數據點,很可能引起你的服務器具體價格相對一些物品失衡.如果你想要的話,該選項允許你強制Wowecon統計一直使用全局價格.";
-		["WECN_Help_WhyWOWEcon"]	= "為什麼我要在提示資訊顯示WOWEcon價格？";
-		["WECN_Help_WhyWOWEconAnswer"]	= "WOWEcon可以取得非常具體的回傳價格資料後，估價助手用於物品的價格資料可能不同於WOWEcon預設下顯示的價格資料。開啟這項功能將讓您看見此模組回報的確切價格資料。";
-		["WECN_Help_WoweconNoMatchAnswer "]	= "若特定物品出現次數低於所給予的次數時，WOWEcon 將會提供您隱藏伺服器專屬價格的選項。即使這些價格被隱藏而不會顯示於提示資訊中，估價助手仍會去參考這些資料。若您尚未使用全局價格選項的話，您應該要檢查確認它不是一個您伺服器中隱藏的伺服器專屬價格，雖然僅僅只出現過幾次。";
 
 		-- Section: HelpTooltip
 		["AAMU_HelpTooltip_AutoSellBOP"]	= "自動出售無法使用的靈魂綁定裝備";
@@ -9287,12 +9033,15 @@ AuctioneerLocalizations = {
 		["SHTG_HelpTooltip_EnableHistogram"]	= "允許直方圖收集和返回價格資料";
 		["SHTG_HelpTooltip_MultiplyStack"]	= "乘以當前堆疊大小";
 		["SHTG_HelpTooltip_ShowHistogramTooltips"]	= "切換顯示來自直方圖模組的統計 開或關";
+		["SIMP_HelpTooltip_CombinedAverage"]	= "切換簡易模組的綜合平均值顯示 開或關";
 		["SIMP_HelpTooltip_EnableSimpleStats"]	= "允許簡易統計收集和返回價格資料";
+		["SIMP_HelpTooltip_Fallback"]	= "若該物品無合適的價格資訊，使用相似基礎物品的價格資訊(若存在的話)";
 		["SIMP_HelpTooltip_LongerAverage"]	= "為小批量物品返回更長時間平均數(7天,或甚至14天)";
 		["SIMP_HelpTooltip_MinBuyout"]	= "切換顯示來自簡易統計模組的最低直購價 開或關";
 		["SIMP_HelpTooltip_MinBuyoutAverage"]	= "切換顯示來自簡易統計模塊的最低直購價平均值 開或關";
 		["SIMP_HelpTooltip_MultiplyStack"]	= "乘以當前堆疊數量";
 		["SIMP_HelpTooltip_Show"]	= "切換顯示來自簡易統計模組的信息 開或關";
+		["SIMP_HelpTooltip_StdDev"]	= "切換綜合平均值的標準差顯示 開或關";
 		["SIMP_HelpTooltip_Toggle14Day"]	= "切換顯示來自簡易統計模組的14天平均數 開或關";
 		["SIMP_HelpTooltip_Toggle3Day"]	= "切換顯示來自簡易統計模組的3天平均數 開或關";
 		["SIMP_HelpTooltip_Toggle7Day"]	= "切換顯示來自簡易統計模組的7天平均數 開或關";
@@ -9305,10 +9054,6 @@ AuctioneerLocalizations = {
 		["UCUT_HelpTooltip_ShowInTooltip"]	= "增加一行到提示資訊顯示當前是否處於削價競爭";
 		["UCUT_HelpTooltip_UndercutAmount"]	= "指定一個削價的具體數額，而不是一個百分比";
 		["UCUT_HelpTooltip_UndercutMinimum"]	= "這個控制最低削價.AucAdvanced將會用此數額來試著減少競標的價格";
-		["WECN_HelpTooltip_AlwaysGlobalPrice"]	= "切換使用伺服器專屬的WOWEcon價格統計，若它們存在的話";
-		["WECN_HelpTooltip_EnableWOWEconStats"]	= "允許 WOWEcon 收集和返回價格數據";
-		["WECN_HelpTooltip_SanitizeWOWEcon"]	= "在發出價格請求時，從連結中移除極端物品的資料";
-		["WECN_HelpTooltip_ShowWOWEconTooltip"]	= "注意：WOWEcon 預設已經設定為顯示，這也許會在您的提示資訊中產生多餘的資訊";
 
 		-- Section: Interface
 		["AAMU_HelpTooltip_AutoSellGreyNoPrompt"]	= "販賣灰色（垃圾）物品時不需要確認提示";
@@ -9651,7 +9396,9 @@ AuctioneerLocalizations = {
 		["SHTG_Interface_MultiplyStack"]	= "乘以堆疊數量";
 		["SHTG_Interface_ShowHistogramTooltips"]	= "在提示資訊顯示直方圖統計";
 		["SIMP_Interface_ClearingSimple"]	= "清除簡易統計：";
+		["SIMP_Interface_CombinedAverage"]	= "顯示綜合平均";
 		["SIMP_Interface_EnableSimpleStats"]	= "啟用簡易統計(Simple Stats)";
+		["SIMP_Interface_Fallback"]	= "使用後備價格";
 		["SIMP_Interface_LongerAverage"]	= "報告低價物品的安全價格";
 		["SIMP_Interface_MinBuyout"]	= "顯示每日最低直購價";
 		["SIMP_Interface_MinBuyoutAverage"]	= "顯示平均每日最低直購價";
@@ -9659,6 +9406,7 @@ AuctioneerLocalizations = {
 		["SIMP_Interface_SeenCount"]	= "今天 %s 已出現 |cffddeeff %d%s";
 		["SIMP_Interface_Show"]	= "在提示資訊顯示簡易統計";
 		["SIMP_Interface_SimpleOptions"]	= "簡易統計(Simple Stats) 選項";
+		["SIMP_Interface_StdDev"]	= "顯示標準差";
 		["SIMP_Interface_Toggle14Day"]	= "顯示14天移動平均數";
 		["SIMP_Interface_Toggle3Day"]	= "顯示3天移動平均數";
 		["SIMP_Interface_Toggle7Day"]	= "顯示7天移動平均數";
@@ -9680,11 +9428,6 @@ AuctioneerLocalizations = {
 		["UCUT_Interface_UndercutNoMatch"]	= "削價:%% 改為:%s%s 削價:無法匹配最低價格";
 		["UCUT_Interface_UndercutOptions"]	= "削價(Undercut) 選項";
 		["UCUT_Interface_UndercutTooltipSettings"]	= "提示資訊設定";
-		["WECN_Interface_AlwaysGlobalPrice"]	= "總是使用全局價格,而不是伺服器價格";
-		["WECN_Interface_EnableWOWEconStats"]	= "啟用 WOWEcon 統計";
-		["WECN_Interface_SanitizeWOWEcon"]	= "發送給 WOWEcon API 前先安全化鏈接";
-		["WECN_Interface_ShowWOWEconTooltip"]	= "在提示資訊中顯示 WOWEcon 資料(請看說明)";
-		["WECN_Interface_WOWEconOptions"]	= "WOWEcon 選項";
 
 		-- Section: Scanning Messages
 		["PSS_AtEnd"]	= "在結束";
@@ -9758,9 +9501,11 @@ AuctioneerLocalizations = {
 		["SIMP_Tooltip_3DayAverage"]	= "3天平均";
 		["SIMP_Tooltip_7DayAverage"]	= "7天平均";
 		["SIMP_Tooltip_AverageMBO"]	= "平均每天最低直購價";
+		["SIMP_Tooltip_CombinedAverage"]	= "綜合平均";
 		["SIMP_Tooltip_SeenNumberDays"]	= "{{%s}}出現已超過{{%s}}天:";
 		["SIMP_Tooltip_SeenToday"]	= "今天出現{{%s}}次";
 		["SIMP_Tooltip_SimplePrices"]	= "簡易價格:";
+		["SIMP_Tooltip_StdDev"]	= "標準差";
 		["SIMP_Tooltip_TodaysMBO"]	= "今天最低直購價";
 		["UCUT_Tooltip_CannotUndercut"]	= "削價: %s 不能削價";
 		["UCUT_Tooltip_CompetitionAbove"]	= "削價：%s 競爭者高於市場價";
@@ -9768,13 +9513,6 @@ AuctioneerLocalizations = {
 		["UCUT_Tooltip_MovingPrice"]	= "價格浮動";
 		["UCUT_Tooltip_NoCompetition"]	= "削價: %s 無競爭者";
 		["UCUT_Tooltip_Undercutting"]	= "削價: %s 削價競爭";
-		["WECN_Tooltip_GlobalPrice"]	= "全局價格:";
-		["WECN_Tooltip_GlobalSeen"]	= "全局出現{{%s}}:";
-		["WECN_Tooltip_Individually"]	= "(或單個)";
-		["WECN_Tooltip_NeverSeen"]	= "伺服器從未出現";
-		["WECN_Tooltip_PricesSeen"]	= "WOWEcon 價格出現:";
-		["WECN_Tooltip_ServerPrice"]	= "伺服器價格:";
-		["WECN_Tooltip_ServerSeen"]	= "伺服器出現 {{%s}}:";
 
 	};
 

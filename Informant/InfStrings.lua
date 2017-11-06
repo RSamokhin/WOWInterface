@@ -5,7 +5,7 @@
 
 	AddOn: Informant
 	Revision: $Id: InfStrings.lua 5456 2014-06-05 11:59:54Z brykrys $
-	Version: 7.1.5675 (TasmanianThylacine)
+	Version: 7.5.5724 (TasmanianThylacine)
 
 	License:
 		This program is free software; you can redistribute it and/or

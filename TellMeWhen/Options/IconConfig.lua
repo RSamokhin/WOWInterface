@@ -107,7 +107,7 @@ function IE:LoadIcon(isRefresh, icon)
 		local ic_old = CI.icon
 
 		if type(icon) == "table" then			
-			PlaySound("igCharacterInfoTab")
+			PlaySound(SOUNDKIT and SOUNDKIT.IG_CHARACTER_INFO_TAB or "igCharacterInfoTab") -- SOUNDKIT is patch 7.3 compat
 			IE:SaveSettings()
 			
 			CI.icon = icon
@@ -122,6 +122,10 @@ function IE:LoadIcon(isRefresh, icon)
 		elseif icon == false then
 			CI.icon = nil
 			IE.TabGroups.ICON:SetChildrenEnabled(false)
+
+			if IE.CurrentTabGroup.identifier == "ICON" then
+				IE.ResetButton:Disable()
+			end
 		end
 
 		TMW:Fire("TMW_CONFIG_ICON_LOADED_CHANGED", CI.icon, ic_old)
@@ -162,7 +166,7 @@ function TMW:GetIconMenuText(ics)
 	
 	tooltip = tooltip or ""
 	
-	text = text == "" and (L["UNNAMED"] .. ((Type ~= "" and typeData and (" - " .. typeData.name) or ""))) or text
+	text = text == "" and (L["UNNAMED"] .. ((Type ~= "" and typeData and (" - " .. (TMW.get(typeData.name) or "???")) or ""))) or text
 	local textshort = not dontShorten and strsub(text, 1, 40) or text
 
 	if strlen(text) > 40 and not dontShorten then
@@ -170,7 +174,7 @@ function TMW:GetIconMenuText(ics)
 	end
 
 	tooltip =	tooltip ..
-				((Type ~= "" and typeData.name) or "") ..
+				((Type ~= "" and TMW.get(typeData.name)) or "") ..
 				((ics.Enabled and "") or "\r\n(" .. L["DISABLED"] .. ")")
 
 	return text, textshort, tooltip

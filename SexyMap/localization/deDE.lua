@@ -164,7 +164,6 @@ L["Use the global profile if you want the same look on every character, or use a
 L["Vehicle Seat"] = "Fahrzeugsitz"
 L["Vertical Nudge"] = "Vertikaler Anschlag"
 L["Vertical Position"] = "Vertikale Position"
-L["Video Recording Button (Mac OSX Only, When Available)"] = "Videoaufnahme-Knopf (Nur Mac OSX, falls verfügbar)"
 L["Visibility"] = "Sichtbarkeit"
 L["Voice Chat Button (When Available)"] = "Sprachchat-Knopf (wenn verfügbar)"
 L["Width"] = "Breite"
@@ -172,5 +171,3 @@ L["You can set a background and edge file for the minimap like you would with an
 L["Zone Text"] = "Zonentext"
 L["Zoom In Button"] = "Heranzoom-Knopf"
 L["Zoom Out Button"] = "Herauszoom-Knopf"
-
-

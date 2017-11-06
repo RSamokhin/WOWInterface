@@ -1,5 +1,5 @@
 --[[
-	Copyright (c) 2009-2016, Hendrik "Nevcairiel" Leppkes < h.leppkes at gmail dot com >
+	Copyright (c) 2009-2017, Hendrik "Nevcairiel" Leppkes < h.leppkes at gmail dot com >
 	All rights reserved.
 ]]
 local _, Bartender4 = ...
@@ -9,7 +9,6 @@ local ExtraActionBarMod = Bartender4:NewModule("ExtraActionBar", "AceHook-3.0")
 
 -- fetch upvalues
 local Bar = Bartender4.Bar.prototype
-local LBF = LibStub("LibButtonFacade", true)
 
 local setmetatable, table_insert = setmetatable, table.insert
 

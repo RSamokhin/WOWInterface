@@ -1,4 +1,4 @@
-﻿--GAME_LOCALE = UnitName("player") == "Cybeloras" and "zhCN" --FOR TESTING
+--GAME_LOCALE = UnitName("player") == "Cybeloras" and "zhCN" --FOR TESTING
 local L = LibStub("AceLocale-3.0"):NewLocale("TellMeWhen", "enUS", true)
 
 -- WARNING! DO NOT EXPECT TO FIND ANY DECENT LEVEL OF ORGANIZATION IN THIS FILE, BECAUSE IT SIMPLY DOES NOT EXIST. MOVE ALONG.
@@ -59,10 +59,11 @@ L["IMPORTERROR_FAILEDPARSE"] = "There was an error processing the string. Ensure
 
 L["DBRESTORED_INFO"] = [[TellMeWhen has detected that its database was either empty or corrupted. This can be caused by a number of issues, the most common of which is WoW not exiting properly.
 
-TellMeWhen_Options maintains a backup of your database in case this happens since it is very unlikely that both TellMeWhen's and TellMeWhen_Options's databases will become corrupted in this way at the same time.
+TellMeWhen_Options maintains a backup of your database in case this happens. The current backup was created on:
 
+%s
 
-This backup, created from your session that began %s, has been restored.]]
+This backup has been restored.]]
 
 
 L["CHANGELOG"] = "Changelog"
@@ -271,7 +272,7 @@ L["ICONMENU_DOTWATCH_DESC"] = [[Attempts to track the buffs and debuffs that you
 
 Useful for tracking multi-dotting.
 
-This icon type MUST be used as a Group Controller - it cannot be a standalone icon.]]
+This icon type works best when used as a group controller.]]
 L["ICONMENU_DOTWATCH_GCREQ"] = "Must be a group controller"
 L["ICONMENU_DOTWATCH_GCREQ_DESC"] = [[This icon type must be a group controller in order to function. You cannot use it as a standalone icon.
 
@@ -280,10 +281,31 @@ L["ICONMENU_DOTWATCH_AURASFOUND_DESC"] = "Set the icon opacity level for when an
 L["ICONMENU_DOTWATCH_NOFOUND_DESC"] = "Set the icon opacity level for when none of the tracked buffs/debuffs are found."
 
 
-L["ICONMENU_BUFFCHECK"] = "Buff/Debuff Check"
-L["ICONMENU_BUFFCHECK_DESC"] = [[Checks if a buff is absent from any unit that you check.
 
-Use this icon type to check for missing raid buffs.
+L["ICONMENU_GUARDIAN"] = "Guardians"
+L["ICONMENU_GUARDIAN_DESC"] = [[Tracks your active guardians. These are minor units like Wild Imps for Warlocks.
+
+This icon type works best when used as a group controller.]]
+L["ICONMENU_GUARDIAN_TRIGGER"] = "Triggered by: %s"
+L["ICONMENU_GUARDIAN_CHOOSENAME_DESC"] = [[Enter the Name or NPC ID of the guardians you want this icon to monitor.
+
+You can add multiple entries (any combination of names and IDs) by separating them with semicolons (;).]]
+
+L["ICONMENU_GUARDIAN_EMPOWERED"] = "Empowered"
+L["ICONMENU_GUARDIAN_UNEMPOWERED"] = "Unempowered"
+
+L["ICONMENU_GUARDIAN_DUR"] = "Duration to Show"
+L["ICONMENU_GUARDIAN_DUR_GUARDIAN"] = "Guardian Only"
+L["ICONMENU_GUARDIAN_DUR_EMPOWER"] = "Empower Only"
+L["ICONMENU_GUARDIAN_DUR_EITHER"] = "Empower First"
+L["ICONMENU_GUARDIAN_DUR_EITHER_DESC"] = "If empowered, the duration of empower will be used if it is less than the remaining duration of the guardian. Otherwise, the duration of the guardian will be used."
+
+
+
+L["ICONMENU_BUFFCHECK"] = "Missing Buffs/Debuffs"
+L["ICONMENU_BUFFCHECK_DESC"] = [[Checks if an aura is absent from any of the units being watched.
+
+Use this icon type for things like checking for missing raid buffs.
 
 Most other situations should use the %q icon type.]]
 
@@ -407,7 +429,7 @@ L["ICONMENU_OOPOWER"] = "Out of Power"
 L["ICONMENU_OO_F"] = "Out of %s"
 
 L["ICONMENU_STATECOLOR"] = "Icon Tint & Texture"
-L["ICONMENU_STATECOLOR_DESC"] = [[Set the tint of the icon's texture in this icon state.
+L["ICONMENU_STATECOLOR_DESC"] = [[|cff7fffffClick|r to set the tint of the icon's texture in this icon state.
 
 White is normal. Any other color will tint the texture to that color.
 
@@ -546,6 +568,8 @@ L["ICONMENU_ALLOWGCD_DESC"] = [[Check this option to allow the timer to react to
 
 L["ICONMENU_SHOWPBAR_DESC"] = "Shows a bar across the top half of the icon that will display the power still needed to cast the spell."
 L["ICONMENU_SHOWCBAR_DESC"] = "Shows a bar across the bottom half of the icon that will display the icon's timer."
+L["ICONMENU_REVERSEBARS"] = "Flip"
+L["ICONMENU_REVERSEBARS_DESC"] = "Flips the origin point from the left to the right."
 L["ICONMENU_INVERTBARS"] = "Fill bar up"
 L["ICONMENU_INVERTCBAR_DESC"] = "Causes the bar to fill up as duration reaches zero."
 L["ICONMENU_INVERTPBAR_DESC"] = "Causes the bar to fill up as power become sufficient."
@@ -633,9 +657,7 @@ L["ICONMENU_SHOWTTTEXT_STACKS_DESC"] = "Causes the buff/debuff's stacks to be re
 L["ICONMENU_SHOWTTTEXT_FIRST"] = "First non-zero variable"
 L["ICONMENU_SHOWTTTEXT_FIRST_DESC"] = [[Causes the first non-zero variable assoeciated with the buff/debuff to be reported as the icon's stacks.
 
-Usually this will be the correct variable if you desire one of the aura's variables.
-
-If tracking %s, you need to explicitly watch for Variable #1]]
+Usually this will be the correct variable if you desire one of the aura's variables.]]
 L["ICONMENU_SHOWTTTEXT_VAR"] = "Only Variable #%d"
 L["ICONMENU_SHOWTTTEXT_VAR_DESC"] = [[Causes only this variable to be reported as the icon's stacks.
 
@@ -740,6 +762,8 @@ L["ICONMENU_HIDEUNEQUIPPED"] = "Hide when slot lacks weapon"
 L["ICONMENU_HIDEUNEQUIPPED_DESC"] = "Check this to force the icon to be hidden if the weapon spot being checked does not have a weapon in it, or if that slot has a shield or an off-hand frill."
 L["ICONMENU_USEACTIVATIONOVERLAY"] = "Check activation border"
 L["ICONMENU_USEACTIVATIONOVERLAY_DESC"] = "Check this to cause the presence of the sparkly yellow border around an action to force the icon to act as usable."
+L["ICONMENU_ONLYACTIVATIONOVERLAY"] = "Require activation border"
+L["ICONMENU_ONLYACTIVATIONOVERLAY_DESC"] = "Check this to require the presence of the sparkly yellow border around an action to allow the icon to act as usable."
 L["ICONMENU_ONLYEQPPD"] = "Only if equipped"
 L["ICONMENU_ONLYEQPPD_DESC"] = "Check this to make the icon show only if the item is equipped."
 L["ICONMENU_SHOWSTACKS"] = "Show stacks"
@@ -798,7 +822,7 @@ L["UIPANEL_PROFILES"] = "Profiles"
 
 L["UIPANEL_GROUPTYPE"] = "Display Method"
 L["UIPANEL_GROUPTYPE_ICON"] = "Icon"
-L["UIPANEL_GROUPTYPE_ICON_DESC"] = [[Displays the icons in the group using TellMeWhen's traditional icon display.]]
+L["UIPANEL_GROUPTYPE_ICON_DESC"] = [[Displays the icons in the2 group using TellMeWhen's traditional icon display.]]
 L["UIPANEL_GROUPTYPE_BAR"] = "Bar"
 L["UIPANEL_GROUPTYPE_BAR_DESC"] = [[Displays the icons in the group with progress bars attached to the icons.]]
 L["UIPANEL_GROUPTYPE_BARV"] = "Vertical Bar"
@@ -858,6 +882,7 @@ This option is account-wide: all of your profiles will share this setting.
 
 |cffff5959Changes will only be reflected after you |cff7fffffreload your UI|cffff5959.|r]]
 L["UIPANEL_BARTEXTURE"] = "Bar Texture"
+L["UIPANEL_USE_PROFILE"] = "Use Profile Setting"
 L["UIPANEL_PERFORMANCE"] = "Performance"
 L["UIPANEL_UPDATEINTERVAL"] = "Update Interval"
 L["UIPANEL_TOOLTIP_UPDATEINTERVAL"] = [[Sets how often (in seconds) icons are checked for show/hide, alpha, conditions, etc.
@@ -1260,6 +1285,8 @@ L["CONDITIONPANEL_ANDOR"] = "And / Or"
 L["CONDITIONPANEL_ANDOR_DESC"] = "|cff7fffffClick|r to toggle between logical operators AND and OR"
 L["CONDITIONPANEL_POWER"] = "Primary Resource"
 L["CONDITIONPANEL_PERCENT"] = "Percent"
+L["CONDITIONPANEL_PERCENTOFMAXHP"] = "Percent of Max Health"
+L["CONDITIONPANEL_PERCENTOFCURHP"] = "Percent of Current Health"
 L["CONDITIONPANEL_ABSOLUTE"] = "Current"
 L["CONDITIONPANEL_MAX"] = "Max"
 L["CONDITIONPANEL_COMBO"] = "Combo Points"
@@ -1351,7 +1378,9 @@ Players in melee range pull aggro at 110%
 Players at range pull aggro at 130%
 Players with aggro have a raw threat percentage of 255%]]
 L["CONDITIONPANEL_CASTCOUNT"] = "Spell Cast Count"
-L["CONDITIONPANEL_CASTCOUNT_DESC"] = [[Checks the number of times that a unit has cast a certain spell.]]
+L["CONDITIONPANEL_CASTCOUNT_DESC"] = [[Checks the number of times that a unit has cast a certain spell.
+
+If you would like more advanced functionality, use a Counter notification with appropriate triggers, and then check that counter in your condition instead.]]
 L["CONDITIONPANEL_CASTTOMATCH"] = "Spell to Match"
 L["CONDITIONPANEL_CASTTOMATCH_DESC"] = [[Enter a spell name here to make the condition only pass if the spell cast matches it exactly.
 
@@ -1360,6 +1389,9 @@ You can leave this blank to check for any and all spell casts/channels]]
 L["CONDITIONPANEL_LASTCAST"] = "Last Ability Used"
 L["CONDITIONPANEL_LASTCAST_ISSPELL"] = "Matches"
 L["CONDITIONPANEL_LASTCAST_ISNTSPELL"] = "Doesn't Match"
+
+L["CONDITIONPANEL_OVERLAYED"] = "Spell activation overlay"
+L["CONDITIONPANEL_OVERLAYED_DESC"] = "Checks if a given spell has the activation overlay effect (the sparkly yellow border on your action bars)."
 
 L["CONDITIONPANEL_INTERRUPTIBLE"] = "Interruptible"
 L["CONDITIONPANEL_NAME"] = "Unit Name"
@@ -1395,6 +1427,8 @@ L["CONDITIONPANEL_MANAUSABLE"] = "Spell Usable (Mana/Energy/etc.)"
 L["CONDITIONPANEL_MANAUSABLE_DESC"] = [[Checks if a spell is usable base on how much primary resource (mana/energy/rage/focus/runic power/etc.) you have.
 
 Does not check usability based on secondary resources (runes/holy power/chi/etc.)]]
+L["CONDITIONPANEL_SPELLCOST"] = "Spell Cost"
+L["CONDITIONPANEL_SPELLCOST_DESC"] = "Checks the cost of a spell. Units are mana/rage/energy/etc."
 L["CONDITIONPANEL_SPELLRANGE"] = "Spell in range of unit"
 L["CONDITIONPANEL_ITEMRANGE"] = "Item in range of unit"
 L["CONDITIONPANEL_AUTOCAST"] = "Pet spell autocasting"
@@ -1419,7 +1453,9 @@ L["LUACONDITION"] = "Lua (Advanced)"
 L["LUACONDITION2"] = "Lua Condition"
 L["LUACONDITION_DESC"] = [[This condition type allows you to evaluate Lua code to determine the state of a condition.
 
-The input is not an 'if .. then' statement, nor is it a function closure. It is a regular statement to be evaluated, e.g. 'a and b or c'.  If complex functionality is required, use a call to a function, e.g. 'CheckStuff()', that is defined externally (perhaps using TMW's Lua snippets feature).
+If your input is a regular statement to be evaluated, e.g. 'a and b or c', you don't need a return statement.
+
+If you have any control blocks (e.g. if/then), you'll need return statements.
 
 To get a reference to this icon/group, use "thisobj". To insert a reference to another icon by GUID, shift click that icon while this editbox has focus.
 
@@ -1585,6 +1621,9 @@ L["CNDT_TOTEMNAME_DESC"] = [[Set blank to track any totems of the selected type.
 
 Enter a totem name, or a list of names separated by semicolons, to only check certain totems.]]
 L["GCD_ACTIVE"] = "GCD active"
+L["RESOURCE_FRAGMENTS"] = "%s Fragments"
+L["ICONMENU_VALUEFRAGMENTS"] = "Track Fragments"
+L["ICONMENU_VALUEFRAGMENTS_DESC"] = "Enable to track more granular fragments of the selected resource. Primarily used for Soul Shards."
 L["BURNING_EMBERS_FRAGMENTS"] = "Burning Ember 'Fragments'"
 L["BURNING_EMBERS_FRAGMENTS_DESC"] = [[Each whole Burning Ember consists of 10 fragments.
 
@@ -1838,6 +1877,7 @@ L["DT_DOC_LocType"] = "Returns the type of the control loss effect that the icon
 L["DT_DOC_IsShown"] = "Returns whether or not an icon is shown."
 L["DT_DOC_Opacity"] = "Returns the opacity of an icon. Return value is between 0 and 1."
 L["DT_DOC_Duration"] = "Returns the current duration remaining on the icon. It is recommended that you format this with [TMWFormatDuration]"
+L["DT_DOC_MaxDuration"] = "Returns the maximum duration of the icon. This is the duration when the timer started, not the current duration."
 L["DT_DOC_Spell"] = "Returns the spell or item that the icon is showing data for."
 L["DT_DOC_Stacks"] = "Returns the current stacks of the icon"
 L["DT_DOC_Unit"] = "Returns the unit or the name of the unit that the icon is checking. Best use in conjunction with the [Name] tag."
@@ -1887,9 +1927,7 @@ L["EXPORT_TOSTRING"] = "To String"
 L["EXPORT_TOCOMM"] = "To Player"
 L["EXPORT_TOGUILD"] = "To Guild"
 L["EXPORT_TORAID"] = "To Raid"
-L["EXPORT_TOCOMM_DESC"] = [[Type a player's name into the editbox and choose this option to send the data to them. They must be somebody that you can whisper (same faction, server, online), and they must have TellMeWhen v4.0.0+
-
-You can also type "GUILD" or "RAID" (case-sensitive) to send to your entire guild or raid group.]]
+L["EXPORT_TOCOMM_DESC"] = [[Type a player's name into the editbox and choose this option to send the data to them. They must be somebody that you can whisper (same faction, server, online).]]
 L["EXPORT_TOSTRING_DESC"] = "A string containing the necessary data will be pasted into the editbox.  Press Ctrl+C to copy it, and then paste it wherever you want to share it."
 L["EXPORT_SPECIALDESC2"] = "Other TellMeWhen users can only import this data if they have version %s"
 L["EXPORT_f"] = "Export %s"
@@ -1983,6 +2021,8 @@ L["SUG_PATTERNMATCH_FISHINGLURE"] = "Fishing Lure %(%+%d+ Fishing Skill%)" -- en
 L["SUG_PATTERNMATCH_WEIGHTSTONE"] = "Weighted %(%+%d+ Damage%)"
 L["SUG_PATTERNMATCH_SHARPENINGSTONE"] = "Sharpened %(%+%d+ Damage%)"
 
+L["SUG_MODULE_FRAME_LIKELYADDON"] = "Guessed source: %s"
+
 
 L["SUG_FIRSTHELP_DESC"] = [[The suggestion list speeds up configuration.
 
@@ -2013,7 +2053,9 @@ L["EVENT_CATEGORY_CONDITION"] = "Conditions"
 L["EVENT_CATEGORY_MISC"] = "Miscellaneous"
 L["EVENT_CATEGORY_VISIBILITY"] = "Visibility"
 L["EVENT_CATEGORY_TIMER"] = "Timer"
+L["EVENT_CATEGORY_CHARGES"] = "Charges"
 L["EVENT_CATEGORY_CHANGED"] = "Data Changed"
+L["EVENT_CATEGORY_STACKS"] = "Stacks"
 L["EVENT_CATEGORY_CLICK"] = "Interaction"
 
 L["SOUND_EVENT_ONSHOW"] = "On Show"
@@ -2027,6 +2069,12 @@ L["SOUND_EVENT_ONSTART_DESC"] = [[This event triggers when the cooldown becomes 
 
 L["SOUND_EVENT_ONFINISH"] = "On Finish"
 L["SOUND_EVENT_ONFINISH_DESC"] = [[This event triggers when the cooldown becomes usable, the buff/debuff falls off, etc.]]
+
+L["SOUND_EVENT_ONCHARGELOST"] = "On Charge Spent"
+L["SOUND_EVENT_ONCHARGELOST_DESC"] = [[This event triggers when a charge of the ability being tracked is used.]]
+
+L["SOUND_EVENT_ONCHARGEGAINED"] = "On Charge Gained"
+L["SOUND_EVENT_ONCHARGEGAINED_DESC"] = [[This event triggers when a charge of the ability being tracked is gained.]]
 
 L["SOUND_EVENT_ONALPHAINC"] = "On Opacity Increase"
 L["SOUND_EVENT_ONALPHAINC_DESC"] = [[This event triggers when the opacity of an icon increases.
@@ -2051,10 +2099,10 @@ L["SOUND_EVENT_ONSTACK_DESC"] = [[This event triggers when the stacks of whateve
 
 This includes the amount of diminishment for %s icons.]]
 
-L["SOUND_EVENT_ONDURATION"] = "On Duration Changed"
-L["SOUND_EVENT_ONDURATION_DESC"] = [[This event triggers when the duration of the icon's timer changes.
+L["SOUND_EVENT_ONDURATION"] = "On Duration Threshold"
+L["SOUND_EVENT_ONDURATION_DESC"] = [[This event triggers when the duration of the icon's timer changes past some threshold.
 
-Because this event occurs every time the icon is updated while a timer is running, you must set a condition, and the event will only occur when the state of that condition changes.]]
+To use this trigger, you must set a condition, and the event will only occur when the state of that condition changes.]]
 
 L["SOUND_EVENT_ONCLEU"] = "On Combat Event"
 L["SOUND_EVENT_ONCLEU_DESC"] = [[This event triggers when the icon processes a combat event.]]
@@ -2145,12 +2193,12 @@ L["EVENTS_SETTINGS_PASSINGCNDT_DESC"] = "Prevents the notification from being ha
 L["EVENTS_SETTINGS_CNDTJUSTPASSED"] = "And it just began passing"
 L["EVENTS_SETTINGS_CNDTJUSTPASSED_DESC"] = "Prevents the notification from being handled unless the condition configured above has just begun succeeding."
 
-L["EVENTS_SETTINGS_PASSTHROUGH"] = "Continue to lower events"
+L["EVENTS_SETTINGS_PASSTHROUGH"] = "Continue to lower notifications"
 L["EVENTS_SETTINGS_PASSTHROUGH_DESC"] = [[Check to allow another event-triggered notification to be handled after this one.
 
-If left unchecked, the icon will not process any more events after this event if it successfully processes and outputs/displays something.
+If left unchecked, the icon will not process any more notifications after this notifications if it successfully processes and outputs/displays something.
 
-Exeptions may apply, see individual event descriptions for details.]]
+Exeptions may apply, see individual trigger descriptions for details.]]
 
 
 

@@ -1,4 +1,4 @@
-﻿-- --------------------
+-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -98,6 +98,14 @@ function Backdrop:OnDisable()
 	self:SetBorder(0, "ffffffff")
 end
 
+function Backdrop:SetOrientation(orientation)
+	if orientation == "HORIZONTAL" then
+		self.backdrop:SetTexCoord(0, 0, 0, 1, 1, 0, 1, 1)
+	elseif orientation == "VERTICAL" then
+		self.backdrop:SetTexCoord(1, 0, 0, 0, 1, 1, 0, 1)
+	end
+end
+
 function Backdrop:SetBorder(size, color)
 	if not self.border and size ~= 0 then
 		self.border = CreateFrame("Frame", nil, self.container, "TellMeWhen_GenericBorder")
@@ -110,7 +118,11 @@ function Backdrop:SetBorder(size, color)
 end
 
 function Backdrop:SetupForIcon(icon)
-	self.backdrop:SetTexture(LSM:Fetch("statusbar", TMW.db.profile.TextureName))
+	local texture = icon.group.TextureName
+	if texture == "" then
+		texture = TMW.db.profile.TextureName
+	end
+	self.backdrop:SetTexture(LSM:Fetch("statusbar", texture))
 	
 	local color = TMW:GetColors("BackdropColor", "BackdropColor_Enable",
 		                        icon:GetSettings(), icon.group:GetSettings(), TMW.db.global)

@@ -1,9 +1,10 @@
-## Interface: 70000
+## Interface: 70300
 ## Title: PetTracker Upgrades
 ## Notes: Warns you when wild pets you might want appear in combat.
 ## Author: Jaliborc (João Cardoso)
 
 ## Dependencies: PetTracker
 ## X-Category: Battle Pets
+## Version: 7.3.0
 
 Upgrades.lua

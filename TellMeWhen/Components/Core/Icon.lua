@@ -1,4 +1,4 @@
-﻿-- --------------------
+-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -670,8 +670,13 @@ function Icon.Update(icon, force)
 				if TMW.Locked then
 					for i = icon.__controlledIconIndex+1, icon.group.numIcons do
 						local ic = icon.group[i]
-						if ic and ic.attributes.shown then
-							ic:Hide()
+						if ic and ic.attributes.realAlpha > 0 then
+							-- This allows for correct handling of states & opacities in all cases.
+							ic:SetInfo("alphaOverride", 0)
+
+							-- The following won't work for this:
+							-- ic:SetInfo("state", 0), because it breaks meta icon controller groups (meta icon state overrides local state).
+							-- ic:Hide(), because it breaks OnShow/OnHide animations on controlled icons.
 						end
 					end
 				end
@@ -712,7 +717,7 @@ function Icon.YieldInfo(icon, isNotDone, ...)
 		if not destIcon then
 			return
 		end
-		destIcon:Show()
+		destIcon:SetInfo("alphaOverride", nil)
 
 		icon.typeData:HandleYieldedInfo(icon, destIcon, ...)
 
@@ -873,19 +878,11 @@ function Icon.Setup(icon)
 
 	
 	if icon.Enabled or not TMW.Locked then
-		
+		icon:Show()
 
 		-- Associate the icon's GUID with the icon in a global context
 		-- so that it can be referred to by GUID.
 		TMW:DeclareDataOwner(iconGUID, icon)
-	
-
-		-- Non-controlled icons should always show if they're used.
-		-- Controlled icons are shown/hidden based on whether or not they're used
-		-- (this is handled by the icon controller system, so don't manually show controller icons here)
-		if not icon:IsControlled() then
-			icon:Show()
-		end
 
 
 		-- Lame framelevel fix: Sometimes, icons end up with dramatically different frame levels than their group.
@@ -1309,11 +1306,11 @@ end})
 --  )
 -- 
 --  -- From IconTypes/IconType_reactive:
---  icon:SetInfo("state; texture; start, duration; charges, maxCharges; stack, stackText; spell",
+--  icon:SetInfo("state; texture; start, duration; charges, maxCharges, chargeStart, chargeDur; stack, stackText; spell",
 --    STATE_USABLE,
 --    GetSpellTexture(iName),
 --    start, duration,
---    charges, maxCharges,
+--    charges, maxCharges, chargeStart, chargeDur
 --    stack, stack,
 --    iName			
 -- )

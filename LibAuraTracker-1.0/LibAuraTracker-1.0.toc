@@ -1,0 +1,17 @@
+## Interface: 70000
+## Title: Lib: AuraTracker-1.0
+## Notes: Provides logic for tracking auras for calculating pandemic refresh windows.
+## Author: TurtleGuy
+## Version: 1.0
+## X-Curse-Packaged-Version: r20160815015836
+## X-Curse-Project-Name: LibAuraTracker-1.0
+## X-Curse-Project-ID: auratracker
+## X-Curse-Repository-ID: wow/auratracker/mainline
+
+
+#@no-lib-strip@
+libs\LibStub\LibStub.lua
+#@end-no-lib-strip@
+
+LibAuraTracker-1.0.lua
+

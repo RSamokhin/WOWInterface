@@ -6,6 +6,7 @@
 --  This isn't for a tab but for a small notification window. Requires the Suggestions tab.
 --
 
+if (not Overachiever.SUGGESTIONS) then  return;  end
 local L = OVERACHIEVER_STRINGS
 
 
@@ -57,6 +58,7 @@ end
 
 function Overachiever.ResetHiddenHolidayNotices()
 	hiddenEvents = nil
+	lastEvents = nil
 end
 
 

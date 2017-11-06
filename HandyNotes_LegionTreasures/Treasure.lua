@@ -2,11 +2,13 @@ local myname, ns = ...
 
 -- note to self: I like Garr_TreasureIcon...
 
-local ORDER = 1220; -- order resources currency
+local ORDER = 1220 -- order resources currency
+local ARGUNITE = 1508
 local ARTIFACT = 'ARTIFACT'
 local CHEST = 'Treasure Chest'
 local CHEST_SM = 'Small Treasure Chest'
 local CHEST_GLIM = 'Glimmering Treasure Chest'
+local LEGION_SUPPLIES = 'Legion War Supplies'
 local REQ_GRAPPLE = 'Requires: Stormforged Grapple Launcher'
 local path = function(questid, label, atlas, note, scale)
     label = label or "Path to treasure"
@@ -26,6 +28,14 @@ local grapple = function(questid, note)
     return path(questid, "Grapple start point", 'MiniMap-DeadArrow', note, 1.5)
 end
 ns.grapple = grapple
+
+ns.map_spellids = {
+    ["Azsuna"] = 182958,
+    ["Highmountain"] = 188741,
+    ["Stormheim"] = 182957,
+    ["Suramar"] = 199416,
+    ["Valsharah"] = 185719,
+}
 
 ns.points = {
     --[[ structure:
@@ -51,7 +61,7 @@ ns.points = {
         [44473946] = {quest=37713, currency=ARTIFACT, label=CHEST_SM},
         [47860773] = {quest=42295, currency=ARTIFACT, label=CHEST_SM},
         [49384536] = {quest=37828, currency=ARTIFACT, item=122681, label=CHEST},
-        [49415800] = {quest=38370, currency=ARTIFACT, label=CHEST},
+        [49415800] = {quest=38370, currency=ARTIFACT, item=141882, label=CHEST},
         [49653448] = {quest=37831, currency=ARTIFACT, label=CHEST_SM},
         [50215029] = {quest=42290, currency=ARTIFACT, label=CHEST_SM},
         [50465211] = {quest=44081, currency=ARTIFACT, item=140685, label="Treacherous Stallions", note="Ley Portal @ 60.3, 46.3; kill the stallions"},
@@ -98,10 +108,11 @@ ns.points = {
     ["Highmountain"] = {
         [36616213] = {quest=40488, currency=ARTIFACT, label=CHEST},
         [37353381] = {quest=40477, currency=ARTIFACT, label=CHEST_SM},
+        [39005450] = {quest=44731, currency=ARTIFACT, label=CHEST, note="Path up behind Nesingwary's camp"},
         [39307621] = {quest=40473, currency=ARTIFACT, label=CHEST, note="Hard to reach; try from behind the totem"},
         [39376229] = {quest=40474, currency=ARTIFACT, label=CHEST},
         [39555744] = {quest=39812, currency=ARTIFACT, label=CHEST},
-        [39704830] = {quest=39494, currency=ARTIFACT, label="Floating Treasure", note="On river surface"},
+        [39704830] = {quest=39494, currency=ARTIFACT, item=131763, label="Floating Treasure", note="On river surface, moves"},
         [42203482] = {quest=40480, currency=ARTIFACT, label=CHEST_SM},
         [42212730] = {quest=40479, currency=ARTIFACT, label=CHEST},
         [43582510] = {quest=40478, currency=ARTIFACT, label=CHEST, note="Cave entrance @ 42.5, 25.4"},
@@ -124,6 +135,7 @@ ns.points = {
         [53035224] = {quest=40493, currency=ARTIFACT, label=CHEST_SM},
         [49905380] = path(40493, "Crystal Fissure"),
         [51175305] = {quest=39471, currency=ARTIFACT, label=CHEST_GLIM, note="Path past the Skyhorn"},
+        [52566637] = {quest=42453, currency=ARTIFACT, label=CHEST, note="Only after Battle of Snowblind Mesa quests are done?"},
         [53004830] = path(39471, "Path to Reflection Peak"),
         [53063946] = {quest=40499, currency=ARTIFACT, label=CHEST_SM},
         [53414868] = {quest=40500, currency=ARTIFACT, label=CHEST_SM},
@@ -138,6 +150,7 @@ ns.points = {
         [44707230] = path({39606, 40508, 40509}, "Neltharion's Vault"),
         [51603740] = path({40496, 40497, 40406}, "Rockcrawler Chasm"),
         [48103390] = path({40496, 40497, 40406}, "Rockcrawler Chasm"),
+        [32206680] = {achievement=10774, item=139773, toy=true}, -- Emerald Winds
     },
     ["Stormheim"] = {
         [27335749] = {quest=38529, currency=ARTIFACT, label=CHEST, note="Cave entrance @ 31.4, 57.1"},
@@ -195,7 +208,8 @@ ns.points = {
         [65364310] = {quest=43205, currency=ARTIFACT, label=CHEST_SM},
         [65585737] = {quest=43187, currency=ARTIFACT, label=CHEST_SM},
         [67935774] = {quest=40083, currency=ARTIFACT, label=CHEST_SM},
-        [68462959] = {quest=40108, currency=ARTIFACT, label=CHEST},
+        [68462959] = {quest=40108, currency=ARTIFACT, label=CHEST_GLIM, note=REQ_GRAPPLE},
+        [68402000] = path(40108),
         [68974183] = {quest=40086, currency=ARTIFACT, label=CHEST_SM, note="Tomb entrance @ 70.0, 42.6"},
         [69964262] = path(40086),
         [69144478] = {quest=38637, currency=ARTIFACT, label=CHEST_SM, note=REQ_GRAPPLE},
@@ -243,13 +257,13 @@ ns.points = {
         [42203000] = path(43856),
         [44302289] = {quest=43850, currency=ARTIFACT, label=CHEST},
         [44387587] = {quest=43869, currency=ARTIFACT, label=CHEST_SM},
-        [44803100] = {quest=43986, item=140326, label="Enchanted Burial Urn"},
+        [44803100] = {quest=43986, item=140326, label="Enchanted Burial Urn", note="Doesn't stand out much; by the bench, upper level"},
         [46552599] = {quest=43744, item=141655, label="Shimmering Ancient Mana Cluster"},
         [48117321] = {quest=43865, currency=ARTIFACT, label=CHEST_SM, note="Grapple to it"},
-        [48143399] = {quest=43853, item=141655, label=CHEST_SM},
+        [48143399] = {quest=43853, currency=ARTIFACT, label=CHEST_SM},
         [48288261] = {quest=43866, currency=ARTIFACT, label=CHEST_SM, note="Grapple from 48.4, 82.2"},
         [48408220] = grapple(43866),
-        [48297121] = {quest=44324, currency=ARTIFACT, label=CHEST, note="Jumping puzzle! I recommend starting on the bookshelf."},
+        [48297121] = {quest=44324, currency=ARTIFACT, label=CHEST, note="Upstairs"},
         [48587217] = {quest=44323, currency=ARTIFACT, label=CHEST, note="Upstairs"},
         [48957379] = {quest=43867, currency=ARTIFACT, label=CHEST, note="Upstairs"},
         [49988493] = {quest=43864, currency=ARTIFACT, label=CHEST_SM, note="Grapple from 50.0, 84.5"},
@@ -267,6 +281,7 @@ ns.points = {
         [60356851] = {quest=43876, item=139786, label=CHEST_GLIM},
         [61365550] = {quest=43872, currency=ARTIFACT, label=CHEST},
         [63654911] = {quest=43857, currency=ARTIFACT, label=CHEST_SM},
+        [65814191] = {quest=43743, item=141655, label="Shimmering Ancient Mana Cluster", note="At the back of the leyline cave"},
         [67315511] = {quest=43858, currency=ARTIFACT, label=CHEST},
         [71464975] = {quest=43859, currency=ARTIFACT, label=CHEST_SM},
         [76886150] = {quest=43860, currency=ARTIFACT, label=CHEST_SM, note="Underwater, in a sunken ship"},
@@ -282,26 +297,26 @@ ns.points = {
         [38456530] = {quest=39080, currency=ARTIFACT, label=CHEST_SM, note="Basement; must have completed The Farmsteads"},
         [38626718] = {quest=39079, currency=ARTIFACT, label=CHEST_SM},
         [39945460] = {quest=38369, currency=ARTIFACT, label=CHEST_SM},
-        [41404560] = {quest=39085, currency=ARTIFACT, label=CHEST_SM, note="Top of wall"}, -- TODO: which of these is right?
-        [41414561] = {quest=39086, currency=ARTIFACT, label=CHEST_GLIM, note="Top of wall"},
-        [42008850] = {quest=39085, currency=ARTIFACT, label=CHEST_SM}, -- TODO: which of these is right?
+        [41404560] = path({39085,39086}, "Darkpens"),
         [42665801] = {quest=39077, currency=ARTIFACT, label=CHEST_SM},
         [43068822] = {quest=44138, currency=ARTIFACT, label=CHEST, note="Cave entrance @ 43.7, 89.9"},
         [43225488] = {quest=39084, currency=ARTIFACT, label=CHEST, note="Top of wall"},
         [43397589] = {quest=38363, currency=ARTIFACT, label=CHEST_SM},
         [44358257] = {quest=38387, currency=ARTIFACT, item=141892, label=CHEST, note="Cave under the inn; entrance behind the building"},
+        [45106120] = {quest=39083, currency=ARTIFACT, label=CHEST_SM, note="Hidden in the tree"},
         [46448630] = {quest=38277, currency=ARTIFACT, label=CHEST_SM},
         [48687381] = {quest=38366, currency=ARTIFACT, label=CHEST_SM, note="Under tree roots"},
         [48998615] = {quest=38886, currency=ARTIFACT, label=CHEST_SM},
         [51247777] = {quest=38388, currency=ARTIFACT, label=CHEST_SM, note="Cave entrance @ 50.9, 77.0"},
         [50907700] = path(38388),
-        [54003489] = {quest=38390, currency=ARTIFACT, label=CHEST_GLIM, note="Cave entrance @ 53.2, 38.0"},
+        [54003489] = {quest=38390, item=141891, currency=ARTIFACT, label=CHEST_GLIM, note="Cave entrance @ 53.2, 38.0"},
         [53203800] = path(38390),
         [54187061] = {quest=39093, currency=ARTIFACT, label=CHEST_SM, note="In cave"},
         [54417419] = {quest=38359, currency=ARTIFACT, label=CHEST_SM, note="In house behind the fence"},
         [54506048] = {quest=39097, currency=ARTIFACT, item=130152, label=CHEST, note="In cave"},
-        [54958054] = {quest=38861, currency=ARTIFACT, label=CHEST_SM, note="In underwater cave"},
-        [54108210] = path(38861, "Route to cave"),
+        [54908056] = {quest=38864, currency=ARTIFACT, label=CHEST_SM, note="In underwater cave"},
+        -- [54958054] = {quest=38861, currency=ARTIFACT, label=CHEST_SM, note="In underwater cave"}, -- removed? swapped for 38864?
+        [54108210] = path(38864, "Route to cave"),
         [55557762] = {quest=38466, item=130147, toy=true, label="Unguarded Thistlemaw Treasure", note="Unguarded..."},
         [56008376] = {quest=38861, currency=ARTIFACT, label=CHEST_SM},
         [56225730] = {quest=39072, currency=ARTIFACT, label=CHEST_SM},
@@ -333,11 +348,38 @@ ns.points = {
         [69475999] = {quest=38781, currency=ARTIFACT, label=CHEST_SM},
         [70225704] = {quest=38783, currency=ARTIFACT, label=CHEST_SM},
     },
-
+    ["ArgusSurface"] = { -- Krokuun
+        [48505890] = {quest=48886, currency=ARGUNITE, label="Lost Krokun Chest"},
+        [67606990] = {quest=48000, currency=ARGUNITE, label="Eredar War Supplies", note="Up on the ridge"},
+    },
+    ["ArgusCore"] = { -- Antoran Wastes
+        [72404210] = {quest=48387, currency=ARGUNITE, label=LEGION_SUPPLIES},
+        [76465651] = {quest=48390, currency=ARGUNITE, label=LEGION_SUPPLIES}, -- Verify me...
+    },
+    ["ArgusCitadelSpire"] = { -- Nath'raxas Spire
+    },
+    ["ArgusMacAree"] = { -- MacAree
+        [27284015] = {quest=48750, label="Shattered House Chest", currency=ARGUNITE},
+        [70245976] = {quest=48748, label="Augari Secret Stash", currency=ARGUNITE},
+    },
     -- Small zones
+    ["Dalaran70"] = {
+        [47404120] = {quest=45365, item=143534, toy=true, note="On the table on the second floor of the Legerdemain Lounge", level=10},
+        -- Dog pebble, questid is for showing Dog the pebble, not looting it
+        [38102920] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [42104440] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [41005320] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [46205390] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [49406940] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [51706220] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [54505320] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [54304080] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [47702920] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [44601820] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+    },
     ["Darkpens"] = { -- Val'sharah
-        [42018849] = {quest=39085, currency=ARTIFACT, label=CHEST_SM, note="Top of wall @ 41.4, 45.6"},
-        [50905168] = {quest=39086, currency=ARTIFACT, label=CHEST_GLIM, note="Top of wall @ 41.4, 45.6"},
+        [42018849] = {quest=39085, currency=ARTIFACT, label=CHEST_SM, note="In water at bottom of stairs"},
+        [50905168] = {quest=39086, currency=ARTIFACT, label=CHEST_GLIM},
     },
     ["Helheim"] = { -- Stormheim
         [79842471] = {quest=38510, currency=ARTIFACT, label=CHEST_SM},
@@ -398,6 +440,9 @@ ns.points = {
         -- Temple of Fal'adora:
         [35525280] = {quest=43988, item=140328, label="Volatile Leyline Crystal", note="Downstairs", level=32},
         [38605414] = {quest=43838, currency=ARTIFACT, label=CHEST_SM, note="Downstairs", level=32},
+    },
+    ["LeylineMicro01"] = { -- Elor'shan
+        [49301730] = {quest=43743, item=141655, label="Shimmering Ancient Mana Cluster"},
     },
 
     -- DH starter

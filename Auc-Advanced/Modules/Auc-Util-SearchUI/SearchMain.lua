@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI
-	Version: 7.1.5675 (TasmanianThylacine)
-	Revision: $Id: SearchMain.lua 5657 2016-08-09 22:12:08Z brykrys $
+	Version: 7.5.5724 (TasmanianThylacine)
+	Revision: $Id: SearchMain.lua 5703 2017-01-14 21:54:30Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This Addon provides a Search tab on the AH interface, which allows
@@ -272,6 +272,10 @@ end
 
 function lib.Processors.auctionopen(callbackType, ...)
 	lib.NotifyCallbacks("auctionopen")
+end
+
+function lib.Processors.iteminfoupdate(callbackType, ...)
+	lib.NotifyCallbacks("iteminfoupdate")
 end
 
 lib.Processors.gameactive = private.UpdateFactionResources
@@ -1092,13 +1096,13 @@ function private.CreateAuctionFrames()
 	frame.scanscount:SetPoint("LEFT", frame.scanslabel, "RIGHT", 5, 0)
 	frame.scanscount:SetText("0")
 	frame.scanscount:SetJustifyH("RIGHT")
-	frame.scanscount.last = 0
+	private.lastScansCount = 0
 	function private.UpdateScanProgress(_, _, _, _, _, _, _, scansQueued)
 		if AucAdvanced.Scan.IsScanning() then
 			scansQueued = scansQueued + 1
 		end
-		if scansQueued ~= frame.scanscount.last then
-			frame.scanscount.last = scansQueued
+		if scansQueued ~= private.lastScansCount then
+			private.lastScansCount = scansQueued
 			frame.scanscount:SetText(scansQueued)
 		end
 	end
@@ -1416,8 +1420,9 @@ function private.MakeGuiConfig()
 		elseif (callback == "OnClickCell") then
 			lib.OnClickSheet(button, row, column)
 		elseif (callback == "ColumnSort") then
-			-- ### todo: calling SetSetting can be very expensive (as it triggers a cascade of other calls), try to do it only when acutally needed?
-			-- ### however, looks like ColumnSort is the only way to detect when sort column or direction has changed
+			-- ColumnSort notifies that data has been sorted, which occurs very frequently
+			-- Here we only want to detect changes to sort column or direction
+			-- SetSetting exits early if the setting has not actually changed, so there shouldn't be a problem with notification message spam
 			lib.SetSetting("columnsortcurDir", curDir)
 			lib.SetSetting("columnsortcurSort", column)
 		elseif (callback == "OnMouseDownCell") then
@@ -1428,7 +1433,7 @@ function private.MakeGuiConfig()
 	gui.Search = CreateFrame("Button", "AucSearchUISearchButton", gui, "OptionsButtonTemplate")
 	gui.Search:SetPoint("BOTTOMLEFT", gui, "BOTTOMLEFT", 30, 80)
 	gui.Search:SetText("Search")
-	gui.Search:SetScript("OnClick", lib.PerformSearch)
+	gui.Search:SetScript("OnClick", function() lib.PerformSearch() end)
 	gui.Search:SetFrameLevel(11)
 	gui.Search.TooltipText = "Search Snapshot using current Searcher"
 	gui.Search:SetScript("OnEnter", showTooltipText)
@@ -1440,30 +1445,21 @@ function private.MakeGuiConfig()
 			--Check if rescan method is implemented
 			local searcher = private.FindSearcher() -- find Selected searcher
 			if searcher.Rescan then
+				gui.Rescan.searcher = searcher
 				gui.Rescan:Show()
-				gui.Rescan:SetScript("OnClick", function()
-									if flagRescan then
-										flagRescan = nil
-										CooldownFrame_Set(gui.Rescan.frame, 0, 0, false) -- ### Legion change check
-										private.gui.Search:Enable()
-										lib.PerformSearch()
-									else
-										searcher.Rescan()
-										CooldownFrame_Set(gui.Rescan.frame, GetTime(), 2, true)
-										private.gui.Search:Disable()
-										flagRescan = GetTime()
-									end
-								end)
 			else
+				gui.Rescan.searcher = nil
 				gui.Rescan:Hide()
 			end
 		else
 			gui.Search:Disable()
+			gui.Rescan.searcher = nil
+			gui.Rescan:Hide()
 		end
 	end
 
 	--rescan AH button.
-	gui.Rescan = CreateFrame("Button", "AucSearchUISearchButton", gui, "UIPanelCloseButton")
+	gui.Rescan = CreateFrame("Button", "AucSearchUIRescanButton", gui, "UIPanelCloseButton")
 	gui.Rescan:Show()
 	gui.Rescan:SetWidth(20)
 	gui.Rescan:SetHeight(20)
@@ -1473,9 +1469,23 @@ function private.MakeGuiConfig()
 	gui.Rescan.TooltipText = "Refresh the Auction House snapshot, then search\nClick again to cancel"
 	gui.Rescan:SetScript("OnEnter", showTooltipText)
 	gui.Rescan:SetScript("OnLeave", hideTooltip)
-	--animation
+	--animation (using cooldown frame. ### todo: use one of the animation widgets instead?)
 	gui.Rescan.frame = CreateFrame("Cooldown", nil, gui.Rescan, "CooldownFrameTemplate")
 	gui.Rescan.frame:SetAllPoints(gui.Rescan)
+	gui.Rescan:SetScript("OnClick", function(self)
+		if flagRescan then
+			flagRescan = nil
+			CooldownFrame_Set(self.frame, 0, 0, false)
+			gui.Search:Enable()
+			lib.PerformSearch()
+		elseif self.searcher then
+			self.searcher.Rescan()
+			local gt = GetTime()
+			CooldownFrame_Set(self.frame, gt, 2, true)
+			gui.Search:Disable()
+			flagRescan = gt + 2.5 -- time to trigger next animation
+		end
+	end)
 
 
 	gui:AddCat("Welcome")
@@ -1869,12 +1879,26 @@ if LibStub then
 end
 
 function private.FindSearcher(item)
-	if not gui.config.selectedTab then
-		return
+	local selected
+	if item then -- item may be either the searcher's lib or its name
+		local searcher = lib.Searchers[item]
+		if searcher then -- item is the searcher name
+			if searcher.Search then
+				return searcher, item
+			end
+			return -- we found a match, but it's not a valid searcher
+		end
+		-- otherwise item should be the lib table
+	else -- no item, default to finding current selected searcher
+		selected = gui and gui.config.selectedTab
 	end
+	if not item and not selected then return end
 	for name, searcher in pairs(lib.Searchers) do
-		if searcher and searcher.tabname and searcher.tabname == gui.config.selectedTab and searcher.Search then
-			return searcher, name
+		if searcher == item or (selected and searcher.tabname == selected) then
+			if searcher.Search then
+				return searcher, name
+			end
+			return -- we found a match, but it's not a valid searcher
 		end
 	end
 end
@@ -2054,8 +2078,12 @@ function lib.SearchItem(searcherName, item, nodupes, skipresults)
 	return false, value
 end
 
-local PerformSearch = function()
-	local searcher, searcherName = private.FindSearcher()
+local PerformSearch = function(item)
+	local searcher, searcherName = private.FindSearcher(item) -- if item provided, use it to find seacher
+	if not searcher and item then
+		-- we tried using item but got no result, it must be invalid, try again without it
+		searcher, searcherName = private.FindSearcher()
+	end
 	if not searcher then
 		aucPrint("No valid Searches selected")
 		return
@@ -2160,11 +2188,11 @@ function lib.PerformSearch(searcher)
             error("Error in search coroutine: "..result.."\n\n{{{Coroutine Stack:}}}\n"..debugstack(coSearch));
 		end
 	else
-		aucPrint("coroutine already running: "..coroutine.status(coSearch))
+		debugPrint("coroutine already running: "..coroutine.status(coSearch))
 	end
 end
 
-function private.OnUpdate(self, elapsed)
+local function OnUpdate(self, elapsed)
 	if coSearch then
 		if coroutine.status(coSearch) == "suspended" then
 			local status, result = coroutine.resume(coSearch)
@@ -2180,23 +2208,25 @@ function private.OnUpdate(self, elapsed)
 		lib.NotifyCallbacks("postscanupdate")
 	end
 
-	if flagRescan and private.gui and private.gui.Rescan.frame:IsShown() then
-		--if scan still in progress, keep the button churnin'
-		if flagRescan + 2.5 < GetTime() then
-			CooldownFrame_Set(private.gui.Rescan.frame, GetTime(), 2, true)
-			flagRescan = GetTime()
-		end
+	if flagRescan then
 		--are we finished scanning
-		if private.gui.AuctionFrame and private.gui.AuctionFrame.scanscount.last == 0 then
+		if private.lastScansCount == 0 then
 			flagRescan = nil
 			CooldownFrame_Set(private.gui.Rescan.frame, 0, 0, false)
 			private.gui.Search:Enable()
 			lib.PerformSearch()
+		else
+			--if scan still in progress, keep the button churnin'
+			local gt = GetTime()
+			if gt > flagRescan then
+				flagRescan = gt + 2.5
+				CooldownFrame_Set(private.gui.Rescan.frame, gt, 2, true)
+			end
 		end
 	end
 end
 
 private.updater = CreateFrame("Frame", nil, UIParent)
-private.updater:SetScript("OnUpdate", private.OnUpdate)
+private.updater:SetScript("OnUpdate", OnUpdate)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.1/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5657 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/7.5/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5703 $")

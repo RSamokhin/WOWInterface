@@ -1,5 +1,6 @@
 WorldQuestGroupFinderConf = {}
-local _, L = ...;
+
+local L = LibStub ("AceLocale-3.0"):GetLocale ("WorldQuestGroupFinder", true)
 
 local DefaultConfig = {}
 WorldQuestGroupFinderConfig = {}
@@ -14,87 +15,78 @@ function WorldQuestGroupFinderConf.CreateConfigMenu()
 	local addonName, addonTitle, addonNotes = GetAddOnInfo('WorldQuestGroupFinder')
 	local configPanelText = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
 	configPanelText:SetPoint('TOPLEFT', 16, -16)
-	configPanelText:SetText(addonTitle .. " "..GetAddOnMetadata("WorldQuestGroupFinder", "Version").." (" .. L["Brought to you by Robou, EU-Hyjal"] ..")")
+	configPanelText:SetText(addonTitle .. " "..GetAddOnMetadata("WorldQuestGroupFinder", "Version").." (" .. L["WQGF_CONFIG_PAGE_CREDITS"] ..")")
 
 	local configPanelDesc = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
 
-	configPanelDesc:SetPoint('TOPLEFT', configPanelText, 'BOTTOMLEFT', 0, -8)
+	configPanelDesc:SetPoint('TOPLEFT', configPanelText, 'BOTTOMLEFT', 0, -6)
 	configPanelDesc:SetPoint('RIGHT', configPanel, -32, 0)
 	configPanelDesc:SetNonSpaceWrap(true)
 	configPanelDesc:SetJustifyH('LEFT')
 	configPanelDesc:SetJustifyV('TOP')
-	configPanelDesc:SetText(addonNotes)
+	configPanelDesc:SetText(L["WQGF_ADDON_DESCRIPTION"])
 	
-	local autoInviteDesc = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
-	autoInviteDesc:SetPoint('TOPLEFT', configPanelDesc, 'BOTTOMLEFT', -2, -8)
-	autoInviteDesc:SetText(L["Auto-invite"])
+	local regularQuestsDesc = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
+	regularQuestsDesc:SetPoint('TOPLEFT', configPanelDesc, 'BOTTOMLEFT', -2, -8)
+	regularQuestsDesc:SetText(L["WQGF_CONFIG_QUEST_SUPPORT_TITLE"])
 
-	local autoInviteUsers = WorldQuestGroupFinderConf.CreateCheckButton(L["Auto-invite WQGF users"], configPanel, L["World Quest Group Finder users will automatically be invited to the group"], "autoinviteUsers", 'InterfaceOptionsCheckButtonTemplate')
-	autoInviteUsers:SetPoint('TOPLEFT', autoInviteDesc, 'BOTTOMLEFT', 0, -2)
-	
-	local autoInvite = WorldQuestGroupFinderConf.CreateCheckButton(L["Auto-invite everyone"], configPanel, L["Every applicant will automatically be invited to the group up to a limit of 5 players"], "autoinvite", 'InterfaceOptionsCheckButtonTemplate')
-	autoInvite:SetPoint('TOPLEFT', autoInviteUsers, 'BOTTOMLEFT', 10, 2)
-	WorldQuestGroupFinderConf.AddDependentCheckbox(autoInviteUsers, autoInvite, false)
-	
-	local autoinviteOriginal = WorldQuestGroupFinderConf.CreateCheckButton(L["Use WoW's auto-invite function"], configPanel, L["Use WoW's auto-invite function (Not recommended, will cause realm hoppers to join the group)"], "autoinviteOriginal", 'InterfaceOptionsCheckButtonTemplate')
-	autoinviteOriginal:SetPoint('TOPLEFT', autoInvite, 'BOTTOMLEFT', 10, 2)
-	WorldQuestGroupFinderConf.AddDependentCheckbox(autoInvite, autoinviteOriginal, false)
+	local regularQuests = WorldQuestGroupFinderConf.CreateCheckButton(L["WQGF_CONFIG_QUEST_SUPPORT_ENABLE"], configPanel, L["WQGF_CONFIG_QUEST_SUPPORT_HOVER"], "regularQuests", 'InterfaceOptionsCheckButtonTemplate')
+	regularQuests:SetPoint('TOPLEFT', regularQuestsDesc, 'BOTTOMLEFT', 0, -2)
 	
 	local askToLeaveDesc = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
-	askToLeaveDesc:SetPoint('TOPLEFT', autoinviteOriginal, 'BOTTOMLEFT', -20, -8)
-	askToLeaveDesc:SetText(L["Show a dialog to leave the group when the world quest is completed"])
+	askToLeaveDesc:SetPoint('TOPLEFT', regularQuests, 'BOTTOMLEFT', 0, -6)
+	askToLeaveDesc:SetText(L["WQGF_CONFIG_WQ_END_DIALOG_TITLE"])
 
-	local askToLeave = WorldQuestGroupFinderConf.CreateCheckButton(L["Enable world quest end dialog"], configPanel, L["You will be proposed to leave the group or delist it when the world quest is completed"], "askToLeave", 'InterfaceOptionsCheckButtonTemplate')
+	local askToLeave = WorldQuestGroupFinderConf.CreateCheckButton(L["WQGF_CONFIG_WQ_END_DIALOG_ENABLE"], configPanel, L["WQGF_CONFIG_WQ_END_DIALOG_HOVER"], "askToLeave", 'InterfaceOptionsCheckButtonTemplate')
 	askToLeave:SetPoint('TOPLEFT', askToLeaveDesc, 'BOTTOMLEFT', 0, -2)
+	
+	local autoLeaveGroup = WorldQuestGroupFinderConf.CreateCheckButton(L["WQGF_CONFIG_WQ_END_DIALOG_AUTO_LEAVE_ENABLE"], configPanel, L["WQGF_CONFIG_WQ_END_DIALOG_AUTO_LEAVE_HOVER"], "autoLeaveGroup", 'InterfaceOptionsCheckButtonTemplate')
+	autoLeaveGroup:SetPoint('TOPLEFT', askToLeave, 'BOTTOMLEFT', 10, 2)
+	WorldQuestGroupFinderConf.AddDependentCheckbox(askToLeave, autoLeaveGroup, false)
 
 	local notifyPartyDesc = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
-	notifyPartyDesc:SetPoint('TOPLEFT', askToLeave, 'BOTTOMLEFT', 0, -8)
-	notifyPartyDesc:SetText(L["Notify the group when the world quest is completed"])
+	notifyPartyDesc:SetPoint('TOPLEFT', autoLeaveGroup, 'BOTTOMLEFT', -10, -6)
+	notifyPartyDesc:SetText(L["WQGF_CONFIG_PARTY_NOTIFICATION_TITLE"])
 
-	local notifyParty = WorldQuestGroupFinderConf.CreateCheckButton(L["Enable party notification"], configPanel, L["A message will be sent to the party when the world quest is completed"], "notifyParty", 'InterfaceOptionsCheckButtonTemplate')
+	local notifyParty = WorldQuestGroupFinderConf.CreateCheckButton(L["WQGF_CONFIG_PARTY_NOTIFICATION_ENABLE"], configPanel, L["WQGF_CONFIG_PARTY_NOTIFICATION_HOVER"], "notifyParty", 'InterfaceOptionsCheckButtonTemplate')
 	notifyParty:SetPoint('TOPLEFT', notifyPartyDesc, 'BOTTOMLEFT', 0, -2)
 
 	local askZoningDesc = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
-	askZoningDesc:SetPoint('TOPLEFT', notifyParty, 'BOTTOMLEFT', 0, -8)
-	askZoningDesc:SetText(L["Propose searching for a group when entering a world quest area for the first time"])
+	askZoningDesc:SetPoint('TOPLEFT', notifyParty, 'BOTTOMLEFT', 0, -6)
+	askZoningDesc:SetText(L["WQGF_CONFIG_NEW_WQ_AREA_DETECTION_TITLE"])
 
-	local askZoning = WorldQuestGroupFinderConf.CreateCheckButton(L["Enable new world quest zone detection"], configPanel, L["You will be asked if you want to search for a group when entering a new world quest zone"], "askZoning", 'InterfaceOptionsCheckButtonTemplate')
+	local askZoning = WorldQuestGroupFinderConf.CreateCheckButton(L["WQGF_CONFIG_NEW_WQ_AREA_DETECTION_ENABLE"], configPanel, L["WQGF_CONFIG_NEW_WQ_AREA_DETECTION_HOVER"], "askZoning", 'InterfaceOptionsCheckButtonTemplate')
 	askZoning:SetPoint('TOPLEFT', askZoningDesc, 'BOTTOMLEFT', 0, -2)
 
-	local askZoningBusy = WorldQuestGroupFinderConf.CreateCheckButton(L["Do not propose if already grouped for another world quest"], configPanel, L["Do not propose if already grouped for another world quest"], "askZoningBusy", 'InterfaceOptionsCheckButtonTemplate')
-	askZoningBusy:SetPoint('TOPLEFT', askZoning, 'BOTTOMLEFT', 10, 2)
-	WorldQuestGroupFinderConf.AddDependentCheckbox(askZoning, askZoningBusy, false)
+	local allLanguagesDesc = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
+	allLanguagesDesc:SetPoint('TOPLEFT', askZoning, 'BOTTOMLEFT', 0, -6)
+	allLanguagesDesc:SetText(L["WQGF_CONFIG_LANGUAGE_FILTER_TITLE"])
 
-	local askZoningAuto = WorldQuestGroupFinderConf.CreateCheckButton(L["Automatically start searching if not in a group"], configPanel, L["A group will automatically be searched when entering a new world quest zone"], "askZoningAuto", 'InterfaceOptionsCheckButtonTemplate')
-	askZoningAuto:SetPoint('TOPLEFT', askZoningBusy, 'BOTTOMLEFT', 0, 2)
-	WorldQuestGroupFinderConf.AddDependentCheckbox(askZoning, askZoningAuto, false)
+	local allLanguagesOpt = WorldQuestGroupFinderConf.CreateCheckButton(L["WQGF_CONFIG_LANGUAGE_FILTER_ENABLE"], configPanel, L["WQGF_CONFIG_LANGUAGE_FILTER_HOVER"], "allLanguages", 'InterfaceOptionsCheckButtonTemplate')
+	allLanguagesOpt:SetPoint('TOPLEFT', allLanguagesDesc, 'BOTTOMLEFT', 0, -2)
 
-	local autoAcceptInviteDesc = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
-	autoAcceptInviteDesc:SetPoint('TOPLEFT', askZoningAuto, 'BOTTOMLEFT', -10, -8)
-	autoAcceptInviteDesc:SetText(L["Auto-accept group invites"])
+	local avoidPVPDesc = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
+	avoidPVPDesc:SetPoint('TOPLEFT', allLanguagesOpt, 'BOTTOMLEFT', 0, -6)
+	avoidPVPDesc:SetText(L["WQGF_CONFIG_PVP_REALMS_TITLE"])
 
-	local autoAcceptInvite = WorldQuestGroupFinderConf.CreateCheckButton(L["Automatically accept group invites for groups applied by WQGF"], configPanel, L["Will automatically accept group invites"], "autoAcceptInvites", 'InterfaceOptionsCheckButtonTemplate')
-	autoAcceptInvite:SetPoint('TOPLEFT', autoAcceptInviteDesc, 'BOTTOMLEFT', 0, -2)
+	local avoidPVPOpt = WorldQuestGroupFinderConf.CreateCheckButton(L["WQGF_CONFIG_PVP_REALMS_ENABLE"], configPanel, L["WQGF_CONFIG_PVP_REALMS_HOVER"], "avoidPVP", 'InterfaceOptionsCheckButtonTemplate')
+	avoidPVPOpt:SetPoint('TOPLEFT', avoidPVPDesc, 'BOTTOMLEFT', 0, -2)
 
-	local hideLoginMessageDesc = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
-	hideLoginMessageDesc:SetPoint('TOPLEFT', autoAcceptInvite, 'BOTTOMLEFT', 0, -8)
-	hideLoginMessageDesc:SetText(L["WQGF login message"])
+	local silentModeDesc = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
+	silentModeDesc:SetPoint('TOPLEFT', avoidPVPOpt, 'BOTTOMLEFT', 0, -6)
+	silentModeDesc:SetText(L["WQGF_CONFIG_SILENT_MODE_TITLE"])
 
-	local hideLoginMessage = WorldQuestGroupFinderConf.CreateCheckButton(L["Hide WQGF init message at login"], configPanel, L["Won't display the WQGF message at login anymore"], "hideLoginMessage", 'InterfaceOptionsCheckButtonTemplate')
-	hideLoginMessage:SetPoint('TOPLEFT', hideLoginMessageDesc, 'BOTTOMLEFT', 0, -2)
+	local silentModeOpt = WorldQuestGroupFinderConf.CreateCheckButton(L["WQGF_CONFIG_SILENT_MODE_ENABLE"], configPanel, L["WQGF_CONFIG_SILENT_MODE_HOVER"], "silent", 'InterfaceOptionsCheckButtonTemplate')
+	silentModeOpt:SetPoint('TOPLEFT', silentModeDesc, 'BOTTOMLEFT', 0, -2)
 
-	local languagesDesc = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
-	languagesDesc:SetPoint('TOPLEFT', hideLoginMessage, 'BOTTOMLEFT', 0, -8)
-	languagesDesc:SetText(L["The groups found by the addon are filtered by realm language according to your selection in the Group Finder interface."])
-
-	local languagesDesc2 = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
-	languagesDesc2:SetPoint('TOPLEFT', languagesDesc, 'BOTTOMLEFT', 0, -4)
-	languagesDesc2:SetText(L["It is recommended to select all languages to get a broader realm selection."])
-
+	local bindingAdvice = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormalSmall')
+	bindingAdvice:SetPoint('TOPLEFT', silentModeOpt, 'BOTTOMLEFT', 0, -10)
+	bindingAdvice:SetText(L["WQGF_CONFIG_BINDING_ADVICE"])
+	
 	if (GetLocale() ~= "enUS" and GetLocale() ~= "enGB") then
 		local translationInfo = configPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormalSmall')
-		translationInfo:SetPoint('TOPLEFT', languagesDesc2, 'BOTTOMLEFT', 0, -12)
-		translationInfo:SetText(L["TRANSLATION_INFO"])
+		translationInfo:SetPoint('TOPLEFT', bindingAdvice, 'BOTTOMLEFT', 0, -10)
+		translationInfo:SetText(L["WQGF_TRANSLATION_INFO"])
 	end
 	
 	InterfaceOptions_AddCategory(configPanel)
@@ -186,19 +178,21 @@ function WorldQuestGroupFinderConf.SetConfigValue(key, value, cType)
 	elseif (cType == "CHAR") then
 		WorldQuestGroupFinderCharacterConfig[key] = value
 	end
-	WorldQuestGroupFinder.dprint(string.format(L["Changed parameter value. Parameter: %s, Value: %s, Type: %s"], key, tostring(value), cType))
+	WorldQuestGroupFinder.dprint(string.format("Changed parameter value. Parameter: %s, Value: %s, Type: %s", key, tostring(value), cType))
 end
 
 WorldQuestGroupFinderConf.DefaultConfig = {
 	autoinvite = true,
-	autoinviteOriginal = false,
 	autoinviteUsers = true,
 	askToLeave = true,
 	notifyParty = true,
 	askZoning = true,
-	askZoningBusy = true,
-	askZoningAuto = false,
 	hideLoginMessage = false,
 	autoAcceptInvites = false,
-	printDebug = false
+	printDebug = false,
+	allLanguages = true,
+	avoidPVP = false,
+	autoLeaveGroup = false,
+	regularQuests = true,
+	frameUnlocked = true
 }

@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "frFR" then return end
+if GetLocale() ~= "frFR" then return end
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
 local L = DBM_GUI_Translations
 
@@ -82,7 +82,7 @@ L.Warn_FontType				= "Choisir une police"
 L.Warn_FontStyle			= "Contours de la police"
 L.Warn_FontShadow			= "Ombre"
 L.Warn_FontSize				= "Taille de la police: %d"
-L.Warn_Duration				= "Durée de l'alerte: %d sec"
+L.Warn_Duration				= "Durée de l'alerte: %0.1f sec"
 L.None						= "Aucun"
 L.Outline					= "Simple"
 L.ThickOutline				= "Epais"
@@ -207,7 +207,6 @@ L.CountdownVoice2			= "Définir la deuxième voix pour les comptes à rebours"
 L.CountdownVoice3			= "Définir la troisième voix" --shortened to avoid overlap in game
 L.VoicePackChoice			= "Définir le Pack de voix pour les Alertes Vocales"
 L.Area_CountdownOptions		= "Options des Comptes à rebours"
-L.ShowCountdownText			= "Afficher le texte du compte à rebours lors des comptes à rebours de la voix principale" --might be possible to make it shorter
 L.Area_VoicePackOptions		= "Options des Packs de voix (Pack de voix tiers)"
 L.SpecWarn_NoSoundsWVoice	= "Ne pas jouer d'alerte spéciale s'il y a déjà une alerte vocale"
 L.SWFNever					= "Jamais"
@@ -295,7 +294,6 @@ L.AutoReplySound			= "Jouer un son d'alerte lorsque vous recevez une réponse au
 --
 L.TimerGeneral 				= "Options des timers"
 L.SKT_Enabled				= "Afficher le timer du record pour lecombat actuel s'il est disponible"
-L.CRT_Enabled				= "Afficher le timer de la prochaine charge de resurrection en combat"
 L.ShowRespawn				= "Afficher le timer de la réapparition du boss après un wipe"
 L.ShowQueuePop				= "Afficher le timer du temps restant pour accepter l'invitation (LFG,BG,etc)"
 L.ChallengeTimerOptions		= "Réglage du timer du meilleur temps en challenge mode"
